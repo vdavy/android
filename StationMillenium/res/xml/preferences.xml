@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- player preferences -->
+    <PreferenceCategory
+        android:title="@string/preferences_player_category" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_wifi_only"
+            android:key="preferences_player_wifi_only"
+            android:summaryOff="@string/preferences_player_wifi_only_summary_off"
+            android:summaryOn="@string/preferences_player_wifi_only_summary_on"
+            android:title="@string/preferences_player_wifi_only" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_player_autostart"
+            android:key="preferences_player_autostart"
+            android:summary="@string/preferences_player_autostart_summary"
+            android:title="@string/preferences_player_autostart" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

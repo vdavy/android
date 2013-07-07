@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="left">
+
+    <ImageView
+        android:id="@+id/player_history_item_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/drawer_image_desc"
+        android:src="@drawable/drawer_entry_icon" />
+
+    <TextView
+        android:id="@+id/player_history_item_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/player_history_item_icon"        
+        android:paddingLeft="5dp"
+        android:textAppearance="?android:attr/textAppearanceSmall" 
+		android:layout_centerVertical="true"/>
+
+</RelativeLayout>

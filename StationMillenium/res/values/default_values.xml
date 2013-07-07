@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Default values XML file -->
+<resources>
+
+    <!-- default values for player -->
+    <string name="player_stream_url">http://www.station-millenium.com/millenium.mp3</string>
+    <string name="player_current_song_url">http://www.station-millenium.com/coverart/android/currentSongs</string>
+    <string name="player_connection_read_timeout">10000</string>
+    <string name="player_connection_connect_timeout">15000</string>
+    <string name="player_connection_request_method">GET</string>
+    <string name="player_image_url_root">http://www.station-millenium.com/coverart</string>
+    
+</resources>
