@@ -699,7 +699,7 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 
 		//send local broadcast intent for widget
 		Intent widgetIntent = new Intent(state.getAssociatedIntent().toString());
-		LocalBroadcastManager.getInstance(this).sendBroadcast(widgetIntent);
+		sendBroadcast(widgetIntent);
 		
 		//adjust the remote control state
 		if ((Utils.isAPILevel14Available()) && (remoteControlClient != null)) {

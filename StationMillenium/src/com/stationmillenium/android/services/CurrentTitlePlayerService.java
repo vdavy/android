@@ -69,6 +69,7 @@ public class CurrentTitlePlayerService extends IntentService {
 					intentToSend.putExtra(LocalIntentsData.CURRENT_TITLE.toString(), songDataDTO);
 					Log.d(TAG, "Send intent to update current title : " + intentToSend);
 					LocalBroadcastManager.getInstance(this).sendBroadcast(intentToSend);
+					sendBroadcast(intentToSend); //for the widget
 					
 				} catch (XMLParserException e) {
 					Log.w(TAG, "Error while parsing XML data", e);

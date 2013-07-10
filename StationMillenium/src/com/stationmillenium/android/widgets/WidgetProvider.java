@@ -12,12 +12,10 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -236,23 +234,5 @@ public class WidgetProvider extends AppWidgetProvider {
 		else 
 			awm.updateAppWidget(awm.getAppWidgetIds(componentName), remoteViews);
 	}
-	
-	@Override
-	public void onEnabled(Context context) {
-		Log.d(TAG, "Enabling the widget");
-		super.onEnabled(context);		
-		LocalBroadcastManager.getInstance(context).registerReceiver(this, new IntentFilter(LocalIntents.CURRENT_TITLE_UPDATED.toString()));
-		LocalBroadcastManager.getInstance(context).registerReceiver(this, new IntentFilter(PlayerState.PLAYING.getAssociatedIntent().toString()));
-		LocalBroadcastManager.getInstance(context).registerReceiver(this, new IntentFilter(PlayerState.PAUSED.getAssociatedIntent().toString()));
-		LocalBroadcastManager.getInstance(context).registerReceiver(this, new IntentFilter(PlayerState.STOPPED.getAssociatedIntent().toString()));
-		LocalBroadcastManager.getInstance(context).registerReceiver(this, new IntentFilter(PlayerState.BUFFERING.getAssociatedIntent().toString()));
-	}
-	
-	@Override
-	public void onDisabled(Context context) {
-		Log.d(TAG, "Disabling the widget");
-		LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
-		super.onDisabled(context);
-	}
-	
+
 }
