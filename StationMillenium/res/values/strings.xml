@@ -9,21 +9,6 @@
     <!-- menu entries -->
     <string name="action_settings">Paramètres</string>
     
-    <!-- drawer menu -->
-    <string name="drawer_image_desc">Drawer menu image</string>
-    <string name="open_drawer_desc">Ouvrir le menu</string>
-    <string name="close_drawer_desc">Fermer le menu</string>
-    <string name="action_bar_menu_title">Aller à&#8230;</string>
-
-    <!-- drawer menu entries -->
-    <string-array name="menu_array">
-        <item>Home</item>
-        <item>Player live</item>
-        <item>Dernières news</item>
-        <item>Grille des programmes</item>
-        <item>Liens</item>
-    </string-array>
-
     <!-- player texts -->
     <string name="player_currently_playing">Actuellement à l\'antenne</string>
     <string name="player_network_unavailable">Pas de connexion à Internet</string>
