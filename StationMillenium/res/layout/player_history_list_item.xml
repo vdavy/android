@@ -8,8 +8,8 @@
         android:id="@+id/player_history_item_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/drawer_image_desc"
-        android:src="@drawable/drawer_entry_icon" />
+        android:contentDescription="@string/empty_string"
+        android:src="@drawable/playlist_history_entry_icon" />
 
     <TextView
         android:id="@+id/player_history_item_text"
