@@ -8,7 +8,7 @@
     <!-- min version of sdk is android gingerbread 2.3 -->
     <uses-sdk
         android:minSdkVersion="10"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="18" />
 
     <!-- permissions to access network and check network state -->
     <uses-permission android:name="android.permission.INTERNET" />
