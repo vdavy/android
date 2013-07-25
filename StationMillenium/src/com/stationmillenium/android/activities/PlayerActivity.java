@@ -23,11 +23,9 @@ import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout.LayoutParams;
@@ -55,7 +53,7 @@ import com.stationmillenium.android.utils.Utils;
  * @author vincent
  *
  */
-public class PlayerActivity extends FragmentActivity {
+public class PlayerActivity extends ActionBarActivity {
 
 	
 	/**
@@ -230,10 +228,8 @@ public class PlayerActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player_activity);
 		
-		//set up action bar - if available
-		if (Utils.isAPILevel14Available()) {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-		}
+		//set up action bar
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		//get widgets
 		//image switcher
@@ -264,19 +260,6 @@ public class PlayerActivity extends FragmentActivity {
 					
 		//set the volume stream will be controled but pressing buttons
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-	}
-	
-	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			Log.d(TAG, "Navigate up");
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-
-		default:
-			return super.onMenuItemSelected(featureId, item);
-		}
 	}
 	
 	@Override
@@ -568,7 +551,6 @@ public class PlayerActivity extends FragmentActivity {
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		
 
 		currentTitleTextView.setText(savedInstanceState.getCharSequence(CURRENT_TITLE_SAVE));
 		currentTimeTextView.setText(savedInstanceState.getCharSequence(CURRENT_TIME_SAVE));

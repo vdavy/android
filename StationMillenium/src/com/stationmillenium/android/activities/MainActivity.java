@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +22,7 @@ import com.stationmillenium.android.utils.Utils;
  * @author vincent
  *
  */
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends ActionBarActivity {
 
 	private static final String TAG = "MainActivity";
 	
@@ -79,37 +79,6 @@ public class MainActivity extends FragmentActivity {
 		}
 		
 	}
-
-//	@SuppressLint("NewApi")
-//	@Override
-//	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//		//change action bar title
-//		if (Utils.isAPILevel14Available()) {
-//			String actionBarTitle = getResources().getStringArray(R.array.menu_array)[position];
-//			getActionBar().setTitle(actionBarTitle);
-//		}
-//		
-//		//manage list
-//		leftDrawer.setItemChecked(position, true);
-//		drawerLayout.closeDrawer(leftDrawer);
-//		
-//		//navigate or swap fragments
-//		switch (position) {
-//		case 1:
-//			
-//			break;
-//
-//		default:
-//			HomeFragment2 homeFragment2 = new HomeFragment2();
-//			getSupportFragmentManager()
-//				.beginTransaction()
-//				.setCustomAnimations(R.anim.change_fragment_fadein, R.anim.change_fragment_fadeout,
-//						R.anim.change_fragment_fadein, R.anim.change_fragment_fadeout)
-//				.replace(R.id.content_frame, homeFragment2)
-//				.commit();
-//			break;
-//		}
-//	}
 
 	/**
 	 * Start the {@link PlayerActivity}
