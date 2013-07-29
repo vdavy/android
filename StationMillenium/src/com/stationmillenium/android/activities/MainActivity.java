@@ -68,16 +68,12 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		//classic menu case
-		switch (item.getItemId()) {
-		case R.id.action_settings:
+		if (item.getItemId() == R.id.action_settings) {
 			Intent settingsIntent = new Intent(this, SharedPreferencesActivity.class);
 			startActivity(settingsIntent);
 			return true;
-
-		default:
+		} else 
 			return super.onOptionsItemSelected(item);
-		}
-		
 	}
 
 	/**
