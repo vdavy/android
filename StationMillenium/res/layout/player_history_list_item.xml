@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="left">
+    android:gravity="left"
+    android:background="@drawable/home_item_background_shape">
 
     <ImageView
         android:id="@+id/player_history_item_icon"
