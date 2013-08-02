@@ -281,7 +281,7 @@ public class PlayerActivity extends ActionBarActivity {
 		if (historyListValues != null)
 			historyList.setAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.player_history_list_item, R.id.player_history_item_text, historyListValues));
 		else
-			historyList.setAdapter(null);
+			historyList.setAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.player_history_list_item, R.id.player_history_item_text, new String[]{"", "", "", "", ""}));
 	
 		//if the player is not running
 		if (!Utils.isMediaPlayerServiceRunning(getApplicationContext())) {
@@ -489,7 +489,7 @@ public class PlayerActivity extends ActionBarActivity {
 		//player has been stopped - reinit views
 		imageSwitcher.setImageResource(R.drawable.player_default_image);
 		currentTitleTextView.setText("");
-		historyList.setAdapter(null);
+		historyList.setAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.player_history_list_item, R.id.player_history_item_text, new String[]{"", "", "", "", ""}));
 		playButton.setVisibility(View.VISIBLE);
 		pauseButton.setVisibility(View.GONE);
 		stopButton.setVisibility(View.GONE);

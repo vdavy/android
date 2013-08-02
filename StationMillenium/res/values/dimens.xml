@@ -18,5 +18,13 @@
     <dimen name="widget_buttons_top_right_radius">5dp</dimen>
     <dimen name="widget_buttons_bottom_left_radius">5dp</dimen>
     <dimen name="widget_buttons_bottom_right_radius">0dp</dimen>
-    
+
+    <!-- dimensions for player layout -->
+    <dimen name="player_current_title_text">20sp</dimen>
+    <dimen name="current_title_text">18sp</dimen>
+    <dimen name="player_last_5_titles_margin_top">30dp</dimen>
+    <dimen name="player_last_5_titles_text_size">15sp</dimen>
+	<dimen name="player_history_item_text">12sp</dimen>
+	<dimen name="player_list_divider_height">4dp</dimen>
+	
 </resources>
