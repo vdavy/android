@@ -3,7 +3,8 @@
     android:id="@+id/player_history_list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
     android:listSelector="@android:color/transparent"
     android:divider="@android:color/transparent"
-    android:dividerHeight="2dp" />
+    android:dividerHeight="@dimen/player_list_divider_height" />

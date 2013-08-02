@@ -11,6 +11,7 @@
     
     <!-- player texts -->
     <string name="player_currently_playing">Actuellement à l\'antenne</string>
+    <string name="player_last_played_titles"><u><b>Les 5 derniers titres diffusés :</b></u></string>
     <string name="player_network_unavailable">Pas de connexion à Internet</string>
     <string name="player_network_error">Erreur réseau</string>
     <string name="player_current_title">%1$s - %2$s</string>
