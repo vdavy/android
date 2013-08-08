@@ -10,4 +10,17 @@
     <string name="player_connection_request_method">GET</string>
     <string name="player_image_url_root">http://www.station-millenium.com/coverart</string>
     
+    <!-- default values for replay part -->
+    <string name="replay_url">http://www.station-millenium.com/replay/</string>
+        
+    <!-- antenna grid -->
+	<string name="antenna_grid_image_url">http://www.station-millenium.com/wp-millenium/wp-content/uploads/2013/08/grille-programmes-android.jpg</string>
+
+	<!-- links -->
+	<string name="tweeter_user_name">millenium22</string>
+	<string name="facebook_internal_url">fb://page/132025813602837</string>
+	<string name="facebook_web_url">https://www.facebook.com/stationmillenium</string>
+	<string name="twitter_internal_url">twitter://user?screen_name=millenium22</string>
+	<string name="twitter_web_url">https://www.twitter.com/millenium22</string>
+	
 </resources>

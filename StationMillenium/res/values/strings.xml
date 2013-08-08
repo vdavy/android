@@ -5,6 +5,9 @@
     <string name="app_name">Station Millenium</string>
     <string name="player_activity_title">Player Live Millenium</string>
 	<string name="preferences_activity_title">Paramètres</string>
+    <string name="replay_activity_title">Le replay</string>
+    <string name="antenna_grid_activity_title">La grille des programmes</string>
+    <string name="links_activity_title">Les liens Millenium</string>
     
     <!-- menu entries -->
     <string name="action_settings">Paramètres</string>
@@ -49,5 +52,6 @@
 	
 	<!-- other resources -->
 	<string name="empty_string"></string>
+	<string name="webview_error">Erreur sur le replay : %1$s</string>
 	
 </resources>
