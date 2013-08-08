@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_background" >
+
+    <Button 
+        android:id="@+id/open_facebook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="facebook"/>
+    
+    <Button 
+        android:id="@+id/open_twitter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/open_facebook"
+        android:text="twitter"/>
+    
+    <ProgressBar
+        android:id="@id/android:empty"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="@dimen/player_list_divider_height" />
+
+</RelativeLayout>

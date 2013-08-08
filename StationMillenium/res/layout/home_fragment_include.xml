@@ -54,6 +54,7 @@
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/home_item_background"
                 android:contentDescription="@string/empty_string"
+                android:onClick="displayAntennaGridFragment"
                 android:padding="8dp"
                 android:src="@drawable/ic_home_antenna" />
         </LinearLayout>
@@ -73,6 +74,7 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/home_item_background"
                 android:contentDescription="@string/empty_string"
+                android:onClick="displayReplayFragment"
                 android:padding="8dp"
                 android:src="@drawable/ic_home_replay" />
 
@@ -82,6 +84,7 @@
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/home_item_background"
                 android:contentDescription="@string/empty_string"
+                android:onClick="displayLinksFragment"
                 android:padding="8dp"
                 android:src="@drawable/ic_home_links" />
         </LinearLayout>
