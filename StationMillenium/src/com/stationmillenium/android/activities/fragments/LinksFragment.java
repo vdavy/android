@@ -25,7 +25,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.stationmillenium.android.R;
@@ -170,18 +170,33 @@ public class LinksFragment extends ListFragment {
 		//set title and activity full screen
 		((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.links_activity_title);
 		
-		//social networks buttons
-		((Button) getView().findViewById(R.id.open_facebook)).setOnClickListener(new OnClickListener() {			
+		//social networks buttons : add links
+		//facebook
+		((ImageView) getView().findViewById(R.id.open_facebook)).setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
+				Log.d(TAG, "Open facebook app");
 				openSocialNetwork(R.string.facebook_internal_url, R.string.facebook_web_url);
 			}
 		});
 		
-		((Button) getView().findViewById(R.id.open_twitter)).setOnClickListener(new OnClickListener() {			
+		//twitter
+		((ImageView) getView().findViewById(R.id.open_twitter)).setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
+				Log.d(TAG, "Open twitter app");
 				openSocialNetwork(R.string.twitter_internal_url, R.string.twitter_web_url);
+			}
+		});
+		
+		//web site
+		((ImageView) getView().findViewById(R.id.open_web_site)).setOnClickListener(new OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG, "Open web site");
+				String url = getString(R.string.web_site_url);
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+				startActivity(browserIntent);
 			}
 		});
 	}
