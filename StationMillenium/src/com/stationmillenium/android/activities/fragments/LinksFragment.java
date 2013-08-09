@@ -51,6 +51,7 @@ public class LinksFragment extends ListFragment {
 	private class TweetsLoader extends AsyncTask<String, Void, List<TweetItem>> {
 
 		private static final String TAG = "TweetsLoader";
+		private static final int MAX_TWEETS = 6;
 
 		//references
 		private String consumerKey;
@@ -92,6 +93,9 @@ public class LinksFragment extends ListFragment {
 						tweetURL = status.getURLEntities()[0].getURL();
 					
 					tweetItemList.add(new TweetItem(status.getText(), tweetURL)); //add to list
+					
+					if (tweetItemList.size() >= MAX_TWEETS) //limit tweets list
+						break;
 				}
 				
 				Log.d(TAG, "Gathered tweets list : " + tweetItemList);
