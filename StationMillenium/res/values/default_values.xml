@@ -22,5 +22,6 @@
 	<string name="facebook_web_url">https://www.facebook.com/stationmillenium</string>
 	<string name="twitter_internal_url">twitter://user?screen_name=millenium22</string>
 	<string name="twitter_web_url">https://www.twitter.com/millenium22</string>
+	<string name="web_site_url">http://www.station-millenium.com</string>
 	
 </resources>

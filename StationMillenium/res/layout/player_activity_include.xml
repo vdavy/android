@@ -148,7 +148,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/player_progress_bar"
                     android:gravity="center"
-                    android:textColor="#f0ffffff"
+                    android:textColor="#ff1887df"
                     android:textSize="30sp"
                     android:typeface="monospace" />
             </RelativeLayout>
