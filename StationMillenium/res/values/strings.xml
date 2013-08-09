@@ -50,6 +50,9 @@
 	<string name="preferences_player_autostart">Démarrer la lecture automatiquement</string>
 	<string name="preferences_player_autostart_summary">Démarrer la lecture de la radio automatiquement lors de l\'affichage du player</string>
 	
+	<!-- links -->
+	<string name="links_latest_news"><u><b>Dernières news</b></u></string>
+	
 	<!-- other resources -->
 	<string name="empty_string"></string>
 	<string name="webview_error">Erreur sur le replay : %1$s</string>
