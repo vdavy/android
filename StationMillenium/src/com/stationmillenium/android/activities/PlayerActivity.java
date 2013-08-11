@@ -219,6 +219,7 @@ public class PlayerActivity extends ActionBarActivity {
 	private ImageButton pauseButton;
 	private ImageButton stopButton;
 	private ProgressBar progressBar;
+	private TextView playerLoadingTextView;
 	private TextView currentTimeTextView;
 	
 	@SuppressLint("NewApi")
@@ -256,6 +257,7 @@ public class PlayerActivity extends ActionBarActivity {
 		pauseButton = (ImageButton) findViewById(R.id.pause_button);
 		stopButton = (ImageButton) findViewById(R.id.stop_button);
 		progressBar = (ProgressBar) findViewById(R.id.player_progress_bar);
+		playerLoadingTextView = (TextView) findViewById(R.id.player_loading);
 		currentTimeTextView = (TextView) findViewById(R.id.player_current_time);
 					
 		//set the volume stream will be controled but pressing buttons
@@ -445,6 +447,8 @@ public class PlayerActivity extends ActionBarActivity {
 	 */
 	private void playerBuffering() {
 		progressBar.setVisibility(View.VISIBLE);
+		playerLoadingTextView.setVisibility(View.VISIBLE);
+		currentTimeTextView.setText("");
 		playButton.setVisibility(View.GONE);
 		pauseButton.setClickable(false);
 		pauseButton.setVisibility(View.VISIBLE);
@@ -456,6 +460,8 @@ public class PlayerActivity extends ActionBarActivity {
 	 */
 	private void playerPlaying() {
 		progressBar.setVisibility(View.GONE);
+		playerLoadingTextView.setVisibility(View.GONE);
+		currentTimeTextView.setText("");
 		stopButton.setVisibility(View.VISIBLE);
 		pauseButton.setClickable(true);
 		pauseButton.setVisibility(View.VISIBLE);
@@ -494,6 +500,7 @@ public class PlayerActivity extends ActionBarActivity {
 		pauseButton.setVisibility(View.GONE);
 		stopButton.setVisibility(View.GONE);
 		progressBar.setVisibility(View.GONE);
+		playerLoadingTextView.setVisibility(View.GONE);
 		currentTimeTextView.setText("");
 		
 		//reinit local vars too

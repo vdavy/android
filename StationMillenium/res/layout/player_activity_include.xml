@@ -142,6 +142,19 @@
                     android:visibility="gone" />
 
                 <TextView
+                    android:id="@+id/player_loading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/player_progress_bar"
+                    android:gravity="center"
+                    android:text="@string/player_loading"
+                    android:textColor="#ff1887df"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    android:layout_marginLeft="2dp" />
+
+                <TextView
                     android:id="@+id/player_current_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

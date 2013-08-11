@@ -29,6 +29,7 @@
     <string name="player_pause_toast">Pause&#8230;</string>
     <string name="player_stop_toast">Stop&#8230;</string>
     <string name="player_notification_time">%1$s:%2$s</string>
+    <string name="player_loading">Chargement en cours...</string>
     
     <!-- playing notification -->
     <string name="notification_ticker_text">Lecture de la radio&#8230;</string>
