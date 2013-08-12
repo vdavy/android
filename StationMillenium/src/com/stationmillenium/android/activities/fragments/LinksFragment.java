@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import android.widget.ListView;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.MainActivity;
+import com.stationmillenium.android.activities.SharedPreferencesActivity.SharedPreferencesConstants;
 import com.stationmillenium.android.utils.TweetItem;
 import com.stationmillenium.android.utils.Utils;
 
@@ -52,7 +54,7 @@ public class LinksFragment extends ListFragment {
 	private class TweetsLoader extends AsyncTask<String, Void, List<TweetItem>> {
 
 		private static final String TAG = "TweetsLoader";
-		private static final int MAX_TWEETS = 6;
+		private static final String MAX_TWEETS_DEFAULT = "6";
 
 		//references
 		private String consumerKey;
@@ -87,6 +89,13 @@ public class LinksFragment extends ListFragment {
 	        	twitter.getOAuth2Token(); //load token 
 				ResponseList<twitter4j.Status> tweetsList = twitter.getUserTimeline(params[0]); //load tweets
 				
+				//max tweets to load
+				String maxTweetsString = PreferenceManager.getDefaultSharedPreferences(LinksFragment.this.getActivity())
+						.getString(SharedPreferencesConstants.TWEETS_DISPLAY_NUMBER, MAX_TWEETS_DEFAULT);
+				int maxTweets = Integer.parseInt(maxTweetsString);
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Max tweets to load : " + maxTweets);
+				
 				List<TweetItem> tweetItemList = new ArrayList<TweetItem>();
 				for (twitter4j.Status status : tweetsList) { //process each tweet
 					//load tweet url
@@ -96,7 +105,7 @@ public class LinksFragment extends ListFragment {
 					
 					tweetItemList.add(new TweetItem(status.getText(), tweetURL)); //add to list
 					
-					if (tweetItemList.size() >= MAX_TWEETS) //limit tweets list
+					if (tweetItemList.size() >= maxTweets) //limit tweets list
 						break;
 				}
 				
@@ -130,8 +139,6 @@ public class LinksFragment extends ListFragment {
 						+ " - array adapater : " + arrayAdapterRef.get());
 			}
 		}
-
-		
 
 	}
 
