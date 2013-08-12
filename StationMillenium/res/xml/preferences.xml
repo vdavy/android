@@ -2,8 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <!-- player preferences -->
-    <PreferenceCategory
-        android:title="@string/preferences_player_category" >
+    <PreferenceCategory android:title="@string/preferences_player_category" >
         <CheckBoxPreference
             android:defaultValue="false"
             android:icon="@drawable/ic_wifi_only"
@@ -17,6 +16,18 @@
             android:key="preferences_player_autostart"
             android:summary="@string/preferences_player_autostart_summary"
             android:title="@string/preferences_player_autostart" />
+    </PreferenceCategory>
+
+    <!-- player preferences -->
+    <PreferenceCategory android:title="@string/preferences_links" >
+        <ListPreference
+            android:defaultValue="6"
+            android:entries="@array/preferences_links_tweets_number_values"
+            android:entryValues="@array/preferences_links_tweets_number_values_internal"
+            android:key="preferences_tweets_display_number"
+            android:summary="@string/preferences_links_tweets_number_summary"
+            android:title="@string/preferences_links_tweets_number" >
+        </ListPreference>
     </PreferenceCategory>
 
 </PreferenceScreen>
