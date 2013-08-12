@@ -3,6 +3,8 @@
  */
 package com.stationmillenium.android.utils;
 
+import com.stationmillenium.android.BuildConfig;
+
 import android.app.backup.BackupAgentHelper;
 import android.app.backup.SharedPreferencesBackupHelper;
 import android.util.Log;
@@ -19,7 +21,8 @@ public class AppBackupAgent extends BackupAgentHelper {
 	
 	@Override
 	public void onCreate() {
-		Log.d(TAG, "Backup app data...");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Backup app data...");
 		SharedPreferencesBackupHelper spbm = new SharedPreferencesBackupHelper(this, SHARED_PREFERECES_KEY);
 		addHelper(SHARED_PREFERECES_KEY, spbm);
 	}

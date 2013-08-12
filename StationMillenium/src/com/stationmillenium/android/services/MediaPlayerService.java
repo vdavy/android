@@ -49,6 +49,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.activities.PlayerActivity.PlayerState;
@@ -77,31 +78,36 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d(TAG, "Received intent about pressed control buttons");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Received intent about pressed control buttons");
 			KeyEvent event = (KeyEvent) intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
 			if (event.getAction() == KeyEvent.ACTION_DOWN) {
 				switch (event.getKeyCode()) {
 				case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-					Log.d(TAG, "Play/pause button pressed");
+					if (BuildConfig.DEBUG)
+						Log.d(TAG, "Play/pause button pressed");
 					Intent playPauseIntent = new Intent(LocalIntents.PLAYER_PLAY_PAUSE.toString());
 					context.startService(playPauseIntent);
 					break;
 				
 				case KeyEvent.KEYCODE_MEDIA_PLAY:
-					Log.d(TAG, "Play button pressed");
+					if (BuildConfig.DEBUG)
+						Log.d(TAG, "Play button pressed");
 					Intent playIntent = new Intent(LocalIntents.PLAYER_PLAY.toString());
 					context.startService(playIntent);
 					break;
 	
 				
 				case KeyEvent.KEYCODE_MEDIA_PAUSE:
-					Log.d(TAG, "Pause button pressed");
+					if (BuildConfig.DEBUG)
+						Log.d(TAG, "Pause button pressed");
 					Intent pauseIntent = new Intent(LocalIntents.PLAYER_PAUSE.toString());
 					context.startService(pauseIntent);
 					break;
 					
 				case KeyEvent.KEYCODE_MEDIA_STOP:
-					Log.d(TAG, "Stop button pressed");
+					if (BuildConfig.DEBUG)
+						Log.d(TAG, "Stop button pressed");
 					Intent stopIntent = new Intent(LocalIntents.PLAYER_STOP.toString());
 					context.startService(stopIntent);
 					break;
@@ -124,7 +130,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d(TAG, "Received intent that audio becomes noisy");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Received intent that audio becomes noisy");
 			stopMediaPlayer();
 		}
 
@@ -215,7 +222,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d(TAG, "Update the current playing title");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Update the current playing title");
 			CurrentTitleDTO songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());
 			if (songData != null)
 				new AsyncImageLoader(songData).execute(songData.getCurrentSong().getImage());
@@ -256,7 +264,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 		 * @param mediaPlayer the {@link MediaPlayer} to make ref
 		 */
 		public static void setMediaPlayerReference(MediaPlayer mediaPlayer) {
-			Log.d(TAG, "Set the media player reference");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Set the media player reference");
 			mediaPlayerRef = new WeakReference<MediaPlayer>(mediaPlayer);
 		}
 		
@@ -332,14 +341,16 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 		@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 		@Override
 		public void handleMessage(Message msg) {
-			Log.d(TAG, "Start the MediaPlayerService");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Start the MediaPlayerService");
 			if (mediaPlayerServiceRef.get() != null) {
 				try {
 					mediaPlayerServiceRef.get().audioManager = (AudioManager) mediaPlayerServiceRef.get().getSystemService(Context.AUDIO_SERVICE);
 					int result = mediaPlayerServiceRef.get().audioManager.requestAudioFocus(mediaPlayerServiceRef.get(), AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 		
 					if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-						Log.d(TAG, "Audio focus request granted - start the stream");
+						if (BuildConfig.DEBUG)
+							Log.d(TAG, "Audio focus request granted - start the stream");
 		
 						if (Utils.isNetworkAvailable(mediaPlayerServiceRef.get().getApplicationContext())) { //check if network is up
 							try {
@@ -531,17 +542,20 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 			} else if (LocalIntents.PLAYER_STOP.toString().equals(intent.getAction()))
 				stopMediaPlayer();
 			else if (LocalIntents.PLAYER_OPEN.toString().equals(intent.getAction())) {
-				Log.d(TAG, "Open the player with data");
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Open the player with data");
 				playerActivityResumed = true; //player resumed at same time
 				Intent playerIntent = createPlayerActivityIntent();
 				startActivity(playerIntent);
 				
 			} else if (LocalIntents.PLAYER_ACTIVITY_PAUSE.toString().equals(intent.getAction())) {
-				Log.d(TAG, "Player activity paused - don't send intents");
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Player activity paused - don't send intents");
 				playerActivityResumed = false;
 				
 			} else if (LocalIntents.PLAYER_ACTIVITY_RESUME.toString().equals(intent.getAction())) {
-				Log.d(TAG, "Player activity resumed - send intents");
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Player activity resumed - send intents");
 				playerActivityResumed = true;
 				
 			} else {
@@ -562,21 +576,25 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 
 	@Override
 	public void onAudioFocusChange(int focusChange) {
-		Log.d(TAG, "Audio focus changed - process it...");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Audio focus changed - process it...");
 		switch (focusChange) {
 		case AudioManager.AUDIOFOCUS_GAIN:
-			Log.d(TAG, "Audio focus gain - start playing");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Audio focus gain - start playing");
 			audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, originalVolume, 0);
 			playMediaPlayer(this);
 			break;
 
 		case AudioManager.AUDIOFOCUS_LOSS:
-			Log.d(TAG, "Audio focus loss - stop playing");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Audio focus loss - stop playing");
 			stopMediaPlayer();
 			break;
 			
 		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-			Log.d(TAG, "Audio focus loss transient - pause playing");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Audio focus loss transient - pause playing");
 			pauseMediaPlayer(this);
 			break;
 			
@@ -592,7 +610,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 	
 	@Override
 	public void onPrepared(MediaPlayer mp) {
-		Log.d(TAG, "Player is ready - let's start");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Player is ready - let's start");
 		mp.start();
 		Toast.makeText(this, getResources().getString(R.string.player_play_toast), Toast.LENGTH_SHORT).show();
 		
@@ -611,7 +630,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 	 * Setup the {@link CurrentTitlePlayerService} timer
 	 */
 	private void setupCurrentTitlePlayerServiceTimer() {
-		Log.d(TAG, "Register curernt title service timer");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Register current title service timer");
 		updateCurrentTitleTimer = new Timer(UPDATE_CURRENT_TITLE_TIMER_NAME);
 		updateCurrentTitleTimer.schedule(new TimerTask() {
 			
@@ -629,7 +649,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 	 * @param context the {@link Context} to update notification
 	 */
 	private void playMediaPlayer(Context context) {
-		Log.d(TAG, "Play media player");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Play media player");
 		if ((mediaPlayer != null) && (!mediaPlayer.isPlaying()))
 			mediaPlayer.start();
 		
@@ -649,7 +670,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 	 * @param context the {@link Context} to update notification
 	 */
 	private void pauseMediaPlayer(Context context) {
-		Log.d(TAG, "Pause media player");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Pause media player");
 		if ((mediaPlayer != null) && (mediaPlayer.isPlaying()))
 			mediaPlayer.pause();
 		
@@ -668,7 +690,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 	 * Stop the player and stop service
 	 */
 	private void stopMediaPlayer() {
-		Log.d(TAG, "Stop the media player");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Stop the media player");
 		if ((mediaPlayer != null) && (mediaPlayer.isPlaying()))
 			mediaPlayer.stop();
 		Toast.makeText(this, getResources().getString(R.string.player_stop_toast), Toast.LENGTH_SHORT).show();
@@ -677,7 +700,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 		sendStateIntent(PlayerState.STOPPED);
 		
 		//stop service
-		Log.d(TAG, "Stop service");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Stop service");
 		stopForeground(true);
 		stopSelf();
 	}
@@ -749,7 +773,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 					mediaPlayer.stop();
 				
 				//stop service
-				Log.d(TAG, "Stop service");
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Stop service");
 				stopForeground(true);
 				stopSelf();
 			}
@@ -768,7 +793,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override
 	public void onDestroy() {
-		Log.d(TAG, "Destroying service");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Destroying service");
 		//release media player
 		if (mediaPlayer != null) {
 			mediaPlayer.release();
@@ -779,7 +805,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 		cancelCurrentTitleTimerServiceTimer();
 				
 		//free resources
-		Log.d(TAG, "Free handlers");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Free handlers");
 		if (audioManager != null) {
 			if (Utils.isAPILevel14Available()) 
 				audioManager.unregisterRemoteControlClient(remoteControlClient);
@@ -807,7 +834,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 	 * Cancel {@link CurrentTitlePlayerService} timer
 	 */
 	private void cancelCurrentTitleTimerServiceTimer() {
-		Log.d(TAG, "Cancel current title timer");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Cancel current title timer");
 		if (updateCurrentTitleTimer != null)
 			updateCurrentTitleTimer.cancel();
 	}
@@ -817,7 +845,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 	 * @throws IOException if any error occurs
 	 */
 	private void initMediaPlayer() throws IOException {
-		Log.d(TAG, "Init media player");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Init media player");
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		mediaPlayer.setDataSource(getResources().getString(R.string.player_stream_url));
@@ -838,11 +867,13 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 	@Override
 	public boolean onInfo(MediaPlayer mp, int what, int extra) {
 		if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-			Log.d(TAG, "Media player start buffering...");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Media player start buffering...");
 			sendStateIntent(PlayerState.BUFFERING);
 			return true;
 		} else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-			Log.d(TAG, "Media player end buffering...");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Media player end buffering...");
 			sendStateIntent(PlayerState.PLAYING);
 			return true;
 		}

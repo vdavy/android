@@ -12,6 +12,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.util.Log;
 import android.util.Xml;
 
+import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.dto.CurrentTitleDTO;
 import com.stationmillenium.android.dto.CurrentTitleDTO.Song;
 import com.stationmillenium.android.dto.CurrentTitleDTO.Song.ImageMetadata;
@@ -41,7 +42,8 @@ public class XMLCurrentTitleParser {
 	public XMLCurrentTitleParser(InputStream is) throws XMLParserException {
 		try {
 			//create the new parser
-			Log.d(TAG, "Create the XML parser");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Create the XML parser");
 			parser = Xml.newPullParser();
 	        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 	        parser.setInput(is, "ISO-8859-1");
@@ -56,7 +58,8 @@ public class XMLCurrentTitleParser {
 
 		} finally { //close the input stream
 			try {
-				Log.d(TAG, "Close input stream");
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Close input stream");
 				is.close();
 			} catch (IOException e) {
 				Log.w(TAG, "Error while closing XML input stream");
@@ -104,7 +107,8 @@ public class XMLCurrentTitleParser {
 	 * @throws IOException if any IO error occurs
 	 */
 	private void parseCurrentSong(CurrentTitleDTO dtoToFillIn) throws XmlPullParserException, IOException {
-		Log.d(TAG, "Pase the current song part");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Pase the current song part");
 		String availableValue = parser.getAttributeValue(ns, "available"); 
 		parser.require(XmlPullParser.START_TAG, ns, "currentSong"); //
 		while (parser.next() != XmlPullParser.END_TAG) { //process until the end
@@ -119,7 +123,8 @@ public class XMLCurrentTitleParser {
 		        if (name.equals("artist")) { //artist case
 		        	String artist = readTagText("artist");
 		        	if ((artist != null) && (!artist.equals(""))) {
-		        		Log.d(TAG, "Artist value : " + artist);
+		        		if (BuildConfig.DEBUG)
+		        			Log.d(TAG, "Artist value : " + artist);
 		        		if (dtoToFillIn.getCurrentSong() == null)
 		        			dtoToFillIn.setCurrentSong(new Song());
 		        		dtoToFillIn.getCurrentSong().setArtist(artist);
@@ -128,7 +133,8 @@ public class XMLCurrentTitleParser {
 		        } else if (name.equals("title")) { //title case      	
 		        	String title = readTagText("title");
 		        	if ((title != null) && (!title.equals(""))) {
-		        		Log.d(TAG, "Title value : " + title);
+		        		if (BuildConfig.DEBUG)
+		        			Log.d(TAG, "Title value : " + title);
 		        		if (dtoToFillIn.getCurrentSong() == null)
 		        			dtoToFillIn.setCurrentSong(new Song());
 		        		dtoToFillIn.getCurrentSong().setTitle(title);
@@ -153,13 +159,15 @@ public class XMLCurrentTitleParser {
 	 * @throws IOException if any IO error occurs
 	 */
 	private void parseLast5Songs(CurrentTitleDTO dtoToFillIn) throws XmlPullParserException, IOException {
-		Log.d(TAG, "Parse the last 5 songs");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Parse the last 5 songs");
 		parser.require(XmlPullParser.START_TAG, ns, "last5Songs"); //root tag
 		while (parser.next() != XmlPullParser.END_TAG) { //process until the end
 	        if (parser.getEventType() != XmlPullParser.START_TAG) { //if not the start tag, continue
 	            continue;
 	        }
-	        Log.d(TAG, "Last 5 songs list found");
+	        if (BuildConfig.DEBUG)
+	        	Log.d(TAG, "Last 5 songs list found");
 
 	        Song song = new Song();
 	        parser.require(XmlPullParser.START_TAG, ns, "song"); //song tag
@@ -167,7 +175,8 @@ public class XMLCurrentTitleParser {
 		        if (parser.getEventType() != XmlPullParser.START_TAG) { //if not the start tag, continue
 		            continue;
 		        }
-		        Log.d(TAG, "Song tag found");
+		        if (BuildConfig.DEBUG)
+		        	Log.d(TAG, "Song tag found");
 		        
 			    
 	        	//process the tag
@@ -175,21 +184,24 @@ public class XMLCurrentTitleParser {
 		        if (name.equals("artist")) { //artist case
 		        	String artist = readTagText("artist");
 		        	if ((artist != null) && (!artist.equals(""))) {
-		        		Log.d(TAG, "Artist value : " + artist);
+		        		if (BuildConfig.DEBUG)
+		        			Log.d(TAG, "Artist value : " + artist);
 		        		song.setArtist(artist);
 		        	}
 		        
 		        } else if (name.equals("title")) { //title case      	
 		        	String title = readTagText("title");
 		        	if ((title != null) && (!title.equals(""))) {
-		        		Log.d(TAG, "Title value : " + title);
+		        		if (BuildConfig.DEBUG)
+		        			Log.d(TAG, "Title value : " + title);
 		        		song.setTitle(title);
 		        	}
 		        }
 			}
 			
 			//add to history list
-	        Log.d(TAG, "Song to add to history list : " + song);
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Song to add to history list : " + song);
 	        dtoToFillIn.getHistory().add(song);
 		}
 	}
@@ -201,34 +213,39 @@ public class XMLCurrentTitleParser {
 	 * @throws IOException if any IO error occurs
 	 */
 	private void parseImageMetaData(CurrentTitleDTO dtoToFillIn) throws XmlPullParserException, IOException {
-		Log.d(TAG, "Parse the image meta data");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Parse the image meta data");
 		parser.require(XmlPullParser.START_TAG, ns, "image"); //root tag
 		while (parser.next() != XmlPullParser.END_TAG) { //process until the end
 	        if (parser.getEventType() != XmlPullParser.START_TAG) { //if not the start tag, continue
 	            continue;
 	        }
-	        Log.d(TAG, "Image tag found");
+	        if (BuildConfig.DEBUG)
+	        	Log.d(TAG, "Image tag found");
 	    
         	//process the tag
 	        String name = parser.getName();
 	        if (name.equals("path")) { //path case
 	        	String path = readTagText("path");
 	        	if ((path != null) && (!path.equals(""))) {
-	        		Log.d(TAG, "Path value : " + path);
+	        		if (BuildConfig.DEBUG)
+	        			Log.d(TAG, "Path value : " + path);
 	        		dtoToFillIn.getCurrentSong().getMetadata().setPath(path);
 	        	}
 	        
 	        } else if (name.equals("width")) { //width case      	
 	        	String width = readTagText("width");
 	        	if ((width != null) && (!width.equals(""))) {
-	        		Log.d(TAG, "Width value : " + width);
+	        		if (BuildConfig.DEBUG)
+	        			Log.d(TAG, "Width value : " + width);
 	        		dtoToFillIn.getCurrentSong().getMetadata().setWidth(width);
 	        	}
 	        
 	        } else if (name.equals("height")) { //height case      	
 	        	String height = readTagText("height");
 	        	if ((height != null) && (!height.equals(""))) {
-	        		Log.d(TAG, "Height value : " + height);
+	        		if (BuildConfig.DEBUG)
+	        			Log.d(TAG, "Height value : " + height);
 	        		dtoToFillIn.getCurrentSong().getMetadata().setHeight(height);
 	        	}
 	        }
@@ -251,7 +268,8 @@ public class XMLCurrentTitleParser {
 	    }
 	    parser.require(XmlPullParser.END_TAG, ns, tag);
 	    
-	    Log.d(TAG, "Read value for tag '" + tag + "' : " + result);
+	    if (BuildConfig.DEBUG)
+	    	Log.d(TAG, "Read value for tag '" + tag + "' : " + result);
 	    return result;
 	}
 }

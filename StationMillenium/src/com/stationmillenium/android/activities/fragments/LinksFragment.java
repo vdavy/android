@@ -28,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.MainActivity;
 import com.stationmillenium.android.utils.TweetItem;
@@ -72,7 +73,8 @@ public class LinksFragment extends ListFragment {
 
 		@Override
 		protected List<TweetItem> doInBackground(String... params) {
-			Log.d(TAG, "Load tweets...");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Load tweets...");
 
 			//build tweeter auth conf
 	        ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -98,7 +100,8 @@ public class LinksFragment extends ListFragment {
 						break;
 				}
 				
-				Log.d(TAG, "Gathered tweets list : " + tweetItemList);
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Gathered tweets list : " + tweetItemList);
 				return tweetItemList;
 				
 			} catch (Exception e) { //if any error occurs
@@ -112,7 +115,8 @@ public class LinksFragment extends ListFragment {
 		@Override
 		protected void onPostExecute(List<TweetItem> result) {
 			if ((result != null) && (arrayAdapterRef.get() != null)) {
-				Log.d(TAG, "Fill-in tweets list");
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Fill-in tweets list");
 				arrayAdapterRef.get().clear();
 				if (Utils.isAPILevel11Available())
 					arrayAdapterRef.get().addAll(result); //addAll available only in API level 11
@@ -146,7 +150,8 @@ public class LinksFragment extends ListFragment {
 		
 		//get saved array data if any available
 		if ((savedInstanceState != null) && (savedInstanceState.getSerializable(ARRAY_ADAPATER_BUNDLE) != null)) { 
-			Log.d(TAG, "Array data available on view creation");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Array data available on view creation");
 			Object[] tweetItemArray = (Object[]) savedInstanceState.getSerializable(ARRAY_ADAPATER_BUNDLE);
 			for (Object tweet : tweetItemArray)
 				arrayAdapter.add((TweetItem) tweet);
@@ -160,11 +165,13 @@ public class LinksFragment extends ListFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		Log.d(TAG, "Resuming links fragment");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Resuming links fragment");
 
 		//load tweets data if needed
 		if (getListAdapter().getCount() == 0) {
-			Log.d(TAG, "Launch latest tweets loading...");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Launch latest tweets loading...");
 			tweetsLoader = new TweetsLoader(getString(R.string.tweeter_consumer_key), 
 					getString(R.string.tweeter_consumer_secret), 
 					(ArrayAdapter<TweetItem>) getListAdapter());
@@ -179,7 +186,8 @@ public class LinksFragment extends ListFragment {
 		((ImageView) getView().findViewById(R.id.open_facebook)).setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "Open facebook app");
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Open facebook app");
 				openSocialNetwork(R.string.facebook_internal_url, R.string.facebook_web_url);
 			}
 		});
@@ -188,7 +196,8 @@ public class LinksFragment extends ListFragment {
 		((ImageView) getView().findViewById(R.id.open_twitter)).setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "Open twitter app");
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Open twitter app");
 				openSocialNetwork(R.string.twitter_internal_url, R.string.twitter_web_url);
 			}
 		});
@@ -197,7 +206,8 @@ public class LinksFragment extends ListFragment {
 		((ImageView) getView().findViewById(R.id.open_web_site)).setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "Open web site");
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Open web site");
 				String url = getString(R.string.web_site_url);
 				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 				startActivity(browserIntent);
@@ -207,9 +217,11 @@ public class LinksFragment extends ListFragment {
 
 	@Override
 	public void onPause() {
-		Log.d(TAG, "Pause links fragment");
+		if (BuildConfig.DEBUG)	
+			Log.d(TAG, "Pause links fragment");
 		if (tweetsLoader != null) {
-			Log.d(TAG, "Cancel the async tweets loader");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Cancel the async tweets loader");
 			tweetsLoader.cancel(true); //cancel loading if running
 		}
 		
@@ -220,7 +232,8 @@ public class LinksFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		//get tweet url
-		Log.d(TAG, "List item clicked - open URL");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "List item clicked - open URL");
 		TweetItem item = (TweetItem) l.getItemAtPosition(position);
 		String url = item.getTweetURL();
 		if (url != null) {
@@ -228,16 +241,18 @@ public class LinksFragment extends ListFragment {
 			   url = "http://" + url;
 			
 			//open url
-			Log.d(TAG, "URL to open : " + url);
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "URL to open : " + url);
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 			startActivity(browserIntent);
-		} else
+		} else if (BuildConfig.DEBUG)
 			Log.d(TAG, "No URL on this tweet");
 	}
 	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		Log.d(TAG, "Backup array adapter values...");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Backup array adapter values...");
 		List<TweetItem> tweetItemList = new ArrayList<TweetItem>();
 		for (int i = 0; i < getListAdapter().getCount(); i++) 
 			tweetItemList.add((TweetItem) getListAdapter().getItem(i));

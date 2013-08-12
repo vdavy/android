@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.activities.PlayerActivity.PlayerState;
@@ -63,7 +64,8 @@ public class WidgetProvider extends AppWidgetProvider {
 		@Override
 		protected void onPostExecute(Bitmap result) {
 			if (result != null) {
-				Log.d(TAG, "Update image view");
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Update image view");
 				RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 				remoteView.setImageViewBitmap(R.id.widget_image, result);
 				
@@ -79,7 +81,8 @@ public class WidgetProvider extends AppWidgetProvider {
 	
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-		Log.d(TAG, "Widget updating...");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Widget updating...");
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 		
@@ -112,7 +115,8 @@ public class WidgetProvider extends AppWidgetProvider {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.d(TAG, "Widget receiving intent : " + intent);
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Widget receiving intent : " + intent);
 		super.onReceive(context, intent);
 		if (LocalIntents.CURRENT_TITLE_UPDATED.toString().equals(intent.getAction())) {
 			CurrentTitleDTO songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());

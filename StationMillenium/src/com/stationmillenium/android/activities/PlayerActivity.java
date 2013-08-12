@@ -38,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher.ViewFactory;
 
+import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.SharedPreferencesActivity.SharedPreferencesConstants;
 import com.stationmillenium.android.dto.CurrentTitleDTO;
@@ -92,7 +93,8 @@ public class PlayerActivity extends ActionBarActivity {
 			@Override
 			protected void onPostExecute(Bitmap result) {
 				if ((imageSwitcherRef.get() != null) && (result != null)) {
-					Log.d(TAG, "Update image view");
+					if (BuildConfig.DEBUG)
+						Log.d(TAG, "Update image view");
 					imageSwitcherRef.get().setImageDrawable(new BitmapDrawable(getResources(), result));
 					currentTitleImage = result;
 				}
@@ -102,7 +104,8 @@ public class PlayerActivity extends ActionBarActivity {
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d(TAG, "Update title intent received - process...");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Update title intent received - process...");
 			CurrentTitleDTO songData = null; 
 			if ((intent != null) && (intent.getExtras() != null))
 				songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());
@@ -110,11 +113,13 @@ public class PlayerActivity extends ActionBarActivity {
 			if (songData != null) { //if data found
 				//update the image 
 				if (songData.getCurrentSong().getImage() != null) {
-					Log.d(TAG, "Image specified - update...");
+					if (BuildConfig.DEBUG)
+						Log.d(TAG, "Image specified - update...");
 					AsyncImageLoader ail = new AsyncImageLoader(imageSwitcher);
 					ail.execute(songData.getCurrentSong().getImage());
 				} else {
-					Log.d(TAG, "No image specified - use default");
+					if (BuildConfig.DEBUG)
+						Log.d(TAG, "No image specified - use default");
 					imageSwitcher.setImageResource(R.drawable.player_default_image);
 				}
 				
@@ -159,7 +164,7 @@ public class PlayerActivity extends ActionBarActivity {
 		protected void onPostExecute(Boolean result) {
 			if ((result != null) && (result))
 				startPlayer(null);
-			else
+			else if (BuildConfig.DEBUG)
 				Log.d(TAG, "Autostart disabled");
 		}
 		
@@ -225,7 +230,8 @@ public class PlayerActivity extends ActionBarActivity {
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "Create the activity");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Create the activity");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player_activity);
 		
@@ -266,7 +272,8 @@ public class PlayerActivity extends ActionBarActivity {
 	
 	@Override
 	protected void onResume() {
-		Log.d(TAG, "Resume player activity");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Resume player activity");
 		super.onResume();
 		if (currentTitleImage != null)
 			imageSwitcher.setImageDrawable(new BitmapDrawable(getResources(), currentTitleImage));
@@ -362,7 +369,8 @@ public class PlayerActivity extends ActionBarActivity {
 
 	@Override
 	protected void onPause() {
-		Log.d(TAG, "Pausing player activity");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Pausing player activity");
 		super.onPause();
 		
 		//cancel update title broadcast receiver
@@ -400,7 +408,8 @@ public class PlayerActivity extends ActionBarActivity {
 		Calendar newDate = Calendar.getInstance();
 		newDate.add(Calendar.SECOND, -REFRESH_TIMEOUT);
 		if ((lastTimeUpdated == null) || (newDate.after(lastTimeUpdated))) { //it's time for a refresh
-			Log.d(TAG, "Data refresh requested...");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Data refresh requested...");
 			Intent mediaPlayerIntent = new Intent(this, MediaPlayerService.class);
 			mediaPlayerIntent.setAction(LocalIntents.PLAYER_OPEN.toString());
 			startService(mediaPlayerIntent);
@@ -418,12 +427,14 @@ public class PlayerActivity extends ActionBarActivity {
 	 */
 	public void startPlayer(View view) {
 		//start player service
-		Log.d(TAG, "Play player button clicked");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Play player button clicked");
 		if (playerState == PlayerState.STOPPED) {
 			if (!Utils.isMediaPlayerServiceRunning(this)) {
 				if (!Utils.isWifiOnlyAndWifiNotConnected(this)) {
 					//start player service
-					Log.d(TAG, "Start media player service");
+					if (BuildConfig.DEBUG)
+						Log.d(TAG, "Start media player service");
 					Intent mediaPlayerIntent = new Intent(this, MediaPlayerService.class);
 					startService(mediaPlayerIntent);
 					
@@ -432,11 +443,12 @@ public class PlayerActivity extends ActionBarActivity {
 					Toast.makeText(this, getResources().getString(R.string.player_no_wifi), Toast.LENGTH_SHORT).show();
 				}
 				
-			} else
+			} else if (BuildConfig.DEBUG)
 				Log.d(TAG, "Media player service already started");
 			
 		} else {
-			Log.d(TAG, "Play the player");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Play the player");
 			Intent playPlayerIntent = new Intent(LocalIntents.PLAYER_PLAY.toString());
 			startService(playPlayerIntent);
 		}
@@ -473,7 +485,8 @@ public class PlayerActivity extends ActionBarActivity {
 	 * @param view the view which triggered event
 	 */
 	public void stopPlayer(View view) {
-		Log.d(TAG, "Stop player button clicked");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Stop player button clicked");
 		Intent stopPlayerIntent = new Intent(LocalIntents.PLAYER_STOP.toString());
 		startService(stopPlayerIntent);
 	}
@@ -483,7 +496,8 @@ public class PlayerActivity extends ActionBarActivity {
 	 * @param view the view which triggered event
 	 */
 	public void pausePlayer(View view) {
-		Log.d(TAG, "Pause player button clicked");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Pause player button clicked");
 		Intent pausePlayerIntent = new Intent(LocalIntents.PLAYER_PAUSE.toString());
 		startService(pausePlayerIntent);
 	}
@@ -519,25 +533,31 @@ public class PlayerActivity extends ActionBarActivity {
 	
 	@Override
 	protected void onNewIntent(Intent intent) {
-		Log.d(TAG, "Player state intent received : " + intent);
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Player state intent received : " + intent);
 		if (PlayerState.PAUSED.getAssociatedIntent().toString().equals(intent.getAction())) {
-			Log.d(TAG, "Pause player");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Pause player");
 			playerState = PlayerState.PAUSED;
 			
 		} else if (PlayerState.PLAYING.getAssociatedIntent().toString().equals(intent.getAction())) {
-			Log.d(TAG, "Playing player");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Playing player");
 			playerState = PlayerState.PLAYING;
 			
 		} else if (PlayerState.STOPPED.getAssociatedIntent().toString().equals(intent.getAction())) {
-			Log.d(TAG, "Stop player");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Stop player");
 			playerState = PlayerState.STOPPED;
 		
 		} else if (PlayerState.BUFFERING.getAssociatedIntent().toString().equals(intent.getAction())){
-			Log.d(TAG, "Buffering player");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Buffering player");
 			playerState = PlayerState.BUFFERING;
 			
 		} else if (LocalIntents.ON_PLAYER_OPEN.toString().equals(intent.getAction())) {
-			Log.d(TAG, "Open player with data");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Open player with data");
 			updateTitleBroadcastReceiver.onReceive(getApplicationContext(), intent);
 			playerState = (PlayerState) intent.getSerializableExtra(LocalIntentsData.CURRENT_STATE.toString());
 		}
@@ -545,7 +565,8 @@ public class PlayerActivity extends ActionBarActivity {
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		Log.d(TAG, "Save activity values...");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Save activity values...");
 		outState.putCharSequence(CURRENT_TITLE_SAVE, currentTitleTextView.getText());
 		outState.putCharSequence(CURRENT_TIME_SAVE, currentTimeTextView.getText());
 		outState.putSerializable(PLAYER_STATE_SAVE, playerState);

@@ -20,6 +20,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.dto.CurrentTitleDTO;
 import com.stationmillenium.android.exceptions.XMLParserException;
@@ -50,15 +51,18 @@ public class CurrentTitlePlayerService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		if (Utils.isNetworkAvailable(this)) { //is network ok ?
-			Log.d(TAG, "Network is available - get XML data...");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Network is available - get XML data...");
 			InputStream is = connectToURLSource(getResources().getString(R.string.player_current_song_url));
 			if (is != null) { //input stream ok
-				Log.d(TAG, "Input stream is OK - process it...");
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Input stream is OK - process it...");
 				try {
 					//get and parse XML data
 					XMLCurrentTitleParser currentTitleParser = new XMLCurrentTitleParser(is);
 					CurrentTitleDTO songDataDTO = currentTitleParser.parseXML();
-					Log.d(TAG, "Gathered song data : " + songDataDTO);
+					if (BuildConfig.DEBUG)
+						Log.d(TAG, "Gathered song data : " + songDataDTO);
 					
 					//process image if needed
 					if (songDataDTO.getCurrentSong().getMetadata() != null)
@@ -67,7 +71,8 @@ public class CurrentTitlePlayerService extends IntentService {
 					//send intent
 					Intent intentToSend = new Intent(LocalIntents.CURRENT_TITLE_UPDATED.toString());
 					intentToSend.putExtra(LocalIntentsData.CURRENT_TITLE.toString(), songDataDTO);
-					Log.d(TAG, "Send intent to update current title : " + intentToSend);
+					if (BuildConfig.DEBUG)
+						Log.d(TAG, "Send intent to update current title : " + intentToSend);
 					LocalBroadcastManager.getInstance(this).sendBroadcast(intentToSend);
 					sendBroadcast(intentToSend); //for the widget
 					
@@ -76,12 +81,14 @@ public class CurrentTitlePlayerService extends IntentService {
 				}
 				
 			} else { //error while getting input stream
-				Log.d(TAG, "No input stream - stopping service...");
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "No input stream - stopping service...");
 				Toast.makeText(this, getResources().getString(R.string.player_network_error), Toast.LENGTH_SHORT).show();
 			}
 				
 		} else {
-			Log.d(TAG, "Network is unavailable - stopping service...");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Network is unavailable - stopping service...");
 			Toast.makeText(this, getResources().getString(R.string.player_network_unavailable), Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -92,7 +99,8 @@ public class CurrentTitlePlayerService extends IntentService {
 	 * @return the {@link InputStream} of the connection
 	 */
 	private InputStream connectToURLSource(String urlText) {
-		Log.d(TAG, "Connect to server to get data");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Connect to server to get data");
 		try {
 			//set up connection
 			URL url = new URL(urlText);
@@ -101,11 +109,13 @@ public class CurrentTitlePlayerService extends IntentService {
 			connection.setReadTimeout(Integer.parseInt(getResources().getString(R.string.player_connection_read_timeout)));
 			connection.setRequestMethod(getResources().getString(R.string.player_connection_request_method));
 			connection.setRequestProperty("Content-Type", "text/xml; charset=utf-8");
-			Log.d(TAG, "Connection to use : " + connection);
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Connection to use : " + connection);
 			
 			//connect
 			connection.connect();
-			Log.d(TAG, "Response code : " + connection.getResponseCode());
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Response code : " + connection.getResponseCode());
 			return connection.getInputStream();
 			
 		} catch (MalformedURLException e) {
@@ -129,9 +139,13 @@ public class CurrentTitlePlayerService extends IntentService {
 		//check if the image exists in cache
 		File imageFile = new File(getCacheDir(), fileName);
 		if (!imageFile.exists()) {
-			Log.d(TAG, fileName + " does not exist - load it from server...");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, fileName + " does not exist - load it from server...");
+			
 			String imageUrl = getResources().getString(R.string.player_image_url_root) + songDataDTO.getCurrentSong().getMetadata().getPath();
-			Log.d(TAG, "Image URL : " + imageUrl);
+			
+			if (BuildConfig.DEBUG)	
+				Log.d(TAG, "Image URL : " + imageUrl);
 			InputStream imageIs = connectToURLSource(imageUrl);
 			
 			//write input stream data to file	
@@ -159,7 +173,8 @@ public class CurrentTitlePlayerService extends IntentService {
 					Log.w(TAG, "Errors during closing of image streams", e);
 				}
 			}
-			Log.d(TAG, "Image written to " + imageFile);
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Image written to " + imageFile);
 		}
 		
 		//image is cached - set the image file

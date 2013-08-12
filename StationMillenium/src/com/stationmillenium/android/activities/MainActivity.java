@@ -64,29 +64,7 @@ public class MainActivity extends ActionBarActivity {
 	        	.add(R.id.content_frame, new HomeFragment())
 	        	.commit();
 		}
-		
-        //twitter test 
-//        ConfigurationBuilder cb = new ConfigurationBuilder();
-//        cb.setOAuthConsumerKey("j20KwHQ4RMIsT5cab4avMA")
-//        	.setOAuthConsumerSecret("p1EapWpV2v4uqCUv3GnsNMbMSUdNAp4uiJTioWg1Rg")
-////        	.setOAuthAccessToken("523409073-T6riNlkLIz9zqFok9UR8X5ZjCFCTGaMKLgT37Fk")
-////        	.setOAuthAccessTokenSecret("iYGHimFhuYRKfFoDTqLFklhrebOjiWCMphO2K45WxIw");
-//        	.setApplicationOnlyAuthEnabled(true)
-//        	.setUseSSL(true);
-//        Twitter twitter = new TwitterFactory(cb.build()).getInstance();
-//        try {
-//        	twitter.getOAuth2Token(); //load token 
-//			ResponseList<Status> tweetsList = twitter.getUserTimeline("millenium22");
-//			
-//			if (tweetsList.get(0).getURLEntities().length > 0) //load tweet url
-//				tweetsList.get(0).getURLEntities()[0].getURL();
-//			
-//			Log.d(TAG, tweetsList.toString());
-//			
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+
 	}
     
 	@Override
@@ -111,7 +89,8 @@ public class MainActivity extends ActionBarActivity {
 	 * @param view the {@link View} originating the event
 	 */
 	public void startPlayer(View view) {
-		Log.d(TAG, "Launch player");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Launch player");
 		Intent playerIntent = new Intent(this, PlayerActivity.class);
 		if (!Utils.isMediaPlayerServiceRunning(getApplicationContext())) 
 			playerIntent.putExtra(LocalIntentsData.ALLOW_AUTOSTART.toString(), true);
@@ -124,7 +103,8 @@ public class MainActivity extends ActionBarActivity {
 	 * @param view the {@link View} originating the event
 	 */
 	public void displayReplayFragment(View view) {
-		Log.d(TAG, "Display the replay fragment");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Display the replay fragment");
 		displayFragment(new ReplayWebViewFragment());
 	}
 	
@@ -133,7 +113,8 @@ public class MainActivity extends ActionBarActivity {
 	 * @param view the {@link View} originating the event
 	 */
 	public void displayAntennaGridFragment(View view) {
-		Log.d(TAG, "Display the antenna grid fragment");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Display the antenna grid fragment");
 		displayFragment(new AntennaGridFragment());			
 	}
 	
@@ -142,7 +123,8 @@ public class MainActivity extends ActionBarActivity {
 	 * @param view the {@link View} originating the event
 	 */
 	public void displayLinksFragment(View view) {
-		Log.d(TAG, "Display the links fragment");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Display the links fragment");
 		displayFragment(new LinksFragment());			
 	}
 	

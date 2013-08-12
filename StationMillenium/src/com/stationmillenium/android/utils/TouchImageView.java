@@ -10,6 +10,8 @@
 
 package com.stationmillenium.android.utils;
 
+import com.stationmillenium.android.BuildConfig;
+
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -212,8 +214,9 @@ public class TouchImageView extends ImageView {
             int bmWidth = drawable.getIntrinsicWidth();
             int bmHeight = drawable.getIntrinsicHeight();
             
-            Log.d("bmSize", "bmWidth: " + bmWidth + " bmHeight : " + bmHeight);
-
+            if (BuildConfig.DEBUG)
+            	Log.d("bmSize", "bmWidth: " + bmWidth + " bmHeight : " + bmHeight);
+            
             float scaleX = (float) viewWidth / (float) bmWidth;
             float scaleY = (float) viewHeight / (float) bmHeight;
             scale = Math.min(scaleX, scaleY);
