@@ -70,7 +70,7 @@ public class SharedPreferencesActivity extends PreferenceActivity {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				int position = Integer.parseInt(newValue.toString()) - 1;
 				preference.setSummary(arrayValues[position]);
-				return false;
+				return true;
 			}
 		});
 		
