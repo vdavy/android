@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.MainActivity;
 
@@ -66,7 +67,8 @@ public class AntennaGridFragment extends Fragment {
 
 		@Override
 		protected Bitmap doInBackground(String... params) {
-			Log.d(TAG, "Load image...");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Load image...");
 
 			//cache image on disk
 			File imageFile = new File(getActivity().getCacheDir(), ANTENNA_GRID_IMAGE_FILE_NAME);
@@ -100,7 +102,8 @@ public class AntennaGridFragment extends Fragment {
 		@Override
 		protected void onPostExecute(Bitmap result) {
 			if ((result != null) && (imageViewRef.get() != null) && (progressBarRef.get() != null)) {
-				Log.d(TAG, "Set antenna grid image");
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Set antenna grid image");
 				progressBarRef.get().setVisibility(View.GONE);
 				imageViewRef.get().setImageBitmap(result);
 				imageToDisplay = result;
@@ -140,7 +143,8 @@ public class AntennaGridFragment extends Fragment {
 					Log.w(TAG, "Errors during closing of image streams", e);
 				}
 			}
-			Log.d(TAG, "Image written to " + imageFile);
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Image written to " + imageFile);
 		}
 
 
@@ -150,7 +154,8 @@ public class AntennaGridFragment extends Fragment {
 		 * @return the {@link InputStream} of the connection
 		 */
 		private InputStream connectToURLSource(String urlText) {
-			Log.d(TAG, "Connect to server to get image");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Connect to server to get image");
 			try {
 				//set up connection
 				URL url = new URL(urlText);
@@ -158,11 +163,13 @@ public class AntennaGridFragment extends Fragment {
 				connection.setConnectTimeout(Integer.parseInt(getResources().getString(R.string.player_connection_connect_timeout)));
 				connection.setReadTimeout(Integer.parseInt(getResources().getString(R.string.player_connection_read_timeout)));
 				connection.setRequestMethod(getResources().getString(R.string.player_connection_request_method));
-				Log.d(TAG, "Connection to use : " + connection);
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Connection to use : " + connection);
 
 				//connect
 				connection.connect();
-				Log.d(TAG, "Response code : " + connection.getResponseCode());
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Response code : " + connection.getResponseCode());
 				return connection.getInputStream();
 
 			} catch (MalformedURLException e) {
@@ -224,18 +231,21 @@ public class AntennaGridFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		Log.d(TAG, "Resuming antenna grid fragment");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Resuming antenna grid fragment");
 
 		//load image
 		ImageView imageView = (ImageView) getView().findViewById(R.id.antenna_grid_imageview);
 		ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.antenna_grid_progressbar);
 		if (imageToDisplay == null) {
-			Log.d(TAG, "Launch antenna grid image loading...");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Launch antenna grid image loading...");
 			imageLoader = new ImageLoader(imageView, progressBar);
 			imageLoader.execute(getString(R.string.antenna_grid_image_url));
 		
 		} else {
-			Log.d(TAG, "Image already loaded - display it...");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Image already loaded - display it...");
 			imageView.setImageBitmap(imageToDisplay);
 			progressBar.setVisibility(View.GONE);
 		}
@@ -246,9 +256,11 @@ public class AntennaGridFragment extends Fragment {
 
 	@Override
 	public void onPause() {
-		Log.d(TAG, "Pause antenna grid fragment");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Pause antenna grid fragment");
 		if (imageLoader != null) {
-			Log.d(TAG, "Cancel the async image loader");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Cancel the async image loader");
 			imageLoader.cancel(true); //cancel loading if running
 		}
 		

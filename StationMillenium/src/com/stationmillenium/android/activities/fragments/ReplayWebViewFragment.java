@@ -19,6 +19,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 
 /**
@@ -41,11 +42,13 @@ public class ReplayWebViewFragment extends Fragment {
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	public void onResume() {
-		Log.d(TAG, "Resuming replay webview fragment");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Resuming replay webview fragment");
 		super.onResume();
 
 		if (resetWebview) {
-			Log.d(TAG, "Init new webview");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Init new webview");
 			
 			//setup web view
 			WebView replayWebView = (WebView) getView().findViewById(R.id.replay_webview);
@@ -62,7 +65,8 @@ public class ReplayWebViewFragment extends Fragment {
 			//set the progress bar
 			replayWebView.setWebChromeClient(new WebChromeClient() {
 				public void onProgressChanged(WebView view, int progress) {
-					Log.d(TAG, "Page load progress : " + progress);
+					if (BuildConfig.DEBUG)
+						Log.d(TAG, "Page load progress : " + progress);
 					progressBar.setProgress(progress);
 					progressBar.setVisibility((progress == 100) ?  View.GONE : View.VISIBLE);
 						
@@ -81,7 +85,8 @@ public class ReplayWebViewFragment extends Fragment {
 			replayWebView.loadUrl(getString(R.string.replay_url));
 			
 		} else {
-			Log.d(TAG, "Resume webview");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Resume webview");
 			((WebView) getView().findViewById(R.id.replay_webview)).onResume();
 		}
 			
@@ -92,7 +97,8 @@ public class ReplayWebViewFragment extends Fragment {
 	@Override
 	public void onPause() {
 		//reset activity title
-		Log.d(TAG, "Pausing replay webview fragment");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Pausing replay webview fragment");
 		((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
 		((WebView) getView().findViewById(R.id.replay_webview)).onPause();
 		super.onPause();

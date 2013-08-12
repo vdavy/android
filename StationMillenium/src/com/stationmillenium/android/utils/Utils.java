@@ -12,6 +12,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.activities.SharedPreferencesActivity.SharedPreferencesConstants;
 import com.stationmillenium.android.services.MediaPlayerService;
 
@@ -58,17 +59,20 @@ public class Utils {
 			boolean networkConnected = false;
 			
 			//check state
-			Log.d(TAG_NETWORK_AVAILABLE, "Wifi only : " + wifiOnly + " - Network up : " + networkUp + " - Wifi type : " + wifiType);
+			if (BuildConfig.DEBUG)
+				Log.d(TAG_NETWORK_AVAILABLE, "Wifi only : " + wifiOnly + " - Network up : " + networkUp + " - Wifi type : " + wifiType);
 			if (wifiOnly) 
 				networkConnected = networkUp && wifiType;
 			else 
 				networkConnected = networkUp;
-			Log.d(TAG_NETWORK_AVAILABLE, "Network connected : " + networkConnected);
+			if (BuildConfig.DEBUG)
+				Log.d(TAG_NETWORK_AVAILABLE, "Network connected : " + networkConnected);
 			
 			return networkConnected;
 			
 		} else {
-			Log.d(TAG_NETWORK_AVAILABLE, "No network available");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG_NETWORK_AVAILABLE, "No network available");
 			return false;
 		}
 	}
@@ -86,7 +90,8 @@ public class Utils {
 		boolean networkUp = networkInfo.isConnected();
 		
 		//check state
-		Log.d(TAG_WIFI_ONLY_NOT_ACTIVATED, "Wifi only : " + wifiOnly + " - Network up : " + networkUp);
+		if (BuildConfig.DEBUG)
+			Log.d(TAG_WIFI_ONLY_NOT_ACTIVATED, "Wifi only : " + wifiOnly + " - Network up : " + networkUp);
 		return (wifiOnly && !networkUp);
 	}
 	

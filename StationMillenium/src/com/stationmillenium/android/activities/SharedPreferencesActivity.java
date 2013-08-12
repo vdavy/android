@@ -10,6 +10,7 @@ import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.utils.Utils;
 
@@ -39,7 +40,8 @@ public class SharedPreferencesActivity extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		//init view
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "Load preferences");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Load preferences");
 		addPreferencesFromResource(R.xml.preferences);
 
 		//set up action bar - if available
@@ -52,7 +54,8 @@ public class SharedPreferencesActivity extends PreferenceActivity {
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			Log.d(TAG, "Navigate up");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Navigate up");
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 
