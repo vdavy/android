@@ -24,6 +24,7 @@
             android:defaultValue="6"
             android:entries="@array/preferences_links_tweets_number_values"
             android:entryValues="@array/preferences_links_tweets_number_values_internal"
+            android:icon="@drawable/ic_tweets_number"
             android:key="preferences_tweets_display_number"
             android:summary="@string/preferences_links_tweets_number_summary"
             android:title="@string/preferences_links_tweets_number" >
