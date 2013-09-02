@@ -33,6 +33,7 @@ public class SharedPreferencesActivity extends PreferenceActivity {
 		String WIFI_ONLY = "preferences_player_wifi_only";
 		String AUTOSTART_RADIO = "preferences_player_autostart";
 		String TWEETS_DISPLAY_NUMBER = "preferences_tweets_display_number";
+		String PIWIK_TRACKING_ID = "piwik_tracking_id";
 	}
 
 
