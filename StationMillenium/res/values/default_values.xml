@@ -24,4 +24,8 @@
 	<string name="twitter_web_url">https://www.twitter.com/millenium22</string>
 	<string name="web_site_url">http://www.station-millenium.com</string>
 	
+	<!-- tracking URL -->
+	<string name="tracking_url_with_id">http://www.station-millenium.com/android-piwik-tracker.php?visitorId=</string>
+	<string name="tracking_url">http://www.station-millenium.com/android-piwik-tracker.php</string>	
+	
 </resources>
