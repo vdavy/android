@@ -28,4 +28,8 @@
 	<string name="tracking_url_with_id">http://www.station-millenium.com/android-piwik-tracker.php?visitorId=</string>
 	<string name="tracking_url">http://www.station-millenium.com/android-piwik-tracker.php</string>	
 	
+	<!-- cache management -->
+	<integer name="cache_size_max">3145728</integer><!-- 3 MB -->
+	<integer name="cache_size_to_reach_percent">75</integer><!-- cache size to reach when cleaning in percent -->
+	
 </resources>

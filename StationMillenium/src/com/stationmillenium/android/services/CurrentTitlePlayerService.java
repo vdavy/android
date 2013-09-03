@@ -5,6 +5,7 @@ package com.stationmillenium.android.services;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,6 +14,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -37,6 +42,7 @@ import com.stationmillenium.android.utils.XMLCurrentTitleParser;
 public class CurrentTitlePlayerService extends IntentService {
 
 	private static final String TAG = "CurrentTitlePlayerService";
+	private static final String FILENAME_PATTERN = "\\p{Alnum}{32}.png";
 
 	/**
 	 * Create a new player service
@@ -65,8 +71,10 @@ public class CurrentTitlePlayerService extends IntentService {
 						Log.d(TAG, "Gathered song data : " + songDataDTO);
 					
 					//process image if needed
-					if (songDataDTO.getCurrentSong().getMetadata() != null)
+					if (songDataDTO.getCurrentSong().getMetadata() != null) {
+						cleanupCache(); //clean up cache before adding new image
 						manageBitmapImageWithCache(songDataDTO);
+					}
 					
 					//send intent
 					Intent intentToSend = new Intent(LocalIntents.CURRENT_TITLE_UPDATED.toString());
@@ -180,5 +188,74 @@ public class CurrentTitlePlayerService extends IntentService {
 		//image is cached - set the image file
 		songDataDTO.getCurrentSong().setImage(imageFile);
 	}
-	
+
+	/**
+	 * Cleanup the app cache if cache size is too big
+	 */
+	private void cleanupCache() {
+		Log.d(TAG, "Start cache cleanup...");
+		
+		//get image files from cache
+		File[] cacheFiles = getCacheDir().listFiles(new FileFilter() {
+			@Override
+			public boolean accept(File pathname) {
+				return ((pathname != null) && (pathname.getName().matches(FILENAME_PATTERN)));
+			}
+		});
+		List<File> cacheFileList = Arrays.asList(cacheFiles);
+		Log.d(TAG, "Found cache files : " + cacheFileList);
+		
+		//compute cache size
+		long totalCacheSize = 0;
+		for (File cacheFile : cacheFileList) 
+			totalCacheSize += cacheFile.length();
+		Log.d(TAG, "Cache total size (KB) : " + (totalCacheSize / 1024));
+		
+		//is cache too big ?
+		if (totalCacheSize > getResources().getInteger(R.integer.cache_size_max)) {
+			Log.d(TAG, "Cache size too big - cleanup needed");
+			
+			//sort cache file list by last modified date 
+			Collections.sort(cacheFileList, new Comparator<File>() {
+				@Override
+				public int compare(File lhs, File rhs) {
+					if (lhs == null) //first file null
+						return -1;
+					else if (rhs == null) //second file null
+						return 1;
+					else if (lhs.length() < rhs.length()) //first file older than second
+						return -1;
+					else if (lhs.length() > rhs.length()) //second file older than first
+						return 1;
+					else //file have same age
+						return 0;
+				}
+			});
+			Log.d(TAG, "Sorted files by age : " + cacheFileList);
+			
+			//compute cache size to reach
+			long cacheSizeToReach = getResources().getInteger(R.integer.cache_size_max) * getResources().getInteger(R.integer.cache_size_to_reach_percent) / 100;
+			Log.d(TAG, "Cache size to reach (KB) : " + (cacheSizeToReach / 1024));
+			
+			//clean cache
+			for (File cacheFile : cacheFileList) {
+				long cacheFileSize = cacheFile.length(); //save length before file deletion
+				cacheFile.delete();
+				Log.d(TAG, "File deleted : " + cacheFile);
+				
+				//file deleted, so substract file length from cache
+				totalCacheSize -= cacheFileSize;
+				Log.d(TAG, "New cache size (KB) : " + (totalCacheSize / 1024));
+				
+				//check if cache size is now acceptable
+				if (totalCacheSize <= cacheSizeToReach) {
+					Log.d(TAG, "Cache size reached requested value - stop cleanup");
+					break;
+				} else
+					Log.d(TAG, "Requested size for cache not reached - continue cleanup");
+			}
+			
+		} else
+			Log.d(TAG, "Cache size not too big");
+	}
 }
