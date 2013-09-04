@@ -11,6 +11,7 @@
     
     <!-- menu entries -->
     <string name="action_settings">Paramètres</string>
+    <string name="action_reload_page">Recharger la page</string>
     
     <!-- player texts -->
     <string name="player_currently_playing">Actuellement à l\'antenne</string>

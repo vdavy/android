@@ -193,7 +193,8 @@ public class CurrentTitlePlayerService extends IntentService {
 	 * Cleanup the app cache if cache size is too big
 	 */
 	private void cleanupCache() {
-		Log.d(TAG, "Start cache cleanup...");
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Start cache cleanup...");
 		
 		//get image files from cache
 		File[] cacheFiles = getCacheDir().listFiles(new FileFilter() {
@@ -203,17 +204,21 @@ public class CurrentTitlePlayerService extends IntentService {
 			}
 		});
 		List<File> cacheFileList = Arrays.asList(cacheFiles);
-		Log.d(TAG, "Found cache files : " + cacheFileList);
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Found cache files : " + cacheFileList);
 		
 		//compute cache size
 		long totalCacheSize = 0;
 		for (File cacheFile : cacheFileList) 
 			totalCacheSize += cacheFile.length();
-		Log.d(TAG, "Cache total size (KB) : " + (totalCacheSize / 1024));
+		
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Cache total size (KB) : " + (totalCacheSize / 1024));
 		
 		//is cache too big ?
 		if (totalCacheSize > getResources().getInteger(R.integer.cache_size_max)) {
-			Log.d(TAG, "Cache size too big - cleanup needed");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Cache size too big - cleanup needed");
 			
 			//sort cache file list by last modified date 
 			Collections.sort(cacheFileList, new Comparator<File>() {
@@ -231,27 +236,34 @@ public class CurrentTitlePlayerService extends IntentService {
 						return 0;
 				}
 			});
-			Log.d(TAG, "Sorted files by age : " + cacheFileList);
+			
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Sorted files by age : " + cacheFileList);
 			
 			//compute cache size to reach
 			long cacheSizeToReach = getResources().getInteger(R.integer.cache_size_max) * getResources().getInteger(R.integer.cache_size_to_reach_percent) / 100;
-			Log.d(TAG, "Cache size to reach (KB) : " + (cacheSizeToReach / 1024));
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Cache size to reach (KB) : " + (cacheSizeToReach / 1024));
 			
 			//clean cache
 			for (File cacheFile : cacheFileList) {
 				long cacheFileSize = cacheFile.length(); //save length before file deletion
 				cacheFile.delete();
-				Log.d(TAG, "File deleted : " + cacheFile);
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "File deleted : " + cacheFile);
 				
 				//file deleted, so substract file length from cache
 				totalCacheSize -= cacheFileSize;
-				Log.d(TAG, "New cache size (KB) : " + (totalCacheSize / 1024));
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "New cache size (KB) : " + (totalCacheSize / 1024));
 				
 				//check if cache size is now acceptable
 				if (totalCacheSize <= cacheSizeToReach) {
-					Log.d(TAG, "Cache size reached requested value - stop cleanup");
+					if (BuildConfig.DEBUG)
+						Log.d(TAG, "Cache size reached requested value - stop cleanup");
+					
 					break;
-				} else
+				} else if (BuildConfig.DEBUG)
 					Log.d(TAG, "Requested size for cache not reached - continue cleanup");
 			}
 			
