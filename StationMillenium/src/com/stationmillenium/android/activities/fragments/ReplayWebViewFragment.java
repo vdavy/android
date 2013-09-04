@@ -10,6 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -32,6 +35,13 @@ public class ReplayWebViewFragment extends Fragment {
 	private final static String TAG = "ReplayWebViewFragment";
 	
 	private boolean resetWebview;
+	private WebView replayWebView;
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true); //set fragment has menu : http://developer.android.com/guide/components/fragments.html#ActionBar
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +61,7 @@ public class ReplayWebViewFragment extends Fragment {
 				Log.d(TAG, "Init new webview");
 			
 			//setup web view
-			WebView replayWebView = (WebView) getView().findViewById(R.id.replay_webview);
+			replayWebView = (WebView) getView().findViewById(R.id.replay_webview);
 			WebSettings webSettings = replayWebView.getSettings();
 			webSettings.setJavaScriptEnabled(true);
 			webSettings.setBuiltInZoomControls(true);
@@ -87,7 +97,7 @@ public class ReplayWebViewFragment extends Fragment {
 		} else {
 			if (BuildConfig.DEBUG)
 				Log.d(TAG, "Resume webview");
-			((WebView) getView().findViewById(R.id.replay_webview)).onResume();
+			replayWebView.onResume();
 		}
 			
 		//set title
@@ -102,6 +112,25 @@ public class ReplayWebViewFragment extends Fragment {
 		((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
 		((WebView) getView().findViewById(R.id.replay_webview)).onPause();
 		super.onPause();
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.replay_webview, menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_reload_page) { //reload web view
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Reload the web view");
+			
+			if (replayWebView != null)
+				replayWebView.reload();
+			return true;
+		} else 
+			return super.onOptionsItemSelected(item);
 	}
 	
 }
