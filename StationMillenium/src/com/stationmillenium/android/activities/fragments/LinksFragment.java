@@ -33,8 +33,8 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.MainActivity;
 import com.stationmillenium.android.activities.SharedPreferencesActivity.SharedPreferencesConstants;
-import com.stationmillenium.android.utils.TweetItem;
 import com.stationmillenium.android.utils.Utils;
+import com.stationmillenium.android.utils.dtos.TweetItem;
 
 /**
  * Links fragment

@@ -45,9 +45,9 @@ import com.stationmillenium.android.dto.CurrentTitleDTO;
 import com.stationmillenium.android.dto.CurrentTitleDTO.Song;
 import com.stationmillenium.android.services.MediaPlayerService;
 import com.stationmillenium.android.services.MediaPlayerService.MediaPlayerCurrentPositionGrabber;
-import com.stationmillenium.android.utils.LocalIntents;
-import com.stationmillenium.android.utils.LocalIntentsData;
 import com.stationmillenium.android.utils.Utils;
+import com.stationmillenium.android.utils.intents.LocalIntents;
+import com.stationmillenium.android.utils.intents.LocalIntentsData;
 
 /**
  * Activity to display the player

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.stationmillenium.android.utils;
+package com.stationmillenium.android.utils.xml;
 
 import java.io.IOException;
 import java.io.InputStream;

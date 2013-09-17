@@ -8,7 +8,7 @@
  * @see https://github.com/MikeOrtiz/TouchImageView/blob/master/src/com/example/touch/TouchImageView.java
  */
 
-package com.stationmillenium.android.utils;
+package com.stationmillenium.android.utils.views;
 
 import com.stationmillenium.android.BuildConfig;
 

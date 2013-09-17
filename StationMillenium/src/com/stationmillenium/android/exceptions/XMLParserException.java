@@ -3,7 +3,7 @@
  */
 package com.stationmillenium.android.exceptions;
 
-import com.stationmillenium.android.utils.XMLCurrentTitleParser;
+import com.stationmillenium.android.utils.xml.XMLCurrentTitleParser;
 
 /**
  * Exception for {@link XMLCurrentTitleParser}

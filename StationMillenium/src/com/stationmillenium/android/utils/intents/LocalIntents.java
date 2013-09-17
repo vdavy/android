@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.stationmillenium.android.utils;
+package com.stationmillenium.android.utils.intents;
 
 /**
  * Intents used in the app
@@ -22,7 +22,9 @@ public enum LocalIntents {
 	ON_PLAYER_PAUSE("ON_PLAYER_PAUSE"),
 	ON_PLAYER_STOP("ON_PLAYER_STOP"),
 	ON_PLAYER_BUFFERING("ON_PLAYER_BUFFERING"),
-	ON_PLAYER_OPEN("ON_PLAYER_OPEN");
+	ON_PLAYER_OPEN("ON_PLAYER_OPEN"),
+	SET_ALARM_TIME("SET_ALARM_TIME"),
+	ON_ALARM_TIME_ELAPSED("ON_ALARM_TIME_ELAPSED");
 	
 	private String intentValue;
 	

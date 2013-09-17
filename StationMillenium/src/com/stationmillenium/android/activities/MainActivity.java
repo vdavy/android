@@ -18,8 +18,8 @@ import com.stationmillenium.android.activities.fragments.AntennaGridFragment;
 import com.stationmillenium.android.activities.fragments.HomeFragment;
 import com.stationmillenium.android.activities.fragments.LinksFragment;
 import com.stationmillenium.android.activities.fragments.ReplayWebViewFragment;
-import com.stationmillenium.android.utils.LocalIntentsData;
 import com.stationmillenium.android.utils.Utils;
+import com.stationmillenium.android.utils.intents.LocalIntentsData;
 
 /**
  * Main activity : drawer manager and home  

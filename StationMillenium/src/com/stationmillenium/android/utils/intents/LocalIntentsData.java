@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.stationmillenium.android.utils;
+package com.stationmillenium.android.utils.intents;
 
 /**
  * Data keys to use in local intents 
