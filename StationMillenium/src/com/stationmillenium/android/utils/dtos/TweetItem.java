@@ -1,4 +1,4 @@
-package com.stationmillenium.android.utils;
+package com.stationmillenium.android.utils.dtos;
 
 import java.io.Serializable;
 

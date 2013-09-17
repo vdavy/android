@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stationmillenium.android"
     android:installLocation="auto"
-    android:versionCode="3"
-    android:versionName="1.0.0" >
+    android:versionCode="4"
+    android:versionName="1.1.0-beta" >
 
     <!-- min version of sdk is android gingerbread 2.3 -->
     <uses-sdk
@@ -61,7 +61,7 @@
             android:name=".activities.SharedPreferencesActivity"
             android:label="@string/preferences_activity_title"
             android:parentActivityName=".activities.MainActivity" >
-           <meta-data
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
 
@@ -99,7 +99,7 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-        
+
         <!-- broadcast recevier for the widget part -->
         <receiver android:name=".widgets.WidgetProvider" >
             <intent-filter>
@@ -115,6 +115,11 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget" />
         </receiver>
+
+        <!-- alarm service -->
+        <service
+            android:name=".services.AlarmService"
+            android:exported="false" />
     </application>
 
 </manifest>

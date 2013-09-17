@@ -29,10 +29,10 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.dto.CurrentTitleDTO;
 import com.stationmillenium.android.exceptions.XMLParserException;
-import com.stationmillenium.android.utils.LocalIntents;
-import com.stationmillenium.android.utils.LocalIntentsData;
 import com.stationmillenium.android.utils.Utils;
-import com.stationmillenium.android.utils.XMLCurrentTitleParser;
+import com.stationmillenium.android.utils.intents.LocalIntents;
+import com.stationmillenium.android.utils.intents.LocalIntentsData;
+import com.stationmillenium.android.utils.xml.XMLCurrentTitleParser;
 
 /**
  * Service to manage current title grabbering

@@ -26,9 +26,9 @@ import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.activities.PlayerActivity.PlayerState;
 import com.stationmillenium.android.dto.CurrentTitleDTO;
 import com.stationmillenium.android.services.MediaPlayerService;
-import com.stationmillenium.android.utils.LocalIntents;
-import com.stationmillenium.android.utils.LocalIntentsData;
 import com.stationmillenium.android.utils.Utils;
+import com.stationmillenium.android.utils.intents.LocalIntents;
+import com.stationmillenium.android.utils.intents.LocalIntentsData;
 
 /**
  * Class to manage the widget

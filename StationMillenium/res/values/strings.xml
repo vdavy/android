@@ -98,6 +98,39 @@
 	    <item name="19">19</item>
 	    <item name="20">20</item>
 	</string-array>
+	<string name="preferences_alarm_screen">Alarme</string>
+	<string name="preferences_alarm_screen_summary">Paramètres de l\'alarme</string>
+	<string name="preferences_alarm_enable">Activer l\'alarme</string>
+	<string name="preferences_alarm_enabled">Alarme activée</string>
+	<string name="preferences_alarm_disabled">Alarme désactivée</string>
+	<string name="preferences_alarm_repeat">Répétitions</string>
+	<string name="preferences_alarm_time">Heure</string>
+	<string name="preferences_alarm_set">Sauvegarder</string>
+	<string name="preferences_alarm_cancel">Annuler</string>
+	<string name="preferences_alarm_no_time">Heure non définie</string>
+	<string name="preferences_alarm_time_set">Heure définie : %1$s</string>
+	<string name="preferences_alarm_no_time">Heure non définie</string>
+	<string name="preferences_alarm_activation_days">Jours</string>
+	<string name="preferences_alarm_activation_days_no_selection">Aucun jour sélectionné</string>
+	<string name="preferences_alarm_activation_days_separator">,</string>
+	<string-array name="preferences_alarm_days">
+	    <item name="0">Lundi</item>
+	    <item name="1">Mardi</item>
+	    <item name="2">Mercredi</item>
+	    <item name="3">Jeudi</item>
+	    <item name="4">Vendredi</item>
+	    <item name="5">Samedi</item>
+	    <item name="6">Dimanche</item>
+	</string-array>
+	<string-array name="preferences_alarm_days_values">
+	    <item name="0">0</item>
+	    <item name="1">1</item>
+	    <item name="2">2</item>
+	    <item name="3">3</item>
+	    <item name="4">4</item>
+	    <item name="5">5</item>
+	    <item name="6">6</item>
+	</string-array>
 	
 	<!-- links -->
 	<string name="links_latest_news"><u><b>Dernières news</b></u></string>
@@ -105,5 +138,10 @@
 	<!-- other resources -->
 	<string name="empty_string"></string>
 	<string name="webview_error">Erreur sur le replay : %1$s</string>
+	
+	<!-- alarm -->
+	<string name="alarm_set">Alarme activée %1$s prochain à %2$sh%3$s</string>
+	<string name="alarm_set_same_day">Alarme activée à %1$sh%2$s</string>
+	<string name="alarm_triggered">Alarme Station Millenium déclenchée</string>
 	
 </resources>

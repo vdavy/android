@@ -2,39 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:millenium="http://schemas.android.com/apk/res/com.stationmillenium.android" >
 
-    <!-- alarm preferences -->
-    <PreferenceScreen
-        android:icon="@drawable/ic_alarm"
-        android:title="@string/preferences_alarm_screen"
-        android:summary="@string/preferences_alarm_screen_summary" >
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:icon="@drawable/ic_alarm"
-            android:key="preferences_alarm_enabled"
-            android:summaryOff="@string/preferences_alarm_disabled"
-            android:summaryOn="@string/preferences_alarm_enabled"
-            android:title="@string/preferences_alarm_enable" />
-
-        <!-- alarm repetitions preferences -->
-        <PreferenceCategory android:title="@string/preferences_alarm_repeat" >
-
-            <!-- alarm hour preference -->
-            <com.stationmillenium.android.utils.preferences.TimePreference
-                android:icon="@drawable/ic_alarm_time"
-                android:key="preferences_alarm_time"
-                android:title="@string/preferences_alarm_time" />
-
-            <!-- alarm days repetition preferences -->
-            <MultiSelectListPreference
-                android:entries="@array/preferences_alarm_days"
-                android:entryValues="@array/preferences_alarm_days_values"
-                android:icon="@drawable/ic_alarm_calendar"
-                android:key="preferences_alarm_days"
-                android:title="@string/preferences_alarm_activation_days" />
-        </PreferenceCategory>
-    </PreferenceScreen>
-
     <!-- player preferences -->
     <PreferenceCategory android:title="@string/preferences_player_category" >
         <CheckBoxPreference
@@ -62,6 +29,34 @@
             android:key="preferences_tweets_display_number"
             android:summary="@string/preferences_links_tweets_number_summary"
             android:title="@string/preferences_links_tweets_number" />
+    </PreferenceCategory>
+
+    <!-- alarm preferences -->
+    <PreferenceCategory
+        android:icon="@drawable/ic_alarm"
+        android:title="@string/preferences_alarm_screen" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_alarm"
+            android:key="preferences_alarm_enabled"
+            android:summaryOff="@string/preferences_alarm_disabled"
+            android:summaryOn="@string/preferences_alarm_enabled"
+            android:title="@string/preferences_alarm_enable" />
+
+        <!-- alarm hour preference -->
+        <com.stationmillenium.android.utils.preferences.TimePreference
+            android:icon="@drawable/ic_alarm_time"
+            android:key="preferences_alarm_time"
+            android:title="@string/preferences_alarm_time" />
+
+        <!-- alarm days repetition preferences -->
+        <com.stationmillenium.android.utils.preferences.ListPreferenceMultiSelect
+            android:entries="@array/preferences_alarm_days"
+            android:entryValues="@array/preferences_alarm_days_values"
+            android:icon="@drawable/ic_alarm_calendar"
+            android:key="preferences_alarm_days_string"
+            android:title="@string/preferences_alarm_activation_days"
+            millenium:separator="|" />
     </PreferenceCategory>
 
 </PreferenceScreen>
