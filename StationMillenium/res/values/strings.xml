@@ -143,5 +143,7 @@
 	<string name="alarm_set">Alarme activée %1$s prochain à %2$sh%3$s</string>
 	<string name="alarm_set_same_day">Alarme activée à %1$sh%2$s</string>
 	<string name="alarm_triggered">Alarme Station Millenium déclenchée</string>
+	<string name="alarm_already_triggered">Alarme Station Millenium : radio déjà en cours de lecture</string>
+	<string name="alarm_no_time_set">Pas d\'heure définie pour l\'alarme</string>
 	
 </resources>
