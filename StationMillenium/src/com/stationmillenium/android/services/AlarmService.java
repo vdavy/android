@@ -40,9 +40,9 @@ public class AlarmService extends IntentService {
 
 	private static final String TAG = "AlarmService";
 	private static final String ALARM_DAYS_LIST_STRING_SEPARATOR = "\\|";
-	
+
 	private Handler handler;
-	
+
 	/**
 	 * Create a new {@link AlarmService}
 	 */
@@ -55,7 +55,7 @@ public class AlarmService extends IntentService {
 		super.onCreate();
 		handler = new Handler(); //create handler to display toasts
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see android.app.IntentService#onHandleIntent(android.content.Intent)
 	 */
@@ -65,75 +65,86 @@ public class AlarmService extends IntentService {
 		if (LocalIntents.SET_ALARM_TIME.toString().equals(intent.getAction())) {
 			if (BuildConfig.DEBUG)
 				Log.d(TAG, "Set alarm time intent received : " + intent);
-			
+
 			if (preferences.getBoolean(SharedPreferencesConstants.ALARM_ENABLED, false)) { //check if alarm is enabled
 				//get repeat days
 				int[] repeatDays = getRepeatDays(preferences); 
 				if (BuildConfig.DEBUG)
 					Log.d(TAG, "Alarm repeat days : " + repeatDays);
-				
+
 				Calendar alarmTime = getAlarmTimeCalendar(preferences); //get the alarm time set in a calendar
-				if (repeatDays.length == 0) { //no repeat days case
-					if (BuildConfig.DEBUG)
-						Log.d(TAG, "No repeat days for alarm");
-					
-					//if alarm time elapsed : set it for tomorrow
-					if (Calendar.getInstance().after(alarmTime)) {
+				if (alarmTime != null) { //if alarm time is set
+					if (repeatDays.length == 0) { //no repeat days case
 						if (BuildConfig.DEBUG)
-							Log.d(TAG, "Alarm time elapsed - set if for next day");
-						alarmTime.add(Calendar.DATE, 1);
-					} 
-					
-					//program alarm
-					programAlarm(alarmTime);
-					
-				} else { //process alarm with repeat days
-					if (BuildConfig.DEBUG)
-						Log.d(TAG, "Alarm with repeat days not yet implemented");
-					int dayIndex = convertCalendarDayIndexToArrayIndex(alarmTime); //convert the day index
-					int nextRepeatDay = -1;
-					for (int day : repeatDays) { //check each day
-						if ((day > dayIndex) 
-								|| ((day == dayIndex) && (Calendar.getInstance().before(alarmTime)))) { //if we found the next day for repeat
-							nextRepeatDay = day; //save it and exit
-							break;
+							Log.d(TAG, "No repeat days for alarm");
+
+						//if alarm time elapsed : set it for tomorrow
+						if (Calendar.getInstance().after(alarmTime)) {
+							if (BuildConfig.DEBUG)
+								Log.d(TAG, "Alarm time elapsed - set if for next day");
+							alarmTime.add(Calendar.DATE, 1);
+						} 
+
+						//program alarm
+						programAlarm(alarmTime);
+
+					} else { //process alarm with repeat days
+						if (BuildConfig.DEBUG)
+							Log.d(TAG, "Alarm with repeat days not yet implemented");
+						int dayIndex = convertCalendarDayIndexToArrayIndex(alarmTime); //convert the day index
+						int nextRepeatDay = -1;
+						for (int day : repeatDays) { //check each day
+							if ((day > dayIndex) 
+									|| ((day == dayIndex) && (Calendar.getInstance().before(alarmTime)))) { //if we found the next day for repeat
+								nextRepeatDay = day; //save it and exit
+								break;
+							}
 						}
+
+						//the next repeat day has not been found, so use the first in next week
+						if (nextRepeatDay == -1)
+							nextRepeatDay = repeatDays[0];
+
+						//deal with the case of the repeat day is the same day
+						if ((nextRepeatDay == dayIndex) && (Calendar.getInstance().after(alarmTime))) {
+							if (BuildConfig.DEBUG)
+								Log.d(TAG, "Repeat day is the same day as today - repeat in one week");
+							alarmTime.add(Calendar.DATE, 7);
+
+						} else if (nextRepeatDay != dayIndex) { //as repeat date is not today, we need to add some day delay
+							if (BuildConfig.DEBUG)
+								Log.d(TAG, "Repeat day is not today : add some delay");
+							nextRepeatDay += 2; //shift 2 days forward
+							if (nextRepeatDay > 7) //at the end of the week, return to the beginning
+								nextRepeatDay -= 7; 
+
+							alarmTime.set(Calendar.DAY_OF_WEEK, nextRepeatDay); //set the next repeat day
+						}
+
+						//program the alarm
+						programAlarm(alarmTime);
 					}
-					
-					 //the next repeat day has not been found, so use the first in next week
-					if (nextRepeatDay == -1)
-						nextRepeatDay = repeatDays[0];
-					
-					 //deal with the case of the repeat day is the same day
-					if ((nextRepeatDay == dayIndex) && (Calendar.getInstance().after(alarmTime))) {
-						if (BuildConfig.DEBUG)
-							Log.d(TAG, "Repeat day is the same day as today - repeat in one week");
-						alarmTime.add(Calendar.DATE, 7);
-						
-					} else if (nextRepeatDay != dayIndex) { //as repeat date is not today, we need to add some day delay
-						if (BuildConfig.DEBUG)
-							Log.d(TAG, "Repeat day is not today : add some delay");
-						nextRepeatDay += 2; //shift 2 days forward
-						if (nextRepeatDay > 7) //at the end of the week, return to the beginning
-							nextRepeatDay -= 7; 
-						
-						alarmTime.set(Calendar.DAY_OF_WEEK, nextRepeatDay); //set the next repeat day
-					}
-					
-					//program the alarm
-					programAlarm(alarmTime);
-				}
 				
+				} else { //alarm time not set
+					if (BuildConfig.DEBUG)
+						Log.d(TAG, "Alarm time not set - can't program alarm");
+					
+					displayToast(getString(R.string.alarm_no_time_set));
+					preferences.edit() //disable the alarm
+						.putBoolean(SharedPreferencesConstants.ALARM_ENABLED, false)
+						.apply();
+				}
+
 			} else { //alarm disabled, cancel intent
 				if (BuildConfig.DEBUG)
 					Log.d(TAG, "Alarm disabled - cancel intent");
 				cancelAlarm();
 			}
-			 
+
 		} else { //launch player
 			if (BuildConfig.DEBUG)
 				Log.d(TAG, "Received intent to launch player");
-			
+
 			//launch player
 			if (!Utils.isMediaPlayerServiceRunning(this)) { //do not launch media player twice
 				if (!Utils.isWifiOnlyAndWifiNotConnected(this)) { //if wifi requested, check it is enabled and connected
@@ -144,30 +155,32 @@ public class AlarmService extends IntentService {
 					playIntent.putExtra(LocalIntentsData.RESUME_PLAYER_ACTIVITY.toString(), false);
 					startService(playIntent);
 					displayToast(getString(R.string.alarm_triggered));
-					
+
 				} else {
 					Log.w(TAG, "Wifi requested but not connected for alarm");
-					Toast.makeText(this, getResources().getString(R.string.player_no_wifi), Toast.LENGTH_SHORT).show();
+					displayToast(getString(R.string.player_no_wifi));
 				}
-				
-			} else if (BuildConfig.DEBUG)
-				Log.d(TAG, "Alarm not triggered, media player already running");
-			
-			
+
+			} else {
+				displayToast(getString(R.string.alarm_already_triggered));
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Alarm not triggered, media player already running");
+			}
+
 			//next, properly reset alarm preference
 			if (getRepeatDays(preferences).length == 0) {
 				if (BuildConfig.DEBUG)
 					Log.d(TAG, "No repeat days set - disable alarm");
-				
+
 				//no repeat days set, so disable alarm
 				preferences.edit()
 					.putBoolean(SharedPreferencesConstants.ALARM_ENABLED, false)
 					.apply();
-				
+
 			} else {
 				if (BuildConfig.DEBUG)
 					Log.d(TAG, "Repeat days set - restart service to set alarm");
-				
+
 				//start the service
 				Intent alarmIntent = new Intent(this, AlarmService.class);
 				alarmIntent.setAction(LocalIntents.SET_ALARM_TIME.toString());
@@ -193,7 +206,7 @@ public class AlarmService extends IntentService {
 		PendingIntent launchPlayerPendingIntent = PendingIntent.getService(this, 0, launchPlayerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		return launchPlayerPendingIntent;
 	}
-	
+
 	/**
 	 * Get the {@link AlarmManager}
 	 * @return the {@link AlarmManager}
@@ -201,7 +214,7 @@ public class AlarmService extends IntentService {
 	private AlarmManager getAlarmManager() {
 		return (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 	}
-	
+
 	/**
 	 * Get the alarm repeat days
 	 * @param preferences the {@link SharedPreferences}
@@ -210,7 +223,7 @@ public class AlarmService extends IntentService {
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private int[] getRepeatDays(SharedPreferences preferences) {
 		Set<String> repeatDaysSet = null;
-		
+
 		//get the day values as properly way
 		if (Utils.isAPILevel11Available()) { 
 			repeatDaysSet = preferences.getStringSet(SharedPreferencesConstants.ALARM_DAYS, null);
@@ -221,7 +234,7 @@ public class AlarmService extends IntentService {
 				repeatDaysSet = new HashSet<String>(Arrays.asList(alarmDaysArray));
 			}
 		}
-		
+
 		//process set to convert to array
 		if ((repeatDaysSet != null) && (!repeatDaysSet.isEmpty())) {
 			int[] finalArray = new int[repeatDaysSet.size()];
@@ -229,13 +242,13 @@ public class AlarmService extends IntentService {
 			Collections.sort(selectedDaysList);
 			for (int i = 0; i < selectedDaysList.size(); i++) 
 				finalArray[i] = Integer.parseInt(selectedDaysList.get(i));
-				
+
 			return finalArray;
-			
+
 		} else //if no data, return empty array
 			return new int[0];
 	}
-	
+
 	/**
 	 * Get the {@link Calendar} with alarm time set 
 	 * @param preferences the {@link SharedPreferences}
@@ -244,20 +257,26 @@ public class AlarmService extends IntentService {
 	private Calendar getAlarmTimeCalendar(SharedPreferences preferences) {
 		long timePickerTime = preferences.getLong(SharedPreferencesConstants.ALARM_TIME, 0); //get the time in millis from timepicker
 		if (timePickerTime != 0) {
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Alarm time is set - use it");
+
 			Calendar setTimeCalendar = Calendar.getInstance(); //set in into calendar
 			setTimeCalendar.setTimeInMillis(timePickerTime);
-			
+
 			Calendar currentTime = Calendar.getInstance(); //set a current day calendar with hour and minute alarm time
 			currentTime.set(Calendar.HOUR_OF_DAY, setTimeCalendar.get(Calendar.HOUR_OF_DAY));
 			currentTime.set(Calendar.MINUTE, setTimeCalendar.get(Calendar.MINUTE));
 			currentTime.set(Calendar.SECOND, 0);
 			currentTime.set(Calendar.MILLISECOND, 0);
 			return currentTime;
-			
-		} else
-			return Calendar.getInstance();
+
+		} else { //alarm time not set, so return null
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Alarm time is not set - use current time with delta");
+			return null;
+		}
 	}
-	
+
 	/**
 	 * Program the alarm
 	 * @param programTime the {@link Calendar} for time to program alarm
@@ -265,23 +284,37 @@ public class AlarmService extends IntentService {
 	private void programAlarm(Calendar programTime) {
 		if (BuildConfig.DEBUG)
 			Log.d(TAG, "Program alarm");
-		
+
 		//program alarm
 		PendingIntent playPendingIntent = createLaunchPlayerPendingIntent();
 		getAlarmManager().set(AlarmManager.RTC_WAKEUP, programTime.getTimeInMillis(), playPendingIntent);
-		
+
 		//display toast
 		String toastText = null; 
 		if (programTime.get(Calendar.DATE) == Calendar.getInstance().get(Calendar.DATE)) { //display only hour and minute
-			toastText = getString(R.string.alarm_set_same_day, programTime.get(Calendar.HOUR_OF_DAY),programTime.get(Calendar.MINUTE));
+			toastText = getString(R.string.alarm_set_same_day, 
+					addZeroIfNeeded(programTime.get(Calendar.HOUR_OF_DAY)), 
+					addZeroIfNeeded(programTime.get(Calendar.MINUTE)));
 		} else { //display hour, minutes and day
 			String[] dayNamesArray = getResources().getStringArray(R.array.preferences_alarm_days);
 			int dayIndex = convertCalendarDayIndexToArrayIndex(programTime); //convert the day index
-			toastText = getString(R.string.alarm_set, dayNamesArray[dayIndex], programTime.get(Calendar.HOUR_OF_DAY), programTime.get(Calendar.MINUTE));
+			toastText = getString(R.string.alarm_set, 
+					dayNamesArray[dayIndex], 
+					addZeroIfNeeded(programTime.get(Calendar.HOUR_OF_DAY)), 
+					addZeroIfNeeded(programTime.get(Calendar.MINUTE)));
 		}
-		
+
 		//show toast
 		displayToast(toastText);
+	}
+
+	/**
+	 * Add a "0" before value if < 10
+	 * @param value the value 
+	 * @return the converted {@link String}
+	 */
+	private String addZeroIfNeeded(int value) {
+		return (value < 10) ? "0" + value : "" + value;
 	}
 
 	/**
@@ -296,7 +329,7 @@ public class AlarmService extends IntentService {
 		dayIndex -= 2;
 		return dayIndex;
 	}
-	
+
 	/**
 	 * Display a toast using the handler
 	 * @param toastText the text
@@ -309,5 +342,5 @@ public class AlarmService extends IntentService {
 			}
 		});
 	}
-	
+
 }

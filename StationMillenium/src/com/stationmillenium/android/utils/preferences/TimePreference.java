@@ -78,29 +78,32 @@ public class TimePreference extends DialogPreference {
 	@Override
 	protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
 
-		if (restoreValue) {
-			if (defaultValue == null) {
-				calendar.setTimeInMillis(getPersistedLong(System.currentTimeMillis()));
-			} else {
-				calendar.setTimeInMillis(Long.parseLong(getPersistedString((String) defaultValue)));
-			}
-		} else {
-			if (defaultValue == null) {
+		if (restoreValue) { //if we need to restore the saved value
+			if (defaultValue == null) { //if we don't have a default value 
+				// try to restore saved value as long and use current time for default
+				calendar.setTimeInMillis(getPersistedLong(System.currentTimeMillis())); 
+			} else { //we have default value
+				//try to restore saved value (as string) and use default value
+				calendar.setTimeInMillis(Long.parseLong(getPersistedString((String) defaultValue))); 
+			} 
+		} else { //we don't restore saved value
+			if (defaultValue == null) { //we don't have default value, use current time
 				calendar.setTimeInMillis(System.currentTimeMillis());
-			} else {
+			} else { //we have default value, use it
 				calendar.setTimeInMillis(Long.parseLong((String) defaultValue));
 			}
 		}
 		setSummary(getSummary());
+		
 	}
 
 	@Override
 	public CharSequence getSummary() {
-		if (calendar == null) {
+		if ((getPersistedLong(0) != 0) || (!getPersistedString("").equals(""))) {
+			//custom summary
+			String dateText = DateFormat.getTimeFormat(getContext()).format(new Date(calendar.getTimeInMillis()));
+			return getContext().getString(R.string.preferences_alarm_time_set, dateText);
+		} else
 			return getContext().getString(R.string.preferences_alarm_no_time);
-		}
-		
-		String dateText = DateFormat.getTimeFormat(getContext()).format(new Date(calendar.getTimeInMillis()));
-		return getContext().getString(R.string.preferences_alarm_time_set, dateText);
 	}
 } 

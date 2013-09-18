@@ -21,9 +21,11 @@ import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
@@ -96,7 +98,6 @@ public class SharedPreferencesActivity extends PreferenceActivity {
 		initNewsNumber();
 		initAlarmTime();
 		initAlarmEnabled();
-		enableAlarmFields(alarmEnabled.isChecked());
 	}
 
 	/**
@@ -106,24 +107,18 @@ public class SharedPreferencesActivity extends PreferenceActivity {
 		alarmEnabled.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				sendUpdateAlarmTimeIntent(); //send intent to update alarm
-				enableAlarmFields((Boolean) newValue);
-				return true;
+				long alarmTime = PreferenceManager.getDefaultSharedPreferences(SharedPreferencesActivity.this).getLong(SharedPreferencesConstants.ALARM_TIME, 0);
+				if (alarmTime != 0) { //alarm time is set
+					sendUpdateAlarmTimeIntent(); //send intent to update alarm
+					return true;
+				} else { //alarm time is not set
+					if (BuildConfig.DEBUG)
+						Log.d(TAG, "Alarm time not set - can't program alarm");
+					Toast.makeText(SharedPreferencesActivity.this, R.string.alarm_no_time_set, Toast.LENGTH_SHORT).show();
+					return false;
+				}
 			}
 		});
-	}
-	
-	/**
-	 * Enable the alarm fields
-	 * @param enable <code>true</code> to enable fields, <code>false</code> to disable
-	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void enableAlarmFields(boolean enable) {
-		alarmTime.setEnabled(enable);
-		if (Utils.isAPILevel11Available())
-			alarmDaysList.setEnabled(enable);
-		else
-			alarmDaysListString.setEnabled( enable);
 	}
 	
 	/**
@@ -308,6 +303,18 @@ public class SharedPreferencesActivity extends PreferenceActivity {
 		Intent alarmIntent = new Intent(this, AlarmService.class);
 		alarmIntent.setAction(LocalIntents.SET_ALARM_TIME.toString());
 		startService(alarmIntent);
+	}
+	
+	@Override
+	protected void onResume() {
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Resuming the preferences screen");
+		
+		super.onResume(); //resume all activity
+		
+		//refresh the alarm enabled value
+		boolean alarmEnabledValue = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SharedPreferencesConstants.ALARM_ENABLED, false);
+		alarmEnabled.setChecked(alarmEnabledValue);
 	}
 	
 }
