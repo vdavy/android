@@ -131,6 +131,8 @@
 	    <item name="5">5</item>
 	    <item name="6">6</item>
 	</string-array>
+	<string name="preferences_app_version">Version de l\'application</string>
+	<string name="preferences_app_version_not_available">Indisponible</string>
 	
 	<!-- links -->
 	<string name="links_latest_news"><u><b>Dernières news</b></u></string>

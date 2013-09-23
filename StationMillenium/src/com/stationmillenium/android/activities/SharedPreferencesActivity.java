@@ -15,6 +15,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -63,6 +64,7 @@ public class SharedPreferencesActivity extends PreferenceActivity implements OnS
 	//static intialization part
 	private static final String TAG = "PreferencesActivity";
 	private static final String ALARM_DAYS_LIST_STRING_SEPARATOR = "\\|";
+	private static final String APP_VERSION_PREFERENCE = "preferences_version";
 	
 	//preference fields
 	private CheckBoxPreference alarmEnabled;
@@ -100,6 +102,9 @@ public class SharedPreferencesActivity extends PreferenceActivity implements OnS
 		initNewsNumber();
 		initAlarmTime();
 		initAlarmEnabled();
+		initAppVersionPreference();
+		
+		//register callback for preference changes
 		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
 	}
 
@@ -325,4 +330,23 @@ public class SharedPreferencesActivity extends PreferenceActivity implements OnS
 			Log.d(TAG, "Unregister OnSharedPreferenceChangeListener");
 		PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
 	}
+	
+	/**
+	 * Init the app version preference with version name of app
+	 */
+	@SuppressWarnings("deprecation")
+	private void initAppVersionPreference() {
+		Preference appVersionPreference = findPreference(APP_VERSION_PREFERENCE);
+		try { //try to set the version in app version preference summary
+			String version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+			appVersionPreference.setSummary(version);
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Set app version preference with value : " + version);
+			
+		} catch (NameNotFoundException e) { //if any error use default message
+			Log.w(TAG, "Error while setting app version preference", e);
+			appVersionPreference.setSummary(R.string.preferences_app_version_not_available);
+		}
+	}
+	
 }
