@@ -13,6 +13,8 @@ import java.util.Set;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -40,7 +42,7 @@ import com.stationmillenium.android.utils.preferences.TimePreference;
  * @author vincent
  *
  */
-public class SharedPreferencesActivity extends PreferenceActivity {
+public class SharedPreferencesActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
 	/**
 	 * Constants for shared preferences
@@ -98,6 +100,7 @@ public class SharedPreferencesActivity extends PreferenceActivity {
 		initNewsNumber();
 		initAlarmTime();
 		initAlarmEnabled();
+		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
 	}
 
 	/**
@@ -306,15 +309,20 @@ public class SharedPreferencesActivity extends PreferenceActivity {
 	}
 	
 	@Override
-	protected void onResume() {
-		if (BuildConfig.DEBUG)
-			Log.d(TAG, "Resuming the preferences screen");
-		
-		super.onResume(); //resume all activity
-		
-		//refresh the alarm enabled value
-		boolean alarmEnabledValue = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SharedPreferencesConstants.ALARM_ENABLED, false);
-		alarmEnabled.setChecked(alarmEnabledValue);
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		if (SharedPreferencesConstants.ALARM_ENABLED.equals(key)) { //if the changed preference is the alarm enabled
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Alarm enabled shared preference changed");
+			boolean alarmEnabledValue = sharedPreferences.getBoolean(SharedPreferencesConstants.ALARM_ENABLED, false); //get new value
+			alarmEnabled.setChecked(alarmEnabledValue); //set checked
+		}
 	}
 	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Unregister OnSharedPreferenceChangeListener");
+		PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+	}
 }
