@@ -5,9 +5,8 @@
     <!-- alarm preferences -->
     <PreferenceScreen
         android:icon="@drawable/ic_alarm"
-        android:title="@string/preferences_alarm_screen"
-        android:summary="@string/preferences_alarm_screen_summary" >
-
+        android:summary="@string/preferences_alarm_screen_summary"
+        android:title="@string/preferences_alarm_screen" >
         <CheckBoxPreference
             android:defaultValue="false"
             android:icon="@drawable/ic_alarm"
@@ -52,7 +51,7 @@
             android:title="@string/preferences_player_autostart" />
     </PreferenceCategory>
 
-    <!-- player preferences -->
+    <!-- news preferences -->
     <PreferenceCategory android:title="@string/preferences_links" >
         <ListPreference
             android:defaultValue="6"
@@ -63,5 +62,12 @@
             android:summary="@string/preferences_links_tweets_number_summary"
             android:title="@string/preferences_links_tweets_number" />
     </PreferenceCategory>
+
+    <!-- app version -->
+    <Preference
+        android:key="preferences_version"
+        android:persistent="false"
+        android:selectable="false"
+        android:title="@string/preferences_app_version" />
 
 </PreferenceScreen>

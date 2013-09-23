@@ -19,7 +19,7 @@
             android:title="@string/preferences_player_autostart" />
     </PreferenceCategory>
 
-    <!-- player preferences -->
+    <!-- news preferences -->
     <PreferenceCategory android:title="@string/preferences_links" >
         <ListPreference
             android:defaultValue="6"
@@ -58,5 +58,12 @@
             android:title="@string/preferences_alarm_activation_days"
             millenium:separator="|" />
     </PreferenceCategory>
+
+    <!-- app version -->
+    <Preference
+        android:key="preferences_version"
+        android:persistent="false"
+        android:selectable="false"
+        android:title="@string/preferences_app_version" />
 
 </PreferenceScreen>
