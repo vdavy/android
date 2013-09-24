@@ -35,6 +35,7 @@
     <PreferenceCategory
         android:icon="@drawable/ic_alarm"
         android:title="@string/preferences_alarm_screen" >
+        <!-- alarm enabled -->
         <CheckBoxPreference
             android:defaultValue="false"
             android:icon="@drawable/ic_alarm"
@@ -43,6 +44,13 @@
             android:summaryOn="@string/preferences_alarm_enabled"
             android:title="@string/preferences_alarm_enable" />
 
+        <!-- alarm data warning -->
+	    <Preference
+	        android:key="preferences_alarm_warning"
+	        android:persistent="false"
+	        android:selectable="false"
+	        android:summary="@string/preferences_alarm_network_available_summary" />
+	    
         <!-- alarm hour preference -->
         <com.stationmillenium.android.utils.preferences.TimePreference
             android:icon="@drawable/ic_alarm_time"
@@ -60,10 +68,12 @@
     </PreferenceCategory>
 
     <!-- app version -->
-    <Preference
-        android:key="preferences_version"
-        android:persistent="false"
-        android:selectable="false"
-        android:title="@string/preferences_app_version" />
+    <PreferenceCategory android:title="@string/preferences_about">
+	    <Preference
+	        android:key="preferences_version"
+	        android:persistent="false"
+	        android:selectable="false"
+	        android:title="@string/preferences_app_version" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
