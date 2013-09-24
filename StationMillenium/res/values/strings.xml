@@ -133,6 +133,8 @@
 	</string-array>
 	<string name="preferences_app_version">Version de l\'application</string>
 	<string name="preferences_app_version_not_available">Indisponible</string>
+	<string name="preferences_alarm_network_available_summary">Pour que l\'alarme puisse fonctionner, le Wifi ou les données mobiles doivent être activés.</string>
+	<string name="preferences_about">A propos</string>
 	
 	<!-- links -->
 	<string name="links_latest_news"><u><b>Dernières news</b></u></string>

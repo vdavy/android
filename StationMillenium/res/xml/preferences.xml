@@ -15,6 +15,13 @@
             android:summaryOn="@string/preferences_alarm_enabled"
             android:title="@string/preferences_alarm_enable" />
 
+        <!-- alarm data warning -->
+	    <Preference
+	        android:key="preferences_alarm_warning"
+	        android:persistent="false"
+	        android:selectable="false"
+	        android:summary="@string/preferences_alarm_network_available_summary" />
+    
         <!-- alarm repetitions preferences -->
         <PreferenceCategory android:title="@string/preferences_alarm_repeat" >
 
