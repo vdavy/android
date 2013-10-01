@@ -683,6 +683,7 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 		((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
 		Toast.makeText(this, getResources().getString(R.string.player_pause_toast), Toast.LENGTH_SHORT).show();
 		
+		//stop current title update
 		cancelCurrentTitleTimerServiceTimer();
 	}
 	
@@ -699,6 +700,9 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 		//send state intent
 		sendStateIntent(PlayerState.STOPPED);
 		
+		//stop current title update
+		cancelCurrentTitleTimerServiceTimer();
+				
 		//stop service
 		if (BuildConfig.DEBUG)
 			Log.d(TAG, "Stop service");
