@@ -56,48 +56,54 @@ public class CurrentTitlePlayerService extends IntentService {
 	 */
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		if (Utils.isNetworkAvailable(this)) { //is network ok ?
-			if (BuildConfig.DEBUG)
-				Log.d(TAG, "Network is available - get XML data...");
-			InputStream is = connectToURLSource(getResources().getString(R.string.player_current_song_url));
-			if (is != null) { //input stream ok
+		if (Utils.isMediaPlayerServiceRunning(getApplicationContext())) { //is the media player service running,
+			if (Utils.isNetworkAvailable(this)) { //is network ok ?
 				if (BuildConfig.DEBUG)
-					Log.d(TAG, "Input stream is OK - process it...");
-				try {
-					//get and parse XML data
-					XMLCurrentTitleParser currentTitleParser = new XMLCurrentTitleParser(is);
-					CurrentTitleDTO songDataDTO = currentTitleParser.parseXML();
+					Log.d(TAG, "Network is available - get XML data...");
+				InputStream is = connectToURLSource(getResources().getString(R.string.player_current_song_url));
+				if (is != null) { //input stream ok
 					if (BuildConfig.DEBUG)
-						Log.d(TAG, "Gathered song data : " + songDataDTO);
-					
-					//process image if needed
-					if (songDataDTO.getCurrentSong().getMetadata() != null) {
-						cleanupCache(); //clean up cache before adding new image
-						manageBitmapImageWithCache(songDataDTO);
+						Log.d(TAG, "Input stream is OK - process it...");
+					try {
+						//get and parse XML data
+						XMLCurrentTitleParser currentTitleParser = new XMLCurrentTitleParser(is);
+						CurrentTitleDTO songDataDTO = currentTitleParser.parseXML();
+						if (BuildConfig.DEBUG)
+							Log.d(TAG, "Gathered song data : " + songDataDTO);
+						
+						//process image if needed
+						if (songDataDTO.getCurrentSong().getMetadata() != null) {
+							cleanupCache(); //clean up cache before adding new image
+							manageBitmapImageWithCache(songDataDTO);
+						}
+						
+						//send intent
+						Intent intentToSend = new Intent(LocalIntents.CURRENT_TITLE_UPDATED.toString());
+						intentToSend.putExtra(LocalIntentsData.CURRENT_TITLE.toString(), songDataDTO);
+						if (BuildConfig.DEBUG)
+							Log.d(TAG, "Send intent to update current title : " + intentToSend);
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intentToSend);
+						sendBroadcast(intentToSend); //for the widget
+						
+					} catch (XMLParserException e) {
+						Log.w(TAG, "Error while parsing XML data", e);
 					}
 					
-					//send intent
-					Intent intentToSend = new Intent(LocalIntents.CURRENT_TITLE_UPDATED.toString());
-					intentToSend.putExtra(LocalIntentsData.CURRENT_TITLE.toString(), songDataDTO);
+				} else { //error while getting input stream
 					if (BuildConfig.DEBUG)
-						Log.d(TAG, "Send intent to update current title : " + intentToSend);
-					LocalBroadcastManager.getInstance(this).sendBroadcast(intentToSend);
-					sendBroadcast(intentToSend); //for the widget
-					
-				} catch (XMLParserException e) {
-					Log.w(TAG, "Error while parsing XML data", e);
+						Log.d(TAG, "No input stream - stopping service...");
+					Toast.makeText(this, getResources().getString(R.string.player_network_error), Toast.LENGTH_SHORT).show();
 				}
-				
-			} else { //error while getting input stream
+					
+			} else {
 				if (BuildConfig.DEBUG)
-					Log.d(TAG, "No input stream - stopping service...");
-				Toast.makeText(this, getResources().getString(R.string.player_network_error), Toast.LENGTH_SHORT).show();
+					Log.d(TAG, "Network is unavailable - stopping service...");
+				Toast.makeText(this, getResources().getString(R.string.player_network_unavailable), Toast.LENGTH_SHORT).show();
 			}
-				
-		} else {
+			
+		} else { //media player service is not running, no need to update title
 			if (BuildConfig.DEBUG)
-				Log.d(TAG, "Network is unavailable - stopping service...");
-			Toast.makeText(this, getResources().getString(R.string.player_network_unavailable), Toast.LENGTH_SHORT).show();
+				Log.d(TAG, "Media player is not running - stopping service...");
 		}
 	}
 
