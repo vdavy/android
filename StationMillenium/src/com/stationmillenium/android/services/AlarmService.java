@@ -90,7 +90,7 @@ public class AlarmService extends IntentService {
 
 					} else { //process alarm with repeat days
 						if (BuildConfig.DEBUG)
-							Log.d(TAG, "Alarm with repeat days not yet implemented");
+							Log.d(TAG, "Alarm with repeat days");
 						int dayIndex = convertCalendarDayIndexToArrayIndex(alarmTime); //convert the day index
 						int nextRepeatDay = -1;
 						for (int day : repeatDays) { //check each day
@@ -114,10 +114,15 @@ public class AlarmService extends IntentService {
 						} else if (nextRepeatDay != dayIndex) { //as repeat date is not today, we need to add some day delay
 							if (BuildConfig.DEBUG)
 								Log.d(TAG, "Repeat day is not today : add some delay");
+							alarmTime.setFirstDayOfWeek(Calendar.SUNDAY); //set start day of week as sunday
 							nextRepeatDay += 2; //shift 2 days forward
 							if (nextRepeatDay > 7) //at the end of the week, return to the beginning
 								nextRepeatDay -= 7; 
-
+							if (nextRepeatDay < Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) //repeat day is next week : add delay of 7 days
+								alarmTime.add(Calendar.DATE, 7);
+							else if (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) //repeat day is nearly next week, only 1 day delay is needed
+								alarmTime.add(Calendar.DATE, 1);
+								
 							alarmTime.set(Calendar.DAY_OF_WEEK, nextRepeatDay); //set the next repeat day
 						}
 
