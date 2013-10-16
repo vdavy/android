@@ -275,7 +275,7 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 		 * @return the current position or 0 if not available
 		 */
 		public static int getMediaPlayerCurrentPosition() {
-			if (mediaPlayerRef.get() != null) {
+			if ((mediaPlayerRef != null) && (mediaPlayerRef.get() != null)) {
 				try {
 					return mediaPlayerRef.get().getCurrentPosition();
 				} catch (IllegalStateException e) {
