@@ -599,10 +599,15 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 			break;
 			
 		case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-			Log.d(TAG, "Audio focus loss transient with duck - duck volume");
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Audio focus loss transient with duck - duck volume");
 			if ((mediaPlayer != null) && (mediaPlayer.isPlaying())) {
+				originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC); //save the original volume value for volume restore
 				int duckVolume = (int) (audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC) * 0.2); //duck volume is 20% of max volume
-				audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, duckVolume, 0);
+				if (originalVolume > duckVolume) //if original volume is lower than duck volume, no need to duck (duck volume would be higher than dyck volume)
+					audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, duckVolume, 0);
+				else if (BuildConfig.DEBUG)
+					Log.d(TAG, "Original volume lower than duck volume - no need to duck");
 			}
 			break;
 		}
