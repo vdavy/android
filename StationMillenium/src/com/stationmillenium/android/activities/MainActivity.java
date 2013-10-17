@@ -144,4 +144,15 @@ public class MainActivity extends ActionBarActivity {
 			.commit();
 	}
 		
+	/**
+	 * Start the {@link AlarmSharedPreferencesActivity}
+	 * @param view the originating view
+	 */
+	public void startAlarmPreferencesActivity(View view) {
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Display the alarm shared preferences activity");
+		Intent settingsIntent = new Intent(this, AlarmSharedPreferencesActivity.class);
+		startActivity(settingsIntent);
+	}
+	
 }

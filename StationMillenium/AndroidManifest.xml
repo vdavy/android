@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stationmillenium.android"
     android:installLocation="auto"
-    android:versionCode="13"
-    android:versionName="1.1.4" >
+    android:versionCode="14"
+    android:versionName="1.1.5-beta" >
 
     <!-- min version of sdk is android gingerbread 2.3 -->
     <uses-sdk
@@ -71,6 +71,16 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+
+        <!-- alarm preferences activity -->
+        <activity
+            android:name=".activities.AlarmSharedPreferencesActivity"
+            android:label="@string/preferences_alarm_screen"
+            android:parentActivityName=".activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
         </activity>
 
         <!-- player service -->

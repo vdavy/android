@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.activities.SharedPreferencesActivity.SharedPreferencesConstants;
+import com.stationmillenium.android.activities.AlarmSharedPreferencesActivity.AlarmSharedPreferencesConstants;
 import com.stationmillenium.android.utils.Utils;
 import com.stationmillenium.android.utils.intents.LocalIntents;
 import com.stationmillenium.android.utils.intents.LocalIntentsData;
@@ -66,7 +66,7 @@ public class AlarmService extends IntentService {
 			if (BuildConfig.DEBUG)
 				Log.d(TAG, "Set alarm time intent received : " + intent);
 
-			if (preferences.getBoolean(SharedPreferencesConstants.ALARM_ENABLED, false)) { //check if alarm is enabled
+			if (preferences.getBoolean(AlarmSharedPreferencesConstants.ALARM_ENABLED, false)) { //check if alarm is enabled
 				//get repeat days
 				int[] repeatDays = getRepeatDays(preferences); 
 				if (BuildConfig.DEBUG)
@@ -136,7 +136,7 @@ public class AlarmService extends IntentService {
 					
 					displayToast(getString(R.string.alarm_no_time_set));
 					preferences.edit() //disable the alarm
-						.putBoolean(SharedPreferencesConstants.ALARM_ENABLED, false)
+						.putBoolean(AlarmSharedPreferencesConstants.ALARM_ENABLED, false)
 						.apply();
 				}
 
@@ -179,7 +179,7 @@ public class AlarmService extends IntentService {
 
 				//no repeat days set, so disable alarm
 				preferences.edit()
-					.putBoolean(SharedPreferencesConstants.ALARM_ENABLED, false)
+					.putBoolean(AlarmSharedPreferencesConstants.ALARM_ENABLED, false)
 					.apply();
 
 			} else {
@@ -231,9 +231,9 @@ public class AlarmService extends IntentService {
 
 		//get the day values as properly way
 		if (Utils.isAPILevel11Available()) { 
-			repeatDaysSet = preferences.getStringSet(SharedPreferencesConstants.ALARM_DAYS, null);
+			repeatDaysSet = preferences.getStringSet(AlarmSharedPreferencesConstants.ALARM_DAYS, null);
 		} else {
-			String repeatDaysString = preferences.getString(SharedPreferencesConstants.ALARM_DAYS_STRING, null);
+			String repeatDaysString = preferences.getString(AlarmSharedPreferencesConstants.ALARM_DAYS_STRING, null);
 			if ((repeatDaysString != null) && (!repeatDaysString.equals(""))) {
 				String[] alarmDaysArray = repeatDaysString.split(ALARM_DAYS_LIST_STRING_SEPARATOR);
 				repeatDaysSet = new HashSet<String>(Arrays.asList(alarmDaysArray));
@@ -260,7 +260,7 @@ public class AlarmService extends IntentService {
 	 * @return the {@link Calendar}
 	 */
 	private Calendar getAlarmTimeCalendar(SharedPreferences preferences) {
-		long timePickerTime = preferences.getLong(SharedPreferencesConstants.ALARM_TIME, 0); //get the time in millis from timepicker
+		long timePickerTime = preferences.getLong(AlarmSharedPreferencesConstants.ALARM_TIME, 0); //get the time in millis from timepicker
 		if (timePickerTime != 0) {
 			if (BuildConfig.DEBUG)
 				Log.d(TAG, "Alarm time is set - use it");

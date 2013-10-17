@@ -99,7 +99,6 @@
 	    <item name="20">20</item>
 	</string-array>
 	<string name="preferences_alarm_screen">Alarme</string>
-	<string name="preferences_alarm_screen_summary">Paramètres de l\'alarme</string>
 	<string name="preferences_alarm_enable">Activer l\'alarme</string>
 	<string name="preferences_alarm_enabled">Alarme activée</string>
 	<string name="preferences_alarm_disabled">Alarme désactivée</string>
