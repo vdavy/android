@@ -9,10 +9,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingTop="20dp" >
+        android:paddingTop="10dp" >
 
         <ImageView
             android:layout_width="match_parent"
@@ -26,17 +25,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="top"
         android:gravity="center_vertical"
         android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
+            android:layout_gravity="bottom"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingBottom="10dp" >
+            android:orientation="horizontal" >
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -62,7 +59,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|center_vertical"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingBottom="10dp"
@@ -87,6 +83,24 @@
                 android:onClick="displayLinksFragment"
                 android:padding="8dp"
                 android:src="@drawable/ic_home_links" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="5dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:background="@drawable/home_item_background"
+                android:contentDescription="@string/empty_string"
+                android:onClick="startAlarmPreferencesActivity"
+                android:padding="8dp"
+                android:src="@drawable/ic_home_alarm" />
         </LinearLayout>
     </LinearLayout>
 
