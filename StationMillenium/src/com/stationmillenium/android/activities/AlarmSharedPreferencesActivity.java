@@ -12,9 +12,11 @@ import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -35,6 +37,7 @@ import com.stationmillenium.android.services.AlarmService;
 import com.stationmillenium.android.utils.Utils;
 import com.stationmillenium.android.utils.intents.LocalIntents;
 import com.stationmillenium.android.utils.preferences.ListPreferenceMultiSelect;
+import com.stationmillenium.android.utils.preferences.SeekBarDialogPreference;
 import com.stationmillenium.android.utils.preferences.TimePreference;
 
 /**
@@ -54,6 +57,7 @@ public class AlarmSharedPreferencesActivity extends PreferenceActivity implement
 		String ALARM_TIME = "preferences_alarm_time";
 		String ALARM_DAYS = "preferences_alarm_days";
 		String ALARM_DAYS_STRING = "preferences_alarm_days_string";
+		String ALARM_VOLUME = "preferences_alarm_volume";
 	}
 
 	//static intialization part
@@ -65,6 +69,7 @@ public class AlarmSharedPreferencesActivity extends PreferenceActivity implement
 	private TimePreference alarmTime;
 	private MultiSelectListPreference alarmDaysList;
 	private ListPreference alarmDaysListString;
+	private SeekBarDialogPreference alarmVolumeSeekBar;
 	
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
@@ -94,6 +99,7 @@ public class AlarmSharedPreferencesActivity extends PreferenceActivity implement
 		//init fields
 		initAlarmTime();
 		initAlarmEnabled();
+		initAlarmVolume();
 		
 		//register callback for preference changes
 		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
@@ -143,14 +149,58 @@ public class AlarmSharedPreferencesActivity extends PreferenceActivity implement
 	private void initializePreferenceFields(boolean isAPILevel11Available) {
 		alarmEnabled = (CheckBoxPreference) findPreference(AlarmSharedPreferencesConstants.ALARM_ENABLED);
 		alarmTime = (TimePreference) findPreference(AlarmSharedPreferencesConstants.ALARM_TIME);
+		alarmVolumeSeekBar = (SeekBarDialogPreference) findPreference(AlarmSharedPreferencesConstants.ALARM_VOLUME);
 		if (isAPILevel11Available)
 			alarmDaysList = (MultiSelectListPreference) findPreference(AlarmSharedPreferencesConstants.ALARM_DAYS);
 		else
 			alarmDaysListString = (ListPreferenceMultiSelect) findPreference(AlarmSharedPreferencesConstants.ALARM_DAYS_STRING);
 	}
 	
-	
+	/**
+	 * Init the alarm volume field
+	 */
+	private void initAlarmVolume() {
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Init the alarm volume field");
+		
+		//set min and current value
+		AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		alarmVolumeSeekBar.setMaxProgress(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+		if (!PreferenceManager.getDefaultSharedPreferences(this).contains(AlarmSharedPreferencesConstants.ALARM_VOLUME)) { //add default volume value if no value
+			int volumeValue = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+			PreferenceManager.getDefaultSharedPreferences(this)
+				.edit()
+				.putInt(AlarmSharedPreferencesConstants.ALARM_VOLUME, volumeValue)
+				.apply();
+			alarmVolumeSeekBar.setProgress(volumeValue);
+		}
+		
+		//set summary and progress text suffix
+		updateAlarmVolumeSummary(alarmVolumeSeekBar.getProgress());
+		alarmVolumeSeekBar.setProgressTextSuffix(" " + getString(R.string.preferences_alarm_volume_progress_text_suffix, alarmVolumeSeekBar.getMaxProgress()));
+		
+		//set the on change handler for summary update
+		alarmVolumeSeekBar.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Alarm volume field value change");
+				updateAlarmVolumeSummary((Integer) newValue);
+				return true;
+			}
+		});
+	}
 
+	/**
+	 * Set the summary for alarm volume field
+	 * @param value the new value for volume
+	 */
+	private void updateAlarmVolumeSummary(int value) {
+		String summaryText = getString(R.string.preferences_alarm_volume_summary, value, alarmVolumeSeekBar.getMaxProgress());
+		alarmVolumeSeekBar.setSummary(summaryText);
+	}
+	
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
@@ -171,7 +221,7 @@ public class AlarmSharedPreferencesActivity extends PreferenceActivity implement
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void initAlarmDaysList() {
 		if (BuildConfig.DEBUG)
-			Log.d(TAG, "Init the alaram days list summary");
+			Log.d(TAG, "Init the alarm days list summary");
 		//get values
 		Set<String> selectedDays = alarmDaysList.getValues();
 		
@@ -184,7 +234,7 @@ public class AlarmSharedPreferencesActivity extends PreferenceActivity implement
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				if (BuildConfig.DEBUG)
-					Log.d(TAG, "Update the alaram days list summary");
+					Log.d(TAG, "Update the alarm days list summary");
 				manageAlarmDaysSummary(preference, (Set<String>) newValue);
 				sendUpdateAlarmTimeIntent(); //update alarm
 				return true;

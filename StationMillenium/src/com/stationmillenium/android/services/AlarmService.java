@@ -158,6 +158,7 @@ public class AlarmService extends IntentService {
 						Log.d(TAG, "Start media player service for alarm triggering");
 					Intent playIntent = new Intent(this, MediaPlayerService.class);
 					playIntent.putExtra(LocalIntentsData.RESUME_PLAYER_ACTIVITY.toString(), false);
+					playIntent.putExtra(LocalIntentsData.GET_VOLUME_FROM_PREFERENCES.toString(), true);
 					startService(playIntent);
 					displayToast(getString(R.string.alarm_triggered));
 
