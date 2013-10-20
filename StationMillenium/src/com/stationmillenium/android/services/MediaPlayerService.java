@@ -40,6 +40,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.BigPictureStyle;
 import android.support.v4.app.NotificationCompat.Builder;
@@ -51,6 +52,7 @@ import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
+import com.stationmillenium.android.activities.AlarmSharedPreferencesActivity.AlarmSharedPreferencesConstants;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.activities.PlayerActivity.PlayerState;
 import com.stationmillenium.android.dto.CurrentTitleDTO;
@@ -363,6 +365,13 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 								mediaPlayerServiceRef.get().abnbr.setRegistered(true);
 								LocalBroadcastManager.getInstance(mediaPlayerServiceRef.get()).registerReceiver(mediaPlayerServiceRef.get().uctbr, new IntentFilter(LocalIntents.CURRENT_TITLE_UPDATED.toString()));
 								mediaPlayerServiceRef.get().uctbr.setRegistered(true);
+								if (msg.arg2 == 1) { //use volume manager from shared preferences
+									if (BuildConfig.DEBUG)
+										Log.d(TAG, "Use volume from shared preferences");
+									int volumeValue = PreferenceManager.getDefaultSharedPreferences(mediaPlayerServiceRef.get())
+											.getInt(AlarmSharedPreferencesConstants.ALARM_VOLUME, mediaPlayerServiceRef.get().audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+									mediaPlayerServiceRef.get().audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volumeValue, 0);
+								}									
 								mediaPlayerServiceRef.get().originalVolume = mediaPlayerServiceRef.get().audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		
 								//remote control if api level 14
@@ -563,6 +572,10 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
 			    // start ID so we know which request we're stopping when we finish the job
 			    Message msg = serviceHandler.obtainMessage();
 			    msg.arg1 = startId;
+			    if (intent.getBooleanExtra(LocalIntentsData.GET_VOLUME_FROM_PREFERENCES.toString(), false))
+			    	msg.arg2 = 1;
+			    else 
+			    	msg.arg2 = 0;
 			    serviceHandler.sendMessage(msg);
 			    
 			    //if start media player is required, activity is resumed

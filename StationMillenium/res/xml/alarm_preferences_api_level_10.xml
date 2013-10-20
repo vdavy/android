@@ -17,6 +17,15 @@
         android:persistent="false"
         android:selectable="false"
         android:summary="@string/preferences_alarm_network_available_summary" />
+    
+    <!-- alarm volume -->
+    <com.stationmillenium.android.utils.preferences.SeekBarDialogPreference
+        android:icon="@drawable/ic_alarm_volume"
+        android:dialogMessage="@string/preferences_alarm_volume_dialog_message"
+        android:key="preferences_alarm_volume"
+        android:title="@string/preferences_alarm_volume_title"
+        millenium:min="1" />
+    
     <!-- alarm repetitions preferences -->
     <PreferenceCategory android:title="@string/preferences_alarm_repeat" >
 
