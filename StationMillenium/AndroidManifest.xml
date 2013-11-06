@@ -3,12 +3,12 @@
     package="com.stationmillenium.android"
     android:installLocation="auto"
     android:versionCode="15"
-    android:versionName="1.2.0" >
+    android:versionName="1.2.1-beta1" >
 
     <!-- min version of sdk is android gingerbread 2.3 -->
     <uses-sdk
         android:minSdkVersion="10"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="20" />
 
     <!-- permissions to access network and check network state -->
     <uses-permission android:name="android.permission.INTERNET" />

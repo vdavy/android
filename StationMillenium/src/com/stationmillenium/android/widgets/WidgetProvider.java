@@ -6,6 +6,7 @@ package com.stationmillenium.android.widgets;
 import java.io.File;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -22,6 +23,7 @@ import android.widget.RemoteViews;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
+import com.stationmillenium.android.activities.MainActivity;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.activities.PlayerActivity.PlayerState;
 import com.stationmillenium.android.dto.CurrentTitleDTO;
@@ -104,11 +106,8 @@ public class WidgetProvider extends AppWidgetProvider {
 		PendingIntent stopPendingIntent = PendingIntent.getService(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		remoteViews.setOnClickPendingIntent(R.id.widget_stop_button, stopPendingIntent);
 		
-		//global intent
-		PendingIntent globalPendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, PlayerActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-		remoteViews.setOnClickPendingIntent(R.id.widget_image, globalPendingIntent);
-		remoteViews.setOnClickPendingIntent(R.id.widget_artist_text, globalPendingIntent);
-		remoteViews.setOnClickPendingIntent(R.id.widget_title_text, globalPendingIntent);
+		//set global pending intent
+		setMainWidgetPartsPendingIntent(context, remoteViews, MainActivity.class);
 		
 		appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
 	}
@@ -119,27 +118,39 @@ public class WidgetProvider extends AppWidgetProvider {
 			Log.d(TAG, "Widget receiving intent : " + intent);
 		super.onReceive(context, intent);
 		if (LocalIntents.CURRENT_TITLE_UPDATED.toString().equals(intent.getAction())) {
-			CurrentTitleDTO songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());
 			
-			if (songData != null) {
-				RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+			if (Utils.isMediaPlayerServiceRunning(context)) { //check if media player service is running to apply data
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Media player service running - applying received data...");
 				
-				//update current title
-				if ((songData.getCurrentSong().getArtist() != null) && (songData.getCurrentSong().getTitle() != null)) {
-					remoteViews.setTextViewText(R.id.widget_artist_text, songData.getCurrentSong().getArtist());
-					remoteViews.setTextViewText(R.id.widget_title_text, songData.getCurrentSong().getTitle());
-				} else {
-					remoteViews.setTextViewText(R.id.widget_artist_text, context.getResources().getString(R.string.player_no_title));
-					remoteViews.setTextViewText(R.id.widget_title_text, "");
+				CurrentTitleDTO songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());
+				
+				if (songData != null) {
+					RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+					
+					//update current title
+					if ((songData.getCurrentSong().getArtist() != null) && (songData.getCurrentSong().getTitle() != null)) {
+						remoteViews.setTextViewText(R.id.widget_artist_text, songData.getCurrentSong().getArtist());
+						remoteViews.setTextViewText(R.id.widget_title_text, songData.getCurrentSong().getTitle());
+					} else {
+						remoteViews.setTextViewText(R.id.widget_artist_text, context.getResources().getString(R.string.player_no_title));
+						remoteViews.setTextViewText(R.id.widget_title_text, "");
+					}
+					
+					//update image 
+					if (songData.getCurrentSong().getImage() != null) {
+						new WidgetAsyncImageLoader(context).execute(songData.getCurrentSong().getImage());
+					} else 
+						remoteViews.setImageViewResource(R.id.widget_image, R.drawable.player_default_image);
+					
+					updateWidget(context, remoteViews);
 				}
 				
-				//update image 
-				if (songData.getCurrentSong().getImage() != null) {
-					new WidgetAsyncImageLoader(context).execute(songData.getCurrentSong().getImage());
-				} else 
-					remoteViews.setImageViewResource(R.id.widget_image, R.drawable.player_default_image);
+			} else {
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Media player service not running - reseting widgets...");
 				
-				updateWidget(context, remoteViews);
+				updateWidgetsStates(context, PlayerState.STOPPED); //reset the widget
 			}
 			
 		} else if (PlayerState.PLAYING.getAssociatedIntent().toString().equals(intent.getAction())) {
@@ -162,6 +173,9 @@ public class WidgetProvider extends AppWidgetProvider {
 	private void updateWidgetsStates(Context context, PlayerState playerState) {
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 		
+		//TODO : ajouter pending intent pour ouverture de l'appli en fonction des états,
+		//ajouter des intents sur widget_image_layout et widget_text_layout
+		
 		//set buttons display
 		boolean playButtonVisible = false;
 		boolean pauseButtonVisible = false;
@@ -171,6 +185,9 @@ public class WidgetProvider extends AppWidgetProvider {
 			playButtonVisible = false;
 			pauseButtonVisible = true;
 			stopButtonVisible = true;
+			
+			//set global pending intent
+			setMainWidgetPartsPendingIntent(context, remoteViews, PlayerActivity.class);
 			break;
 
 		case BUFFERING:
@@ -182,6 +199,9 @@ public class WidgetProvider extends AppWidgetProvider {
 			//text view loading text
 			remoteViews.setTextViewText(R.id.widget_artist_text, context.getResources().getString(R.string.player_widget_loading));
 			remoteViews.setTextViewText(R.id.widget_title_text, "");
+			
+			//set global pending intent
+			setMainWidgetPartsPendingIntent(context, remoteViews, PlayerActivity.class);
 			break;
 
 		case PAUSED:
@@ -190,11 +210,14 @@ public class WidgetProvider extends AppWidgetProvider {
 			pauseButtonVisible = false;
 			stopButtonVisible = true;
 			
-			//update play pending intent
+			//update play pending intent 
 			Intent pauseIntent = new Intent(context, MediaPlayerService.class);
 			pauseIntent.setAction(LocalIntents.PLAYER_PLAY.toString());
 			PendingIntent pausePendingIntent = PendingIntent.getService(context, 0, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			remoteViews.setOnClickPendingIntent(R.id.widget_play_button, pausePendingIntent);
+			
+			//set global pending intent
+			setMainWidgetPartsPendingIntent(context, remoteViews, PlayerActivity.class);
 			break;
 			
 		case STOPPED:
@@ -208,6 +231,9 @@ public class WidgetProvider extends AppWidgetProvider {
 			PendingIntent playPendingIntent = PendingIntent.getService(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			remoteViews.setOnClickPendingIntent(R.id.widget_play_button, playPendingIntent);
 		
+			//set global pending intent
+			setMainWidgetPartsPendingIntent(context, remoteViews, MainActivity.class);
+			
 			//clear widget
 			remoteViews.setImageViewResource(R.id.widget_image, R.drawable.player_default_image);
 			remoteViews.setTextViewText(R.id.widget_artist_text, "");
@@ -221,6 +247,20 @@ public class WidgetProvider extends AppWidgetProvider {
 		remoteViews.setViewVisibility(R.id.widget_stop_button, (stopButtonVisible) ? View.VISIBLE : View.GONE);
 		
 		updateWidget(context, remoteViews);
+	}
+
+	/**
+	 * Set the {@link PendingIntent} on the main widget part
+	 * @param context the {@link Context}
+	 * @param remoteViews the {@link RemoteViews} for setting {@link PendingIntent}
+	 * @param activityClazz the {@link Activity} class
+	 */
+	private <T extends Activity> void setMainWidgetPartsPendingIntent(Context context, RemoteViews remoteViews, Class<T> activityClazz) {
+		//main widget parts pending intent
+		Intent mainActivityIntent = new Intent(context, activityClazz);
+		PendingIntent mainActivityPendingIntent = PendingIntent.getActivity(context, 0, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		remoteViews.setOnClickPendingIntent(R.id.widget_image, mainActivityPendingIntent);
+		remoteViews.setOnClickPendingIntent(R.id.widget_text_layout, mainActivityPendingIntent);
 	}
 	
 	/**

@@ -106,44 +106,56 @@ public class PlayerActivity extends ActionBarActivity {
 		public void onReceive(Context context, Intent intent) {
 			if (BuildConfig.DEBUG)
 				Log.d(TAG, "Update title intent received - process...");
-			CurrentTitleDTO songData = null; 
-			if ((intent != null) && (intent.getExtras() != null))
-				songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());
-							
-			if (songData != null) { //if data found
-				//update the image 
-				if (songData.getCurrentSong().getImage() != null) {
-					if (BuildConfig.DEBUG)
-						Log.d(TAG, "Image specified - update...");
-					AsyncImageLoader ail = new AsyncImageLoader(imageSwitcher);
-					ail.execute(songData.getCurrentSong().getImage());
-				} else {
-					if (BuildConfig.DEBUG)
-						Log.d(TAG, "No image specified - use default");
+			
+			if (Utils.isMediaPlayerServiceRunning(getApplicationContext())) {
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Media player service running - applying received data...");
+				
+				CurrentTitleDTO songData = null; 
+				if ((intent != null) && (intent.getExtras() != null))
+					songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());
+								
+				if (songData != null) { //if data found
+					//update the image 
+					if (songData.getCurrentSong().getImage() != null) {
+						if (BuildConfig.DEBUG)
+							Log.d(TAG, "Image specified - update...");
+						AsyncImageLoader ail = new AsyncImageLoader(imageSwitcher);
+						ail.execute(songData.getCurrentSong().getImage());
+					} else {
+						if (BuildConfig.DEBUG)
+							Log.d(TAG, "No image specified - use default");
+						imageSwitcher.setImageResource(R.drawable.player_default_image);
+					}
+					
+					//update current title
+					if ((songData.getCurrentSong().getArtist() != null) && (songData.getCurrentSong().getTitle() != null)) {
+						String titleText = getResources().getString(R.string.player_current_title, songData.getCurrentSong().getArtist(), songData.getCurrentSong().getTitle());
+						currentTitleTextView.setText(titleText);
+					} else
+						currentTitleTextView.setText(getResources().getString(R.string.player_no_title));
+					
+					//update the history view
+					List<String> historyTextList = new ArrayList<String>();
+					for (Song historySong : songData.getHistory()) {
+						String historyText = getResources().getString(R.string.player_current_title, historySong.getArtist(), historySong.getTitle());
+						historyTextList.add(historyText);
+					}
+					historyList.setAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.player_history_list_item, R.id.player_history_item_text, historyTextList));
+					historyListValues = new String[historyTextList.size()];
+					historyTextList.toArray(historyListValues);
+					
+				} else { //no data available - use default
+					Log.w(TAG, "No data available !");
 					imageSwitcher.setImageResource(R.drawable.player_default_image);
-				}
-				
-				//update current title
-				if ((songData.getCurrentSong().getArtist() != null) && (songData.getCurrentSong().getTitle() != null)) {
-					String titleText = getResources().getString(R.string.player_current_title, songData.getCurrentSong().getArtist(), songData.getCurrentSong().getTitle());
-					currentTitleTextView.setText(titleText);
-				} else
 					currentTitleTextView.setText(getResources().getString(R.string.player_no_title));
-				
-				//update the history view
-				List<String> historyTextList = new ArrayList<String>();
-				for (Song historySong : songData.getHistory()) {
-					String historyText = getResources().getString(R.string.player_current_title, historySong.getArtist(), historySong.getTitle());
-					historyTextList.add(historyText);
 				}
-				historyList.setAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.player_history_list_item, R.id.player_history_item_text, historyTextList));
-				historyListValues = new String[historyTextList.size()];
-				historyTextList.toArray(historyListValues);
 				
-			} else { //no data available - use default
-				Log.w(TAG, "No data available !");
-				imageSwitcher.setImageResource(R.drawable.player_default_image);
-				currentTitleTextView.setText(getResources().getString(R.string.player_no_title));
+			} else {
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Media player service not running - reseting widgets...");
+				
+				playerStopped(); //reset all widgets
 			}
 		}
 	}
