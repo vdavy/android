@@ -52,6 +52,8 @@ public class MainActivity extends ActionBarActivity {
 		                 .penaltyLog()
 		                 .build());
 	         }
+	        
+			Log.d(TAG, "Display the main activity");
 	     }
  		
 		super.onCreate(savedInstanceState);
