@@ -11,9 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,6 +29,7 @@ import com.stationmillenium.android.exceptions.XMLParserException;
 import com.stationmillenium.android.utils.Utils;
 import com.stationmillenium.android.utils.intents.LocalIntents;
 import com.stationmillenium.android.utils.intents.LocalIntentsData;
+import com.stationmillenium.android.utils.network.NetworkUtils;
 import com.stationmillenium.android.utils.xml.XMLCurrentTitleParser;
 
 /**
@@ -60,7 +58,13 @@ public class CurrentTitlePlayerService extends IntentService {
 			if (Utils.isNetworkAvailable(this)) { //is network ok ?
 				if (BuildConfig.DEBUG)
 					Log.d(TAG, "Network is available - get XML data...");
-				InputStream is = connectToURLSource(getResources().getString(R.string.player_current_song_url));
+				InputStream is = NetworkUtils.connectToURL(getResources().getString(R.string.player_current_song_url), 
+						null, 
+						getResources().getString(R.string.player_connection_request_method), 
+						getResources().getString(R.string.player_connection_content_type), 
+						Integer.parseInt(getResources().getString(R.string.player_connection_connect_timeout)), 
+						Integer.parseInt(getResources().getString(R.string.player_connection_read_timeout)));
+
 				if (is != null) { //input stream ok
 					if (BuildConfig.DEBUG)
 						Log.d(TAG, "Input stream is OK - process it...");
@@ -108,40 +112,6 @@ public class CurrentTitlePlayerService extends IntentService {
 	}
 
 	/**
-	 * Connect to the URL source	
-	 * @param urlText the URL to connect as text
-	 * @return the {@link InputStream} of the connection
-	 */
-	private InputStream connectToURLSource(String urlText) {
-		if (BuildConfig.DEBUG)
-			Log.d(TAG, "Connect to server to get data");
-		try {
-			//set up connection
-			URL url = new URL(urlText);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setConnectTimeout(Integer.parseInt(getResources().getString(R.string.player_connection_connect_timeout)));
-			connection.setReadTimeout(Integer.parseInt(getResources().getString(R.string.player_connection_read_timeout)));
-			connection.setRequestMethod(getResources().getString(R.string.player_connection_request_method));
-			connection.setRequestProperty("Content-Type", "text/xml; charset=utf-8");
-			if (BuildConfig.DEBUG)
-				Log.d(TAG, "Connection to use : " + connection);
-			
-			//connect
-			connection.connect();
-			if (BuildConfig.DEBUG)
-				Log.d(TAG, "Response code : " + connection.getResponseCode());
-			return connection.getInputStream();
-			
-		} catch (MalformedURLException e) {
-			Log.e(TAG, "Error with URL", e);
-			return null;
-		} catch (IOException e) {
-			Log.e(TAG, "Error while getting XML data", e);
-			return null;
-		}
-	}
-	
-	/**
 	 * Load the image into the cache if not found
 	 * @param songDataDTO the song data
 	 */
@@ -160,7 +130,12 @@ public class CurrentTitlePlayerService extends IntentService {
 			
 			if (BuildConfig.DEBUG)	
 				Log.d(TAG, "Image URL : " + imageUrl);
-			InputStream imageIs = connectToURLSource(imageUrl);
+			InputStream imageIs = NetworkUtils.connectToURL(imageUrl, 
+					null, 
+					getResources().getString(R.string.player_connection_request_method), 
+					getResources().getString(R.string.player_connection_content_type), 
+					Integer.parseInt(getResources().getString(R.string.player_connection_connect_timeout)), 
+					Integer.parseInt(getResources().getString(R.string.player_connection_read_timeout)));
 			
 			//write input stream data to file	
 			OutputStream imageOs = null;

@@ -6,6 +6,7 @@ package com.stationmillenium.android.dto;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -103,6 +104,7 @@ public class CurrentTitleDTO implements Serializable {
 		
 		private String artist;
 		private String title;
+		private Date playedDate;
 		private File image;
 		private ImageMetadata metadata;
 		
@@ -161,14 +163,29 @@ public class CurrentTitleDTO implements Serializable {
 		public void setMetadata(ImageMetadata metadata) {
 			this.metadata = metadata;
 		}
+		
+		/**
+		 * @return the playedDate
+		 */
+		public Date getPlayedDate() {
+			return playedDate;
+		}
+
+		/**
+		 * @param playedDate the playedDate to set
+		 */
+		public void setPlayedDate(Date playedDate) {
+			this.playedDate = playedDate;
+		}
 
 		/* (non-Javadoc)
 		 * @see java.lang.Object#toString()
 		 */
 		@Override
 		public String toString() {
-			return "Song [artist=" + artist + ", title=" + title + ", image="
-					+ image + ", metadata=" + metadata + "]";
+			return "Song [artist=" + artist + ", title=" + title
+					+ ", playedDate=" + playedDate + ", image=" + image
+					+ ", metadata=" + metadata + "]";
 		}
 
 		/* (non-Javadoc)

@@ -111,7 +111,7 @@
             </intent-filter>
         </receiver>
 
-        <!-- broadcast recevier for the widget part -->
+        <!-- broadcast receiver for the widget part -->
         <receiver android:name=".widgets.WidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -138,6 +138,15 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        
+        <!-- song history content provider -->
+		<provider
+            android:name=".contentproviders.SongHistoryContentProvider"
+            android:authorities="com.stationmillenium.android.contentproviders.SongHistoryContentProvider"
+            android:exported="false"
+            android:label="@string/app_name" >
+        </provider>
+        
     </application>
 
 </manifest>
