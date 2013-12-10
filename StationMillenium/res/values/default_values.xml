@@ -8,6 +8,7 @@
     <string name="player_connection_read_timeout">10000</string>
     <string name="player_connection_connect_timeout">15000</string>
     <string name="player_connection_request_method">GET</string>
+    <string name="player_connection_content_type">text/xml; charset=utf-8</string>
     <string name="player_image_url_root">http://www.station-millenium.com/coverart</string>
     
     <!-- default values for replay part -->
@@ -32,4 +33,12 @@
 	<integer name="cache_size_max">3145728</integer><!-- 3 MB -->
 	<integer name="cache_size_to_reach_percent">75</integer><!-- cache size to reach when cleaning in percent -->
 	
+	<!-- song history values -->
+	<string name="song_history_url">http://www.station-millenium.com/coverart/android/searchSongsHistory</string>
+    <string name="song_history_read_timeout">10000</string>
+    <string name="song_history_connect_timeout">15000</string>
+    <string name="song_history_request_method">GET</string>
+    <string name="song_history_content_type">text/xml; charset=utf-8</string>
+    <string name="song_history_max_items">30</string>
+    
 </resources>
