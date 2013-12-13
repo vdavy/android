@@ -89,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:paddingBottom="5dp" >
 
             <ImageView
@@ -101,6 +101,16 @@
                 android:onClick="startAlarmPreferencesActivity"
                 android:padding="8dp"
                 android:src="@drawable/ic_home_alarm" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/home_item_background"
+                android:contentDescription="@string/empty_string"
+                android:onClick="startSongHistorySearchActivity"
+                android:padding="8dp"
+                android:text="C&apos;était quoi ?"
+                android:textColor="#ffffffff" />
         </LinearLayout>
     </LinearLayout>
 

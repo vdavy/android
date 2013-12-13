@@ -42,12 +42,19 @@ public abstract class AbstractXMLParser<T> {
 			//create the new parser
 			if (BuildConfig.DEBUG)
 				Log.d(TAG, "Create the XML parser");
-			this.is = is;
-			parser = Xml.newPullParser();
-	        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-	        parser.setInput(is, "ISO-8859-1");
-	        parser.nextTag();
-	        
+			 
+			if (is != null) { //check the input stream is not null
+				this.is = is;
+				parser = Xml.newPullParser();
+		        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+		        parser.setInput(is, "ISO-8859-1");
+		        parser.nextTag();
+		        
+			} else { //input stream is null : error thrown
+				Log.w(TAG, "Input stream is null !");
+				throw new XMLParserException("XML parsing exception");
+			}
+ 	        
 		} catch(XmlPullParserException e) { //process errors
 			Log.w(TAG, "XML parsing exception", e);
 			throw new XMLParserException("XML parsing exception", e);
