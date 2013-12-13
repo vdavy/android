@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stationmillenium.android"
     android:installLocation="auto"
-    android:versionCode="17"
-    android:versionName="1.2.1" >
+    android:versionCode="19"
+    android:versionName="1.3.0-beta1" >
 
     <!-- min version of sdk is android gingerbread 2.3 -->
     <uses-sdk
@@ -83,6 +83,16 @@
                 android:value=".activities.MainActivity" />
         </activity>
 
+        <!-- song history search activity -->
+        <activity
+            android:name=".activities.SongSearchHistoryActivity"
+            android:label="@string/song_search_history"
+            android:parentActivityName=".activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+        
         <!-- player service -->
         <service
             android:name=".services.CurrentTitlePlayerService"

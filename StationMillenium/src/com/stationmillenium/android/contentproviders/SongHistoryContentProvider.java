@@ -4,10 +4,12 @@
 package com.stationmillenium.android.contentproviders;
 
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
@@ -19,12 +21,14 @@ import android.net.Uri;
 import android.net.Uri.Builder;
 import android.provider.BaseColumns;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.R.string;
 import com.stationmillenium.android.dto.CurrentTitleDTO.Song;
 import com.stationmillenium.android.exceptions.XMLParserException;
+import com.stationmillenium.android.utils.Utils;
 import com.stationmillenium.android.utils.network.NetworkUtils;
 import com.stationmillenium.android.utils.xml.XMLSongHistoryParser;
 
@@ -101,6 +105,9 @@ public class SongHistoryContentProvider extends ContentProvider {
 	private static final int SUGGEST_SEARCH = 3;
 	private static final UriMatcher URI_MATCHER = buildURIMatcher();
 	
+	//instance vars
+	private SimpleDateFormat sdf;
+	
 	/**
 	 * Build the {@link UriMatcher} for {@link SongHistoryContentProvider}
 	 * @return the {@link UriMatcher}
@@ -114,18 +121,19 @@ public class SongHistoryContentProvider extends ContentProvider {
 		return matcher;
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see android.content.ContentProvider#onCreate()
 	 */
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	public boolean onCreate() {
 		if (BuildConfig.DEBUG)
 			Log.d(TAG, "Initialization of SongHistoryContentProvider");
-		
+		sdf = new SimpleDateFormat(getContext().getString(R.string.song_history_date_format));
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see android.content.ContentProvider#query(android.net.Uri, java.lang.String[], java.lang.String, java.lang.String[], java.lang.String)
 	 */
 	@Override
@@ -217,17 +225,25 @@ public class SongHistoryContentProvider extends ContentProvider {
 	 * @return the {@link Cursor} with results
 	 */
 	private Cursor sendQueryAndGetCursor(Map<String, String> params) {
-		InputStream is = NetworkUtils.connectToURL(getContext().getString(R.string.song_history_url), //get connection
-				params, 
-				getContext().getString(R.string.song_history_request_method), 
-				getContext().getString(R.string.song_history_content_type), 
-				Integer.parseInt(getContext().getString(R.string.song_history_connect_timeout)), 
-				Integer.parseInt(getContext().getString(R.string.song_history_read_timeout)));
-		try {
-			List<Song> songList = new XMLSongHistoryParser(is).parseXML(); //parse the XML
-			return convertSongListToMatrixCursor(songList); //convert and return cursor
-		} catch (XMLParserException e) {
-			Log.e(TAG, "Error while parsing XML", e);
+		if (Utils.isNetworkAvailable(getContext())) {
+			InputStream is = NetworkUtils.connectToURL(getContext().getString(R.string.song_history_url), //get connection
+					params, 
+					getContext().getString(R.string.song_history_request_method), 
+					getContext().getString(R.string.song_history_content_type), 
+					Integer.parseInt(getContext().getString(R.string.song_history_connect_timeout)), 
+					Integer.parseInt(getContext().getString(R.string.song_history_read_timeout)));
+			try {
+				List<Song> songList = new XMLSongHistoryParser(is).parseXML(); //parse the XML
+				return convertSongListToMatrixCursor(songList); //convert and return cursor
+			} catch (XMLParserException e) {
+				Log.e(TAG, "Error while parsing XML", e);
+				return null;
+			}
+		} else { //if not network available, cancel request
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Network not available");
+			
+			Toast.makeText(getContext(), getContext().getString(R.string.player_network_unavailable), Toast.LENGTH_SHORT).show();
 			return null;
 		}
 	}
@@ -253,32 +269,28 @@ public class SongHistoryContentProvider extends ContentProvider {
 		}
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see android.content.ContentProvider#insert(android.net.Uri, android.content.ContentValues)
 	 */
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see android.content.ContentProvider#delete(android.net.Uri, java.lang.String, java.lang.String[])
 	 */
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		// TODO Auto-generated method stub
-		return 0;
+		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see android.content.ContentProvider#update(android.net.Uri, android.content.ContentValues, java.lang.String, java.lang.String[])
 	 */
 	@Override
-	public int update(Uri uri, ContentValues values, String selection,
-			String[] selectionArgs) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -319,7 +331,7 @@ public class SongHistoryContentProvider extends ContentProvider {
 				index,
 				song.getArtist(),
 				song.getTitle(),
-				song.getPlayedDate(),
+				sdf.format(song.getPlayedDate()),
 				(song.getMetadata() != null) ? song.getMetadata().getPath() : null,
 				(song.getMetadata() != null) ? song.getMetadata().getWidth() : null,
 				(song.getMetadata() != null) ? song.getMetadata().getHeight() : null

@@ -19,12 +19,20 @@ public class XMLParserException extends Exception {
 
 
 	/**
-	 * Crate a new {@link XMLParserException} 
+	 * Create a new {@link XMLParserException} 
 	 * @param message the message of the exception
 	 * @param cause the cause (as {@link Exception}) of the exception
 	 */
 	public XMLParserException(String message, Exception cause) {
 		super(message, cause);
+	}
+	
+	/**
+	 * Create a new {@link XMLParserException} 
+	 * @param message the message of the exception
+	 */
+	public XMLParserException(String message) {
+		super(message);
 	}
 	
 }

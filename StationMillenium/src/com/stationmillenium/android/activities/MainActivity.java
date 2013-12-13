@@ -156,5 +156,16 @@ public class MainActivity extends ActionBarActivity {
 		Intent settingsIntent = new Intent(this, AlarmSharedPreferencesActivity.class);
 		startActivity(settingsIntent);
 	}
+
+	/**
+	 * Start the {@link SongSearchHistoryActivity}
+	 * @param view the originating view
+	 */
+	public void startSongHistorySearchActivity(View view) {
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Display the song history search activity");
+		Intent settingsIntent = new Intent(this, SongSearchHistoryActivity.class);
+		startActivity(settingsIntent);
+	}
 	
 }

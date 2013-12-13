@@ -153,4 +153,8 @@
 	<string name="alarm_already_triggered">Alarme Station Millenium : radio déjà en cours de lecture</string>
 	<string name="alarm_no_time_set">Pas d\'heure définie pour l\'alarme Station Millenium</string>
 	
+	<!-- song search history -->
+	<string name="song_search_history">C\'était quoi ?</string>
+	<string name="song_search_no_data">Aucune donnée disponible</string>
+	
 </resources>
