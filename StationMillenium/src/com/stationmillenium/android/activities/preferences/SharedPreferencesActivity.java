@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.stationmillenium.android.activities;
+package com.stationmillenium.android.activities.preferences;
 
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager.NameNotFoundException;

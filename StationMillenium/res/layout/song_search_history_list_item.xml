@@ -23,6 +23,7 @@
         android:layout_toRightOf="@id/song_history_item_icon"
         android:paddingLeft="5dp"
         android:textColor="#3a9ad0"
+        android:textIsSelectable="false"
         android:textSize="12sp"
         android:textStyle="bold" />
 
@@ -33,6 +34,7 @@
         android:layout_toRightOf="@id/song_history_item_date_text"
         android:paddingLeft="5dp"
         android:textColor="@android:color/white"
+        android:textIsSelectable="false"
         android:textSize="12sp" />
 
     <TextView
@@ -44,6 +46,7 @@
         android:layout_marginTop="-3dp"
         android:paddingLeft="5dp"
         android:textColor="@android:color/white"
+        android:textIsSelectable="false"
         android:textSize="12sp"
         android:textStyle="italic" />
 
