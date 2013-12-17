@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stationmillenium.android"
     android:installLocation="auto"
-    android:versionCode="19"
-    android:versionName="1.3.0-beta1" >
+    android:versionCode="20"
+    android:versionName="1.3.0-beta2" >
 
     <!-- min version of sdk is android gingerbread 2.3 -->
     <uses-sdk
@@ -59,7 +59,7 @@
 
         <!-- preferences activity -->
         <activity
-            android:name=".activities.SharedPreferencesActivity"
+            android:name=".activities.preferences.SharedPreferencesActivity"
             android:label="@string/preferences_activity_title"
             android:parentActivityName=".activities.MainActivity" >
             <meta-data
@@ -75,7 +75,7 @@
 
         <!-- alarm preferences activity -->
         <activity
-            android:name=".activities.AlarmSharedPreferencesActivity"
+            android:name=".activities.preferences.AlarmSharedPreferencesActivity"
             android:label="@string/preferences_alarm_screen"
             android:parentActivityName=".activities.MainActivity" >
             <meta-data
@@ -85,12 +85,23 @@
 
         <!-- song history search activity -->
         <activity
-            android:name=".activities.SongSearchHistoryActivity"
+            android:name="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity"
             android:label="@string/song_search_history"
-            android:parentActivityName=".activities.MainActivity" >
+            android:parentActivityName=".activities.MainActivity"
+            android:launchMode="singleTop" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
+        </activity>
+        
+        <!-- song history search imgage display activity -->
+        <activity
+            android:name="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryImageDisplayActivity"
+            android:label="@string/song_search_history_image"
+            android:parentActivityName=".activities.songsearchhistory.SongSearchHistoryActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.songsearchhistory.SongSearchHistoryActivity" />
         </activity>
         
         <!-- player service -->

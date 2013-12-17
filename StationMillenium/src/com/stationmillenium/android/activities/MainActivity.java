@@ -18,6 +18,9 @@ import com.stationmillenium.android.activities.fragments.AntennaGridFragment;
 import com.stationmillenium.android.activities.fragments.HomeFragment;
 import com.stationmillenium.android.activities.fragments.LinksFragment;
 import com.stationmillenium.android.activities.fragments.ReplayWebViewFragment;
+import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity;
+import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity;
+import com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity;
 import com.stationmillenium.android.utils.Utils;
 import com.stationmillenium.android.utils.intents.LocalIntentsData;
 

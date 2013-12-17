@@ -50,7 +50,8 @@ public class NetworkUtils {
 			connection.setConnectTimeout(connectTimeout);
 			connection.setReadTimeout(readTimeout);
 			connection.setRequestMethod(requestMethod);
-			connection.setRequestProperty(CONTENT_TYPE, contentType);
+			if (contentType != null)
+				connection.setRequestProperty(CONTENT_TYPE, contentType);
 			
 			if (BuildConfig.DEBUG)
 				Log.d(TAG, "Connection to use : " + connection);

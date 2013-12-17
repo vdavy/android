@@ -155,6 +155,9 @@
 	
 	<!-- song search history -->
 	<string name="song_search_history">C\'était quoi ?</string>
+	<string name="song_search_history_image">C\'était quoi ?</string>
 	<string name="song_search_no_data">Aucune donnée disponible</string>
+	<string name="song_search_no_image">Aucune image disponible pour ce titre</string>
+	<string name="song_search_image_title">%1$s - %2$s</string>
 	
 </resources>

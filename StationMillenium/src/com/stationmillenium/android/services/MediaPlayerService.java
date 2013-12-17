@@ -52,9 +52,9 @@ import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.activities.AlarmSharedPreferencesActivity.AlarmSharedPreferencesConstants;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.activities.PlayerActivity.PlayerState;
+import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity.AlarmSharedPreferencesConstants;
 import com.stationmillenium.android.dto.CurrentTitleDTO;
 import com.stationmillenium.android.utils.Utils;
 import com.stationmillenium.android.utils.intents.LocalIntents;

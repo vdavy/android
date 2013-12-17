@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.stationmillenium.android.activities;
+package com.stationmillenium.android.activities.preferences;
 
 import java.util.ArrayList;
 import java.util.Arrays;

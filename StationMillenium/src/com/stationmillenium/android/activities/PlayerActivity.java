@@ -40,7 +40,7 @@ import android.widget.ViewSwitcher.ViewFactory;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.activities.SharedPreferencesActivity.SharedPreferencesConstants;
+import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
 import com.stationmillenium.android.dto.CurrentTitleDTO;
 import com.stationmillenium.android.dto.CurrentTitleDTO.Song;
 import com.stationmillenium.android.services.MediaPlayerService;

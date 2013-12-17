@@ -1,8 +1,9 @@
 /**
  * 
  */
-package com.stationmillenium.android.activities;
+package com.stationmillenium.android.activities.songsearchhistory;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -12,20 +13,24 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.contentproviders.SongHistoryContentProvider.SongHistoryContract;
+import com.stationmillenium.android.utils.intents.LocalIntentsData;
 
 /**
  * Activity to display the song search history
  * @author vincent
  *
  */
-public class SongSearchHistoryActivity extends ActionBarActivity implements LoaderCallbacks<Cursor> {
+public class SongSearchHistoryActivity extends ActionBarActivity implements LoaderCallbacks<Cursor>, OnItemClickListener {
 
 	//static parts
 	private static final String TAG = "SongSearchHistoryActivity";
@@ -66,6 +71,7 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 					R.id.song_history_item_title_text
 				}, 0);
 		historyListView.setAdapter(cursorAdapter);
+		historyListView.setOnItemClickListener(this);
 		
 		//init the loader
 		displayLoadingWidgets();
@@ -111,4 +117,34 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 		noDataTextView.setVisibility((dataProperlyLoaded) ? View.GONE : View.VISIBLE);
 	}
 	
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Item selected");
+		Cursor cursor = cursorAdapter.getCursor();
+		if (id < cursor.getCount()) { //chec id is correct
+			cursor.moveToPosition(Long.valueOf(id).intValue()); //move to correct row 
+			String imagePath = cursor.getString(cursor.getColumnIndex(SongHistoryContract.Columns.IMAGE_PATH)); //get the image path, if available
+			if (imagePath != null) { //if image path found, manage it
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Image found for selected track : " + imagePath);
+				
+				//display image
+				String displayImageActivityTitle = getString(R.string.song_search_image_title, 
+						cursor.getString(cursor.getColumnIndex(SongHistoryContract.Columns.ARTIST)), 
+						cursor.getString(cursor.getColumnIndex(SongHistoryContract.Columns.TITLE)));
+				Intent displayImageIntent = new Intent(this, SongSearchHistoryImageDisplayActivity.class);
+				displayImageIntent.putExtra(LocalIntentsData.IMAGE_FILE_PATH.toString(), imagePath);
+				displayImageIntent.putExtra(LocalIntentsData.IMAGE_TITLE.toString(), displayImageActivityTitle);
+				startActivity(displayImageIntent);
+						
+			} else { //there is no image for this track
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "No image found for selected track");
+				Toast.makeText(this, R.string.song_search_no_image, Toast.LENGTH_SHORT).show();
+			}
+				
+		} else
+			Log.w(TAG, "Selected id greater than cursor size - do nothing");
+	}
 }
