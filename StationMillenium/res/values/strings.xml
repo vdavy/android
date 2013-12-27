@@ -30,7 +30,7 @@
     <string name="player_pause_toast">Player Millenium : pause&#8230;</string>
     <string name="player_stop_toast">Player Millenium : stop&#8230;</string>
     <string name="player_notification_time">%1$s:%2$s</string>
-    <string name="player_loading">Chargement en cours...</string>
+    <string name="player_loading">Chargement en cours&#8230;</string>
     
     <!-- playing notification -->
     <string name="notification_ticker_text">Lecture de la radio&#8230;</string>
@@ -158,6 +158,13 @@
 	<string name="song_search_history_image">C\'était quoi ?</string>
 	<string name="song_search_no_data">Aucune donnée disponible</string>
 	<string name="song_search_no_image">Aucune image disponible pour ce titre</string>
+	<string name="song_search_intro_text">&lt;b&gt;%1$s&lt;/b&gt; résultats trouvés pour &lt;i&gt;%2$s&lt;/i&gt;</string>
+	<string name="song_search_intro_text_no_search">&lt;b&gt;%1$s&lt;/b&gt; résultats</string>
 	<string name="song_search_image_title">%1$s - %2$s</string>
 	
+	<!-- song search history search interface -->
+	<string name="song_search_history_search_hint">Recherche artistes/titres</string>
+    <string name="song_search_history_menu_search">Recherche</string>
+    <string name="song_search_history_menu_reinit">Réinitialiser&#8230;</string>
+    
 </resources>

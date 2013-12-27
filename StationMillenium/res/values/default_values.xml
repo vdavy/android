@@ -35,7 +35,7 @@
 	
 	<!-- song history values -->
 	<string name="song_history_url">http://www.station-millenium.com/coverart/android/searchSongsHistory</string>
-    <string name="song_history_read_timeout">10000</string>
+    <string name="song_history_read_timeout">45000</string>
     <string name="song_history_connect_timeout">15000</string>
     <string name="song_history_request_method">GET</string>
     <string name="song_history_content_type">text/xml; charset=utf-8</string>
