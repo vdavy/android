@@ -47,6 +47,7 @@ public class SongHistoryContentProvider extends ContentProvider {
 	public static final class SongHistoryContract {
 		public static final String AUTHORITY = "com.stationmillenium.android.contentproviders.SongHistoryContentProvider";
 		public static final Uri CONTENT_URI = buildContentURI();
+		public static final Uri ROOT_URI = buildRootURI();
 		private static final String DEFAULT_MATCH = "songHistory";
 		public static final String DATE_SEARCH_SEGMENT = DEFAULT_MATCH + "Date";
 		private static final String FULL_TEXT_SEARCH = DEFAULT_MATCH + "/*";
@@ -60,8 +61,19 @@ public class SongHistoryContentProvider extends ContentProvider {
 		private static Uri buildContentURI() {
 			Builder uriBuilder = new Builder();
 			uriBuilder.scheme(ContentResolver.SCHEME_CONTENT)
-			.authority(AUTHORITY)
-			.appendPath(DEFAULT_MATCH);
+				.authority(AUTHORITY)
+				.appendPath(DEFAULT_MATCH);
+			return uriBuilder.build();
+		}
+		
+		/**
+		 * Init the root {@link Uri} with no specified segment
+		 * @return the {@link Uri}
+		 */
+		private static Uri buildRootURI() {
+			Builder uriBuilder = new Builder();
+			uriBuilder.scheme(ContentResolver.SCHEME_CONTENT)
+				.authority(AUTHORITY);
 			return uriBuilder.build();
 		}
 		
@@ -103,6 +115,7 @@ public class SongHistoryContentProvider extends ContentProvider {
 	private static final int FULL_TEXT_SEARCH = 1;
 	private static final int DATE_SEARCH = 2;
 	private static final int SUGGEST_SEARCH = 3;
+	private static final int SUGGEST_SEARCH_NO_SUGGEST = 4;
 	private static final UriMatcher URI_MATCHER = buildURIMatcher();
 	
 	//instance vars
@@ -118,6 +131,7 @@ public class SongHistoryContentProvider extends ContentProvider {
 		matcher.addURI(SongHistoryContract.AUTHORITY, SongHistoryContract.FULL_TEXT_SEARCH, FULL_TEXT_SEARCH);
 		matcher.addURI(SongHistoryContract.AUTHORITY, SongHistoryContract.DATE_SEARCH, DATE_SEARCH);
 		matcher.addURI(SongHistoryContract.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SUGGEST_SEARCH);
+		matcher.addURI(SongHistoryContract.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SUGGEST_SEARCH);
 		return matcher;
 	}
 	
@@ -156,6 +170,11 @@ public class SongHistoryContentProvider extends ContentProvider {
 			case SUGGEST_SEARCH: //case of suggest query, process query string as full text with suggest projection
 				return sendQueryForSuggestSearch(uri);
 				
+			case SUGGEST_SEARCH_NO_SUGGEST: //case of empty suggestion
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Empty suggestions cursor returned");
+				return createSuggestCursor(); 
+				
 			default:
 				 throw new IllegalArgumentException("Unsupported Uri: " + uri);
 		}
@@ -181,12 +200,7 @@ public class SongHistoryContentProvider extends ContentProvider {
 		
 		try { //convert data into cursor
 			List<Song> songList = new XMLSongHistoryParser(is).parseXML(); //parse the XML
-			MatrixCursor cursor = new MatrixCursor(new String[] { //init the returned cursor
-				SongHistoryContract.Columns._ID,
-				SearchManager.SUGGEST_COLUMN_TEXT_1,
-				SearchManager.SUGGEST_COLUMN_TEXT_2,
-				SearchManager.SUGGEST_COLUMN_QUERY
-			});
+			MatrixCursor cursor = createSuggestCursor();
 			
 			int index = 0;
 			for (Song song : songList) { //add each song into the cursor
@@ -205,6 +219,20 @@ public class SongHistoryContentProvider extends ContentProvider {
 			Log.e(TAG, "Error while parsing XML", e);
 			return null;
 		}
+	}
+
+	/**
+	 * Create the suggest {@link Cursor} 
+	 * @return the associated {@link MatrixCursor}
+	 */
+	private MatrixCursor createSuggestCursor() {
+		MatrixCursor cursor = new MatrixCursor(new String[] { //init the returned cursor
+			SongHistoryContract.Columns._ID,
+			SearchManager.SUGGEST_COLUMN_TEXT_1,
+			SearchManager.SUGGEST_COLUMN_TEXT_2,
+			SearchManager.SUGGEST_COLUMN_QUERY
+		});
+		return cursor;
 	}
 
 	/**

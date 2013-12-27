@@ -13,15 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
-    <!-- listview for search results -->
-
-    <ListView
-        android:id="@+id/song_history_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:dividerHeight="5dp"
-        android:listSelector="@drawable/song_history_item_background"
-        android:padding="5dp" />
+    <!-- no results textview -->
 
     <TextView
         android:id="@+id/song_history_no_data_text"
@@ -32,5 +24,34 @@
         android:textColor="@android:color/white"
         android:textSize="15sp"
         android:visibility="gone" />
+
+    <!-- results layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <!-- intro text view -->
+
+        <TextView
+            android:id="@+id/song_history_search_result_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="2dp"
+            android:textColor="#ff9900cc"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <!-- listview for search results -->
+
+        <ListView
+            android:id="@+id/song_history_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:dividerHeight="5dp"
+            android:listSelector="@drawable/song_history_item_background"
+            android:padding="5dp" />
+    </LinearLayout>
 
 </RelativeLayout>
