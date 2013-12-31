@@ -3,10 +3,10 @@
  */
 package com.stationmillenium.android.activities.songsearchhistory;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -15,33 +15,43 @@ import android.widget.ProgressBar;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
+import com.stationmillenium.android.utils.Utils;
 import com.stationmillenium.android.utils.intents.LocalIntentsData;
 import com.stationmillenium.android.utils.views.ImageLoader;
-import com.stationmillenium.android.utils.views.ImageLoader.ReturnImage;
 
 /**
  * Song search image display activity
+ * Implements {@link OnGlobalLayoutListener} to display image when the layout is full loaded (due to using {@link AsyncTask} in {@link ImageLoader})
  * @author vincent
  *
  */
-public class SongSearchHistoryImageDisplayActivity extends Activity implements ReturnImage, OnGlobalLayoutListener {
+public class SongSearchHistoryImageDisplayActivity extends ActionBarActivity implements OnGlobalLayoutListener {
 
 	//static parts
 	private final static String TAG = "SongSearchImageDisplayActivity";
-	private final static String IMAGE_TO_DISPLAY_BUNDLE = "SONG_SEARCH_IMAGE_TO_DISPLAY_BUNDLE"; 
+	private final static String IMAGE_FILE_NAME_BUNDLE = "ImageFileNameBundle"; 
+	private final static String IMAGE_URL_BUNDLE = "ImageURLBundle"; 
+	private final static String ACTIVITY_TITLE_BUNDLE = "ActivityTitleBundle"; 
 	
 	//instance vars
 	private ImageLoader imageLoader;
-	private Bitmap imageToDisplay;
+	private String imageFileName;
 	private String imageURL;
+	private String activityTitle;
+	
+	//widgets
+	private ImageView imageView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if ((savedInstanceState != null) && (savedInstanceState.getParcelable(IMAGE_TO_DISPLAY_BUNDLE) != null)) //get saved image if any available
-			imageToDisplay = savedInstanceState.getParcelable(IMAGE_TO_DISPLAY_BUNDLE);
-		
+		if (savedInstanceState != null) { 
+			imageFileName = savedInstanceState.getString(IMAGE_FILE_NAME_BUNDLE);
+			imageURL = savedInstanceState.getString(IMAGE_URL_BUNDLE);
+			activityTitle = savedInstanceState.getString(ACTIVITY_TITLE_BUNDLE);
+		}
+			
 		//set layout
 		setContentView(R.layout.image_display_layout);
 		View mainView = findViewById(R.id.image_display_layout);
@@ -55,30 +65,35 @@ public class SongSearchHistoryImageDisplayActivity extends Activity implements R
 			Log.d(TAG, "Resuming song search image display activity");
 
 		//set title
-		String activityTitle = getIntent().getStringExtra(LocalIntentsData.IMAGE_TITLE.toString());
+		if (activityTitle == null) //if title is null, try to get it from intent
+			activityTitle = getIntent().getStringExtra(LocalIntentsData.IMAGE_TITLE.toString());
 		setTitle(activityTitle);
 		
-		//load image
-		ImageView imageView = (ImageView) findViewById(R.id.image_display_imageview);
+		//get widgets
+		imageView = (ImageView) findViewById(R.id.image_display_imageview);
 		ProgressBar progressBar = (ProgressBar) findViewById(R.id.image_display_progressbar);
-		if (imageToDisplay == null) {
-			if (BuildConfig.DEBUG)
-				Log.d(TAG, "Launch song search image loading...");
-			String imageFileName = getIntent().getStringExtra(LocalIntentsData.IMAGE_FILE_PATH.toString());
-			imageFileName = imageFileName.substring(imageFileName.lastIndexOf("/") + 1);
-			if (BuildConfig.DEBUG)
-				Log.d(TAG, "Image file name : " + imageFileName);
-			imageLoader = new ImageLoader(imageView, progressBar, imageFileName, this, this, true);
-			imageURL = getResources().getString(R.string.player_image_url_root) + getIntent().getStringExtra(LocalIntentsData.IMAGE_FILE_PATH.toString());
-			if (BuildConfig.DEBUG)
-				Log.d(TAG, "Image URL : " + imageURL);
 		
-		} else {
-			if (BuildConfig.DEBUG)
-				Log.d(TAG, "Image already loaded - display it...");
-			imageView.setImageBitmap(imageToDisplay);
-			progressBar.setVisibility(View.GONE);
+		//try to get data in saved place
+		//file name part
+		if (imageFileName == null) { //set the file name
+			imageFileName = getIntent().getStringExtra(LocalIntentsData.IMAGE_FILE_PATH.toString());
+			imageFileName = imageFileName.substring(imageFileName.lastIndexOf("/") + 1);
 		}
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Image file name : " + imageFileName);
+		
+		//image URL part
+		if (imageURL == null) {
+			imageURL = getResources().getString(R.string.player_image_url_root) + getIntent().getStringExtra(LocalIntentsData.IMAGE_FILE_PATH.toString());
+			
+		}
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Image URL : " + imageURL);
+		
+		//start loader
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Launch song search image loading...");
+		imageLoader = new ImageLoader(imageView, progressBar, imageFileName, this, true);
 	}
 
 	@Override
@@ -91,20 +106,23 @@ public class SongSearchHistoryImageDisplayActivity extends Activity implements R
 			imageLoader.cancel(true); //cancel loading if running
 		}
 		
+		//recycle image when pausing
+		Utils.recycleBitmapFromImageView(imageView);
+				
 		super.onPause();
 	}
 	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		outState.putParcelable(IMAGE_TO_DISPLAY_BUNDLE, imageToDisplay);
+		outState.putString(IMAGE_FILE_NAME_BUNDLE, imageFileName);
+		outState.putString(IMAGE_URL_BUNDLE, imageURL);
+		outState.putString(ACTIVITY_TITLE_BUNDLE, String.valueOf(getTitle()));
 		super.onSaveInstanceState(outState);
 	}
-
-	@Override
-	public void setReturnedImage(Bitmap image) {
-		imageToDisplay = image;
-	}
 	
+	/**
+	 * Display image when layout is loaded
+	 */
 	@Override
 	public void onGlobalLayout() {
 		if (imageLoader != null) {
@@ -117,5 +135,5 @@ public class SongSearchHistoryImageDisplayActivity extends Activity implements R
 		} if (BuildConfig.DEBUG)
 			Log.d(TAG, "Image loader is null");
 	}
-	
+
 }

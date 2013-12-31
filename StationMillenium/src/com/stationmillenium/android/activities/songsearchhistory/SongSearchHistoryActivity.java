@@ -3,6 +3,10 @@
  */
 package com.stationmillenium.android.activities.songsearchhistory;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
@@ -11,6 +15,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -34,8 +39,10 @@ import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
+import com.stationmillenium.android.activities.fragments.datetime.DatePickerFragment;
+import com.stationmillenium.android.activities.fragments.datetime.TimePickerFragment;
 import com.stationmillenium.android.contentproviders.SongHistoryContentProvider.SongHistoryContract;
-import com.stationmillenium.android.utils.Utils;
+import com.stationmillenium.android.utils.intents.LocalIntents;
 import com.stationmillenium.android.utils.intents.LocalIntentsData;
 
 /**
@@ -49,7 +56,11 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 	private static final String TAG = "SongSearchHistoryActivity";
 	private static final String SEARCH_QUERY = "SearchQuery"; 
 	private static final String SEARCH_QUERY_TYPE = "SearchQueryType";
+	private static final String SEARCH_TIME = "SearchTime"; 
+	private static final String SEARCH_TIME_TYPE = "SearchTimeType";
 	private static final int LOADER_INDEX = 1;
+	private static final String DATE_PICKER_FRAGMENT = "DatePickerFragment";
+	private static final String TIME_PICKER_FRAGMENT = "TimePickerFragment";
 	
 	//widgets list
 	private ListView historyListView;
@@ -61,6 +72,7 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 	//instance vars
 	private SimpleCursorAdapter cursorAdapter;
 	private String query;
+	private Calendar searchTimeCalendar;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -108,13 +120,23 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 			Log.d(TAG, "Create the loader - index : " + index + " - bundle : " + bundle);
 		
 		Uri uri = null;
-		if ((bundle != null) && (bundle.getBoolean(SEARCH_QUERY_TYPE))) { //test if we need to do a search
+		if ((bundle != null) && (bundle.getBoolean(SEARCH_QUERY_TYPE))) { //test if we need to do a query search
 			if (BuildConfig.DEBUG)
-				Log.d(TAG, "Load search cursor");
+				Log.d(TAG, "Load query search cursor");
 			
 			//build the URI with the search query
 			uri = SongHistoryContract.CONTENT_URI.buildUpon()
 					.appendPath(bundle.getString(SEARCH_QUERY))
+					.build();
+			
+		} else if ((bundle != null) && (bundle.getBoolean(SEARCH_TIME_TYPE))) { //test if we need to do a time search
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Load time search cursor");
+			
+			//build the URI with the search query
+			uri = SongHistoryContract.ROOT_URI.buildUpon()
+					.appendPath(SongHistoryContract.DATE_SEARCH_SEGMENT)
+					.appendPath(bundle.getString(SEARCH_TIME))
 					.build();
 			
 		} else { //do a initial cursor load
@@ -127,17 +149,21 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 		return new CursorLoader(this, uri, null, null, null, null); 
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		if (BuildConfig.DEBUG)
 			Log.d(TAG, "Loading is finished - display data...");
-		
+
 		//display the proper intro text
 		String introText = "";
 		String cursorCount = String.valueOf((cursor != null) ? cursor.getCount() : "0");
-		if ((query != null) && (!String.valueOf("").equals(query)))
+		if ((query != null) && (!String.valueOf("").equals(query))) //text query display intro
 			introText = getString(R.string.song_search_intro_text, cursorCount, query);
-		else
+		else if (searchTimeCalendar != null) { //time query display intro
+			SimpleDateFormat sdf  = new SimpleDateFormat(getString(R.string.song_history_date_format));
+			introText = getString(R.string.song_search_time_intro_text, cursorCount, sdf.format(searchTimeCalendar.getTime()));
+		} else
 			introText = getString(R.string.song_search_intro_text_no_search, cursorCount);
 		introTextView.setText(Html.fromHtml(introText));
 		
@@ -214,13 +240,11 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
         //configure search widget
         //see : http://developer.android.com/guide/topics/search/search-dialog.html#ConfiguringWidget
         //see also (for using compat API) : http://developer.android.com/guide/topics/ui/actionbar.html#ActionView
-        if (Utils.isAPILevel11Available()) {
-            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-            searchMenuItem = menu.findItem(R.id.song_search_menu_search);
-            SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-            searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
-        }
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchMenuItem = menu.findItem(R.id.song_search_menu_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
 
         return true;
     }
@@ -229,20 +253,24 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.song_search_menu_search: //launch a search
-            	if (!Utils.isAPILevel11Available()) { //if we don't have action bar 
-            		//TODO : check on api level 10
-	            	if (BuildConfig.DEBUG)
-						Log.d(TAG, "Launch song search requested");
-	                onSearchRequested();
-	                return true;
-            	} else
-            		return false;
+	            if (BuildConfig.DEBUG)
+	            	Log.d(TAG, "Launch song search requested");
+	            return false;
+            	
+            case R.id.song_search_menu_time_search: //launch the time search
+            	if (BuildConfig.DEBUG)
+					Log.d(TAG, "Launch time search");
+            	query = null;
+            	collapseSearchView();
+            	launchDatePickerFragment();
+            	return true;
                 
             case R.id.song_search_menu_reinit: //reinit the loader to initial search
             	if (BuildConfig.DEBUG)
 					Log.d(TAG, "Reinit song search to initial value");
-            	if ((searchMenuItem != null) && (MenuItemCompat.isActionViewExpanded(searchMenuItem))) //collapse the search view if needed
-            		MenuItemCompat.collapseActionView(searchMenuItem);
+            	query = null; //reinit query
+            	searchTimeCalendar = null; //reinit searched date
+            	collapseSearchView();
             	displayLoadingWidgets();
             	getSupportLoaderManager().restartLoader(LOADER_INDEX, null, this);
             	return true;
@@ -251,6 +279,14 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
                 return super.onOptionsItemSelected(item);
         }
     }
+
+	/**
+	 * Collapse the {@link SearchView} if needed
+	 */
+	private void collapseSearchView() {
+		if ((searchMenuItem != null) && (MenuItemCompat.isActionViewExpanded(searchMenuItem))) //collapse the search view if needed
+			MenuItemCompat.collapseActionView(searchMenuItem);
+	}
 	 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -260,6 +296,9 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 		setIntent(intent); //save intent
 		
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) { //if we are facing to search query
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Search intent received");
+			
 			//get extra data prepared
 			String query = intent.getStringExtra(SearchManager.QUERY);
 			Bundle extraDataBundle = new Bundle();
@@ -275,8 +314,77 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 			displayLoadingWidgets();
 			getSupportLoaderManager().restartLoader(LOADER_INDEX, extraDataBundle, this);
 			
+		} else if (LocalIntents.ON_DATE_PICKED_UP.toString().equals(intent.getAction())) { //date picked up
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Date picked up intent received");
+			
+			//save the received data
+			searchTimeCalendar = Calendar.getInstance();
+			searchTimeCalendar.set(Calendar.YEAR, intent.getIntExtra(LocalIntentsData.SONG_SEARCH_YEAR.toString(), 0));
+			searchTimeCalendar.set(Calendar.MONTH, intent.getIntExtra(LocalIntentsData.SONG_SEARCH_MONTH.toString(), 0));
+			searchTimeCalendar.set(Calendar.DAY_OF_MONTH, intent.getIntExtra(LocalIntentsData.SONG_SEARCH_DATE.toString(), 0));
+			
+			launchTimePickerFragment(); //pick the time up
+			
+		} else if (LocalIntents.ON_TIME_PICKED_UP.toString().equals(intent.getAction())) { //time picked up
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Time picked up intent received");
+			
+			//save the received data
+			if (searchTimeCalendar != null) {
+				searchTimeCalendar.set(Calendar.HOUR_OF_DAY, intent.getIntExtra(LocalIntentsData.SONG_SEARCH_HOURS.toString(), 0));
+				searchTimeCalendar.set(Calendar.MINUTE, intent.getIntExtra(LocalIntentsData.SONG_SEARCH_MINUTES.toString(), 0));
+				if (BuildConfig.DEBUG)
+					Log.d(TAG, "Date to search : " + searchTimeCalendar);
+				
+				//launch the time search
+				launchTimeSearch();
+			}
+			
 		} else //other type of intent are not supported
 			Log.w(TAG, "Intent not supported : " + intent);
+	}
+	
+	/**
+	 * Launch the {@link DatePickerFragment}
+	 */
+	private void launchDatePickerFragment() {
+		DialogFragment datePickerFragment = new DatePickerFragment();
+	    datePickerFragment.show(getSupportFragmentManager(), DATE_PICKER_FRAGMENT);
+	}
+	
+	/**
+	 * Launch the {@link TimePickerFragment}
+	 */
+	private void launchTimePickerFragment() {
+		TimePickerFragment timePickerFragment = new TimePickerFragment();
+		timePickerFragment.show(getSupportFragmentManager(), TIME_PICKER_FRAGMENT);
+	}
+	
+	/**
+	 * Launch the time search based on selected date
+	 */
+	@SuppressLint("SimpleDateFormat")
+	private void launchTimeSearch() {
+		if (searchTimeCalendar != null) {
+			//get formatted time
+			SimpleDateFormat sdf = new SimpleDateFormat(SongHistoryContract.DATE_SEARCH_FORMAT);
+			String formattedDate = sdf.format(searchTimeCalendar.getTime());
+			
+			//init bundle params
+			Bundle extraDataBundle = new Bundle();
+			extraDataBundle.putBoolean(SEARCH_TIME_TYPE, true);
+			extraDataBundle.putString(SEARCH_TIME, formattedDate);
+			if (BuildConfig.DEBUG)
+				Log.d(TAG, "Time search params : " + extraDataBundle);
+		
+			//launch the search
+			query = null;
+			displayLoadingWidgets();
+			getSupportLoaderManager().restartLoader(LOADER_INDEX, extraDataBundle, this);
+			
+		} else
+			Log.w(TAG, "Date to search is null");
 	}
 	
 }

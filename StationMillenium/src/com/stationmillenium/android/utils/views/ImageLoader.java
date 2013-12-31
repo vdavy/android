@@ -30,20 +30,6 @@ import com.stationmillenium.android.utils.network.NetworkUtils;
  */
 public class ImageLoader extends AsyncTask<String, Void, Bitmap> {
 
-	/**
-	 * Set the returned image
-	 * @author vincent
-	 *
-	 */
-	public interface ReturnImage {
-		
-		/**
-		 * Set the returned image
-		 * @param image the image as {@link Bitmap}
-		 */
-		void setReturnedImage(Bitmap image);
-		
-	}
 	private static final String TAG = "ImageLoader";
 
 	//references
@@ -51,7 +37,6 @@ public class ImageLoader extends AsyncTask<String, Void, Bitmap> {
 	private WeakReference<ProgressBar> progressBarRef;
 	private String imageFileName;
 	private WeakReference<Context> contextRef;
-	private WeakReference<ReturnImage> returnImageRef;
 	private boolean loadImageFromDiskIfExists;
 	
 	/**
@@ -60,15 +45,13 @@ public class ImageLoader extends AsyncTask<String, Void, Bitmap> {
 	 * @param progressBar the {@link ProgressBar} to wait during image download
 	 * @param imageFileName the file name of the local image file
 	 * @param context the {@link Context}
-	 * @param returnImage the instance of {@link ReturnImage} to get the reference of the loaded {@link Bitmap}
 	 * @param loadImageFromDiskIfExists <code>true</code> if prefer loading the image from disk if exists, <code>false</code> if reload required
 	 */
-	public ImageLoader(ImageView imageView, ProgressBar progressBar, String imageFileName, Context context, ReturnImage returnImage, boolean loadImageFromDiskIfExists) {
+	public ImageLoader(ImageView imageView, ProgressBar progressBar, String imageFileName, Context context, boolean loadImageFromDiskIfExists) {
 		imageViewRef = new WeakReference<ImageView>(imageView);
 		progressBarRef = new WeakReference<ProgressBar>(progressBar); 
 		this.imageFileName = imageFileName;
 		contextRef = new WeakReference<Context>(context);
-		returnImageRef = new WeakReference<ImageLoader.ReturnImage>(returnImage);
 		this.loadImageFromDiskIfExists = loadImageFromDiskIfExists;
 	}
 
@@ -141,12 +124,7 @@ public class ImageLoader extends AsyncTask<String, Void, Bitmap> {
 				Log.d(TAG, "Set image to view");
 			progressBarRef.get().setVisibility(View.GONE);
 			imageViewRef.get().setImageBitmap(result);
-			
-			if (returnImageRef.get() != null) //if reference to returned image is needed
-				returnImageRef.get().setReturnedImage(result);
-			else if (BuildConfig.DEBUG)
-				Log.d(TAG, "Reference to returned image not needed");
-			
+		
 		} else {
 			Log.w(TAG, "Error while setting image to view - image : " + result + " - image view : " + imageViewRef.get());
 		}
