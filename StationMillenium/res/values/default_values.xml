@@ -40,6 +40,6 @@
     <string name="song_history_request_method">GET</string>
     <string name="song_history_content_type">text/xml; charset=utf-8</string>
     <string name="song_history_max_items">30</string>
-    <string name="song_history_date_format">yyyy/MM/dd HH:mm</string>
+    <string name="song_history_date_format">dd/MM/yyyy HH:mm</string>
     
 </resources>

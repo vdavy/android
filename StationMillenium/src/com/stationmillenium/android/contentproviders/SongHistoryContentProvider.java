@@ -53,6 +53,7 @@ public class SongHistoryContentProvider extends ContentProvider {
 		private static final String FULL_TEXT_SEARCH = DEFAULT_MATCH + "/*";
 		private static final String DATE_SEARCH = DEFAULT_MATCH + "Date/*";
 		private static final String MIME_TYPE = "vnd." + AUTHORITY + "." + DEFAULT_MATCH;
+		public static final String DATE_SEARCH_FORMAT = "yyyyMMdd-HHmm";
 		
 		/**
 		 * Init the content {@link Uri} 
