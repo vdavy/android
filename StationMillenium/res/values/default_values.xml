@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Default values XML file -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
     <!-- default values for player -->
     <string name="player_stream_url">http://www.station-millenium.com/millenium.mp3</string>
