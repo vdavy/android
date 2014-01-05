@@ -95,6 +95,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:adjustViewBounds="true"
                 android:background="@drawable/home_item_background"
                 android:contentDescription="@string/empty_string"
@@ -102,15 +103,15 @@
                 android:padding="8dp"
                 android:src="@drawable/ic_home_alarm" />
 
-            <Button
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:background="@drawable/home_item_background"
                 android:contentDescription="@string/empty_string"
                 android:onClick="startSongHistorySearchActivity"
                 android:padding="8dp"
-                android:text="C&apos;était quoi ?"
-                android:textColor="#ffffffff" />
+                android:src="@drawable/ic_home_history" />
         </LinearLayout>
     </LinearLayout>
 
