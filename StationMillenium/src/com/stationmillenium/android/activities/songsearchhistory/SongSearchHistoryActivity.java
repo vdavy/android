@@ -61,6 +61,7 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 	private static final int LOADER_INDEX = 1;
 	private static final String DATE_PICKER_FRAGMENT = "DatePickerFragment";
 	private static final String TIME_PICKER_FRAGMENT = "TimePickerFragment";
+	private static final String IS_SEARCH_VIEW_EXPANDED_BUNDLE = "IsSearchViewExpandedBundle";
 	
 	//widgets list
 	private ListView historyListView;
@@ -73,6 +74,7 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 	private SimpleCursorAdapter cursorAdapter;
 	private String query;
 	private Calendar searchTimeCalendar;
+	private boolean expandActionViewOnCreate;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,9 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 		progressBar = (ProgressBar) findViewById(R.id.song_history_progressbar);
 		noDataTextView = (TextView) findViewById(R.id.song_history_no_data_text);
 		introTextView = (TextView) findViewById(R.id.song_history_search_result_text);
+		
+		//should we re-expand search view ?
+		expandActionViewOnCreate = (savedInstanceState != null) ? savedInstanceState.getBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE) : false;
 		
 		//set up action bar
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -245,6 +250,8 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        if (expandActionViewOnCreate)
+        	MenuItemCompat.expandActionView(searchMenuItem);
 
         return true;
     }
@@ -385,6 +392,13 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 			
 		} else
 			Log.w(TAG, "Date to search is null");
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		//save the expanded state for screen rotation
+		outState.putBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE, ((searchMenuItem != null) && (MenuItemCompat.isActionViewExpanded(searchMenuItem))));
+		super.onSaveInstanceState(outState);
 	}
 	
 }

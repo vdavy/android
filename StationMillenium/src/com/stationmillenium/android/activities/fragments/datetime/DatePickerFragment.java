@@ -29,6 +29,7 @@ public class DatePickerFragment extends DialogFragment implements OnDateSetListe
 	
 	//flag due to twice calls of callback : http://stackoverflow.com/questions/12436073/datepicker-ondatechangedlistener-called-twice
 	private boolean alreadySet; 
+	private boolean isFragmentPaused; //to not send intent on screen rotation
 	
 	@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class DatePickerFragment extends DialogFragment implements OnDateSetListe
 
 	@Override
 	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-		if (!alreadySet) {
+		if ((!alreadySet) && (!isFragmentPaused)) { 
 			if (BuildConfig.DEBUG)
 				Log.d(TAG, "Selected date : " + year + "-" + monthOfYear + "-" + dayOfMonth);
 			
@@ -61,7 +62,19 @@ public class DatePickerFragment extends DialogFragment implements OnDateSetListe
 			//flag we have send data
 			alreadySet = true;
 		} else 
-			Log.w(TAG, "Date already set");
+			Log.w(TAG, "Date already set or fragment paused");
+	}
+	
+	@Override
+	public void onPause() {
+		isFragmentPaused = true;
+		super.onPause();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		isFragmentPaused = false;
 	}
 	
 }

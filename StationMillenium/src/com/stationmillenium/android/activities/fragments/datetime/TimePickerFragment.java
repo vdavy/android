@@ -30,6 +30,7 @@ public class TimePickerFragment extends DialogFragment implements OnTimeSetListe
 	
 	//flag due to twice calls of callback : http://stackoverflow.com/questions/12436073/datepicker-ondatechangedlistener-called-twice
 	private boolean alreadySet; 
+	private boolean isFragmentPaused; //to not send intent on screen rotation
 		
 	@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -40,13 +41,13 @@ public class TimePickerFragment extends DialogFragment implements OnTimeSetListe
 
         // Create a new instance of TimePickerDialog and return it
         TimePickerDialog timePickerDialog =  new TimePickerDialog(getActivity(), this, hour, minute, DateFormat.is24HourFormat(getActivity()));
-        timePickerDialog.setTitle(getString(R.string.song_search_history_menu_time_search_select_date));
+        timePickerDialog.setTitle(getString(R.string.song_search_history_menu_time_search_select_time));
         return timePickerDialog;
     }
 	
 	@Override
 	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-		if (!alreadySet) {
+		if ((!alreadySet) && (!isFragmentPaused)) { 
 			if (BuildConfig.DEBUG)
 				Log.d(TAG, "Selected time : " + hourOfDay + ":" + minute);
 			
@@ -61,6 +62,18 @@ public class TimePickerFragment extends DialogFragment implements OnTimeSetListe
 			alreadySet = true;
 		} else 
 			Log.w(TAG, "Date already set");
+	}
+	
+	@Override
+	public void onPause() {
+		isFragmentPaused = true;
+		super.onPause();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		isFragmentPaused = false;
 	}
 	
 }
