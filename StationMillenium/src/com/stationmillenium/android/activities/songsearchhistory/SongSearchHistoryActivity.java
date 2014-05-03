@@ -8,8 +8,10 @@ import java.util.Calendar;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -21,6 +23,8 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.text.Html;
@@ -42,6 +46,7 @@ import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.datetime.DatePickerFragment;
 import com.stationmillenium.android.activities.fragments.datetime.TimePickerFragment;
 import com.stationmillenium.android.contentproviders.SongHistoryContentProvider.SongHistoryContract;
+import com.stationmillenium.android.utils.Utils;
 import com.stationmillenium.android.utils.intents.LocalIntents;
 import com.stationmillenium.android.utils.intents.LocalIntentsData;
 
@@ -50,7 +55,7 @@ import com.stationmillenium.android.utils.intents.LocalIntentsData;
  * @author vincent
  *
  */
-public class SongSearchHistoryActivity extends ActionBarActivity implements LoaderCallbacks<Cursor>, OnItemClickListener {
+public class SongSearchHistoryActivity extends ActionBarActivity implements LoaderCallbacks<Cursor>, OnItemClickListener, OnRefreshListener {
 
 	//static parts
 	private static final String TAG = "SongSearchHistoryActivity";
@@ -69,6 +74,7 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 	private TextView noDataTextView;
 	private TextView introTextView;
 	private MenuItem searchMenuItem;
+	private SwipeRefreshLayout swipeRefreshLayout;
 	
 	//instance vars
 	private SimpleCursorAdapter cursorAdapter;
@@ -76,6 +82,7 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 	private Calendar searchTimeCalendar;
 	private boolean expandActionViewOnCreate;
 	
+	@SuppressLint("InlinedApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG)
@@ -88,6 +95,7 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 		progressBar = (ProgressBar) findViewById(R.id.song_history_progressbar);
 		noDataTextView = (TextView) findViewById(R.id.song_history_no_data_text);
 		introTextView = (TextView) findViewById(R.id.song_history_search_result_text);
+		swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.song_history_swipe_refresh_layout);
 		
 		//should we re-expand search view ?
 		expandActionViewOnCreate = (savedInstanceState != null) ? savedInstanceState.getBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE) : false;
@@ -95,6 +103,15 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 		//set up action bar
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 				
+		//set up swipe refresh
+		swipeRefreshLayout.setOnRefreshListener(this);
+		if (Utils.isAPILevel14Available()) {
+		swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright, 
+	            android.R.color.holo_green_light, 
+	            android.R.color.holo_orange_light, 
+	            android.R.color.holo_red_light);
+		}
+		
 		//cursor adapter
 		cursorAdapter = new SimpleCursorAdapter(this, R.layout.song_search_history_list_item, null, 
 				new String[]{
@@ -399,6 +416,23 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 		//save the expanded state for screen rotation
 		outState.putBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE, ((searchMenuItem != null) && (MenuItemCompat.isActionViewExpanded(searchMenuItem))));
 		super.onSaveInstanceState(outState);
+	}
+	
+	@Override
+	public void onRefresh() {
+		Log.d(TAG, "Refresh requested");
+		//TODO : call real action
+		AlertDialog dialog = new AlertDialog.Builder(this).create();
+		dialog.setTitle("Update requested");
+		dialog.setMessage("Future update in progress...");
+		dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
 	}
 	
 }
