@@ -8,10 +8,8 @@ import java.util.Calendar;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -220,6 +218,7 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 		introTextView.setVisibility(View.VISIBLE);
 		progressBar.setVisibility(View.GONE);
 		noDataTextView.setVisibility((dataProperlyLoaded) ? View.GONE : View.VISIBLE);
+		swipeRefreshLayout.setRefreshing(false);
 	}
 	
 	@Override
@@ -290,19 +289,26 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
             	return true;
                 
             case R.id.song_search_menu_reinit: //reinit the loader to initial search
-            	if (BuildConfig.DEBUG)
-					Log.d(TAG, "Reinit song search to initial value");
-            	query = null; //reinit query
-            	searchTimeCalendar = null; //reinit searched date
-            	collapseSearchView();
-            	displayLoadingWidgets();
-            	getSupportLoaderManager().restartLoader(LOADER_INDEX, null, this);
+            	reinitSongSearch();
             	return true;
             	
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+	/**
+	 * Reinit the song search
+	 */
+	private void reinitSongSearch() {
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "Reinit song search to initial value");
+		query = null; //reinit query
+		searchTimeCalendar = null; //reinit searched date
+		collapseSearchView();
+		displayLoadingWidgets();
+		getSupportLoaderManager().restartLoader(LOADER_INDEX, null, this);
+	}
 
 	/**
 	 * Collapse the {@link SearchView} if needed
@@ -420,19 +426,9 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
 	
 	@Override
 	public void onRefresh() {
-		Log.d(TAG, "Refresh requested");
-		//TODO : call real action
-		AlertDialog dialog = new AlertDialog.Builder(this).create();
-		dialog.setTitle("Update requested");
-		dialog.setMessage("Future update in progress...");
-		dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-			}
-		});
-		dialog.show();
+		Log.d(TAG, "Swipe refresh requested");
+		swipeRefreshLayout.setRefreshing(true);
+		reinitSongSearch();
 	}
 	
 }
