@@ -19,7 +19,7 @@
     <string name="player_network_unavailable">Pas de connexion à Internet</string>
     <string name="player_network_error">Erreur réseau</string>
     <string name="player_current_title">%1$s - %2$s</string>
-    <string name="player_no_title">Indisponible</string>
+    <string name="player_no_title">Station Millenium</string>
     <string name="player_no_wifi">Connecter le Wifi pour écouter la radio</string>
     <string name="player_error">Impossible de lire la radio</string>
     <string name="player_play">Lecture</string>
@@ -35,7 +35,7 @@
     <!-- playing notification -->
     <string name="notification_ticker_text">Lecture de la radio&#8230;</string>
     <string name="player_current_title_notification">Actuellement : %1$s - %2$s</string>
-    <string name="player_current_title_unavailable_notification">Actuellement : indisponible</string>
+    <string name="player_current_title_unavailable_notification">Actuellement : Station Millenium</string>
     <string name="player_notification_play">Lecture</string>
     <string name="player_notification_pause">Pause</string>
     <string name="player_notification_loading">Chargement</string>
@@ -135,7 +135,7 @@
 	<string name="preferences_alarm_volume_progress_text_suffix">sur %1$s</string>
 	<string name="preferences_alarm_volume_summary">%1$s sur %2$s</string>
 	<string name="preferences_app_version">Version de l\'application</string>
-	<string name="preferences_app_version_not_available">Indisponible</string>
+	<string name="preferences_app_version_not_available">Station Millenium</string>
 	<string name="preferences_alarm_network_available_summary">Pour que l\'alarme puisse fonctionner, le Wifi ou les données mobiles doivent être activés.</string>
 	<string name="preferences_about">A propos</string>
 	
