@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Default values XML file -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+    <!-- default values for player -->
+    <string name="player_stream_url">http://www.station-millenium.com/millenium.mp3</string>
+    <string name="player_current_song_url">http://www.station-millenium.com/coverart/android/currentSongs</string>
+    <string name="player_connection_read_timeout">10000</string>
+    <string name="player_connection_connect_timeout">15000</string>
+    <string name="player_connection_request_method">GET</string>
+    <string name="player_connection_content_type">text/xml; charset=utf-8</string>
+    <string name="player_image_url_root">http://www.station-millenium.com/coverart</string>
+    
+    <!-- default values for replay part -->
+    <string name="replay_url">http://www.station-millenium.com/replay/</string>
+        
+    <!-- antenna grid -->
+	<string name="antenna_grid_image_url">http://www.station-millenium.com/wp-millenium/wp-content/uploads/2013/08/grille-programmes-android.jpg</string>
+
+	<!-- links -->
+	<string name="tweeter_user_name">millenium22</string>
+	<string name="facebook_internal_url">fb://page/132025813602837</string>
+	<string name="facebook_web_url">https://www.facebook.com/stationmillenium</string>
+	<string name="twitter_internal_url">twitter://user?screen_name=millenium22</string>
+	<string name="twitter_web_url">https://www.twitter.com/millenium22</string>
+	<string name="web_site_url">http://www.station-millenium.com</string>
+	
+	<!-- tracking URL -->
+	<string name="tracking_url_with_id">http://www.station-millenium.com/android-piwik-tracker.php?visitorId=</string>
+	<string name="tracking_url">http://www.station-millenium.com/android-piwik-tracker.php</string>	
+	
+	<!-- cache management -->
+	<integer name="cache_size_max">3145728</integer><!-- 3 MB -->
+	<integer name="cache_size_to_reach_percent">75</integer><!-- cache size to reach when cleaning in percent -->
+	
+	<!-- song history values -->
+	<string name="song_history_url">http://www.station-millenium.com/coverart/android/searchSongsHistory</string>
+    <string name="song_history_read_timeout">45000</string>
+    <string name="song_history_connect_timeout">15000</string>
+    <string name="song_history_request_method">GET</string>
+    <string name="song_history_content_type">text/xml; charset=utf-8</string>
+    <string name="song_history_max_items">30</string>
+    <string name="song_history_date_format">dd/MM/yyyy HH:mm</string>
+    
+</resources>

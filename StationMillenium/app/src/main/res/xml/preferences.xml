@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:millenium="http://schemas.android.com/apk/res/com.stationmillenium.android" >
+
+    <!-- player preferences -->
+    <PreferenceCategory android:title="@string/preferences_player_category" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_wifi_only"
+            android:key="preferences_player_wifi_only"
+            android:summaryOff="@string/preferences_player_wifi_only_summary_off"
+            android:summaryOn="@string/preferences_player_wifi_only_summary_on"
+            android:title="@string/preferences_player_wifi_only" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_player_autostart"
+            android:key="preferences_player_autostart"
+            android:summary="@string/preferences_player_autostart_summary"
+            android:title="@string/preferences_player_autostart" />
+    </PreferenceCategory>
+
+    <!-- news preferences -->
+    <PreferenceCategory android:title="@string/preferences_links" >
+        <ListPreference
+            android:defaultValue="6"
+            android:entries="@array/preferences_links_tweets_number_values"
+            android:entryValues="@array/preferences_links_tweets_number_values_internal"
+            android:icon="@drawable/ic_tweets_number"
+            android:key="preferences_tweets_display_number"
+            android:summary="@string/preferences_links_tweets_number_summary"
+            android:title="@string/preferences_links_tweets_number" />
+    </PreferenceCategory>
+
+    <!-- app version -->
+    <PreferenceCategory android:title="@string/preferences_about">
+	    <Preference
+	        android:key="preferences_version"
+	        android:persistent="false"
+	        android:selectable="false"
+	        android:title="@string/preferences_app_version" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
