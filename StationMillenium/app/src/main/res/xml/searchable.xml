@@ -1,0 +1,9 @@
+<!-- Searchable configuration for song search history -->
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:hint="@string/song_search_history_search_hint"
+    android:includeInGlobalSearch="false"
+    android:label="@string/app_name"
+    android:searchSuggestAuthority="com.stationmillenium.android.contentproviders.SongHistoryContentProvider"
+    android:searchSuggestIntentAction="android.intent.action.SEARCH"
+    android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
+    android:searchSuggestThreshold="3" />
