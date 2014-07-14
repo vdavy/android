@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Default values XML file -->
-<resources>
-
-    <!-- tweeter auth params -->
-    <string name="tweeter_consumer_key"></string>
-    <string name="tweeter_consumer_secret"></string>
-	
-</resources>
