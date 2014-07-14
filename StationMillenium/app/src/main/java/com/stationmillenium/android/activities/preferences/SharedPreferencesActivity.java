@@ -4,12 +4,15 @@
 package com.stationmillenium.android.activities.preferences;
 
 import android.annotation.SuppressLint;
+import android.app.backup.BackupManager;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,7 +26,7 @@ import com.stationmillenium.android.utils.Utils;
  * @author vincent
  *
  */
-public class SharedPreferencesActivity extends PreferenceActivity {
+public class SharedPreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 	/**
 	 * Constants for shared preferences
@@ -63,7 +66,10 @@ public class SharedPreferencesActivity extends PreferenceActivity {
 		//init fields
 		newsNumber = (ListPreference) findPreference(SharedPreferencesConstants.TWEETS_DISPLAY_NUMBER);
 		initNewsNumber();
-		initAppVersionPreference();		
+		initAppVersionPreference();
+
+        //register callback for preference changes
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
 	}
 	
 	/**
@@ -124,5 +130,21 @@ public class SharedPreferencesActivity extends PreferenceActivity {
 			appVersionPreference.setSummary(R.string.preferences_app_version_not_available);
 		}
 	}
-	
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "Shared preferences changed - trigger backup");
+
+        new BackupManager(this).dataChanged();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "Unregister OnSharedPreferenceChangeListener");
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
 }

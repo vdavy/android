@@ -3,7 +3,7 @@
     package="com.stationmillenium.android"
     android:installLocation="auto"
     android:versionCode="28"
-    android:versionName="1.4.1" >
+    android:versionName="1.4.2-beta" >
 
     <!-- min version of sdk is android gingerbread 2.3 -->
     <uses-sdk
@@ -17,7 +17,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:allowBackup="true"
+        android:backupAgent=".utils.backup.AppBackupAgent"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >

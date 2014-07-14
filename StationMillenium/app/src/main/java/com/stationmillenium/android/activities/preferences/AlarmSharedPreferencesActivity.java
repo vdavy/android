@@ -12,6 +12,7 @@ import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.backup.BackupManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -335,6 +336,7 @@ public class AlarmSharedPreferencesActivity extends PreferenceActivity implement
 				Log.d(TAG, "Alarm enabled shared preference changed");
 			boolean alarmEnabledValue = sharedPreferences.getBoolean(AlarmSharedPreferencesConstants.ALARM_ENABLED, false); //get new value
 			alarmEnabled.setChecked(alarmEnabledValue); //set checked
+            new BackupManager(this).dataChanged();
 		}
 	}
 	
