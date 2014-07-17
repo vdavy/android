@@ -1,0 +1,27 @@
+apply plugin: 'android'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        applicationId "com.stationmillenium.android"
+        minSdkVersion 10
+        targetSdkVersion 19
+
+        testApplicationId "com.stationmillenium.android.test"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+    }
+
+    buildTypes {
+        release {
+            runProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:19.1.+'
+    compile 'org.twitter4j:twitter4j-core:4.0.+'
+}

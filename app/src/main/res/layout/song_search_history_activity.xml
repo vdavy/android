@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_background" >
+
+    <!-- progress bar displayed during search -->
+
+    <ProgressBar
+        android:id="@+id/song_history_progressbar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+    <!-- no results textview -->
+
+    <TextView
+        android:id="@+id/song_history_no_data_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/song_search_no_data"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:visibility="gone" />
+
+    <!-- results layout -->
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/song_history_swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <!-- intro text view -->
+
+            <TextView
+                android:id="@+id/song_history_search_result_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2dp"
+                android:textColor="#ff9900cc"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <!-- listview for search results -->
+
+            <ListView
+                android:id="@+id/song_history_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:dividerHeight="5dp"
+                android:listSelector="@drawable/song_history_item_background"
+                android:padding="5dp" />
+        </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</RelativeLayout>
