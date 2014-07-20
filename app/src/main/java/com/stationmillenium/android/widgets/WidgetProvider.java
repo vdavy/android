@@ -166,16 +166,11 @@ public class WidgetProvider extends AppWidgetProvider {
 	/**
 	 * Update the buttons visibility states
 	 * @param context the {@link Context}
-	 * @param playButtonVisible <code>true</code> to display play button, <code>false</code> to hide
-	 * @param pauseButtonVisible <code>true</code> to display pause button, <code>false</code> to hide
-	 * @param stopButtonVisible <code>true</code> to display stop button, <code>false</code> to hide
+     * @param playerState the player state
 	 */
 	private void updateWidgetsStates(Context context, PlayerState playerState) {
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-		
-		//TODO : ajouter pending intent pour ouverture de l'appli en fonction des états,
-		//ajouter des intents sur widget_image_layout et widget_text_layout
-		
+
 		//set buttons display
 		boolean playButtonVisible = false;
 		boolean pauseButtonVisible = false;
