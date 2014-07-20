@@ -2,13 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stationmillenium.android"
     android:installLocation="auto"
-    android:versionCode="28"
+    android:versionCode="29"
     android:versionName="1.4.2-beta" >
-
-    <!-- min version of sdk is android gingerbread 2.3 -->
-    <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="19" />
 
     <!-- permissions to access network and check network state -->
     <uses-permission android:name="android.permission.INTERNET" />
