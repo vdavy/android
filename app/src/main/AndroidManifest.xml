@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stationmillenium.android"
     android:installLocation="auto"
-    android:versionCode="29"
-    android:versionName="1.4.2-beta" >
+    android:versionCode="30"
+    android:versionName="1.4.2" >
 
     <!-- permissions to access network and check network state -->
     <uses-permission android:name="android.permission.INTERNET" />
