@@ -1,10 +1,5 @@
 package com.stationmillenium.android.utils.preferences;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -17,12 +12,19 @@ import android.widget.ListView;
 
 import com.stationmillenium.android.R;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * Class to emulate {@link MultiSelectListPreference} on Android 2.3
  * Little adapatation for this app
  * 
  * @author declanshanaghy
- * @see http://blog.350nice.com/wp/archives/240
+ * http://blog.350nice.com/wp/archives/240
  * MultiChoice Preference Widget for Android
  *
  * @contributor matiboy
@@ -72,10 +74,10 @@ public class ListPreferenceMultiSelect extends ListPreference {
 	}
 
 	@Override
-	protected void onPrepareDialogBuilder(Builder builder) {
-		CharSequence[] entries = getEntries();
-		CharSequence[] entryValues = getEntryValues();
-		if (entries == null || entryValues == null || entries.length != entryValues.length ) {
+    protected void onPrepareDialogBuilder(@NotNull Builder builder) {
+        CharSequence[] entries = getEntries();
+        CharSequence[] entryValues = getEntryValues();
+        if (entries == null || entryValues == null || entries.length != entryValues.length ) {
 			throw new IllegalStateException(
 					"ListPreference requires an entries array and an entryValues array which are both the same length");
 		}
@@ -138,7 +140,7 @@ public class ListPreferenceMultiSelect extends ListPreference {
 	@Override
 	protected void onDialogClosed(boolean positiveResult) {
 		super.onDialogClosed(positiveResult);
-		ArrayList<String> values = new ArrayList<String>();
+        ArrayList<String> values = new ArrayList<>();
 
 		CharSequence[] entryValues = getEntryValues();
 		if (positiveResult && entryValues != null) {

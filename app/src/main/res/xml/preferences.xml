@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:millenium="http://schemas.android.com/apk/res/com.stationmillenium.android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- player preferences -->
-    <PreferenceCategory android:title="@string/preferences_player_category" >
+    <PreferenceCategory android:title="@string/preferences_player_category">
         <CheckBoxPreference
             android:defaultValue="false"
             android:icon="@drawable/ic_wifi_only"
@@ -20,7 +19,7 @@
     </PreferenceCategory>
 
     <!-- news preferences -->
-    <PreferenceCategory android:title="@string/preferences_links" >
+    <PreferenceCategory android:title="@string/preferences_links">
         <ListPreference
             android:defaultValue="6"
             android:entries="@array/preferences_links_tweets_number_values"
@@ -33,11 +32,11 @@
 
     <!-- app version -->
     <PreferenceCategory android:title="@string/preferences_about">
-	    <Preference
-	        android:key="preferences_version"
-	        android:persistent="false"
-	        android:selectable="false"
-	        android:title="@string/preferences_app_version" />
+        <Preference
+            android:key="preferences_version"
+            android:persistent="false"
+            android:selectable="false"
+            android:title="@string/preferences_app_version" />
     </PreferenceCategory>
 
 </PreferenceScreen>

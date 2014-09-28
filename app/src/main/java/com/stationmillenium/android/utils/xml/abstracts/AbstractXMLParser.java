@@ -3,12 +3,6 @@
  */
 package com.stationmillenium.android.utils.xml.abstracts;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.util.Log;
 import android.util.Xml;
 
@@ -18,9 +12,15 @@ import com.stationmillenium.android.dto.CurrentTitleDTO.Song;
 import com.stationmillenium.android.dto.CurrentTitleDTO.Song.ImageMetadata;
 import com.stationmillenium.android.exceptions.XMLParserException;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * Parser for the XML about current title
- * @see http://developer.android.com/training/basics/network-ops/xml.html for more details
+ * http://developer.android.com/training/basics/network-ops/xml.html for more details
  * @author vincent
  *
  */
@@ -122,34 +122,38 @@ public abstract class AbstractXMLParser<T> {
 	    
         	//process the tag
 	        String name = parser.getName();
-	        if (name.equals("path")) { //path case
-	        	String path = readTagText("path");
-	        	if ((path != null) && (!path.equals(""))) {
-	        		if (BuildConfig.DEBUG)
-	        			Log.d(TAG, "Path value : " + path);
-	        		dtoToFillIn.setPath(path);
-	        	}
-	        
-	        } else if (name.equals("width")) { //width case      	
-	        	String width = readTagText("width");
-	        	if ((width != null) && (!width.equals(""))) {
-	        		if (BuildConfig.DEBUG)
-	        			Log.d(TAG, "Width value : " + width);
-	        		dtoToFillIn.setWidth(width);
-	        	}
-	        
-	        } else if (name.equals("height")) { //height case      	
-	        	String height = readTagText("height");
-	        	if ((height != null) && (!height.equals(""))) {
-	        		if (BuildConfig.DEBUG)
-	        			Log.d(TAG, "Height value : " + height);
-	        		dtoToFillIn.setHeight(height);
-	        	}
-	        }
-		}
-	}
-	
-	/**
+            switch (name) {
+                case "path":  //path case
+                    String path = readTagText("path");
+                    if ((path != null) && (!path.equals(""))) {
+                        if (BuildConfig.DEBUG)
+                            Log.d(TAG, "Path value : " + path);
+                        dtoToFillIn.setPath(path);
+                    }
+
+                    break;
+                case "width":  //width case
+                    String width = readTagText("width");
+                    if ((width != null) && (!width.equals(""))) {
+                        if (BuildConfig.DEBUG)
+                            Log.d(TAG, "Width value : " + width);
+                        dtoToFillIn.setWidth(width);
+                    }
+
+                    break;
+                case "height":  //height case
+                    String height = readTagText("height");
+                    if ((height != null) && (!height.equals(""))) {
+                        if (BuildConfig.DEBUG)
+                            Log.d(TAG, "Height value : " + height);
+                        dtoToFillIn.setHeight(height);
+                    }
+                    break;
+            }
+        }
+    }
+
+    /**
 	 * Read a tag text
 	 * @param tag the tag to read
 	 * @return the read text on the tag
