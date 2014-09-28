@@ -210,9 +210,10 @@ public class CurrentTitleDTO implements Serializable {
 				return true;
 			if (obj == null)
 				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Song other = (Song) obj;
+            if (!(obj instanceof CurrentTitleDTO)) {
+                return false;
+            }
+            Song other = (Song) obj;
 			if (artist == null) {
 				if (other.artist != null)
 					return false;
