@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stationmillenium.android"
     android:installLocation="auto"
-    android:versionCode="30"
-    android:versionName="1.4.2" >
+    android:versionCode="32"
+    android:versionName="1.4.3-beta2">
 
     <!-- permissions to access network and check network state -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,10 +12,11 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
+        android:name=".app.StationMilleniumApp"
         android:backupAgent=".utils.backup.AppBackupAgent"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
 
         <!-- meta data for backup service -->
         <meta-data
@@ -25,9 +26,9 @@
         <!-- main activity -->
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -38,7 +39,7 @@
             android:name=".activities.PlayerActivity"
             android:label="@string/player_activity_title"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.MainActivity" >
+            android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
@@ -56,7 +57,7 @@
         <activity
             android:name=".activities.preferences.SharedPreferencesActivity"
             android:label="@string/preferences_activity_title"
-            android:parentActivityName=".activities.MainActivity" >
+            android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
@@ -72,7 +73,7 @@
         <activity
             android:name=".activities.preferences.AlarmSharedPreferencesActivity"
             android:label="@string/preferences_alarm_screen"
-            android:parentActivityName=".activities.MainActivity" >
+            android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
@@ -82,28 +83,30 @@
         <activity
             android:name="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity"
             android:label="@string/song_search_history"
-            android:parentActivityName=".activities.MainActivity"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.MainActivity">
             <intent-filter>
-            	<action android:name="android.intent.action.SEARCH" />
-        	</intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
-            <meta-data android:name="android.app.searchable"
-                   android:resource="@xml/searchable"/>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
-        
+
         <!-- song history search imgage display activity -->
         <activity
             android:name="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryImageDisplayActivity"
             android:label="@string/song_search_history_image"
-            android:parentActivityName=".activities.songsearchhistory.SongSearchHistoryActivity" >
+            android:parentActivityName=".activities.songsearchhistory.SongSearchHistoryActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.songsearchhistory.SongSearchHistoryActivity" />
         </activity>
-        
+
         <!-- player service -->
         <service
             android:name=".services.CurrentTitlePlayerService"
@@ -113,9 +116,9 @@
             android:exported="false" />
         <service
             android:name=".services.MediaPlayerService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.stationmillenium.android.intents.PLAYER_PLAY" />
+            <action android:name="com.stationmillenium.android.intents.PLAYER_PLAY" />
                 <action android:name="com.stationmillenium.android.intents.PLAYER_PLAY_PAUSE" />
                 <action android:name="com.stationmillenium.android.intents.PLAYER_PAUSE" />
                 <action android:name="com.stationmillenium.android.intents.PLAYER_STOP" />
@@ -126,16 +129,16 @@
         </service>
 
         <!-- broadcast receiver for playback buttons -->
-        <receiver android:name=".services.MediaPlayerService$PlaybackControlButtonsBroadcastReceiver" >
+        <receiver android:name=".services.MediaPlayerService$PlaybackControlButtonsBroadcastReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
 
         <!-- broadcast receiver for the widget part -->
-        <receiver android:name=".widgets.WidgetProvider" >
+        <receiver android:name=".widgets.WidgetProvider">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.stationmillenium.android.intents.ON_PLAYER_PLAY" />
                 <action android:name="com.stationmillenium.android.intents.ON_PLAYER_PAUSE" />
                 <action android:name="com.stationmillenium.android.intents.ON_PLAYER_STOP" />
@@ -154,20 +157,19 @@
             android:exported="false" />
 
         <!-- alarm service boot completed initialization broadcast receiver -->
-        <receiver android:name=".services.AlarmBootCompletedBroadcastReceiver" >
+        <receiver android:name=".services.AlarmBootCompletedBroadcastReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        
+
         <!-- song history content provider -->
-		<provider
+        <provider
             android:name=".contentproviders.SongHistoryContentProvider"
             android:authorities="com.stationmillenium.android.contentproviders.SongHistoryContentProvider"
             android:exported="false"
-            android:label="@string/app_name" >
-        </provider>
-        
+            android:label="@string/app_name"></provider>
+
     </application>
 
 </manifest>

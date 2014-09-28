@@ -229,11 +229,11 @@ public class CurrentTitleDTO implements Serializable {
 	}
 	
 	private Song currentSong = new Song();
-	private List<Song> history = new ArrayList<CurrentTitleDTO.Song>();
-	
-	/**
-	 * @return the currentSong
-	 */
+    private List<Song> history = new ArrayList<>();
+
+    /**
+     * @return the currentSong
+     */
 	public Song getCurrentSong() {
 		return currentSong;
 	}
