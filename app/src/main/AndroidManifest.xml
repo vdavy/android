@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stationmillenium.android"
-    android:installLocation="auto"
-    android:versionCode="34"
-    android:versionName="1.4.3">
+    android:installLocation="auto">
 
-<!-- permissions to access network and check network state -->
+    <!-- permissions to access network and check network state -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -168,7 +166,7 @@
             android:name=".contentproviders.SongHistoryContentProvider"
             android:authorities="com.stationmillenium.android.contentproviders.SongHistoryContentProvider"
             android:exported="false"
-            android:label="@string/app_name"></provider>
+            android:label="@string/app_name" />
 
     </application>
 
