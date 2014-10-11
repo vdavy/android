@@ -82,8 +82,8 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
         public void onReceive(Context context, Intent intent) {
             if (BuildConfig.DEBUG)
                 Log.d(TAG, "Received intent about pressed control buttons");
-            KeyEvent event = (KeyEvent) intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+            if ((event != null) && (event.getAction() == KeyEvent.ACTION_DOWN)) {
                 switch (event.getKeyCode()) {
                     case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
                         if (BuildConfig.DEBUG)
