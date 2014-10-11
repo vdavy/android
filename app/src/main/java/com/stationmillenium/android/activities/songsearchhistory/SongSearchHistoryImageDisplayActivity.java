@@ -19,6 +19,8 @@ import com.stationmillenium.android.utils.AppUtils;
 import com.stationmillenium.android.utils.intents.LocalIntentsData;
 import com.stationmillenium.android.utils.views.ImageLoader;
 
+import java.util.Date;
+
 /**
  * Song search image display activity
  * Implements {@link OnGlobalLayoutListener} to display image when the layout is full loaded (due to using {@link AsyncTask} in {@link ImageLoader})
@@ -32,6 +34,7 @@ public class SongSearchHistoryImageDisplayActivity extends ActionBarActivity imp
     private final static String IMAGE_FILE_NAME_BUNDLE = "ImageFileNameBundle";
     private final static String IMAGE_URL_BUNDLE = "ImageURLBundle";
     private final static String ACTIVITY_TITLE_BUNDLE = "ActivityTitleBundle";
+    private final static String GENERATED_FILE_NAME_KEY = "generated";
 
     //instance vars
     private ImageLoader imageLoader;
@@ -77,7 +80,12 @@ public class SongSearchHistoryImageDisplayActivity extends ActionBarActivity imp
         //file name part
         if (imageFileName == null) { //set the file name
             imageFileName = getIntent().getStringExtra(LocalIntentsData.IMAGE_FILE_PATH.toString());
-            imageFileName = imageFileName.substring(imageFileName.lastIndexOf("/") + 1);
+            if (imageFileName == null) {
+                imageFileName = GENERATED_FILE_NAME_KEY + new Date().getTime();
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "Name not found - use generated one : " + imageFileName);
+            } else
+                imageFileName = imageFileName.substring(imageFileName.lastIndexOf("/") + 1);
         }
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Image file name : " + imageFileName);
@@ -85,8 +93,8 @@ public class SongSearchHistoryImageDisplayActivity extends ActionBarActivity imp
         //image URL part
         if (imageURL == null) {
             imageURL = getResources().getString(R.string.player_image_url_root) + getIntent().getStringExtra(LocalIntentsData.IMAGE_FILE_PATH.toString());
-
         }
+
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Image URL : " + imageURL);
 
