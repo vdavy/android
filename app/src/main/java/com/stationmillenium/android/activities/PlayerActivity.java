@@ -311,7 +311,8 @@ public class PlayerActivity extends ActionBarActivity {
         } else {
             if (BuildConfig.DEBUG)
                 Log.d(TAG, "Play the player");
-            Intent playPlayerIntent = new Intent(LocalIntents.PLAYER_PLAY.toString());
+            Intent playPlayerIntent = new Intent(this, MediaPlayerService.class);
+            playPlayerIntent.setAction(LocalIntents.PLAYER_PLAY.toString());
             startService(playPlayerIntent);
         }
     }
@@ -351,6 +352,7 @@ public class PlayerActivity extends ActionBarActivity {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Stop player button clicked");
         Intent stopPlayerIntent = new Intent(LocalIntents.PLAYER_STOP.toString());
+        stopPlayerIntent.setClass(this, MediaPlayerService.class);
         startService(stopPlayerIntent);
     }
 
@@ -363,6 +365,7 @@ public class PlayerActivity extends ActionBarActivity {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Pause player button clicked");
         Intent pausePlayerIntent = new Intent(LocalIntents.PLAYER_PAUSE.toString());
+        pausePlayerIntent.setClass(this, MediaPlayerService.class);
         startService(pausePlayerIntent);
     }
 

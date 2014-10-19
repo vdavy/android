@@ -89,6 +89,7 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
                         if (BuildConfig.DEBUG)
                             Log.d(TAG, "Play/pause button pressed");
                         Intent playPauseIntent = new Intent(LocalIntents.PLAYER_PLAY_PAUSE.toString());
+                        playPauseIntent.setClass(context, MediaPlayerService.class);
                         context.startService(playPauseIntent);
                         break;
 
@@ -96,6 +97,7 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
                         if (BuildConfig.DEBUG)
                             Log.d(TAG, "Play button pressed");
                         Intent playIntent = new Intent(LocalIntents.PLAYER_PLAY.toString());
+                        playIntent.setClass(context, MediaPlayerService.class);
                         context.startService(playIntent);
                         break;
 
@@ -104,6 +106,7 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
                         if (BuildConfig.DEBUG)
                             Log.d(TAG, "Pause button pressed");
                         Intent pauseIntent = new Intent(LocalIntents.PLAYER_PAUSE.toString());
+                        pauseIntent.setClass(context, MediaPlayerService.class);
                         context.startService(pauseIntent);
                         break;
 
@@ -111,6 +114,7 @@ public class MediaPlayerService extends Service implements OnAudioFocusChangeLis
                         if (BuildConfig.DEBUG)
                             Log.d(TAG, "Stop button pressed");
                         Intent stopIntent = new Intent(LocalIntents.PLAYER_STOP.toString());
+                        stopIntent.setClass(context, MediaPlayerService.class);
                         context.startService(stopIntent);
                         break;
                 }
