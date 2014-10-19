@@ -76,7 +76,9 @@ public class CurrentTitlePlayerService extends IntentService {
                             Log.d(TAG, "Gathered song data : " + songDataDTO);
 
                         //process image if needed
-                        if (songDataDTO.getCurrentSong().getMetadata() != null) {
+                        if ((songDataDTO != null)
+                                && (songDataDTO.getCurrentSong() != null)
+                                && (songDataDTO.getCurrentSong().getMetadata() != null)) {
                             cleanupCache(); //clean up cache before adding new image
                             manageBitmapImageWithCache(songDataDTO);
                         }
