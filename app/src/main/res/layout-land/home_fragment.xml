@@ -1,126 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/home_scrollview"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_fragment_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/home_background"
-    android:fillViewport="true">
+    android:background="@drawable/home_background">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/home_fragment_layout"
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/empty_string"
+        android:scaleType="centerInside"
+        android:src="@drawable/home_logo" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="top"
-        android:orientation="vertical">
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentTop="false"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="#77000000"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|right"
+            android:orientation="vertical">
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:adjustViewBounds="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/home_item_background"
                 android:contentDescription="@string/empty_string"
-                android:scaleType="centerInside"
-                android:src="@drawable/home_logo" />
+                android:onClick="startPlayer"
+                android:padding="8dp"
+                android:src="@drawable/ic_home_player" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/home_item_background"
+                android:contentDescription="@string/empty_string"
+                android:onClick="displayAntennaGridFragment"
+                android:padding="8dp"
+                android:src="@drawable/ic_home_antenna" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp">
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical|right"
-                android:orientation="vertical">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/home_item_background"
+                android:contentDescription="@string/empty_string"
+                android:onClick="displayReplayFragment"
+                android:padding="8dp"
+                android:src="@drawable/ic_home_replay" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/home_item_background"
-                    android:contentDescription="@string/empty_string"
-                    android:onClick="startPlayer"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_home_player" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/home_item_background"
-                    android:contentDescription="@string/empty_string"
-                    android:onClick="displayAntennaGridFragment"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_home_antenna" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/home_item_background"
-                    android:contentDescription="@string/empty_string"
-                    android:onClick="displayReplayFragment"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_home_replay" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/home_item_background"
-                    android:contentDescription="@string/empty_string"
-                    android:onClick="displayLinksFragment"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_home_links" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center_vertical|left">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/home_item_background"
-                    android:contentDescription="@string/empty_string"
-                    android:onClick="startAlarmPreferencesActivity"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_home_alarm" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/home_item_background"
-                    android:contentDescription="@string/empty_string"
-                    android:onClick="startSongHistorySearchActivity"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_home_history" />
-            </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/home_item_background"
+                android:contentDescription="@string/empty_string"
+                android:onClick="displayLinksFragment"
+                android:padding="8dp"
+                android:src="@drawable/ic_home_links" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|left"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/home_item_background"
+                android:contentDescription="@string/empty_string"
+                android:onClick="startAlarmPreferencesActivity"
+                android:padding="8dp"
+                android:src="@drawable/ic_home_alarm" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/home_item_background"
+                android:contentDescription="@string/empty_string"
+                android:onClick="startSongHistorySearchActivity"
+                android:padding="8dp"
+                android:src="@drawable/ic_home_history" />
+        </LinearLayout>
     </LinearLayout>
 
-</ScrollView>
+</RelativeLayout>
