@@ -18,8 +18,8 @@ import org.acra.sender.HttpSender;
         formUri = "https://millenium.iriscouch.com/acra-millenium/_design/acra-storage/_update/report",
         reportType = HttpSender.Type.JSON,
         httpMethod = HttpSender.Method.PUT,
-        formUriBasicAuthLogin = "",
-        formUriBasicAuthPassword = ""
+        formUriBasicAuthLogin = "millenium",
+        formUriBasicAuthPassword = "WetitGipt1"
 )
 public class StationMilleniumApp extends Application {
 

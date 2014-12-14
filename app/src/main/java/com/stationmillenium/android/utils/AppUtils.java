@@ -41,6 +41,16 @@ public class AppUtils {
     }
 
     /**
+     * Return if the API level >= 21
+     *
+     * @return <code>true</code> if API level >= 21, <code>false</code> if not
+     */
+    //not available yet
+    /* public static boolean isAPILevel21Available() {
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
+    } */
+
+    /**
      * Return if the API level >= 11
      *
      * @return <code>true</code> if API level >= 11, <code>false</code> if not
