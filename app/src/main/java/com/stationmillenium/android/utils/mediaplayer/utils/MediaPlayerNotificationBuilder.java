@@ -87,12 +87,12 @@ public class MediaPlayerNotificationBuilder {
             //create notification
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mediaPlayerServiceRef.get())
                     .setSmallIcon(R.drawable.ic_launcher)
-                    .setLargeIcon(playerImage)
+                    .setLargeIcon(Bitmap.createBitmap(playerImage)) //avoid recycled image
                     .setTicker(mediaPlayerServiceRef.get().getString(R.string.notification_ticker_text))
                     .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
                     .setContentText(currentTitle)
                     .setStyle(new NotificationCompat.BigPictureStyle()
-                            .bigPicture(playerImage)
+                            .bigPicture(Bitmap.createBitmap(playerImage)) //avoid recycled image
                             .setSummaryText(currentTitle))
                     .setContentInfo(stateText)
                     .setContentIntent(playerPendingIntent);
