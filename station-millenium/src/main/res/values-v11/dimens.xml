@@ -1,0 +1,15 @@
+<resources>
+
+    <!-- border values for image -->
+    <dimen name="widget_image_top_left_radius">5dp</dimen>
+    <dimen name="widget_image_top_right_radius">dp</dimen>
+    <dimen name="widget_image_bottom_left_radius">5dp</dimen>
+    <dimen name="widget_image_bottom_right_radius">0dp</dimen>
+
+    <!-- border values for buttons -->
+    <dimen name="widget_buttons_top_left_radius">0dp</dimen>
+    <dimen name="widget_buttons_top_right_radius">5dp</dimen>
+    <dimen name="widget_buttons_bottom_left_radius">0dp</dimen>
+    <dimen name="widget_buttons_bottom_right_radius">5dp</dimen>
+
+</resources>
