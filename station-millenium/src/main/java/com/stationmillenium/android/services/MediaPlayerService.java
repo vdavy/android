@@ -268,8 +268,12 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     public void stopMediaPlayer() {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Stop the media player");
-        if ((mediaPlayer != null) && (mediaPlayer.isPlaying()))
-            mediaPlayer.stop();
+        try {
+            if ((mediaPlayer != null) && (mediaPlayer.isPlaying()))
+                mediaPlayer.stop();
+        } catch (IllegalStateException e) {
+            Log.w(TAG, "Error while stopping media player", e);
+        }
         Toast.makeText(this, getResources().getString(R.string.player_stop_toast), Toast.LENGTH_SHORT).show();
 
         //send state intent
