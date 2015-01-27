@@ -7,9 +7,9 @@ android {
     defaultConfig {
         applicationId "com.stationmillenium.android"
         minSdkVersion 10
-        targetSdkVersion 19
-        versionCode 41
-        versionName "1.4.7"
+        targetSdkVersion 21
+        versionCode 42
+        versionName "1.5.0-beta1"
         testApplicationId "com.stationmillenium.android.test"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
