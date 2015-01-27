@@ -17,6 +17,9 @@ import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.RemoteControlClient;
+import android.media.session.MediaController;
+import android.media.session.MediaSession;
+import android.media.session.PlaybackState;
 import android.net.wifi.WifiManager.WifiLock;
 import android.os.Build;
 import android.os.HandlerThread;
@@ -86,6 +89,11 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     private PlayerState playerState;
     private RemoteControlClient remoteControlClient;
 
+    //new session management API 21
+    private MediaSession mediaSession;
+    private MediaController mediaController;
+    private MediaController.TransportControls transportControls;
+
     //stream metadata
     private final Object currentSongImageLock = new Object();
     private Bitmap currentSongImage;
@@ -109,8 +117,11 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     }
 
     @Override
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void onCreate() {
-        pcbbrComponentName = new ComponentName(this, PlaybackControlButtonsBroadcastReceiver.class);
+        if (!AppUtils.isAPILevel21Available()) { //we use new API in Lollipop
+            pcbbrComponentName = new ComponentName(this, PlaybackControlButtonsBroadcastReceiver.class);
+        }
         // Start up the thread running the service.  Note that we create a
         // separate thread because the service normally runs in the process's
         // main thread, which we don't want to block.  We also make it
@@ -124,25 +135,64 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         mediaPlayerNotificationBuilder = new MediaPlayerNotificationBuilder(this);
         mediaPlayerOnAudioFocusChangeHandler = new MediaPlayerOnAudioFocusChangeHandler(this);
+
+        if (AppUtils.isAPILevel21Available()) {
+            mediaSession = new MediaSession(this, "MediaPlayerService");
+            mediaSession.setCallback(new MediaSession.Callback() {
+                @Override
+                public void onPlay() {
+                    Log.d(TAG, "Media session callback play");
+                    playMediaPlayer(getApplicationContext());
+                }
+
+                @Override
+                public void onPause() {
+                    Log.d(TAG, "Media session callback pause");
+                    pauseMediaPlayer(getApplicationContext());
+                }
+
+                @Override
+                public void onStop() {
+                    Log.d(TAG, "Media session callback stop");
+                    stopMediaPlayer();
+                }
+            });
+
+            mediaController = new MediaController(getApplicationContext(), mediaSession.getSessionToken());
+            transportControls = mediaController.getTransportControls();
+            mediaController.registerCallback(mediaPlayerNotificationBuilder.getMediaControllerCallback());
+            mediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
+                    MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
+            if (!mediaSession.isActive()) {
+                mediaSession.setActive(true);
+            }
+
+        }
     }
 
     @Override
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             //process specific intent
             if (LocalIntents.PLAYER_PAUSE.toString().equals(intent.getAction()))
-                pauseMediaPlayer(getApplicationContext());
+                pauseMediaPlayerNewWay();
             else if (LocalIntents.PLAYER_PLAY.toString().equals(intent.getAction()))
-                playMediaPlayer(getApplicationContext());
+                playMediaPlayerNewWay();
             else if (LocalIntents.PLAYER_PLAY_PAUSE.toString().equals(intent.getAction())) {
                 if (mediaPlayer != null) {
-                    if (mediaPlayer.isPlaying())
-                        pauseMediaPlayer(getApplicationContext());
-                    else
-                        playMediaPlayer(getApplicationContext());
+                    if (mediaPlayer.isPlaying()) {
+                        pauseMediaPlayerNewWay();
+                    } else {
+                        playMediaPlayerNewWay();
+                    }
                 }
             } else if (LocalIntents.PLAYER_STOP.toString().equals(intent.getAction()))
-                stopMediaPlayer();
+                if ((AppUtils.isAPILevel21Available()) && (transportControls != null)) {
+                    transportControls.stop();
+                } else {
+                    stopMediaPlayer();
+                }
             else if (LocalIntents.PLAYER_OPEN.toString().equals(intent.getAction())) {
                 if (BuildConfig.DEBUG)
                     Log.d(TAG, "Open the player with data");
@@ -178,6 +228,30 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         // If we get killed, after returning from here, restart
         return START_STICKY;
+    }
+
+    /**
+     * Play the media player using the new Lollipop API if available
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void playMediaPlayerNewWay() {
+        if ((AppUtils.isAPILevel21Available()) && (transportControls != null)) {
+            transportControls.play();
+        } else {
+            playMediaPlayer(getApplicationContext());
+        }
+    }
+
+    /**
+     * Pause the media player using the new Lollipop API if available
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void pauseMediaPlayerNewWay() {
+        if ((AppUtils.isAPILevel21Available()) && (transportControls != null)) {
+            transportControls.pause();
+        } else {
+            pauseMediaPlayer(getApplicationContext());
+        }
     }
 
 
@@ -232,9 +306,11 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         sendStateIntent(PlayerState.PLAYING);
 
         //update notification
-        Notification notification = mediaPlayerNotificationBuilder.createNotification(true);
-        ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
-        Toast.makeText(this, getResources().getString(R.string.player_play_toast), Toast.LENGTH_SHORT).show();
+        if (!AppUtils.isAPILevel21Available()) {
+            Notification notification = mediaPlayerNotificationBuilder.createNotification(true);
+            ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
+            Toast.makeText(this, getResources().getString(R.string.player_play_toast), Toast.LENGTH_SHORT).show();
+        }
 
         setupCurrentTitlePlayerServiceTimer();
     }
@@ -254,9 +330,11 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         sendStateIntent(PlayerState.PAUSED);
 
         //update notification
-        Notification notification = mediaPlayerNotificationBuilder.createNotification(false);
-        ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
-        Toast.makeText(this, getResources().getString(R.string.player_pause_toast), Toast.LENGTH_SHORT).show();
+        if (!AppUtils.isAPILevel21Available()) {
+            Notification notification = mediaPlayerNotificationBuilder.createNotification(false);
+            ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
+            Toast.makeText(this, getResources().getString(R.string.player_pause_toast), Toast.LENGTH_SHORT).show();
+        }
 
         //stop current title update
         cancelCurrentTitleTimerServiceTimer();
@@ -294,7 +372,6 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      *
      * @param state the {@link PlayerState}
      */
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private void sendStateIntent(PlayerState state) {
         //send the state
         playerState = state;
@@ -310,24 +387,37 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         sendBroadcast(widgetIntent);
 
         //adjust the remote control state
-        if ((AppUtils.isAPILevel14Available()) && (remoteControlClient != null)) {
-            switch (playerState) {
-                case BUFFERING:
-                    remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_BUFFERING);
-                    break;
+        switch (playerState) {
+            case BUFFERING:
+                propagatePlaybackState(PlaybackState.STATE_BUFFERING, RemoteControlClient.PLAYSTATE_BUFFERING);
+                break;
 
-                case PAUSED:
-                    remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PAUSED);
-                    break;
+            case PAUSED:
+                propagatePlaybackState(PlaybackState.STATE_PAUSED, RemoteControlClient.PLAYSTATE_PAUSED);
+                break;
 
-                case PLAYING:
-                    remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
-                    break;
+            case PLAYING:
+                propagatePlaybackState(PlaybackState.STATE_PLAYING, RemoteControlClient.PLAYSTATE_PLAYING);
+                break;
 
-                case STOPPED:
-                    remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_STOPPED);
-                    break;
-            }
+            case STOPPED:
+                propagatePlaybackState(PlaybackState.STATE_STOPPED, RemoteControlClient.PLAYSTATE_STOPPED);
+                break;
+        }
+    }
+
+    /**
+     * Propagate playback state in old and fashion way
+     *
+     * @param androidPlaybackState
+     * @param localState
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void propagatePlaybackState(int androidPlaybackState, int localState) {
+        if ((AppUtils.isAPILevel21Available()) && (mediaSession != null)) {
+            mediaSession.setPlaybackState(new PlaybackState.Builder().setState(androidPlaybackState, mediaPlayer.getCurrentPosition(), 1.0f).build());
+        } else if ((AppUtils.isAPILevel14Available()) && (remoteControlClient != null)) {
+            remoteControlClient.setPlaybackState(localState);
         }
     }
 
@@ -374,7 +464,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         return null;
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onDestroy() {
         if (BuildConfig.DEBUG)
@@ -392,11 +482,14 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Free handlers");
         if (audioManager != null) {
-            if (AppUtils.isAPILevel14Available())
+            if ((AppUtils.isAPILevel14Available() && (remoteControlClient != null))) {
                 audioManager.unregisterRemoteControlClient(remoteControlClient);
+            }
 
             audioManager.abandonAudioFocus(mediaPlayerOnAudioFocusChangeHandler);
-            audioManager.unregisterMediaButtonEventReceiver(pcbbrComponentName);
+            if ((!AppUtils.isAPILevel21Available()) && (pcbbrComponentName != null)) { //not used if not remote control client
+                audioManager.unregisterMediaButtonEventReceiver(pcbbrComponentName);
+            }
         }
         if (abnbr.isRegistered()) {
             unregisterReceiver(abnbr);
@@ -405,6 +498,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         if (uctbr.isRegistered()) {
             LocalBroadcastManager.getInstance(MediaPlayerService.this).unregisterReceiver(uctbr);
             uctbr.setRegistered(false);
+        }
+        if ((AppUtils.isAPILevel21Available()) && (mediaSession != null) && (mediaSession.isActive())) {
+            mediaSession.release();
         }
 
         //wifi lock
@@ -549,5 +645,13 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
     public MediaPlayerOnAudioFocusChangeHandler getMediaPlayerOnAudioFocusChangeHandler() {
         return mediaPlayerOnAudioFocusChangeHandler;
+    }
+
+    public MediaSession getMediaSession() {
+        return mediaSession;
+    }
+
+    public int getPosition() {
+        return mediaPlayer.getCurrentPosition();
     }
 }

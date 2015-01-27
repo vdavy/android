@@ -65,7 +65,9 @@ public class MediaPlayerServiceHandler extends Handler {
                             mediaPlayerServiceRef.get().initMediaPlayer();
 
                             //add handlers
-                            mediaPlayerServiceRef.get().getAudioManager().registerMediaButtonEventReceiver(mediaPlayerServiceRef.get().getPcbbrComponentName());
+                            if ((!AppUtils.isAPILevel21Available()) && (mediaPlayerServiceRef.get().getPcbbrComponentName() != null)) { //not used in Lollipop
+                                mediaPlayerServiceRef.get().getAudioManager().registerMediaButtonEventReceiver(mediaPlayerServiceRef.get().getPcbbrComponentName());
+                            }
                             mediaPlayerServiceRef.get().registerReceiver(mediaPlayerServiceRef.get().getAbnbr(), new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
                             mediaPlayerServiceRef.get().getAbnbr().setRegistered(true);
                             LocalBroadcastManager.getInstance(mediaPlayerServiceRef.get()).registerReceiver(mediaPlayerServiceRef.get().getUctbr(), new IntentFilter(LocalIntents.CURRENT_TITLE_UPDATED.toString()));
@@ -80,7 +82,7 @@ public class MediaPlayerServiceHandler extends Handler {
                             mediaPlayerServiceRef.get().setOriginalVolume(mediaPlayerServiceRef.get().getAudioManager().getStreamVolume(AudioManager.STREAM_MUSIC));
 
                             //remote control if api level 14
-                            if (AppUtils.isAPILevel14Available()) {
+                            if ((AppUtils.isAPILevel14Available()) && (!AppUtils.isAPILevel21Available())) {
                                 //init the remote control client
                                 Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
                                 mediaButtonIntent.setComponent(mediaPlayerServiceRef.get().getPcbbrComponentName());

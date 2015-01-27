@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadata;
 import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
 import android.os.AsyncTask;
@@ -59,7 +60,7 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
         }
 
         @Override
-        @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         protected void onPostExecute(Bitmap result) {
             if (mediaPlayerServiceRef.get() != null) {
                 synchronized (mediaPlayerServiceRef.get().getCurrentSongImageLock()) { //save image
@@ -73,8 +74,15 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
                         || ((mediaPlayerServiceRef.get().getCurrentSong() == null) && (song != null)));
                 mediaPlayerServiceRef.get().setCurrentSong(song);
                 if (notificationUpdateNeeded) {
-                    Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().createNotification(mediaPlayerServiceRef.get().getPlayerState() == PlayerActivity.PlayerState.PLAYING);
-                    ((NotificationManager) mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE)).notify(MediaPlayerService.NOTIFICATION_ID, notification);
+                    if (AppUtils.isAPILevel21Available()) { //we can update notification using new API
+                        MediaMetadata.Builder builder = new MediaMetadata.Builder();
+                        builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getArtist());
+                        builder.putString(MediaMetadata.METADATA_KEY_TITLE, mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getTitle());
+                        mediaPlayerServiceRef.get().getMediaSession().setMetadata(builder.build());
+                    } else {
+                        Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().createNotification(mediaPlayerServiceRef.get().getPlayerState() == PlayerActivity.PlayerState.PLAYING);
+                        ((NotificationManager) mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE)).notify(MediaPlayerService.NOTIFICATION_ID, notification);
+                    }
                 }
 
                 //set metadata for remote control
