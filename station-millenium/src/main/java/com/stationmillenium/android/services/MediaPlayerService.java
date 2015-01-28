@@ -542,7 +542,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         //send state intent
         sendStateIntent(PlayerState.BUFFERING);
-        Toast.makeText(this, getResources().getString(R.string.player_loading_toast), Toast.LENGTH_SHORT).show();
+        if (!AppUtils.isAPILevel21Available()) {
+            Toast.makeText(this, getResources().getString(R.string.player_loading_toast), Toast.LENGTH_SHORT).show();
+        }
 
         //send tracking info
         Intent statsTrackerServiceIntent = new Intent(this, StatsTrackerService.class);

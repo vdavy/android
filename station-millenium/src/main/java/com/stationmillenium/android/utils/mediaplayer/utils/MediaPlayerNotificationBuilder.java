@@ -38,13 +38,17 @@ public class MediaPlayerNotificationBuilder {
 
     private MediaController.Callback callback;
 
+    private String currentTitle;
+    private Bitmap titleArt;
+    private PlayerActivity.PlayerState playerState;
+
     /**
      * Create a new MediaPlayerNotificationBuilder
      *
      * @param mediaPlayerService the service
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public MediaPlayerNotificationBuilder(MediaPlayerService mediaPlayerService) {
+    public MediaPlayerNotificationBuilder(final MediaPlayerService mediaPlayerService) {
         mediaPlayerServiceRef = new WeakReference<>(mediaPlayerService);
         if (AppUtils.isAPILevel21Available()) {
             callback = new MediaController.Callback() {
@@ -54,7 +58,20 @@ public class MediaPlayerNotificationBuilder {
                     if (BuildConfig.DEBUG) {
                         Log.d(TAG, "New media metadata : " + metadata.getDescription());
                     }
-                    Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().createNotification(mediaPlayerServiceRef.get().getPlayerState() == PlayerActivity.PlayerState.PLAYING);
+
+                    //set up data
+                    currentTitle = ((metadata.getText(MediaMetadata.METADATA_KEY_ARTIST) == null)
+                            || (metadata.getText(MediaMetadata.METADATA_KEY_TITLE) == null))
+                            ? mediaPlayerServiceRef.get().getString(R.string.player_current_title_unavailable_notification)
+                            : mediaPlayerServiceRef.get().getString(R.string.player_current_title_notification,
+                            metadata.getText(MediaMetadata.METADATA_KEY_ARTIST),
+                            metadata.getText(MediaMetadata.METADATA_KEY_TITLE));
+
+                    titleArt = (metadata.getBitmap(MediaMetadata.METADATA_KEY_ART) == null)
+                            ? BitmapFactory.decodeResource(mediaPlayerServiceRef.get().getResources(), R.drawable.player_default_image)
+                            : metadata.getBitmap(MediaMetadata.METADATA_KEY_ART);
+
+                    Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().initializeNotification(mediaPlayerServiceRef.get().getPlayerState() == PlayerActivity.PlayerState.PLAYING);
                     ((NotificationManager) mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE)).notify(MediaPlayerService.NOTIFICATION_ID, notification);
                 }
 
@@ -69,6 +86,11 @@ public class MediaPlayerNotificationBuilder {
                         case PlaybackState.STATE_PAUSED:
                             Log.d(TAG, "Playback change state playing received");
                             setupState(false, R.string.player_pause_toast);
+                            break;
+
+                        case PlaybackState.STATE_BUFFERING: //no notification to display during buffering
+                            Log.d(TAG, "Playback change state buffering received");
+                            Toast.makeText(mediaPlayerServiceRef.get(), mediaPlayerServiceRef.get().getResources().getString(R.string.player_loading_toast), Toast.LENGTH_SHORT).show();
                             break;
                     }
                 }
@@ -92,13 +114,47 @@ public class MediaPlayerNotificationBuilder {
     }
 
     /**
-     * Create a notification
+     * Initialize a notification with data already set
      *
      * @param pauseAction <code>true</code> to add pause action in {@link android.app.Notification}, <code>false</code> to add play action
      * @return the {@link android.app.Notification}
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public Notification createNotification(boolean pauseAction) {
+        if (mediaPlayerServiceRef.get() != null) {
+            //title part
+            currentTitle = ((mediaPlayerServiceRef.get().getCurrentSong() == null)
+                    || (mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getArtist() == null)
+                    || (mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getTitle() == null))
+                    ? mediaPlayerServiceRef.get().getString(R.string.player_current_title_unavailable_notification)
+                    : mediaPlayerServiceRef.get().getString(R.string.player_current_title_notification,
+                    mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getArtist(),
+                    mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getTitle());
+
+            //song image part
+            synchronized (mediaPlayerServiceRef.get().getCurrentSongImageLock()) {
+                titleArt = (mediaPlayerServiceRef.get().getCurrentSongImage() == null)
+                        ? BitmapFactory.decodeResource(mediaPlayerServiceRef.get().getResources(), R.drawable.player_default_image)
+                        : mediaPlayerServiceRef.get().getCurrentSongImage();
+            }
+
+            playerState = mediaPlayerServiceRef.get().getPlayerState();
+
+            return initializeNotification(pauseAction);
+        } else
+            return null;
+
+
+    }
+
+    /**
+     * Create a notification
+     *
+     * @param pauseAction <code>true</code> to add pause action in {@link android.app.Notification}, <code>false</code> to add play action
+     * @return the {@link android.app.Notification}
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private Notification initializeNotification(boolean pauseAction) {
         if (mediaPlayerServiceRef.get() != null) {
             //create intent for notification
             Intent playerIntent = new Intent(mediaPlayerServiceRef.get(), PlayerActivity.class);
@@ -109,7 +165,7 @@ public class MediaPlayerNotificationBuilder {
 
             //manage state text
             String stateText;
-            switch (mediaPlayerServiceRef.get().getPlayerState()) {
+            switch (playerState) {
                 case BUFFERING:
                     stateText = mediaPlayerServiceRef.get().getResources().getString(R.string.player_notification_loading);
                     break;
@@ -127,23 +183,6 @@ public class MediaPlayerNotificationBuilder {
                     break;
             }
 
-            //set the current title
-            String currentTitle = ((mediaPlayerServiceRef.get().getCurrentSong() == null)
-                    || (mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getArtist() == null)
-                    || (mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getTitle() == null))
-                    ? mediaPlayerServiceRef.get().getString(R.string.player_current_title_unavailable_notification)
-                    : mediaPlayerServiceRef.get().getString(R.string.player_current_title_notification,
-                    mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getArtist(),
-                    mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getTitle());
-
-            //set the player image
-            Bitmap playerImage;
-            synchronized (mediaPlayerServiceRef.get().getCurrentSongImageLock()) {
-                playerImage = (mediaPlayerServiceRef.get().getCurrentSongImage() == null)
-                        ? BitmapFactory.decodeResource(mediaPlayerServiceRef.get().getResources(), R.drawable.player_default_image)
-                        : mediaPlayerServiceRef.get().getCurrentSongImage();
-            }
-
             //pending intent for stopping player
             Intent stopIntent = new Intent(LocalIntents.PLAYER_STOP.toString());
             PendingIntent stopPendingIntent = PendingIntent.getService(mediaPlayerServiceRef.get(), 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -156,7 +195,7 @@ public class MediaPlayerNotificationBuilder {
                 //create notification
                 Notification.Builder notificationBuilder = new Notification.Builder(mediaPlayerServiceRef.get())
                         .setSmallIcon(R.drawable.ic_launcher)
-                        .setLargeIcon(Bitmap.createBitmap(playerImage)) //avoid recycled image
+                        .setLargeIcon(Bitmap.createBitmap(titleArt)) //avoid recycled image
                         .setTicker(mediaPlayerServiceRef.get().getString(R.string.notification_ticker_text))
                         .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
                         .setContentText(currentTitle)
@@ -180,7 +219,7 @@ public class MediaPlayerNotificationBuilder {
                 //create notification
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mediaPlayerServiceRef.get())
                         .setSmallIcon(R.drawable.ic_launcher)
-                        .setLargeIcon(Bitmap.createBitmap(playerImage)) //avoid recycled image
+                        .setLargeIcon(Bitmap.createBitmap(titleArt)) //avoid recycled image
                         .setTicker(mediaPlayerServiceRef.get().getString(R.string.notification_ticker_text))
                         .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
                         .setContentText(currentTitle)
@@ -189,7 +228,7 @@ public class MediaPlayerNotificationBuilder {
                         .setShowWhen(true)
                         .setUsesChronometer(true)
                         .setStyle(new NotificationCompat.BigPictureStyle()
-                                .bigPicture(Bitmap.createBitmap(playerImage)) //avoid recycled image
+                                .bigPicture(Bitmap.createBitmap(titleArt)) //avoid recycled image
                                 .setSummaryText(currentTitle))
                         .setContentInfo(stateText)
                         .setContentIntent(playerPendingIntent);

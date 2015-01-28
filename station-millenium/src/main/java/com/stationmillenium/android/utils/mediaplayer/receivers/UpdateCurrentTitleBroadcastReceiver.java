@@ -61,10 +61,10 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
 
         @Override
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        protected void onPostExecute(Bitmap result) {
+        protected void onPostExecute(Bitmap songArtBitmap) {
             if (mediaPlayerServiceRef.get() != null) {
                 synchronized (mediaPlayerServiceRef.get().getCurrentSongImageLock()) { //save image
-                    mediaPlayerServiceRef.get().setCurrentSongImage(result);
+                    mediaPlayerServiceRef.get().setCurrentSongImage(songArtBitmap);
                 }
 
                 //update the notification
@@ -78,6 +78,7 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
                         MediaMetadata.Builder builder = new MediaMetadata.Builder();
                         builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getArtist());
                         builder.putString(MediaMetadata.METADATA_KEY_TITLE, mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getTitle());
+                        builder.putBitmap(MediaMetadata.METADATA_KEY_ART, songArtBitmap);
                         mediaPlayerServiceRef.get().getMediaSession().setMetadata(builder.build());
                     } else {
                         Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().createNotification(mediaPlayerServiceRef.get().getPlayerState() == PlayerActivity.PlayerState.PLAYING);
@@ -91,8 +92,8 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
                     metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, song.getCurrentSong().getArtist());
                     metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, song.getCurrentSong().getArtist());
                     metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, song.getCurrentSong().getTitle());
-                    if (result != null)
-                        metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, result);
+                    if (songArtBitmap != null)
+                        metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, songArtBitmap);
                     else
                         metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, BitmapFactory.decodeResource(mediaPlayerServiceRef.get().getResources(), R.drawable.player_default_image));
                     metadataEditor.apply();
