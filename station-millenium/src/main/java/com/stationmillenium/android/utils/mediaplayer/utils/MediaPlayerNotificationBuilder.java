@@ -194,7 +194,7 @@ public class MediaPlayerNotificationBuilder {
             if (AppUtils.isAPILevel21Available()) {
                 //create notification
                 Notification.Builder notificationBuilder = new Notification.Builder(mediaPlayerServiceRef.get())
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_notif_icon)
                         .setLargeIcon(Bitmap.createBitmap(titleArt)) //avoid recycled image
                         .setTicker(mediaPlayerServiceRef.get().getString(R.string.notification_ticker_text))
                         .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
@@ -212,7 +212,7 @@ public class MediaPlayerNotificationBuilder {
                         mediaPlayerServiceRef.get().getString((pauseAction) ? R.string.player_pause : R.string.player_play),
                         pausePlayPendingIntent);
 
-                notificationBuilder.addAction(android.R.drawable.ic_media_previous, mediaPlayerServiceRef.get().getString(R.string.player_stop), stopPendingIntent);
+                notificationBuilder.addAction(R.drawable.ic_media_stop, mediaPlayerServiceRef.get().getString(R.string.player_stop), stopPendingIntent);
                 return notificationBuilder.build();
 
             } else {
