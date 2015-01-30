@@ -415,7 +415,8 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void propagatePlaybackState(int androidPlaybackState, int localState) {
         if ((AppUtils.isAPILevel21Available()) && (mediaSession != null)) {
-            mediaSession.setPlaybackState(new PlaybackState.Builder().setState(androidPlaybackState, mediaPlayer.getCurrentPosition(), 1.0f).build());
+            int position = (mediaPlayer != null) ? mediaPlayer.getCurrentPosition() : 0;
+            mediaSession.setPlaybackState(new PlaybackState.Builder().setState(androidPlaybackState, position, 1.0f).build());
         } else if ((AppUtils.isAPILevel14Available()) && (remoteControlClient != null)) {
             remoteControlClient.setPlaybackState(localState);
         }
