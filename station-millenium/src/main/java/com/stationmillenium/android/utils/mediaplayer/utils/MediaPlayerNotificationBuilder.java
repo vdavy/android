@@ -33,6 +33,8 @@ import java.lang.ref.WeakReference;
 public class MediaPlayerNotificationBuilder {
 
     private static final String TAG = "MediaPlayerNotificationBuilder";
+    private static final int[] COMPACT_VIEW_DOUBLE_ACTIONS = {0, 1};
+    private static final int[] COMPACT_VIEW_SINGLE_ACTIONS = {0};
 
     private static WeakReference<MediaPlayerService> mediaPlayerServiceRef;
 
@@ -192,6 +194,10 @@ public class MediaPlayerNotificationBuilder {
             PendingIntent pausePlayPendingIntent = PendingIntent.getService(mediaPlayerServiceRef.get(), 0, pausePlayIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             if (AppUtils.isAPILevel21Available()) {
+                int[] compactViewActions = ((playerState == PlayerActivity.PlayerState.PLAYING) || (playerState == PlayerActivity.PlayerState.PAUSED))
+                        ? COMPACT_VIEW_DOUBLE_ACTIONS
+                        : COMPACT_VIEW_SINGLE_ACTIONS;
+
                 //create notification
                 Notification.Builder notificationBuilder = new Notification.Builder(mediaPlayerServiceRef.get())
                         .setSmallIcon(R.drawable.ic_notif_icon)
@@ -200,17 +206,24 @@ public class MediaPlayerNotificationBuilder {
                         .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
                         .setContentText(currentTitle)
                         .setStyle(new Notification.MediaStyle()
-                                .setShowActionsInCompactView(0, 1)  // only show play/pause in compact view
+                                .setShowActionsInCompactView(compactViewActions)  // only show play/pause in compact view
                                 .setMediaSession(mediaPlayerServiceRef.get().getMediaSession().getSessionToken()))
-                        .setWhen(System.currentTimeMillis() - mediaPlayerServiceRef.get().getPosition())
-                        .setShowWhen(true)
-                        .setUsesChronometer(true)
                         .setContentInfo(stateText)
                         .setContentIntent(playerPendingIntent);
 
-                notificationBuilder.addAction((pauseAction) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play,
-                        mediaPlayerServiceRef.get().getString((pauseAction) ? R.string.player_pause : R.string.player_play),
-                        pausePlayPendingIntent);
+                //add the chronometer
+                if (playerState == PlayerActivity.PlayerState.PLAYING) {
+                    notificationBuilder.setWhen(System.currentTimeMillis() - mediaPlayerServiceRef.get().getPosition())
+                            .setShowWhen(true)
+                            .setUsesChronometer(true);
+                }
+
+                //don't add play/pause button if buffering
+                if (playerState != PlayerActivity.PlayerState.BUFFERING) {
+                    notificationBuilder.addAction((pauseAction) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play,
+                            mediaPlayerServiceRef.get().getString((pauseAction) ? R.string.player_pause : R.string.player_play),
+                            pausePlayPendingIntent);
+                }
 
                 notificationBuilder.addAction(R.drawable.ic_media_stop, mediaPlayerServiceRef.get().getString(R.string.player_stop), stopPendingIntent);
                 return notificationBuilder.build();
@@ -224,19 +237,26 @@ public class MediaPlayerNotificationBuilder {
                         .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
                         .setContentText(currentTitle)
                         .setVisibility(Notification.VISIBILITY_PUBLIC)
-                        .setWhen(System.currentTimeMillis() - mediaPlayerServiceRef.get().getPosition())
-                        .setShowWhen(true)
-                        .setUsesChronometer(true)
                         .setStyle(new NotificationCompat.BigPictureStyle()
                                 .bigPicture(Bitmap.createBitmap(titleArt)) //avoid recycled image
                                 .setSummaryText(currentTitle))
                         .setContentInfo(stateText)
                         .setContentIntent(playerPendingIntent);
 
-                //add proper action (pause or play)
-                notificationBuilder.addAction((pauseAction) ? R.drawable.ic_player_pause : R.drawable.ic_player_play,
-                        mediaPlayerServiceRef.get().getString((pauseAction) ? R.string.player_pause : R.string.player_play),
-                        pausePlayPendingIntent);
+                //add the chronometer
+                if (playerState == PlayerActivity.PlayerState.PLAYING) {
+                    notificationBuilder.setWhen(System.currentTimeMillis() - mediaPlayerServiceRef.get().getPosition())
+                            .setShowWhen(true)
+                            .setUsesChronometer(true);
+                }
+
+                //don't add play/pause button if buffering
+                if (playerState != PlayerActivity.PlayerState.BUFFERING) {
+                    //add proper action (pause or play)
+                    notificationBuilder.addAction((pauseAction) ? R.drawable.ic_player_pause : R.drawable.ic_player_play,
+                            mediaPlayerServiceRef.get().getString((pauseAction) ? R.string.player_pause : R.string.player_play),
+                            pausePlayPendingIntent);
+                }
 
                 notificationBuilder.addAction(R.drawable.ic_player_stop, mediaPlayerServiceRef.get().getString(R.string.player_stop), stopPendingIntent);
                 return notificationBuilder.build();
