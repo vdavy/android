@@ -444,14 +444,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                     Toast.makeText(MediaPlayerService.this, getResources().getString(R.string.player_error), Toast.LENGTH_SHORT).show();
 
                     //stop the service
-                    if (mediaPlayer != null)
-                        mediaPlayer.stop();
-
-                    //stop service
-                    if (BuildConfig.DEBUG)
-                        Log.d(TAG, "Stop service");
-                    stopForeground(true);
-                    stopSelf();
+                    stopMediaPlayer();
                 }
 
         }

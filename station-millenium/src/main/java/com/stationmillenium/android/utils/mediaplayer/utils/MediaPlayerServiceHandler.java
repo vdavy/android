@@ -108,7 +108,7 @@ public class MediaPlayerServiceHandler extends Handler {
 
                             //stop the service
                             mediaPlayerServiceRef.get().getAudioManager().abandonAudioFocus(mediaPlayerServiceRef.get().getMediaPlayerOnAudioFocusChangeHandler());
-                            mediaPlayerServiceRef.get().stopSelf();
+                            mediaPlayerServiceRef.get().stopMediaPlayer();
                         }
 
                     } else {
@@ -117,7 +117,7 @@ public class MediaPlayerServiceHandler extends Handler {
 
                         //stop the service
                         mediaPlayerServiceRef.get().getAudioManager().abandonAudioFocus(mediaPlayerServiceRef.get().getMediaPlayerOnAudioFocusChangeHandler());
-                        mediaPlayerServiceRef.get().stopSelf();
+                        mediaPlayerServiceRef.get().stopMediaPlayer();
                     }
 
                 } else {
@@ -126,7 +126,7 @@ public class MediaPlayerServiceHandler extends Handler {
 
                     //stop the service
                     mediaPlayerServiceRef.get().getAudioManager().abandonAudioFocus(mediaPlayerServiceRef.get().getMediaPlayerOnAudioFocusChangeHandler());
-                    mediaPlayerServiceRef.get().stopSelf();
+                    mediaPlayerServiceRef.get().stopMediaPlayer();
                 }
 
             } catch (Exception npe) {
