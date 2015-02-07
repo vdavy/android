@@ -19,6 +19,24 @@
     </PreferenceCategory>
 
     <!-- news preferences -->
+    <PreferenceCategory android:title="@string/preferences_autorestart">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_player_autorestart"
+            android:key="preferences_player_autorestart"
+            android:summaryOff="@string/preferences_autorestart_player_off"
+            android:summaryOn="@string/preferences_autorestart_player_on"
+            android:title="@string/preferences_autorestart_player" />
+        <EditTextPreference
+            android:defaultValue="10"
+            android:dependency="preferences_player_autorestart"
+            android:icon="@drawable/ic_autorestart_delay"
+            android:inputType="number"
+            android:key="preferences_player_autorestart_delay"
+            android:title="@string/preferences_autorestart_player_timeout" />
+    </PreferenceCategory>
+
+    <!-- auto restart preferences -->
     <PreferenceCategory android:title="@string/preferences_links">
         <ListPreference
             android:defaultValue="6"
