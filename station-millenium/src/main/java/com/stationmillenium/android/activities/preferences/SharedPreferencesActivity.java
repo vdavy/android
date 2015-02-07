@@ -8,12 +8,14 @@ import android.app.backup.BackupManager;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -33,8 +35,10 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
     //static intialization part
     private static final String TAG = "PreferencesActivity";
     private static final String APP_VERSION_PREFERENCE = "preferences_version";
+
     //preference fields
     private ListPreference newsNumber;
+    private EditTextPreference autorestartDelay;
 
     @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
@@ -55,6 +59,8 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
         //init fields
         newsNumber = (ListPreference) findPreference(SharedPreferencesConstants.TWEETS_DISPLAY_NUMBER);
         initNewsNumber();
+        autorestartDelay = (EditTextPreference) findPreference(SharedPreferencesConstants.PLAYER_AUTORESTART_DELAY);
+        initAutorestartDelay();
         initAppVersionPreference();
 
         //register callback for preference changes
@@ -86,6 +92,18 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
                 return true;
             }
         });
+    }
+
+    /**
+     * Initialize auto restart delay preference
+     */
+    private void initAutorestartDelay() {
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "Init the autorestart player delay summary");
+
+        if (!TextUtils.isEmpty(autorestartDelay.getText())) {
+            autorestartDelay.setSummary(getString(R.string.preferences_autorestart_player_timeout_summary, autorestartDelay.getText()));
+        }
     }
 
     @Override
@@ -126,6 +144,9 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
             Log.d(TAG, "Shared preferences changed - trigger backup");
 
         new BackupManager(this).dataChanged();
+        if (SharedPreferencesConstants.PLAYER_AUTORESTART_DELAY.equals(key)) {
+            autorestartDelay.setSummary(getString(R.string.preferences_autorestart_player_timeout_summary, autorestartDelay.getText()));
+        }
     }
 
     @Override
@@ -146,6 +167,8 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
         String AUTOSTART_RADIO = "preferences_player_autostart";
         String TWEETS_DISPLAY_NUMBER = "preferences_tweets_display_number";
         String PIWIK_TRACKING_ID = "piwik_tracking_id";
+        String PLAYER_AUTORESTART = "preferences_player_autorestart";
+        String PLAYER_AUTORESTART_DELAY = "preferences_player_autorestart_delay";
     }
 
 }
