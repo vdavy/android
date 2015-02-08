@@ -28,7 +28,7 @@
             android:summaryOn="@string/preferences_autorestart_player_on"
             android:title="@string/preferences_autorestart_player" />
         <EditTextPreference
-            android:defaultValue="10"
+            android:defaultValue="5"
             android:dependency="preferences_player_autorestart"
             android:icon="@drawable/ic_autorestart_delay"
             android:inputType="number"
