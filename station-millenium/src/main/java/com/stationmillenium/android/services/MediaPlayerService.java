@@ -27,6 +27,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -35,6 +36,7 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.activities.PlayerActivity.PlayerState;
+import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity;
 import com.stationmillenium.android.dto.CurrentTitleDTO;
 import com.stationmillenium.android.utils.AppUtils;
 import com.stationmillenium.android.utils.intents.LocalIntents;
@@ -66,10 +68,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     public static final int NOTIFICATION_ID = 1;
     private static final int UPDATE_TITLE_START_TIME = 500;
     private static final int UPDATE_TITLE_PERIOD_TIME = 10000;
+    private static final String AUTO_RESTART_PLAYER_TIMER_NAME = "AutoRestartPlayerTimer";
+    private static final String AUTO_RESTART_PLAYER_DEFAULT_DELAY = "10";
 
-    //instance vars
-    //service internal vars
-    private Looper mediaPlayerServiceLooper;
     private MediaPlayerServiceHandler mediaPlayerServiceHandler;
 
     //broadcast receivers
@@ -79,6 +80,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
     //intents and lock for update
     private Timer updateCurrentTitleTimer;
+    private Timer autoRestartPlayerTimer;
     private WifiLock wifiLock;
     private boolean playerActivityResumed;
 
@@ -91,7 +93,6 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
     //new session management API 21
     private MediaSession mediaSession;
-    private MediaController mediaController;
     private MediaController.TransportControls transportControls;
 
     //stream metadata
@@ -130,7 +131,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         thread.start();
 
         // Get the HandlerThread's Looper and use it for our Handler
-        mediaPlayerServiceLooper = thread.getLooper();
+        Looper mediaPlayerServiceLooper = thread.getLooper();
         mediaPlayerServiceHandler = new MediaPlayerServiceHandler(mediaPlayerServiceLooper, this);
 
         mediaPlayerNotificationBuilder = new MediaPlayerNotificationBuilder(this);
@@ -158,7 +159,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                 }
             });
 
-            mediaController = new MediaController(getApplicationContext(), mediaSession.getSessionToken());
+            MediaController mediaController = new MediaController(getApplicationContext(), mediaSession.getSessionToken());
             transportControls = mediaController.getTransportControls();
             mediaController.registerCallback(mediaPlayerNotificationBuilder.getMediaControllerCallback());
             mediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
@@ -271,6 +272,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         //player current time update start
         setupCurrentTitlePlayerServiceTimer();
+        setupAutoRestartPlayerTimer();
     }
 
     /**
@@ -285,10 +287,43 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             @Override
             public void run() {
                 Intent currentTitleServiceIntent = new Intent(MediaPlayerService.this, CurrentTitlePlayerService.class);
-                MediaPlayerService.this.startService(currentTitleServiceIntent);
+                startService(currentTitleServiceIntent);
             }
 
         }, UPDATE_TITLE_START_TIME, UPDATE_TITLE_PERIOD_TIME);
+    }
+
+    /**
+     * Setup the timer for the auto restart player service
+     */
+    private void setupAutoRestartPlayerTimer() {
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SharedPreferencesActivity.SharedPreferencesConstants.PLAYER_AUTORESTART, false)) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Register auto restart player timer");
+            }
+
+            int defaultDelay = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this)
+                    .getString(SharedPreferencesActivity.SharedPreferencesConstants.PLAYER_AUTORESTART_DELAY, AUTO_RESTART_PLAYER_DEFAULT_DELAY))
+                    * 1000; //in ms
+            autoRestartPlayerTimer = new Timer(AUTO_RESTART_PLAYER_TIMER_NAME);
+            autoRestartPlayerTimer.schedule(new TimerTask() {
+
+                private int previousPosition;
+
+                @Override
+                public void run() {
+                    Intent autoRestartPlayerIntent = new Intent(MediaPlayerService.this, AutoRestartPlayerService.class);
+                    autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.PREVIOUS_POSITION, previousPosition);
+                    autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.CURRENT_POSITION, getPosition());
+                    startService(autoRestartPlayerIntent);
+                    previousPosition = getPosition();
+                }
+
+            }, defaultDelay, defaultDelay);
+
+        } else if (BuildConfig.DEBUG) {
+            Log.d(TAG, "No need to register auto restart player timer");
+        }
     }
 
     /**
@@ -312,7 +347,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             Toast.makeText(this, getResources().getString(R.string.player_play_toast), Toast.LENGTH_SHORT).show();
         }
 
+        //start timers
         setupCurrentTitlePlayerServiceTimer();
+        setupAutoRestartPlayerTimer();
     }
 
     /**
@@ -338,6 +375,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         //stop current title update
         cancelCurrentTitleTimerServiceTimer();
+        cancelAutoRestartPlayerServiceTimer();
     }
 
     /**
@@ -359,6 +397,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         //stop current title update
         cancelCurrentTitleTimerServiceTimer();
+        cancelAutoRestartPlayerServiceTimer();
 
         //stop service
         if (BuildConfig.DEBUG)
@@ -471,6 +510,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         //player current time and title update stop
         cancelCurrentTitleTimerServiceTimer();
+        cancelAutoRestartPlayerServiceTimer();
 
         //free resources
         if (BuildConfig.DEBUG)
@@ -512,6 +552,16 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             Log.d(TAG, "Cancel current title timer");
         if (updateCurrentTitleTimer != null)
             updateCurrentTitleTimer.cancel();
+    }
+
+    /**
+     * Cancel {@link com.stationmillenium.android.services.AutoRestartPlayerService} timer
+     */
+    private void cancelAutoRestartPlayerServiceTimer() {
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "Cancel auto restart player service timer");
+        if (autoRestartPlayerTimer != null)
+            autoRestartPlayerTimer.cancel();
     }
 
     /**
