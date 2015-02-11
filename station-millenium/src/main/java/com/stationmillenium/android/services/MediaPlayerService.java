@@ -315,6 +315,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                     Intent autoRestartPlayerIntent = new Intent(MediaPlayerService.this, AutoRestartPlayerService.class);
                     autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.PREVIOUS_POSITION, previousPosition);
                     autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.CURRENT_POSITION, getPosition());
+                    autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.PLAYER_STATE, playerState);
                     startService(autoRestartPlayerIntent);
                     previousPosition = getPosition();
                 }
@@ -601,11 +602,13 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             if (BuildConfig.DEBUG)
                 Log.d(TAG, "Media player start buffering...");
             sendStateIntent(PlayerState.BUFFERING);
+            cancelAutoRestartPlayerServiceTimer();
             return true;
         } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
             if (BuildConfig.DEBUG)
                 Log.d(TAG, "Media player end buffering...");
             sendStateIntent(PlayerState.PLAYING);
+            cancelAutoRestartPlayerServiceTimer();
             return true;
         }
 
