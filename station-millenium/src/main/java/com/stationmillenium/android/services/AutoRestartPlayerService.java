@@ -7,6 +7,7 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 
+import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.utils.AppUtils;
 import com.stationmillenium.android.utils.intents.LocalIntents;
 
@@ -19,6 +20,7 @@ public class AutoRestartPlayerService extends IntentService {
 
     public static final String PREVIOUS_POSITION = "PreviousPosition";
     public static final String CURRENT_POSITION = "CurrentPosition";
+    public static final String PLAYER_STATE = "PlayerState";
     private static final String TAG = "AutoRestartPlayerService";
     private static final long DELTA_MIN = 500;
     private static final int MAX_TRIES = 5;
@@ -35,16 +37,21 @@ public class AutoRestartPlayerService extends IntentService {
         Log.d(TAG, "Check if we need to auto restart player");
         int previousPosition = intent.getIntExtra(PREVIOUS_POSITION, 0);
         int currentPosition = intent.getIntExtra(CURRENT_POSITION, 0);
+        PlayerActivity.PlayerState state = (PlayerActivity.PlayerState) intent.getSerializableExtra(PLAYER_STATE);
 
-        if ((previousPosition > 0) && (currentPosition > 0)) {
-            int delta = currentPosition - previousPosition;
-            if (delta > DELTA_MIN) {
-                Log.i(TAG, "Player is stuck - restart needed");
-                sendStopIntentToMediaPlayer();
-                setupHandler();
+        if (state == PlayerActivity.PlayerState.PLAYING) {
+            if ((previousPosition > 0) && (currentPosition > 0)) {
+                int delta = currentPosition - previousPosition;
+                if (delta < DELTA_MIN) {
+                    Log.i(TAG, "Player is stuck - restart needed");
+                    sendStopIntentToMediaPlayer();
+                    setupHandler();
+                }
+            } else {
+                Log.i(TAG, "Invalid intent extras");
             }
         } else {
-            Log.i(TAG, "Invalid intent extras");
+            Log.d(TAG, "Player not playing");
         }
     }
 
