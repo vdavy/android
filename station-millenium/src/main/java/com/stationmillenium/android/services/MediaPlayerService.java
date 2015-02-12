@@ -648,6 +648,6 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     }
 
     public int getPosition() {
-        return mediaPlayer.getCurrentPosition();
+        return (mediaPlayer != null) ? mediaPlayer.getCurrentPosition() : 0;
     }
 }
