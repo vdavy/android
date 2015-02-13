@@ -8,14 +8,12 @@ import android.app.backup.BackupManager;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -38,7 +36,7 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
 
     //preference fields
     private ListPreference newsNumber;
-    private EditTextPreference autorestartDelay;
+    private ListPreference autorestartDelay;
 
     @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
@@ -59,7 +57,7 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
         //init fields
         newsNumber = (ListPreference) findPreference(SharedPreferencesConstants.TWEETS_DISPLAY_NUMBER);
         initNewsNumber();
-        autorestartDelay = (EditTextPreference) findPreference(SharedPreferencesConstants.PLAYER_AUTORESTART_DELAY);
+        autorestartDelay = (ListPreference) findPreference(SharedPreferencesConstants.PLAYER_AUTORESTART_DELAY);
         initAutorestartDelay();
         initAppVersionPreference();
 
@@ -75,10 +73,8 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
             Log.d(TAG, "Init the news number param summary");
         //set up news number summary
         //display the init value
-        final String[] arrayValues = getResources().getStringArray(R.array.preferences_links_tweets_number_values);
         if (newsNumber.getValue() != null) {
-            int position = Integer.parseInt(newsNumber.getValue()) - 1;
-            newsNumber.setSummary(arrayValues[position]);
+            newsNumber.setSummary(newsNumber.getEntry());
         }
 
         //set up listener for updates
@@ -87,8 +83,12 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if (BuildConfig.DEBUG)
                     Log.d(TAG, "Update news number summary");
-                int position = Integer.parseInt(newValue.toString()) - 1;
-                preference.setSummary(arrayValues[position]);
+                if (newValue != null) {
+                    CharSequence summary = newsNumber.getEntries()[newsNumber.findIndexOfValue(newValue.toString())];
+                    preference.setSummary(summary);
+                } else {
+                    preference.setSummary("");
+                }
                 return true;
             }
         });
@@ -101,9 +101,25 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Init the autorestart player delay summary");
 
-        if (!TextUtils.isEmpty(autorestartDelay.getText())) {
-            autorestartDelay.setSummary(getString(R.string.preferences_autorestart_player_timeout_summary, autorestartDelay.getText()));
+        if (autorestartDelay.getValue() != null) {
+            autorestartDelay.setSummary(getString(R.string.preferences_autorestart_player_timeout_summary, autorestartDelay.getEntry()));
         }
+
+        autorestartDelay.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "Update auto restart delay summary");
+                if (newValue != null) {
+                    CharSequence summary = autorestartDelay.getEntries()[autorestartDelay.findIndexOfValue(newValue.toString())];
+                    preference.setSummary(getString(R.string.preferences_autorestart_player_timeout_summary, summary));
+                } else {
+                    preference.setSummary("");
+                }
+
+                return true;
+            }
+        });
     }
 
     @Override
@@ -144,9 +160,6 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
             Log.d(TAG, "Shared preferences changed - trigger backup");
 
         new BackupManager(this).dataChanged();
-        if (SharedPreferencesConstants.PLAYER_AUTORESTART_DELAY.equals(key)) {
-            autorestartDelay.setSummary(getString(R.string.preferences_autorestart_player_timeout_summary, autorestartDelay.getText()));
-        }
     }
 
     @Override
