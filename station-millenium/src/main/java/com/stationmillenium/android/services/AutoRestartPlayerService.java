@@ -42,7 +42,7 @@ public class AutoRestartPlayerService extends IntentService {
         if (state == PlayerActivity.PlayerState.PLAYING) {
             if ((previousPosition > 0) && (currentPosition > 0)) {
                 int delta = currentPosition - previousPosition;
-                if (delta < DELTA_MIN) {
+                if ((delta >= 0) && (delta < DELTA_MIN)) {
                     Log.i(TAG, "Player is stuck - restart needed");
                     sendStopIntentToMediaPlayer();
                     setupHandler();

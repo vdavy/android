@@ -27,11 +27,12 @@
             android:summaryOff="@string/preferences_autorestart_player_off"
             android:summaryOn="@string/preferences_autorestart_player_on"
             android:title="@string/preferences_autorestart_player" />
-        <EditTextPreference
+        <ListPreference
             android:defaultValue="5"
             android:dependency="preferences_player_autorestart"
+            android:entries="@array/preferences_autorestart_player_timeout_values"
+            android:entryValues="@array/preferences_autorestart_player_timeout_internal"
             android:icon="@drawable/ic_autorestart_delay"
-            android:inputType="number"
             android:key="preferences_player_autorestart_delay"
             android:title="@string/preferences_autorestart_player_timeout" />
     </PreferenceCategory>

@@ -312,12 +312,14 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
                 @Override
                 public void run() {
-                    Intent autoRestartPlayerIntent = new Intent(MediaPlayerService.this, AutoRestartPlayerService.class);
-                    autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.PREVIOUS_POSITION, previousPosition);
-                    autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.CURRENT_POSITION, getPosition());
-                    autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.PLAYER_STATE, playerState);
-                    startService(autoRestartPlayerIntent);
-                    previousPosition = getPosition();
+                    if (mediaPlayer != null) { //no need to check if media player running if it is null
+                        Intent autoRestartPlayerIntent = new Intent(MediaPlayerService.this, AutoRestartPlayerService.class);
+                        autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.PREVIOUS_POSITION, previousPosition);
+                        autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.CURRENT_POSITION, getPosition());
+                        autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.PLAYER_STATE, playerState);
+                        startService(autoRestartPlayerIntent);
+                        previousPosition = getPosition();
+                    }
                 }
 
             }, defaultDelay, defaultDelay);
