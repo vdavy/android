@@ -603,12 +603,23 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                 Log.d(TAG, "Media player start buffering...");
             sendStateIntent(PlayerState.BUFFERING);
             cancelAutoRestartPlayerServiceTimer();
+            //update notification
+            if (!AppUtils.isAPILevel21Available()) {
+                Notification notification = mediaPlayerNotificationBuilder.createNotification(false);
+                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
+                Toast.makeText(this, getResources().getString(R.string.player_loading_toast), Toast.LENGTH_SHORT).show();
+            }
             return true;
         } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
             if (BuildConfig.DEBUG)
                 Log.d(TAG, "Media player end buffering...");
             sendStateIntent(PlayerState.PLAYING);
-            cancelAutoRestartPlayerServiceTimer();
+            setupAutoRestartPlayerTimer();
+            if (!AppUtils.isAPILevel21Available()) {
+                Notification notification = mediaPlayerNotificationBuilder.createNotification(true);
+                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
+                Toast.makeText(this, getResources().getString(R.string.player_play_toast), Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
 
