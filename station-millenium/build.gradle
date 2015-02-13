@@ -8,8 +8,8 @@ android {
         applicationId "com.stationmillenium.android"
         minSdkVersion 10
         targetSdkVersion 21
-        versionCode 50
-        versionName "1.6.0-beta3"
+        versionCode 51
+        versionName "1.6.0-beta4"
         testApplicationId "com.stationmillenium.android.test"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
