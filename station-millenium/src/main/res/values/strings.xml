@@ -98,6 +98,7 @@
         <item name="19">19</item>
         <item name="20">20</item>
     </string-array>
+    <string name="preferences_alarm_screen_settings">Réglages de l\'alarme</string>
     <string name="preferences_alarm_screen">Alarme</string>
     <string name="preferences_alarm_enable">Activer l\'alarme</string>
     <string name="preferences_alarm_enabled">Alarme activée</string>
