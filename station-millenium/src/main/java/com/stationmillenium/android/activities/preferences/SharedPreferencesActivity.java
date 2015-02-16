@@ -14,8 +14,12 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
@@ -182,6 +186,26 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
         String PIWIK_TRACKING_ID = "piwik_tracking_id";
         String PLAYER_AUTORESTART = "preferences_player_autorestart";
         String PLAYER_AUTORESTART_DELAY = "preferences_player_autorestart_delay";
+    }
+
+    /**
+     * See : http://stackoverflow.com/questions/26509180/no-actionbar-in-preferenceactivity-after-upgrade-to-support-library-v21
+     *
+     * @param savedInstanceState
+     */
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        LinearLayout root = (LinearLayout) findViewById(android.R.id.list).getParent().getParent().getParent();
+        Toolbar bar = (Toolbar) LayoutInflater.from(this).inflate(R.layout.preferences_toolbar, root, false);
+        root.addView(bar, 0); // insert at top
+        bar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
 }

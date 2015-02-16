@@ -28,7 +28,7 @@
             android:summaryOn="@string/preferences_autorestart_player_on"
             android:title="@string/preferences_autorestart_player" />
         <ListPreference
-            android:defaultValue="5"
+            android:defaultValue="15"
             android:dependency="preferences_player_autorestart"
             android:entries="@array/preferences_autorestart_player_timeout_values"
             android:entryValues="@array/preferences_autorestart_player_timeout_internal"
