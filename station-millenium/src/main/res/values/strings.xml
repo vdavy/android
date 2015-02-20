@@ -98,6 +98,7 @@
         <item name="19">19</item>
         <item name="20">20</item>
     </string-array>
+    <string name="preferences_alarm_screen_settings">Réglages de l\'alarme</string>
     <string name="preferences_alarm_screen">Alarme</string>
     <string name="preferences_alarm_enable">Activer l\'alarme</string>
     <string name="preferences_alarm_enabled">Alarme activée</string>
@@ -137,6 +138,36 @@
     <string name="preferences_app_version_not_available">Station Millenium</string>
     <string name="preferences_alarm_network_available_summary">Pour que l\'alarme puisse fonctionner, le Wifi ou les données mobiles doivent être activés.</string>
     <string name="preferences_about">A propos</string>
+    <string name="preferences_autorestart">Redémarrage automatique (beta)</string>
+    <string name="preferences_autorestart_player">Redémarer automatiquement le player en cas de coupure</string>
+    <string name="preferences_autorestart_player_on">Le player sera redémarré en cas de coupure</string>
+    <string name="preferences_autorestart_player_off">Le player ne sera pas redémarré le player en cas de coupure</string>
+    <string name="preferences_autorestart_player_timeout">Délai avant redémarrage du player en cas de coupure</string>
+    <string name="preferences_autorestart_player_timeout_summary">Délai : %1$s</string>
+    <string-array name="preferences_autorestart_player_timeout_values">
+        <item name="1">5 secondes</item>
+        <item name="2">10 secondes</item>
+        <item name="3">15 secondes</item>
+        <item name="4">20 secondes</item>
+        <item name="5">30 secondes</item>
+        <item name="6">40 secondes</item>
+        <item name="7">50 secondes</item>
+        <item name="8">1 minute</item>
+        <item name="9">1 minute 30</item>
+        <item name="10">2 minutes</item>
+    </string-array>
+    <string-array name="preferences_autorestart_player_timeout_internal">
+        <item name="1">5</item>
+        <item name="2">10</item>
+        <item name="3">15</item>
+        <item name="4">20</item>
+        <item name="5">30</item>
+        <item name="6">40</item>
+        <item name="7">50</item>
+        <item name="8">60</item>
+        <item name="9">90</item>
+        <item name="10">120</item>
+    </string-array>
 
     <!-- links -->
     <string name="links_latest_news"><u><b>Dernières news</b></u></string>

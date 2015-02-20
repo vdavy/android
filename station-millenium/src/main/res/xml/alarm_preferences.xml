@@ -2,30 +2,35 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:millenium="http://schemas.android.com/apk/res-auto">
 
-    <!-- alarm preferences -->
+    <!-- alarm repetitions preferences -->
+    <PreferenceCategory android:title="@string/preferences_alarm_screen">
 
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:icon="@drawable/ic_alarm"
-        android:key="preferences_alarm_enabled"
-        android:summaryOff="@string/preferences_alarm_disabled"
-        android:summaryOn="@string/preferences_alarm_enabled"
-        android:title="@string/preferences_alarm_enable" />
+        <!-- alarm preferences -->
 
-    <!-- alarm data warning -->
-    <Preference
-        android:key="preferences_alarm_warning"
-        android:persistent="false"
-        android:selectable="false"
-        android:summary="@string/preferences_alarm_network_available_summary" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_alarm"
+            android:key="preferences_alarm_enabled"
+            android:summaryOff="@string/preferences_alarm_disabled"
+            android:summaryOn="@string/preferences_alarm_enabled"
+            android:title="@string/preferences_alarm_enable" />
 
-    <!-- alarm volume -->
-    <com.stationmillenium.android.utils.preferences.SeekBarDialogPreference
-        android:icon="@drawable/ic_alarm_volume"
-        android:dialogMessage="@string/preferences_alarm_volume_dialog_message"
-        android:key="preferences_alarm_volume"
-        android:title="@string/preferences_alarm_volume_title"
-        millenium:min="1" />
+        <!-- alarm data warning -->
+        <Preference
+            android:key="preferences_alarm_warning"
+            android:persistent="false"
+            android:selectable="false"
+            android:summary="@string/preferences_alarm_network_available_summary" />
+
+        <!-- alarm volume -->
+        <com.stationmillenium.android.utils.preferences.SeekBarDialogPreference
+            android:dialogMessage="@string/preferences_alarm_volume_dialog_message"
+            android:icon="@drawable/ic_alarm_volume"
+            android:key="preferences_alarm_volume"
+            android:title="@string/preferences_alarm_volume_title"
+            millenium:min="1" />
+
+    </PreferenceCategory>
 
     <!-- alarm repetitions preferences -->
     <PreferenceCategory android:title="@string/preferences_alarm_repeat">

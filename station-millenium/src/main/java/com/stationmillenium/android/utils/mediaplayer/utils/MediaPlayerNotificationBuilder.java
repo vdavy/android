@@ -92,7 +92,7 @@ public class MediaPlayerNotificationBuilder {
 
                         case PlaybackState.STATE_BUFFERING: //no notification to display during buffering
                             Log.d(TAG, "Playback change state buffering received");
-                            Toast.makeText(mediaPlayerServiceRef.get(), mediaPlayerServiceRef.get().getResources().getString(R.string.player_loading_toast), Toast.LENGTH_SHORT).show();
+                            setupState(false, R.string.player_loading_toast);
                             break;
                     }
                 }
@@ -102,7 +102,8 @@ public class MediaPlayerNotificationBuilder {
 
     /**
      * Handle the player state
-     * @param pauseAction insert pause action
+     *
+     * @param pauseAction   insert pause action
      * @param toastResource the toast resource
      */
     private void setupState(boolean pauseAction, int toastResource) {

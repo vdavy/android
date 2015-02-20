@@ -14,8 +14,12 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
@@ -33,8 +37,10 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
     //static intialization part
     private static final String TAG = "PreferencesActivity";
     private static final String APP_VERSION_PREFERENCE = "preferences_version";
+
     //preference fields
     private ListPreference newsNumber;
+    private ListPreference autorestartDelay;
 
     @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
@@ -55,6 +61,8 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
         //init fields
         newsNumber = (ListPreference) findPreference(SharedPreferencesConstants.TWEETS_DISPLAY_NUMBER);
         initNewsNumber();
+        autorestartDelay = (ListPreference) findPreference(SharedPreferencesConstants.PLAYER_AUTORESTART_DELAY);
+        initAutorestartDelay();
         initAppVersionPreference();
 
         //register callback for preference changes
@@ -69,10 +77,8 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
             Log.d(TAG, "Init the news number param summary");
         //set up news number summary
         //display the init value
-        final String[] arrayValues = getResources().getStringArray(R.array.preferences_links_tweets_number_values);
         if (newsNumber.getValue() != null) {
-            int position = Integer.parseInt(newsNumber.getValue()) - 1;
-            newsNumber.setSummary(arrayValues[position]);
+            newsNumber.setSummary(newsNumber.getEntry());
         }
 
         //set up listener for updates
@@ -81,8 +87,40 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if (BuildConfig.DEBUG)
                     Log.d(TAG, "Update news number summary");
-                int position = Integer.parseInt(newValue.toString()) - 1;
-                preference.setSummary(arrayValues[position]);
+                if (newValue != null) {
+                    CharSequence summary = newsNumber.getEntries()[newsNumber.findIndexOfValue(newValue.toString())];
+                    preference.setSummary(summary);
+                } else {
+                    preference.setSummary("");
+                }
+                return true;
+            }
+        });
+    }
+
+    /**
+     * Initialize auto restart delay preference
+     */
+    private void initAutorestartDelay() {
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "Init the autorestart player delay summary");
+
+        if (autorestartDelay.getValue() != null) {
+            autorestartDelay.setSummary(getString(R.string.preferences_autorestart_player_timeout_summary, autorestartDelay.getEntry()));
+        }
+
+        autorestartDelay.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "Update auto restart delay summary");
+                if (newValue != null) {
+                    CharSequence summary = autorestartDelay.getEntries()[autorestartDelay.findIndexOfValue(newValue.toString())];
+                    preference.setSummary(getString(R.string.preferences_autorestart_player_timeout_summary, summary));
+                } else {
+                    preference.setSummary("");
+                }
+
                 return true;
             }
         });
@@ -146,6 +184,28 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
         String AUTOSTART_RADIO = "preferences_player_autostart";
         String TWEETS_DISPLAY_NUMBER = "preferences_tweets_display_number";
         String PIWIK_TRACKING_ID = "piwik_tracking_id";
+        String PLAYER_AUTORESTART = "preferences_player_autorestart";
+        String PLAYER_AUTORESTART_DELAY = "preferences_player_autorestart_delay";
+    }
+
+    /**
+     * See : http://stackoverflow.com/questions/26509180/no-actionbar-in-preferenceactivity-after-upgrade-to-support-library-v21
+     *
+     * @param savedInstanceState
+     */
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        LinearLayout root = (LinearLayout) findViewById(android.R.id.list).getParent().getParent().getParent();
+        Toolbar bar = (Toolbar) LayoutInflater.from(this).inflate(R.layout.preferences_toolbar, root, false);
+        root.addView(bar, 0); // insert at top
+        bar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
 }

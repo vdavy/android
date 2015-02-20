@@ -169,6 +169,11 @@
             android:exported="false"
             android:label="@string/app_name" />
 
+        <!-- auto restart player service -->
+        <service
+            android:name=".services.AutoRestartPlayerService"
+            android:exported="false" />
+
     </application>
 
 </manifest>
