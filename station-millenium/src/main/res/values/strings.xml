@@ -138,7 +138,7 @@
     <string name="preferences_app_version_not_available">Station Millenium</string>
     <string name="preferences_alarm_network_available_summary">Pour que l\'alarme puisse fonctionner, le Wifi ou les données mobiles doivent être activés.</string>
     <string name="preferences_about">A propos</string>
-    <string name="preferences_autorestart">Redémarrage automatique (beta)</string>
+    <string name="preferences_autorestart">Redémarrage automatique</string>
     <string name="preferences_autorestart_player">Redémarer automatiquement le player en cas de coupure</string>
     <string name="preferences_autorestart_player_on">Le player sera redémarré en cas de coupure</string>
     <string name="preferences_autorestart_player_off">Le player ne sera pas redémarré le player en cas de coupure</string>
