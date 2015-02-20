@@ -19,7 +19,7 @@ import org.acra.sender.HttpSender;
         reportType = HttpSender.Type.JSON,
         httpMethod = HttpSender.Method.PUT,
         formUriBasicAuthLogin = "millenium",
-        formUriBasicAuthPassword = "WetitGipt1"
+        formUriBasicAuthPassword = ""
 )
 public class StationMilleniumApp extends Application {
 
