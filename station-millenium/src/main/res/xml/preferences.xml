@@ -21,7 +21,7 @@
     <!-- news preferences -->
     <PreferenceCategory android:title="@string/preferences_autorestart">
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:icon="@drawable/ic_player_autorestart"
             android:key="preferences_player_autorestart"
             android:summaryOff="@string/preferences_autorestart_player_off"
