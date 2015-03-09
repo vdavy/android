@@ -21,7 +21,7 @@ public class AutoRestartPlayerService extends IntentService {
     public static final String PREVIOUS_POSITION = "PreviousPosition";
     public static final String CURRENT_POSITION = "CurrentPosition";
     public static final String PLAYER_STATE = "PlayerState";
-    private static final String TAG = "AutoRestartPlayerService";
+    private static final String TAG = "AutoRestartPlayService";
     private static final long DELTA_MIN = 500;
     private static final int MAX_TRIES = 5;
     private static final long POST_DELAY = 1000;

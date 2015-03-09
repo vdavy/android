@@ -17,7 +17,7 @@ import java.lang.ref.WeakReference;
  */
 public class AudioBecommingNoisyBroadcastReceiver extends BroadcastReceiver {
 
-    private static final String TAG = "AudioBecommingNoisyBroadcastReceiver";
+    private static final String TAG = "AudioBecommingNoisyBR";
 
     private WeakReference<MediaPlayerService> mediaPlayerServiceRef;
     private boolean registered;

@@ -18,7 +18,7 @@ import com.stationmillenium.android.utils.intents.LocalIntents;
  */
 public class AlarmBootCompletedBroadcastReceiver extends BroadcastReceiver {
 
-    private static final String TAG = "AlarmBootCompletedBroadcastReceiver";
+    private static final String TAG = "AlarmBootCompletedBR";
 
     /* (non-Javadoc)
      * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)

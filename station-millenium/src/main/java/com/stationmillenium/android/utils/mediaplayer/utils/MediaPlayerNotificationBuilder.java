@@ -32,7 +32,7 @@ import java.lang.ref.WeakReference;
  */
 public class MediaPlayerNotificationBuilder {
 
-    private static final String TAG = "MediaPlayerNotificationBuilder";
+    private static final String TAG = "MPNotificationBuilder";
     private static final int[] COMPACT_VIEW_DOUBLE_ACTIONS = {0, 1};
     private static final int[] COMPACT_VIEW_SINGLE_ACTIONS = {0};
 

@@ -30,7 +30,7 @@ import java.util.Date;
 public class SongSearchHistoryImageDisplayActivity extends ActionBarActivity implements OnGlobalLayoutListener {
 
     //static parts
-    private final static String TAG = "SongSearchImageDisplayActivity";
+    private final static String TAG = "SongImageActivity";
     private final static String IMAGE_FILE_NAME_BUNDLE = "ImageFileNameBundle";
     private final static String IMAGE_URL_BUNDLE = "ImageURLBundle";
     private final static String ACTIVITY_TITLE_BUNDLE = "ActivityTitleBundle";

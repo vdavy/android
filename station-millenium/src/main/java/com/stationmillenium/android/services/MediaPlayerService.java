@@ -182,7 +182,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                 playMediaPlayerNewWay();
             else if (LocalIntents.PLAYER_PLAY_PAUSE.toString().equals(intent.getAction())) {
                 if (mediaPlayer != null) {
-                    if (mediaPlayer.isPlaying()) {
+                    if (isMediaPlayerPlaying()) {
                         pauseMediaPlayerNewWay();
                     } else {
                         playMediaPlayerNewWay();
@@ -337,7 +337,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     public void playMediaPlayer(Context context) {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Play media player");
-        if ((mediaPlayer != null) && (!mediaPlayer.isPlaying()))
+        if (isMediaPlayerPlaying())
             mediaPlayer.start();
 
         //send state intent
@@ -363,8 +363,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     public void pauseMediaPlayer(Context context) {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Pause media player");
-        if ((mediaPlayer != null) && (mediaPlayer.isPlaying()))
+        if (isMediaPlayerPlaying()) {
             mediaPlayer.pause();
+        }
 
         //send state intent
         sendStateIntent(PlayerState.PAUSED);
@@ -388,8 +389,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Stop the media player");
         try {
-            if ((mediaPlayer != null) && (mediaPlayer.isPlaying()))
+            if (isMediaPlayerPlaying()) {
                 mediaPlayer.stop();
+            }
         } catch (IllegalStateException e) {
             Log.w(TAG, "Error while stopping media player", e);
         }
@@ -457,7 +459,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void propagatePlaybackState(int androidPlaybackState, int localState) {
         if ((AppUtils.isAPILevel21Available()) && (mediaSession != null)) {
-            int position = (mediaPlayer != null) ? mediaPlayer.getCurrentPosition() : 0;
+            int position = getPosition();
             mediaSession.setPlaybackState(new PlaybackState.Builder().setState(androidPlaybackState, position, 1.0f).build());
         } else if ((AppUtils.isAPILevel14Available()) && (remoteControlClient != null)) {
             remoteControlClient.setPlaybackState(localState);
@@ -634,7 +636,12 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      * @return true if playing, false if not
      */
     public boolean isMediaPlayerPlaying() {
-        return (mediaPlayer != null) && (mediaPlayer.isPlaying());
+        try {
+            return (mediaPlayer != null) && (mediaPlayer.isPlaying());
+        } catch (IllegalStateException e) {
+            Log.w(TAG, "Error in isPlaying", e);
+            return false;
+        }
     }
 
     public PlayerState getPlayerState() {
@@ -714,6 +721,11 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     }
 
     public int getPosition() {
-        return (mediaPlayer != null) ? mediaPlayer.getCurrentPosition() : 0;
+        try {
+            return (mediaPlayer != null) ? mediaPlayer.getCurrentPosition() : 0;
+        } catch (IllegalStateException e) {
+            Log.w(TAG, "Error in getCurrentPosition", e);
+            return 0;
+        }
     }
 }
