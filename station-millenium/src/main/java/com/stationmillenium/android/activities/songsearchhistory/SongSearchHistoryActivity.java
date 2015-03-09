@@ -56,7 +56,7 @@ import java.util.Calendar;
 public class SongSearchHistoryActivity extends ActionBarActivity implements LoaderCallbacks<Cursor>, OnItemClickListener, OnRefreshListener {
 
     //static parts
-    private static final String TAG = "SongSearchHistoryActivity";
+    private static final String TAG = "SearchHistoryActivity";
     private static final String SEARCH_QUERY = "SearchQuery";
     private static final String SEARCH_QUERY_TYPE = "SearchQueryType";
     private static final String SEARCH_TIME = "SearchTime";

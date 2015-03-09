@@ -34,7 +34,7 @@ import java.lang.ref.WeakReference;
  */
 public class MediaPlayerServiceHandler extends Handler {
 
-    private static final String TAG = "MediaPlayerServiceHandler";
+    private static final String TAG = "MPServiceHandler";
 
     //rerefences to service
     //see : http://stackoverflow.com/questions/12084382/what-is-handlerleak

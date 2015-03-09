@@ -488,7 +488,7 @@ public class PlayerActivity extends ActionBarActivity {
      */
     private class UpdateTitleBroadcastReceiver extends BroadcastReceiver {
 
-        private static final String TAG = "UpdateTitleBroadcastReceiver";
+        private static final String TAG = "UpdateTitleBR";
 
         @Override
         public void onReceive(Context context, Intent intent) {

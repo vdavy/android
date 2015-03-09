@@ -14,7 +14,7 @@ import java.lang.ref.WeakReference;
  */
 public class MediaPlayerOnAudioFocusChangeHandler implements AudioManager.OnAudioFocusChangeListener {
 
-    private static final String TAG = "MediaPlayerOnAudioFocusChangeHandler";
+    private static final String TAG = "MPOnAFChangeHandler";
 
     private WeakReference<MediaPlayerService> mediaPlayerServiceRef;
 

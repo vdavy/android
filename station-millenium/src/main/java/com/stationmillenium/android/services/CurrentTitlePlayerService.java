@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class CurrentTitlePlayerService extends IntentService {
 
-    private static final String TAG = "CurrentTitlePlayerService";
+    private static final String TAG = "CurrentTitleService";
     private static final String FILENAME_PATTERN = "\\p{Alnum}{32}.png";
 
     /**

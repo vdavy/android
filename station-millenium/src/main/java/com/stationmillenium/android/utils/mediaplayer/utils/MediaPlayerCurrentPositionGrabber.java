@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference;
  */
 public class MediaPlayerCurrentPositionGrabber {
 
-    private static final String TAG = "CurrentMediaPlayerTimeGrabber";
+    private static final String TAG = "CurrentMPTimeGrabber";
 
     private static WeakReference<MediaPlayer> mediaPlayerRef;
 

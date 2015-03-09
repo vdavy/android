@@ -55,7 +55,7 @@ import java.util.Set;
 public class AlarmSharedPreferencesActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
     //static intialization part
-    private static final String TAG = "AlarmPreferencesActivity";
+    private static final String TAG = "AlarmPreferenceActivity";
     private static final String ALARM_DAYS_LIST_STRING_SEPARATOR = "\\|";
     //preference fields
     private CheckBoxPreference alarmEnabled;

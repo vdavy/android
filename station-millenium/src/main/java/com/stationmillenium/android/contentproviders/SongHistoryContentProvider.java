@@ -40,7 +40,7 @@ import java.util.Map;
 public class SongHistoryContentProvider extends ContentProvider {
 
     //static part
-    private static final String TAG = "SongHistoryContentProvider";
+    private static final String TAG = "SongHistoryProvider";
     private static final String ACTION_PARAM_NAME = "action";
     private static final String QUERY_PARAM_NAME = "query";
     private static final String SONG_SUGGEST_SEPARATOR = " - ";

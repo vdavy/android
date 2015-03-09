@@ -102,7 +102,7 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    private static final String TAG = "UpdateCurrentTitleBroadcastReceiver";
+    private static final String TAG = "UpdateCurrentTitleBR";
 
     private WeakReference<MediaPlayerService> mediaPlayerServiceRef;
     private boolean registered;

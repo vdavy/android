@@ -27,8 +27,8 @@ import com.stationmillenium.android.services.MediaPlayerService;
  */
 public class AppUtils {
 
-    private static final String TAG_NETWORK_AVAILABLE = "AppUtils#isNetworkAvailable";
-    private static final String TAG_WIFI_ONLY_NOT_ACTIVATED = "AppUtils#isWifiOnlyAndWifiNotConnected";
+    private static final String TAG_NETWORK_AVAILABLE = "AppUtils#isNetworkAvail";
+    private static final String TAG_WIFI_ONLY_NOT_ACTIVATED = "AppUtils#isWifiOnly";
 
 
     /**

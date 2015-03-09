@@ -17,7 +17,7 @@ import com.stationmillenium.android.utils.intents.LocalIntents;
  */
 public class PlaybackControlButtonsBroadcastReceiver extends BroadcastReceiver {
 
-    private static final String TAG = "PlaybackControlButtonsBroadcastReceiver";
+    private static final String TAG = "PlaybackControlBtnBR";
 
     @Override
     public void onReceive(Context context, Intent intent) {
