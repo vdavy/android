@@ -11,7 +11,7 @@
             android:summaryOn="@string/preferences_player_wifi_only_summary_on"
             android:title="@string/preferences_player_wifi_only" />
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:icon="@drawable/ic_player_autostart"
             android:key="preferences_player_autostart"
             android:summary="@string/preferences_player_autostart_summary"
