@@ -95,10 +95,8 @@ public class CurrentTitlePlayerService extends IntentService {
                         Log.w(TAG, "Error while parsing XML data", e);
                     }
 
-                } else { //error while getting input stream
-                    if (BuildConfig.DEBUG)
-                        Log.d(TAG, "No input stream - stopping service...");
-                    Toast.makeText(this, getResources().getString(R.string.player_network_error), Toast.LENGTH_SHORT).show();
+                } else if (BuildConfig.DEBUG) { //error while getting input stream
+                    Log.d(TAG, "No input stream - stopping service...");
                 }
 
             } else {
