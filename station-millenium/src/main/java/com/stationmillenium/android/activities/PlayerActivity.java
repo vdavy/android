@@ -607,4 +607,12 @@ public class PlayerActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if ((playerState != PlayerState.STOPPED) || (AppUtils.isMediaPlayerServiceRunning(this))) {
+            Log.d(TAG, "Activity destroyed - force media player stop");
+            stopPlayer(null);
+        }
+    }
 }

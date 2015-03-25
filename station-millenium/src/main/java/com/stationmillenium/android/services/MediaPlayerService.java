@@ -228,7 +228,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         }
 
         // If we get killed, after returning from here, restart
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     /**
