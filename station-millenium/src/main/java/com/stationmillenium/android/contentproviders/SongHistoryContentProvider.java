@@ -13,6 +13,8 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.net.Uri.Builder;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.BaseColumns;
 import android.util.Log;
 import android.widget.Toast;
@@ -207,8 +209,13 @@ public class SongHistoryContentProvider extends ContentProvider {
         } else { //if not network available, cancel request
             if (BuildConfig.DEBUG)
                 Log.d(TAG, "Network not available");
-
-            Toast.makeText(getContext(), getContext().getString(R.string.player_network_unavailable), Toast.LENGTH_SHORT).show();
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getContext(), R.string.player_network_unavailable, Toast.LENGTH_SHORT).show();
+                }
+            });
             return null;
         }
     }
