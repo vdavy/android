@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "22"
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "com.stationmillenium.android"
         minSdkVersion 10
         targetSdkVersion 22
-        versionCode 62
-        versionName "1.6.4"
+        versionCode 63
+        versionName "1.6.5-beta1"
         testApplicationId "com.stationmillenium.android.test"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
@@ -36,7 +36,7 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:22.0.0'
-    compile 'org.twitter4j:twitter4j-core:4.0.2'
-    compile 'ch.acra:acra:4.5.+'
+    compile 'org.twitter4j:twitter4j-core:4.0.3'
+    compile 'ch.acra:acra:4.6.1'
     compile 'com.intellij:annotations:+@jar'
 }
