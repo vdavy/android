@@ -28,8 +28,11 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MUSIC_PLAYER" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.APP_MUSIC" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
@@ -50,6 +53,7 @@
                 <action android:name="com.stationmillenium.android.intents.ON_PLAYER_BUFFERING" />
                 <action android:name="com.stationmillenium.android.intents.ON_PLAYER_OPEN" />
             </intent-filter>
+
         </activity>
 
         <!-- preferences activity -->
