@@ -15,7 +15,6 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
@@ -82,17 +81,17 @@ public class MediaPlayerNotificationBuilder {
                     switch (state.getState()) {
                         case PlaybackState.STATE_PLAYING:
                             Log.d(TAG, "Playback change state playing received");
-                            setupState(true, R.string.player_play_toast);
+                            setupState(true);
                             break;
 
                         case PlaybackState.STATE_PAUSED:
                             Log.d(TAG, "Playback change state playing received");
-                            setupState(false, R.string.player_pause_toast);
+                            setupState(false);
                             break;
 
                         case PlaybackState.STATE_BUFFERING: //no notification to display during buffering
                             Log.d(TAG, "Playback change state buffering received");
-                            setupState(false, R.string.player_loading_toast);
+                            setupState(false);
                             break;
                     }
                 }
@@ -104,12 +103,10 @@ public class MediaPlayerNotificationBuilder {
      * Handle the player state
      *
      * @param pauseAction   insert pause action
-     * @param toastResource the toast resource
      */
-    private void setupState(boolean pauseAction, int toastResource) {
+    private void setupState(boolean pauseAction) {
         Notification notification = createNotification(pauseAction);
         ((NotificationManager) mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE)).notify(MediaPlayerService.NOTIFICATION_ID, notification);
-        Toast.makeText(mediaPlayerServiceRef.get(), mediaPlayerServiceRef.get().getResources().getString(toastResource), Toast.LENGTH_SHORT).show();
     }
 
     public MediaController.Callback getMediaControllerCallback() {

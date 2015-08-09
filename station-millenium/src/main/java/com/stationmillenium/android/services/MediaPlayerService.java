@@ -261,7 +261,6 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Player is ready - let's start");
         mp.start();
-        Toast.makeText(this, getResources().getString(R.string.player_play_toast), Toast.LENGTH_SHORT).show();
 
         //send state intent
         sendStateIntent(PlayerState.PLAYING);
@@ -347,7 +346,6 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         if (!AppUtils.isAPILevel21Available()) {
             Notification notification = mediaPlayerNotificationBuilder.createNotification(true);
             ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
-            Toast.makeText(this, getResources().getString(R.string.player_play_toast), Toast.LENGTH_SHORT).show();
         }
 
         //start timers
@@ -374,7 +372,6 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         if (!AppUtils.isAPILevel21Available()) {
             Notification notification = mediaPlayerNotificationBuilder.createNotification(false);
             ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
-            Toast.makeText(this, getResources().getString(R.string.player_pause_toast), Toast.LENGTH_SHORT).show();
         }
 
         //stop current title update
@@ -395,7 +392,6 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         } catch (IllegalStateException e) {
             Log.w(TAG, "Error while stopping media player", e);
         }
-        Toast.makeText(this, getResources().getString(R.string.player_stop_toast), Toast.LENGTH_SHORT).show();
 
         //send state intent
         sendStateIntent(PlayerState.STOPPED);
@@ -453,8 +449,8 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     /**
      * Propagate playback state in old and fashion way
      *
-     * @param androidPlaybackState
-     * @param localState
+     * @param androidPlaybackState the playback state in android format
+     * @param localState the local playback state
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void propagatePlaybackState(int androidPlaybackState, int localState) {
@@ -485,7 +481,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                     initMediaPlayer();
                 } catch (IOException e) {
                     Log.w(TAG, "Error while trying to init media player", e);
-                    Toast.makeText(MediaPlayerService.this, getResources().getString(R.string.player_error), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MediaPlayerService.this, R.string.player_error, Toast.LENGTH_SHORT).show();
 
                     //stop the service
                     stopMediaPlayer();
@@ -591,9 +587,6 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         //send state intent
         sendStateIntent(PlayerState.BUFFERING);
-        if (!AppUtils.isAPILevel21Available()) {
-            Toast.makeText(this, getResources().getString(R.string.player_loading_toast), Toast.LENGTH_SHORT).show();
-        }
 
         //send tracking info
         Intent statsTrackerServiceIntent = new Intent(this, StatsTrackerService.class);
@@ -611,7 +604,6 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             if (!AppUtils.isAPILevel21Available()) {
                 Notification notification = mediaPlayerNotificationBuilder.createNotification(false);
                 ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
-                Toast.makeText(this, getResources().getString(R.string.player_loading_toast), Toast.LENGTH_SHORT).show();
             }
             return true;
         } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
@@ -622,7 +614,6 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             if (!AppUtils.isAPILevel21Available()) {
                 Notification notification = mediaPlayerNotificationBuilder.createNotification(true);
                 ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
-                Toast.makeText(this, getResources().getString(R.string.player_play_toast), Toast.LENGTH_SHORT).show();
             }
             return true;
         }

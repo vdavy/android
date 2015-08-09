@@ -16,7 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -56,7 +56,7 @@ import java.util.TimerTask;
  *
  * @author vincent
  */
-public class PlayerActivity extends ActionBarActivity {
+public class PlayerActivity extends AppCompatActivity {
 
 
     //static part
@@ -302,7 +302,7 @@ public class PlayerActivity extends ActionBarActivity {
 
                 } else {
                     Log.w(TAG, "Wifi requested for streaming radio, but not connected");
-                    Toast.makeText(this, getResources().getString(R.string.player_no_wifi), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.player_no_wifi, Toast.LENGTH_SHORT).show();
                 }
 
             } else if (BuildConfig.DEBUG)
@@ -467,7 +467,7 @@ public class PlayerActivity extends ActionBarActivity {
 
         private LocalIntents associatedIntent;
 
-        private PlayerState(LocalIntents associatedIntent) {
+        PlayerState(LocalIntents associatedIntent) {
             this.associatedIntent = associatedIntent;
         }
 

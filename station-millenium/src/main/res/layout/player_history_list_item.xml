@@ -23,7 +23,7 @@
         android:layout_toRightOf="@id/player_history_item_icon"
         android:paddingLeft="5dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="11dp"
+        android:textSize="11sp"
         android:textStyle="italic" />
 
 </RelativeLayout>

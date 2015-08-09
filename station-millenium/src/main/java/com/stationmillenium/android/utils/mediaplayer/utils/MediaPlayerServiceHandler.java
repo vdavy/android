@@ -104,7 +104,7 @@ public class MediaPlayerServiceHandler extends Handler {
 
                         } catch (Exception e) {
                             Log.w(TAG, "Error while trying to init media player", e);
-                            Toast.makeText(mediaPlayerServiceRef.get(), mediaPlayerServiceRef.get().getResources().getString(R.string.player_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mediaPlayerServiceRef.get(), R.string.player_error, Toast.LENGTH_SHORT).show();
 
                             //stop the service
                             mediaPlayerServiceRef.get().getAudioManager().abandonAudioFocus(mediaPlayerServiceRef.get().getMediaPlayerOnAudioFocusChangeHandler());
@@ -113,7 +113,7 @@ public class MediaPlayerServiceHandler extends Handler {
 
                     } else {
                         Log.w(TAG, "No Internet connection - can't play stream");
-                        Toast.makeText(mediaPlayerServiceRef.get(), mediaPlayerServiceRef.get().getResources().getString(R.string.player_network_unavailable), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mediaPlayerServiceRef.get(), R.string.player_network_unavailable, Toast.LENGTH_SHORT).show();
 
                         //stop the service
                         mediaPlayerServiceRef.get().getAudioManager().abandonAudioFocus(mediaPlayerServiceRef.get().getMediaPlayerOnAudioFocusChangeHandler());
@@ -122,7 +122,7 @@ public class MediaPlayerServiceHandler extends Handler {
 
                 } else {
                     Log.w(TAG, "Audio focus request failed - can't play stream");
-                    Toast.makeText(mediaPlayerServiceRef.get(), mediaPlayerServiceRef.get().getResources().getString(R.string.player_error), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mediaPlayerServiceRef.get(), R.string.player_error, Toast.LENGTH_SHORT).show();
 
                     //stop the service
                     mediaPlayerServiceRef.get().getAudioManager().abandonAudioFocus(mediaPlayerServiceRef.get().getMediaPlayerOnAudioFocusChangeHandler());

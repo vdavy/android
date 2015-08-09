@@ -60,7 +60,8 @@
         <activity
             android:name=".activities.preferences.SharedPreferencesActivity"
             android:label="@string/preferences_activity_title"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName=".activities.MainActivity"
+            android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />

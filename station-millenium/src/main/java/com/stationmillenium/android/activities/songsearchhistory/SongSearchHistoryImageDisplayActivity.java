@@ -6,7 +6,7 @@ package com.stationmillenium.android.activities.songsearchhistory;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -27,7 +27,7 @@ import java.util.Date;
  *
  * @author vincent
  */
-public class SongSearchHistoryImageDisplayActivity extends ActionBarActivity implements OnGlobalLayoutListener {
+public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity implements OnGlobalLayoutListener {
 
     //static parts
     private final static String TAG = "SongImageActivity";

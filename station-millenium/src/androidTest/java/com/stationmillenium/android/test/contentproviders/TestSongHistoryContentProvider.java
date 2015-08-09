@@ -24,7 +24,7 @@ import com.stationmillenium.android.contentproviders.SongHistoryContentProvider.
  */
 public class TestSongHistoryContentProvider extends ProviderTestCase2<SongHistoryContentProvider> {
 
-    private static final String TAG = "TestSongHistoryContentProvider";
+    private static final String TAG = "TestSongHistoryCP";
     private static final String FULL_TEXT_QUERY = "agenda c�te";
     private static final String SUGGEST_QUERY = "top concept";
     private static final int MAX_SUGGEST_COLUMNS_COUNT = 4;
