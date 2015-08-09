@@ -24,10 +24,6 @@
     <string name="player_play">Lecture</string>
     <string name="player_pause">Pause</string>
     <string name="player_stop">Stop</string>
-    <string name="player_loading_toast">Player Millenium : chargement&#8230;</string>
-    <string name="player_play_toast">Player Millenium : lecture&#8230;</string>
-    <string name="player_pause_toast">Player Millenium : pause&#8230;</string>
-    <string name="player_stop_toast">Player Millenium : stop&#8230;</string>
     <string name="player_notification_time">%1$s:%2$s</string>
     <string name="player_loading">Chargement en cours&#8230;</string>
 
@@ -172,7 +168,7 @@
     <string name="links_latest_news"><u><b>Dernières news</b></u></string>
 
     <!-- other resources -->
-    <string name="empty_string"></string>
+    <string name="empty_string" />
     <string name="webview_error">Erreur sur le replay : %1$s</string>
 
     <!-- alarm -->

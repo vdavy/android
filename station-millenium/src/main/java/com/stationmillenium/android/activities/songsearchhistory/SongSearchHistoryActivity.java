@@ -20,7 +20,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.util.Log;
@@ -53,7 +53,7 @@ import java.util.Calendar;
  *
  * @author vincent
  */
-public class SongSearchHistoryActivity extends ActionBarActivity implements LoaderCallbacks<Cursor>, OnItemClickListener, OnRefreshListener {
+public class SongSearchHistoryActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, OnItemClickListener, OnRefreshListener {
 
     //static parts
     private static final String TAG = "SearchHistoryActivity";
@@ -96,7 +96,7 @@ public class SongSearchHistoryActivity extends ActionBarActivity implements Load
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.song_history_swipe_refresh_layout);
 
         //should we re-expand search view ?
-        expandActionViewOnCreate = (savedInstanceState != null) ? savedInstanceState.getBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE) : false;
+        expandActionViewOnCreate = (savedInstanceState != null) && savedInstanceState.getBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE);
 
         //set up action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -102,7 +102,7 @@ public class CurrentTitlePlayerService extends IntentService {
             } else {
                 if (BuildConfig.DEBUG)
                     Log.d(TAG, "Network is unavailable - stopping service...");
-                Toast.makeText(this, getResources().getString(R.string.player_network_unavailable), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.player_network_unavailable, Toast.LENGTH_SHORT).show();
             }
 
         } else { //media player service is not running, no need to update title

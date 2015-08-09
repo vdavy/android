@@ -9,7 +9,7 @@ import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -105,7 +105,7 @@ public class ReplayWebViewFragment extends Fragment {
         }
 
         //set title
-        ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(R.string.replay_activity_title);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.replay_activity_title);
     }
 
     @Override
@@ -114,7 +114,7 @@ public class ReplayWebViewFragment extends Fragment {
         //reset activity title
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Pausing replay webview fragment");
-        ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
 
         if ((AppUtils.isAPILevel11Available()) && (replayWebView != null)) {
             replayWebView.onPause();
