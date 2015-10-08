@@ -8,8 +8,8 @@ android {
         applicationId "com.stationmillenium.android"
         minSdkVersion 10
         targetSdkVersion 22
-        versionCode 69
-        versionName "1.7.2-beta1"
+        versionCode 70
+        versionName "1.7.2-beta2"
         testApplicationId "com.stationmillenium.android.test"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
@@ -36,7 +36,7 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'org.twitter4j:twitter4j-core:4.0.3'
-    compile 'ch.acra:acra:4.6.1'
+    compile 'org.twitter4j:twitter4j-core:4.0.4'
+    compile 'ch.acra:acra:4.6.2'
     compile "com.android.support:support-annotations:22.2.1"
 }
