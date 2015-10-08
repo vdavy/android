@@ -3,14 +3,13 @@ package com.stationmillenium.android.utils.preferences;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
+import android.support.annotation.NonNull;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TimePicker;
 
 import com.stationmillenium.android.R;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -50,7 +49,7 @@ public class TimePreference extends DialogPreference {
     }
 
     @Override
-    protected void onBindDialogView(@NotNull View v) {
+    protected void onBindDialogView(@NonNull View v) {
         super.onBindDialogView(v);
         picker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
         picker.setCurrentMinute(calendar.get(Calendar.MINUTE));

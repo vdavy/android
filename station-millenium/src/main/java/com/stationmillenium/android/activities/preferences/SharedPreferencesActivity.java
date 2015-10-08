@@ -13,6 +13,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -24,8 +25,6 @@ import android.widget.LinearLayout;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.utils.AppUtils;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Activity to manage application preferences
@@ -127,7 +126,7 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, @NotNull MenuItem item) {
+    public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (BuildConfig.DEBUG)

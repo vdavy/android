@@ -20,6 +20,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -37,8 +38,6 @@ import com.stationmillenium.android.utils.intents.LocalIntents;
 import com.stationmillenium.android.utils.preferences.ListPreferenceMultiSelect;
 import com.stationmillenium.android.utils.preferences.SeekBarDialogPreference;
 import com.stationmillenium.android.utils.preferences.TimePreference;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -197,7 +196,7 @@ public class AlarmSharedPreferencesActivity extends PreferenceActivity implement
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, @NotNull MenuItem item) {
+    public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (BuildConfig.DEBUG)
