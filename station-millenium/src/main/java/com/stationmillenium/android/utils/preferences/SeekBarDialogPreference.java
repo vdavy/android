@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.DialogPreference;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.SeekBar;
@@ -12,8 +13,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.stationmillenium.android.R;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author lukehorvat
@@ -67,7 +66,7 @@ public class SeekBarDialogPreference extends DialogPreference {
     }
 
     @Override
-    protected void onBindDialogView(@NotNull View view) {
+    protected void onBindDialogView(@NonNull View view) {
         super.onBindDialogView(view);
 
         TextView dialogMessageText = (TextView) view.findViewById(R.id.text_dialog_message);
@@ -200,7 +199,7 @@ public class SeekBarDialogPreference extends DialogPreference {
         }
 
         @Override
-        public void writeToParcel(@NotNull Parcel dest, int flags) {
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
 
             dest.writeInt(minProgress);

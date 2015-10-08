@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -29,8 +30,6 @@ import com.stationmillenium.android.services.MediaPlayerService;
 import com.stationmillenium.android.utils.AppUtils;
 import com.stationmillenium.android.utils.intents.LocalIntents;
 import com.stationmillenium.android.utils.intents.LocalIntentsData;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
@@ -76,7 +75,7 @@ public class WidgetProvider extends AppWidgetProvider {
     }
 
     @Override
-    public void onReceive(@NotNull Context context, @NotNull Intent intent) {
+    public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Widget receiving intent : " + intent);
         super.onReceive(context, intent);

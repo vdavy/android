@@ -2,7 +2,7 @@
 
     <!-- border values for image -->
     <dimen name="widget_image_top_left_radius">5dp</dimen>
-    <dimen name="widget_image_top_right_radius">dp</dimen>
+    <dimen name="widget_image_top_right_radius">0dp</dimen>
     <dimen name="widget_image_bottom_left_radius">5dp</dimen>
     <dimen name="widget_image_bottom_right_radius">0dp</dimen>
 

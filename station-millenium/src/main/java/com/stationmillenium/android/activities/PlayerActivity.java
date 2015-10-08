@@ -15,6 +15,7 @@ import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -40,8 +41,6 @@ import com.stationmillenium.android.utils.AppUtils;
 import com.stationmillenium.android.utils.intents.LocalIntents;
 import com.stationmillenium.android.utils.intents.LocalIntentsData;
 import com.stationmillenium.android.utils.mediaplayer.utils.MediaPlayerCurrentPositionGrabber;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -444,7 +443,7 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestoreInstanceState(@NotNull Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
         currentTitleTextView.setText(savedInstanceState.getCharSequence(CURRENT_TITLE_SAVE));
@@ -607,12 +606,4 @@ public class PlayerActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if ((playerState != PlayerState.STOPPED) || (AppUtils.isMediaPlayerServiceRunning(this))) {
-            Log.d(TAG, "Activity destroyed - force media player stop");
-            stopPlayer(null);
-        }
-    }
 }

@@ -7,12 +7,11 @@ import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.ListView;
 
 import com.stationmillenium.android.R;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,7 +71,7 @@ public class ListPreferenceMultiSelect extends ListPreference {
     }
 
     @Override
-    protected void onPrepareDialogBuilder(@NotNull Builder builder) {
+    protected void onPrepareDialogBuilder(@NonNull Builder builder) {
         CharSequence[] entries = getEntries();
         CharSequence[] entryValues = getEntryValues();
         if (entries == null || entryValues == null || entries.length != entryValues.length) {
@@ -84,7 +83,7 @@ public class ListPreferenceMultiSelect extends ListPreference {
         builder.setMultiChoiceItems(entries, mClickedDialogEntryIndices,
                 new DialogInterface.OnMultiChoiceClickListener() {
                     public void onClick(DialogInterface dialog, int which, boolean val) {
-                        if (isCheckAllValue(which) == true) {
+                        if (isCheckAllValue(which)) {
                             checkAll(dialog, val);
                         }
                         mClickedDialogEntryIndices[which] = val;
@@ -94,10 +93,7 @@ public class ListPreferenceMultiSelect extends ListPreference {
 
     private boolean isCheckAllValue(int which) {
         final CharSequence[] entryValues = getEntryValues();
-        if (checkAllKey != null) {
-            return entryValues[which].equals(checkAllKey);
-        }
-        return false;
+        return checkAllKey != null && entryValues[which].equals(checkAllKey);
     }
 
     private void checkAll(DialogInterface dialog, boolean val) {
@@ -142,10 +138,10 @@ public class ListPreferenceMultiSelect extends ListPreference {
         CharSequence[] entryValues = getEntryValues();
         if (positiveResult && entryValues != null) {
             for (int i = 0; i < entryValues.length; i++) {
-                if (mClickedDialogEntryIndices[i] == true) {
+                if (mClickedDialogEntryIndices[i]) {
                     // Don't save the state of check all option - if any
                     String val = (String) entryValues[i];
-                    if (checkAllKey == null || (val.equals(checkAllKey) == false)) {
+                    if (checkAllKey == null || (!val.equals(checkAllKey))) {
                         values.add(val);
                     }
                 }
