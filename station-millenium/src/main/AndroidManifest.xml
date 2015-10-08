@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.stationmillenium.android"
-    android:installLocation="auto">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.stationmillenium.android"
+          android:installLocation="auto">
 
     <!-- permissions to access network and check network state -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,7 +16,8 @@
         android:backupAgent=".utils.backup.AppBackupAgent"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:allowBackup="true">
 
         <!-- meta data for backup service -->
         <meta-data
@@ -27,12 +29,8 @@
             android:name=".activities.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.MUSIC_PLAYER" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.APP_MUSIC" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
@@ -41,10 +39,11 @@
             android:name=".activities.PlayerActivity"
             android:label="@string/player_activity_title"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName=".activities.MainActivity"
+            tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value="com.stationmillenium.android.activities.MainActivity" />
 
             <intent-filter>
                 <action android:name="com.stationmillenium.android.intents.ON_PLAYER_PLAY" />
@@ -61,10 +60,11 @@
             android:name=".activities.preferences.SharedPreferencesActivity"
             android:label="@string/preferences_activity_title"
             android:parentActivityName=".activities.MainActivity"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value="com.stationmillenium.android.activities.MainActivity" />
 
             <intent-filter>
                 <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
@@ -77,10 +77,11 @@
         <activity
             android:name=".activities.preferences.AlarmSharedPreferencesActivity"
             android:label="@string/preferences_alarm_screen"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName=".activities.MainActivity"
+            tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value="com.stationmillenium.android.activities.MainActivity" />
         </activity>
 
         <!-- song history search activity -->
@@ -88,14 +89,15 @@
             android:name="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity"
             android:label="@string/song_search_history"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName=".activities.MainActivity"
+            tools:ignore="UnusedAttribute">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value="com.stationmillenium.android.activities.MainActivity" />
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -105,10 +107,11 @@
         <activity
             android:name="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryImageDisplayActivity"
             android:label="@string/song_search_history_image"
-            android:parentActivityName=".activities.songsearchhistory.SongSearchHistoryActivity">
+            android:parentActivityName=".activities.songsearchhistory.SongSearchHistoryActivity"
+            tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.songsearchhistory.SongSearchHistoryActivity" />
+                android:value="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity" />
         </activity>
 
         <!-- player service -->
