@@ -32,7 +32,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,7 +67,6 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
 
     //widgets list
     private ListView historyListView;
-    private ProgressBar progressBar;
     private TextView noDataTextView;
     private TextView introTextView;
     private MenuItem searchMenuItem;
@@ -90,7 +88,6 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         //init widgets
         setContentView(R.layout.song_search_history_activity);
         historyListView = (ListView) findViewById(R.id.song_history_list);
-        progressBar = (ProgressBar) findViewById(R.id.song_history_progressbar);
         noDataTextView = (TextView) findViewById(R.id.song_history_no_data_text);
         introTextView = (TextView) findViewById(R.id.song_history_search_result_text);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.song_history_swipe_refresh_layout);
@@ -104,7 +101,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         //set up swipe refresh
         swipeRefreshLayout.setOnRefreshListener(this);
         if (AppUtils.isAPILevel14Available()) {
-            swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
+            swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                     android.R.color.holo_green_light,
                     android.R.color.holo_orange_light,
                     android.R.color.holo_red_light);
@@ -206,7 +203,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         historyListView.setVisibility(View.INVISIBLE);
         noDataTextView.setVisibility(View.GONE);
         introTextView.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
+        setRefreshing(true);
     }
 
     /**
@@ -217,9 +214,8 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     private void displayLoadedDataWidgets(boolean dataProperlyLoaded) {
         historyListView.setVisibility(View.VISIBLE);
         introTextView.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
         noDataTextView.setVisibility((dataProperlyLoaded) ? View.GONE : View.VISIBLE);
-        swipeRefreshLayout.setRefreshing(false);
+        setRefreshing(false);
     }
 
     @Override
@@ -428,8 +424,17 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     @Override
     public void onRefresh() {
         Log.d(TAG, "Swipe refresh requested");
-        swipeRefreshLayout.setRefreshing(true);
+        setRefreshing(true);
         reinitSongSearch();
+    }
+
+    private void setRefreshing(final boolean refreshing) {
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(refreshing);
+            }
+        });
     }
 
 }

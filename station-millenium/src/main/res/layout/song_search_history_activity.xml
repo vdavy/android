@@ -4,15 +4,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/home_background">
 
-    <!-- progress bar displayed during search -->
-
-    <ProgressBar
-        android:id="@+id/song_history_progressbar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
-
     <!-- no results textview -->
 
     <TextView
