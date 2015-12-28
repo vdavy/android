@@ -14,7 +14,7 @@ import org.acra.sender.HttpSender;
  * https://github.com/ACRA/acra/wiki/BasicSetup
  * Created by vincent on 21/09/14.
  */
-@ReportsCrashes(formUri = "https://millenium.iriscouch.com/acra-millenium/_design/acra-storage/_update/report",
+@ReportsCrashes(formUri = "https://www.station-millenium.com:6984/acra-millenium/_design/acra-storage/_update/report",
         reportType = HttpSender.Type.JSON,
         httpMethod = HttpSender.Method.PUT,
         formUriBasicAuthLogin = "millenium",
