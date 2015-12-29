@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.content_frame, new HomeFragment())
                     .commit();
         }
-
+throw new NullPointerException();
     }
 
     @Override
