@@ -29,6 +29,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -52,7 +53,7 @@ import java.util.Calendar;
  *
  * @author vincent
  */
-public class SongSearchHistoryActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, OnItemClickListener, OnRefreshListener {
+public class SongSearchHistoryActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, OnItemClickListener, OnRefreshListener, AbsListView.OnScrollListener {
 
     //static parts
     private static final String TAG = "SearchHistoryActivity";
@@ -100,6 +101,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
 
         //set up swipe refresh
         swipeRefreshLayout.setOnRefreshListener(this);
+        historyListView.setOnScrollListener(this);
         if (AppUtils.isAPILevel14Available()) {
             swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                     android.R.color.holo_green_light,
@@ -437,4 +439,14 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         });
     }
 
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView listView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        int topRowVerticalPosition = (listView == null || listView.getChildCount() == 0) ? 0 : listView.getChildAt(0).getTop();
+        swipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+    }
 }
