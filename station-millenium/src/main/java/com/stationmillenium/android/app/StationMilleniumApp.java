@@ -9,9 +9,12 @@ import com.stationmillenium.android.R;
 import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 import org.acra.sender.HttpSender;
+import org.piwik.sdk.Piwik;
+import org.piwik.sdk.Tracker;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -35,6 +38,8 @@ public class StationMilleniumApp extends Application {
     private static final String KEYSTORE_NAME = "millenium.store";
     private static final String KEYSTORE_PASS = "MilleniumAcralyzerSSL";
 
+    private Tracker piwikTracker;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -44,6 +49,8 @@ public class StationMilleniumApp extends Application {
         ACRA.init(this);
         ACRA.getConfig().setKeyStore(keyStore);
         ACRA.getErrorReporter().setEnabled(getResources().getBoolean(R.bool.enable_acra));
+
+        piwikTracker = initPiwikTracker();
     }
 
     @Nullable
@@ -60,5 +67,17 @@ public class StationMilleniumApp extends Application {
         return keyStore;
     }
 
+    private Tracker initPiwikTracker() {
+        try {
+            return Piwik.getInstance(this).newTracker(getString(R.string.piwik_url), getResources().getInteger(R.integer.piwik_site_id));
+        } catch (MalformedURLException e) {
+            Log.w(TAG, "Error while piwik init", e);
+            return null;
+        }
+    }
+
+    public Tracker getPiwikTracker() {
+        return piwikTracker;
+    }
 }
 

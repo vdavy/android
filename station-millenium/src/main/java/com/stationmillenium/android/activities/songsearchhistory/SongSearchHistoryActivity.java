@@ -40,6 +40,7 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.datetime.DatePickerFragment;
 import com.stationmillenium.android.activities.fragments.datetime.TimePickerFragment;
+import com.stationmillenium.android.app.StationMilleniumApp;
 import com.stationmillenium.android.contentproviders.SongHistoryContentProvider.SongHistoryContract;
 import com.stationmillenium.android.utils.AppUtils;
 import com.stationmillenium.android.utils.intents.LocalIntents;
@@ -131,6 +132,12 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         //init the loader
         displayLoadingWidgets();
         getSupportLoaderManager().initLoader(LOADER_INDEX, null, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((StationMilleniumApp) getApplication()).getPiwikTracker().trackScreenView("/song-search-history");
     }
 
     @Override
