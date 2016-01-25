@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.MainActivity;
+import com.stationmillenium.android.app.StationMilleniumApp;
 import com.stationmillenium.android.utils.AppUtils;
 import com.stationmillenium.android.utils.views.ImageLoader;
 
@@ -66,6 +67,7 @@ public class AntennaGridFragment extends Fragment implements OnGlobalLayoutListe
 
         //set title and activity full screen
         ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.antenna_grid_activity_title);
+        ((StationMilleniumApp) getActivity().getApplication()).getPiwikTracker().trackScreenView("/main/antenna-grid");
     }
 
     @Override

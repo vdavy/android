@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "com.stationmillenium.android"
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 79
-        versionName "1.8.1"
+        versionCode 80
+        versionName "1.8.2-beta1"
         testApplicationId "com.stationmillenium.android.test"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
@@ -39,4 +39,5 @@ dependencies {
     compile 'org.twitter4j:twitter4j-core:4.0.4'
     compile 'ch.acra:acra:4.7.0'
     compile "com.android.support:support-annotations:23.1.1"
+    compile 'org.piwik.sdk:piwik-sdk:0.0.3'
 }

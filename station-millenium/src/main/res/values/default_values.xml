@@ -25,8 +25,9 @@
     <string name="web_site_url">http://www.station-millenium.com</string>
 
     <!-- tracking URL -->
-    <string name="tracking_url_with_id">http://www.station-millenium.com/android-piwik-tracker.php?visitorId=</string>
-    <string name="tracking_url">http://www.station-millenium.com/android-piwik-tracker.php</string>
+    <string name="piwik_url">http://www.station-millenium.com:8080/piwik.php</string>
+    <integer name="piwik_site_id">1</integer>
+    <integer name="piwik_goal_id">1</integer>
 
     <!-- cache management -->
     <integer name="cache_size_max">3145728</integer>

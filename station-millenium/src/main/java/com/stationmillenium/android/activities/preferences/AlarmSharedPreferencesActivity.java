@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
+import com.stationmillenium.android.app.StationMilleniumApp;
 import com.stationmillenium.android.services.AlarmService;
 import com.stationmillenium.android.utils.AppUtils;
 import com.stationmillenium.android.utils.intents.LocalIntents;
@@ -95,6 +96,12 @@ public class AlarmSharedPreferencesActivity extends PreferenceActivity implement
 
         //register callback for preference changes
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((StationMilleniumApp) getApplication()).getPiwikTracker().trackScreenView("/alarm-preferences");
     }
 
     /**

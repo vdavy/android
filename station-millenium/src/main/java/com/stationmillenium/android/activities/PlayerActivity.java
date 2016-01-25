@@ -34,6 +34,7 @@ import android.widget.ViewSwitcher.ViewFactory;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
+import com.stationmillenium.android.app.StationMilleniumApp;
 import com.stationmillenium.android.dto.CurrentTitleDTO;
 import com.stationmillenium.android.dto.CurrentTitleDTO.Song;
 import com.stationmillenium.android.services.MediaPlayerService;
@@ -128,6 +129,8 @@ public class PlayerActivity extends AppCompatActivity {
 
         //set the volume stream will be controled but pressing buttons
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        ((StationMilleniumApp) getApplication()).getPiwikTracker().trackScreenView("/player");
     }
 
     @Override

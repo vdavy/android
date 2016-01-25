@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
+import com.stationmillenium.android.app.StationMilleniumApp;
 import com.stationmillenium.android.utils.AppUtils;
 
 /**
@@ -106,6 +107,7 @@ public class ReplayWebViewFragment extends Fragment {
 
         //set title
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.replay_activity_title);
+        ((StationMilleniumApp) getActivity().getApplication()).getPiwikTracker().trackScreenView("/main/replay");
     }
 
     @Override

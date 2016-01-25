@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
+import com.stationmillenium.android.app.StationMilleniumApp;
 import com.stationmillenium.android.utils.AppUtils;
 import com.stationmillenium.android.utils.intents.LocalIntentsData;
 import com.stationmillenium.android.utils.views.ImageLoader;
@@ -102,6 +103,8 @@ public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity imp
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Launch song search image loading...");
         imageLoader = new ImageLoader(imageView, progressBar, imageFileName, this, true);
+
+        ((StationMilleniumApp) getApplication()).getPiwikTracker().trackScreenView("/song-search-history/display-image");
     }
 
     @Override

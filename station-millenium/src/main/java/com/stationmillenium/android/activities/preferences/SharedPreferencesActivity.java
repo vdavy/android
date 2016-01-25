@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
+import com.stationmillenium.android.app.StationMilleniumApp;
 import com.stationmillenium.android.utils.AppUtils;
 
 /**
@@ -126,6 +127,12 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        ((StationMilleniumApp) getApplication()).getPiwikTracker().trackScreenView("/preferences");
+    }
+
+    @Override
     public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -159,17 +166,18 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Shared preferences changed - trigger backup");
-
+        }
         new BackupManager(this).dataChanged();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Unregister OnSharedPreferenceChangeListener");
+        }
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
     }
 

@@ -18,13 +18,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.MainActivity;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
+import com.stationmillenium.android.app.StationMilleniumApp;
 import com.stationmillenium.android.utils.AppUtils;
 import com.stationmillenium.android.utils.dtos.TweetItem;
 
@@ -92,7 +92,7 @@ public class LinksFragment extends ListFragment {
 
         //social networks buttons : add links
         //facebook
-        ((ImageView) getView().findViewById(R.id.open_facebook)).setOnClickListener(new OnClickListener() {
+        getView().findViewById(R.id.open_facebook).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (BuildConfig.DEBUG)
@@ -102,7 +102,7 @@ public class LinksFragment extends ListFragment {
         });
 
         //twitter
-        ((ImageView) getView().findViewById(R.id.open_twitter)).setOnClickListener(new OnClickListener() {
+        getView().findViewById(R.id.open_twitter).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (BuildConfig.DEBUG)
@@ -112,7 +112,7 @@ public class LinksFragment extends ListFragment {
         });
 
         //web site
-        ((ImageView) getView().findViewById(R.id.open_web_site)).setOnClickListener(new OnClickListener() {
+        getView().findViewById(R.id.open_web_site).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (BuildConfig.DEBUG)
@@ -122,6 +122,8 @@ public class LinksFragment extends ListFragment {
                 startActivity(browserIntent);
             }
         });
+
+        ((StationMilleniumApp) getActivity().getApplication()).getPiwikTracker().trackScreenView("/main/links");
     }
 
     @Override
