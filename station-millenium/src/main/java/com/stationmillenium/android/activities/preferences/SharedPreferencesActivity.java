@@ -24,8 +24,10 @@ import android.widget.LinearLayout;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.app.StationMilleniumApp;
 import com.stationmillenium.android.utils.AppUtils;
+import com.stationmillenium.android.utils.PiwikTracker;
+
+import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.PREFERENCES;
 
 /**
  * Activity to manage application preferences
@@ -129,7 +131,7 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
     @Override
     protected void onResume() {
         super.onResume();
-        ((StationMilleniumApp) getApplication()).getPiwikTracker().trackScreenView("/preferences");
+        PiwikTracker.trackScreenView(getApplication(), PREFERENCES);
     }
 
     @Override

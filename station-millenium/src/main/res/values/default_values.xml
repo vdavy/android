@@ -26,7 +26,8 @@
 
     <!-- tracking URL -->
     <string name="piwik_url">http://www.station-millenium.com:8080/piwik.php</string>
-    <integer name="piwik_site_id">1</integer>
+    <integer name="piwik_app_site_id">1</integer>
+    <integer name="piwik_stream_site_id">2</integer>
     <integer name="piwik_goal_id">1</integer>
 
     <!-- cache management -->

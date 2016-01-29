@@ -34,11 +34,11 @@ import android.widget.ViewSwitcher.ViewFactory;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
-import com.stationmillenium.android.app.StationMilleniumApp;
 import com.stationmillenium.android.dto.CurrentTitleDTO;
 import com.stationmillenium.android.dto.CurrentTitleDTO.Song;
 import com.stationmillenium.android.services.MediaPlayerService;
 import com.stationmillenium.android.utils.AppUtils;
+import com.stationmillenium.android.utils.PiwikTracker;
 import com.stationmillenium.android.utils.intents.LocalIntents;
 import com.stationmillenium.android.utils.intents.LocalIntentsData;
 import com.stationmillenium.android.utils.mediaplayer.utils.MediaPlayerCurrentPositionGrabber;
@@ -50,6 +50,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.PLAYER;
 
 /**
  * Activity to display the player
@@ -127,10 +129,10 @@ public class PlayerActivity extends AppCompatActivity {
         playerLoadingTextView = (TextView) findViewById(R.id.player_loading);
         currentTimeTextView = (TextView) findViewById(R.id.player_current_time);
 
-        //set the volume stream will be controled but pressing buttons
+        //set the volume stream will be controlled but pressing buttons
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-        ((StationMilleniumApp) getApplication()).getPiwikTracker().trackScreenView("/player");
+        PiwikTracker.trackScreenView(getApplication(), PLAYER);
     }
 
     @Override

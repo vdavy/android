@@ -38,7 +38,8 @@ public class StationMilleniumApp extends Application {
     private static final String KEYSTORE_NAME = "millenium.store";
     private static final String KEYSTORE_PASS = "MilleniumAcralyzerSSL";
 
-    private Tracker piwikTracker;
+    private Tracker piwikAppTracker;
+    private Tracker piwikStreamTracker;
 
     @Override
     public void onCreate() {
@@ -50,7 +51,8 @@ public class StationMilleniumApp extends Application {
         ACRA.getConfig().setKeyStore(keyStore);
         ACRA.getErrorReporter().setEnabled(getResources().getBoolean(R.bool.enable_acra));
 
-        piwikTracker = initPiwikTracker();
+        piwikAppTracker = initPiwikAppTracker();
+        piwikStreamTracker = initPiwikStreamTracker();
     }
 
     @Nullable
@@ -67,17 +69,30 @@ public class StationMilleniumApp extends Application {
         return keyStore;
     }
 
-    private Tracker initPiwikTracker() {
+    private Tracker initPiwikAppTracker() {
         try {
-            return Piwik.getInstance(this).newTracker(getString(R.string.piwik_url), getResources().getInteger(R.integer.piwik_site_id));
+            return Piwik.getInstance(this).newTracker(getString(R.string.piwik_url), getResources().getInteger(R.integer.piwik_app_site_id));
         } catch (MalformedURLException e) {
-            Log.w(TAG, "Error while piwik init", e);
+            Log.w(TAG, "Error while piwik app tracker init", e);
             return null;
         }
     }
 
-    public Tracker getPiwikTracker() {
-        return piwikTracker;
+    private Tracker initPiwikStreamTracker() {
+        try {
+            return Piwik.getInstance(this).newTracker(getString(R.string.piwik_url), getResources().getInteger(R.integer.piwik_stream_site_id));
+        } catch (MalformedURLException e) {
+            Log.w(TAG, "Error while piwik stream tracker init", e);
+            return null;
+        }
+    }
+
+    public Tracker getPiwikAppTracker() {
+        return piwikAppTracker;
+    }
+
+    public Tracker getPiwikStreamTracker() {
+        return piwikStreamTracker;
     }
 }
 
