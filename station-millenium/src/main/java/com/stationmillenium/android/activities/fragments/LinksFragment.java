@@ -24,8 +24,8 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.MainActivity;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
-import com.stationmillenium.android.app.StationMilleniumApp;
 import com.stationmillenium.android.utils.AppUtils;
+import com.stationmillenium.android.utils.PiwikTracker;
 import com.stationmillenium.android.utils.dtos.TweetItem;
 
 import java.lang.ref.WeakReference;
@@ -36,6 +36,8 @@ import twitter4j.ResponseList;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
+
+import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.LINKS;
 
 /**
  * Links fragment
@@ -123,7 +125,7 @@ public class LinksFragment extends ListFragment {
             }
         });
 
-        ((StationMilleniumApp) getActivity().getApplication()).getPiwikTracker().trackScreenView("/main/links");
+        PiwikTracker.trackScreenView(getActivity().getApplication(), LINKS);
     }
 
     @Override

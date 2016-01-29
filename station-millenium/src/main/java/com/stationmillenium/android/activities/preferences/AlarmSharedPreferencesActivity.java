@@ -32,9 +32,9 @@ import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.app.StationMilleniumApp;
 import com.stationmillenium.android.services.AlarmService;
 import com.stationmillenium.android.utils.AppUtils;
+import com.stationmillenium.android.utils.PiwikTracker;
 import com.stationmillenium.android.utils.intents.LocalIntents;
 import com.stationmillenium.android.utils.preferences.ListPreferenceMultiSelect;
 import com.stationmillenium.android.utils.preferences.SeekBarDialogPreference;
@@ -46,6 +46,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.ALARM;
 
 /**
  * Activity to manage alarm preferences
@@ -101,7 +103,7 @@ public class AlarmSharedPreferencesActivity extends PreferenceActivity implement
     @Override
     protected void onResume() {
         super.onResume();
-        ((StationMilleniumApp) getApplication()).getPiwikTracker().trackScreenView("/alarm-preferences");
+        PiwikTracker.trackScreenView(getApplication(), ALARM);
     }
 
     /**

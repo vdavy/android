@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.app.StationMilleniumApp;
+import com.stationmillenium.android.utils.PiwikTracker;
+
+import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.HOME;
 
 /**
  * Home fragment for app
@@ -28,6 +30,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((StationMilleniumApp) getActivity().getApplication()).getPiwikTracker().trackScreenView("/main");
+        PiwikTracker.trackScreenView(getActivity().getApplication(), HOME);
     }
 }

@@ -40,14 +40,16 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.datetime.DatePickerFragment;
 import com.stationmillenium.android.activities.fragments.datetime.TimePickerFragment;
-import com.stationmillenium.android.app.StationMilleniumApp;
 import com.stationmillenium.android.contentproviders.SongHistoryContentProvider.SongHistoryContract;
 import com.stationmillenium.android.utils.AppUtils;
+import com.stationmillenium.android.utils.PiwikTracker;
 import com.stationmillenium.android.utils.intents.LocalIntents;
 import com.stationmillenium.android.utils.intents.LocalIntentsData;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.SONG_SEARCH_HISTORY;
 
 /**
  * Activity to display the song search history
@@ -137,7 +139,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     @Override
     protected void onResume() {
         super.onResume();
-        ((StationMilleniumApp) getApplication()).getPiwikTracker().trackScreenView("/song-search-history");
+        PiwikTracker.trackScreenView(getApplication(), SONG_SEARCH_HISTORY);
     }
 
     @Override
