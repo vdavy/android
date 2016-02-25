@@ -11,7 +11,7 @@
     <string name="player_image_url_root">http://www.station-millenium.com/coverart</string>
 
     <!-- default values for replay part -->
-    <string name="replay_url">http://www.station-millenium.com/replay/</string>
+    <string name="replay_url">https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/148534611&amp;color=ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false</string>
 
     <!-- antenna grid -->
     <string name="antenna_grid_image_url">http://www.station-millenium.com/wp-millenium/wp-content/uploads/2013/08/grille-programmes-android.jpg</string>
