@@ -169,7 +169,7 @@
 
     <!-- other resources -->
     <string name="empty_string" />
-    <string name="webview_error">Erreur sur le replay : %1$s</string>
+    <string name="webview_error">Erreur de chargement : %1$s</string>
 
     <!-- alarm -->
     <string name="alarm_set">Alarme Station Millenium activée %1$s prochain à %2$sh%3$s</string>
