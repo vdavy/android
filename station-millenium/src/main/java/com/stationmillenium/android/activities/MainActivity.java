@@ -14,10 +14,11 @@ import android.view.View;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.activities.fragments.AntennaGridFragment;
+import com.stationmillenium.android.activities.fragments.AbstractWebViewFragment;
+import com.stationmillenium.android.activities.fragments.AntennaGridWebViewFragement;
 import com.stationmillenium.android.activities.fragments.HomeFragment;
 import com.stationmillenium.android.activities.fragments.LinksFragment;
-import com.stationmillenium.android.activities.fragments.ReplayWebViewFragment;
+import com.stationmillenium.android.activities.fragments.ReplayWebViewFragement;
 import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity;
 import com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity;
@@ -105,25 +106,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Display the {@link ReplayWebViewFragment}
+     * Display the {@link AbstractWebViewFragment}
      *
      * @param view the {@link View} originating the event
      */
     public void displayReplayFragment(View view) {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Display the replay fragment");
-        displayFragment(new ReplayWebViewFragment());
+        displayFragment(new ReplayWebViewFragement());
     }
 
     /**
-     * Display the {@link AntennaGridFragment}
+     * Display the {@link AntennaGridWebViewFragement}
      *
      * @param view the {@link View} originating the event
      */
     public void displayAntennaGridFragment(View view) {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Display the antenna grid fragment");
-        displayFragment(new AntennaGridFragment());
+        displayFragment(new AntennaGridWebViewFragement());
     }
 
     /**

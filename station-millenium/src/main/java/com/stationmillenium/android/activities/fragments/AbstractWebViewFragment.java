@@ -27,21 +27,21 @@ import android.widget.Toast;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.utils.AppUtils;
-import com.stationmillenium.android.utils.PiwikTracker;
-
-import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.REPLAY;
 
 /**
- * Replay webview fragment
+ * Abstract webview fragment
  *
  * @author vincent
  */
-public class ReplayWebViewFragment extends Fragment {
+public abstract class AbstractWebViewFragment extends Fragment {
 
-    private final static String TAG = "ReplayWebViewFragment";
+    private final static String TAG = "AbstractWebViewFragment";
+
+    protected int title;
+    protected int url;
 
     private boolean resetWebview;
-    private WebView replayWebView;
+    private WebView webView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,24 +52,26 @@ public class ReplayWebViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         resetWebview = (savedInstanceState == null);
-        return inflater.inflate(R.layout.replay_webview_fragment, container, false);
+        return inflater.inflate(R.layout.webview_fragment, container, false);
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onResume() {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Resuming replay webview fragment");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Resuming webview fragment");
+        }
         super.onResume();
 
         if (resetWebview) {
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Init new webview");
+            }
 
             //setup web view
-            replayWebView = (WebView) getView().findViewById(R.id.replay_webview);
-            WebSettings webSettings = replayWebView.getSettings();
+            webView = (WebView) getView().findViewById(R.id.webview);
+            WebSettings webSettings = webView.getSettings();
             webSettings.setJavaScriptEnabled(true);
             webSettings.setBuiltInZoomControls(true);
             webSettings.setLoadWithOverviewMode(true);
@@ -77,10 +79,10 @@ public class ReplayWebViewFragment extends Fragment {
 
             //add webview handlers
             final Activity activity = getActivity();
-            final ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.replay_webview_progressbar);
+            final ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.webview_progressbar);
 
             //set the progress bar
-            replayWebView.setWebChromeClient(new WebChromeClient() {
+            webView.setWebChromeClient(new WebChromeClient() {
                 public void onProgressChanged(WebView view, int progress) {
                     if (BuildConfig.DEBUG)
                         Log.d(TAG, "Page load progress : " + progress);
@@ -91,7 +93,7 @@ public class ReplayWebViewFragment extends Fragment {
             });
 
             //set up error messages display
-            replayWebView.setWebViewClient(new WebViewClient() {
+            webView.setWebViewClient(new WebViewClient() {
                 public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                     Log.e(TAG, "Error while loading webview : #" + errorCode + " : " + description);
                     Toast.makeText(activity, getString(R.string.webview_error, description), Toast.LENGTH_SHORT).show();
@@ -99,29 +101,30 @@ public class ReplayWebViewFragment extends Fragment {
             });
 
             //load the page
-            replayWebView.loadUrl(getString(R.string.replay_url));
+            webView.loadUrl(getString(url));
 
-        } else if ((AppUtils.isAPILevel11Available()) && (replayWebView != null)) {
-            if (BuildConfig.DEBUG)
+        } else if ((AppUtils.isAPILevel11Available()) && (webView != null)) {
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Resume webview");
-            replayWebView.onResume();
+            }
+            webView.onResume();
         }
 
         //set title
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.replay_activity_title);
-        PiwikTracker.trackScreenView(getActivity().getApplication(), REPLAY);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
     }
 
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onPause() {
         //reset activity title
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Pausing replay webview fragment");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Pausing webview fragment");
+        }
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
 
-        if ((AppUtils.isAPILevel11Available()) && (replayWebView != null)) {
-            replayWebView.onPause();
+        if ((AppUtils.isAPILevel11Available()) && (webView != null)) {
+            webView.onPause();
         }
         super.onPause();
     }
@@ -129,20 +132,22 @@ public class ReplayWebViewFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.replay_webview, menu);
+        inflater.inflate(R.menu.webview_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_reload_page) { //reload web view
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Reload the web view");
-
-            if (replayWebView != null)
-                replayWebView.reload();
+            }
+            if (webView != null) {
+                webView.reload();
+            }
             return true;
-        } else
+        } else {
             return super.onOptionsItemSelected(item);
+        }
     }
 
 }

@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <ProgressBar
-        android:id="@+id/replay_webview_progressbar"
+        android:id="@+id/webview_progressbar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         android:max="100" />
 
     <WebView
-        android:id="@+id/replay_webview"
+        android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
