@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -29,8 +30,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewSwitcher.ViewFactory;
+import android.widget.ViewSwitcher;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
@@ -72,6 +77,7 @@ public class PlayerActivity extends AppCompatActivity {
     private static final int CURRENT_TIME_TIMER_START = 0;
     private static final int CURRENT_TIME_TIMER_UDAPTE = 1000;
     private static final String CURRENT_TIME_TIMER_NAME = "CurrentTimeTimer";
+
     //instances vars
     private UpdateTitleBroadcastReceiver updateTitleBroadcastReceiver;
     private PlayerState playerState = PlayerState.STOPPED;
@@ -79,6 +85,8 @@ public class PlayerActivity extends AppCompatActivity {
     private Bitmap currentTitleImage;
     private Calendar lastTimeUpdated;
     private Timer currentPlayingTimeTimer;
+    private GoogleApiClient googleApiClient;
+
     //widgets
     private ImageSwitcher imageSwitcher;
     private ListView historyList;
@@ -89,6 +97,7 @@ public class PlayerActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView playerLoadingTextView;
     private TextView currentTimeTextView;
+
 
     @SuppressLint("NewApi")
     @Override
@@ -105,17 +114,17 @@ public class PlayerActivity extends AppCompatActivity {
         //image switcher
         imageSwitcher = (ImageSwitcher) findViewById(R.id.player_image_switcher);
         final Context context = this;
-        imageSwitcher.setFactory(new ViewFactory() {
+        imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+             @Override
+             public View makeView() {
+                 ImageView imageView = new ImageView(context);
+                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                 imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+                 imageView.setBackgroundColor(getResources().getColor(android.R.color.transparent, null));
+                 return imageView;
+             }
+         });
 
-            @Override
-            public View makeView() {
-                ImageView imageView = new ImageView(context);
-                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-                imageView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                return imageView;
-            }
-        });
 
         //current title
         historyList = (ListView) findViewById(R.id.player_history_list);
@@ -133,6 +142,30 @@ public class PlayerActivity extends AppCompatActivity {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         PiwikTracker.trackScreenView(getApplication(), PLAYER);
+        googleApiClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        googleApiClient.connect();
+        AppIndex.AppIndexApi.start(googleApiClient, getAction());
+    }
+
+    /**
+     * Get the Action for app indexing
+     * @return the Action
+     */
+    @NonNull
+    private Action getAction() {
+        return new Action.Builder(Action.TYPE_LISTEN)
+                .setObject(new Thing.Builder()
+                        .setName(getString(R.string.player_name))
+                        .setDescription(getString(R.string.player_description))
+                        .setUrl(Uri.parse(getString(R.string.player_url)))
+                        .build())
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
     }
 
     @Override
@@ -223,6 +256,7 @@ public class PlayerActivity extends AppCompatActivity {
 
                 //update in ui thread
                 runOnUiThread(new Runnable() {
+                    @Override
                     public void run() {
                         currentTimeTextView.setText(currentTimeText);
                     }
@@ -456,6 +490,13 @@ public class PlayerActivity extends AppCompatActivity {
         playerState = (PlayerState) savedInstanceState.getSerializable(PLAYER_STATE_SAVE);
         historyListValues = savedInstanceState.getStringArray(HISTORY_LIST_SAVE);
         currentTitleImage = savedInstanceState.getParcelable(IMAGE_SAVE);
+    }
+
+    @Override
+    public void onStop() {
+        AppIndex.AppIndexApi.end(googleApiClient, getAction());
+        googleApiClient.disconnect();
+        super.onStop();
     }
 
     /**

@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
+    <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+
     <application
         android:name=".app.StationMilleniumApp"
         android:backupAgent=".utils.backup.AppBackupAgent"
@@ -53,6 +55,14 @@
                 <action android:name="com.stationmillenium.android.intents.ON_PLAYER_OPEN" />
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                      android:host="www.station-millenium.com"
+                      android:pathPrefix="/coverart/player.html" />
+            </intent-filter>
         </activity>
 
         <!-- preferences activity -->
@@ -101,9 +111,18 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                      android:host="www.station-millenium.com"
+                      android:path="/radio/cetait-quoi-ce-titre/" />
+            </intent-filter>
         </activity>
 
-        <!-- song history search imgage display activity -->
+        <!-- song history search image display activity -->
         <activity
             android:name="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryImageDisplayActivity"
             android:label="@string/song_search_history_image"
@@ -180,7 +199,11 @@
         <!-- auto restart player service -->
         <service
             android:name=".services.AutoRestartPlayerService"
-            android:exported="false" />
+            android:exported="false" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
 
     </application>
 

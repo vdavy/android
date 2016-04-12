@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -36,6 +37,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.datetime.DatePickerFragment;
@@ -75,6 +80,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     private TextView introTextView;
     private MenuItem searchMenuItem;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private GoogleApiClient googleApiClient;
 
     //instance vars
     private SimpleCursorAdapter cursorAdapter;
@@ -85,9 +91,10 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     @SuppressLint("InlinedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Create the activity");
         super.onCreate(savedInstanceState);
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Create the activity");
+        }
 
         //init widgets
         setContentView(R.layout.song_search_history_activity);
@@ -134,6 +141,31 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         //init the loader
         displayLoadingWidgets();
         getSupportLoaderManager().initLoader(LOADER_INDEX, null, this);
+
+        googleApiClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        googleApiClient.connect();
+        AppIndex.AppIndexApi.start(googleApiClient, getAction());
+    }
+
+    /**
+     * Get the Action for app indexing
+     * @return the Action
+     */
+    @NonNull
+    private Action getAction() {
+        return new Action.Builder(Action.TYPE_SEARCH)
+                .setObject(new Thing.Builder()
+                        .setName(getString(R.string.songsearch_name))
+                        .setDescription(getString(R.string.songsearch_description))
+                        .setUrl(Uri.parse(getString(R.string.songsearch_url)))
+                        .build())
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
     }
 
     @Override
@@ -457,5 +489,12 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     public void onScroll(AbsListView listView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         int topRowVerticalPosition = (listView == null || listView.getChildCount() == 0) ? 0 : listView.getChildAt(0).getTop();
         swipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+    }
+
+    @Override
+    public void onStop() {
+        AppIndex.AppIndexApi.end(googleApiClient, getAction());
+        googleApiClient.disconnect();
+        super.onStop();
     }
 }
