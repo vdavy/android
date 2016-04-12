@@ -1,13 +1,17 @@
 package com.stationmillenium.android.app;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.stationmillenium.android.R;
 
-import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
+import org.acra.config.ACRAConfiguration;
+import org.acra.config.ConfigurationBuilder;
+import org.acra.security.KeyStoreFactory;
 import org.acra.sender.HttpSender;
 import org.piwik.sdk.Piwik;
 import org.piwik.sdk.Tracker;
@@ -30,7 +34,7 @@ import java.security.cert.CertificateException;
         reportType = HttpSender.Type.JSON,
         httpMethod = HttpSender.Method.PUT,
         formUriBasicAuthLogin = "millenium",
-        formUriBasicAuthPassword = "acig4OcVebs"
+        formUriBasicAuthPassword = "rdserqsdsds"
 )
 public class StationMilleniumApp extends Application {
 
@@ -44,15 +48,28 @@ public class StationMilleniumApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        KeyStore keyStore = getKeyStore();
-
-        // The following line triggers the initialization of ACRA
-        ACRA.init(this);
-        ACRA.getConfig().setKeyStore(keyStore);
-        ACRA.getErrorReporter().setEnabled(getResources().getBoolean(R.bool.enable_acra));
+        initACRA();
 
         piwikAppTracker = initPiwikAppTracker();
         piwikStreamTracker = initPiwikStreamTracker();
+    }
+
+    private void initACRA() {
+        final KeyStore keyStore = getKeyStore();
+
+        // The following line triggers the initialization of ACRA
+        ConfigurationBuilder configurationBuilder = new ConfigurationBuilder(this);
+        configurationBuilder.setKeyStoreFactory(new KeyStoreFactory() {
+            @Nullable
+            @Override
+            public KeyStore create(@NonNull Context context) {
+                return keyStore;
+            }
+        });
+        ACRAConfiguration acraConfiguration = configurationBuilder.build();
+        //ACRA.init(this, acraConfiguration);
+
+        //ACRA.getErrorReporter().setEnabled(getResources().getBoolean(R.bool.enable_acra));
     }
 
     @Nullable
