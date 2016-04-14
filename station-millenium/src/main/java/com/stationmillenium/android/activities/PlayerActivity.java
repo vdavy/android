@@ -36,6 +36,8 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
@@ -149,7 +151,16 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         googleApiClient.connect();
-        AppIndex.AppIndexApi.start(googleApiClient, getAction());
+        AppIndex.AppIndexApi.start(googleApiClient, getAction()).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(Status status) {
+                if (status.isSuccess()) {
+                    Log.d(TAG, "App Indexing API - START : Player view recorded successfully.");
+                } else {
+                    Log.e(TAG, "App Indexing API - START : There was an error recording the player view :"+ status.toString());
+                }
+            }
+        });
     }
 
     /**
@@ -494,7 +505,16 @@ public class PlayerActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        AppIndex.AppIndexApi.end(googleApiClient, getAction());
+        AppIndex.AppIndexApi.end(googleApiClient, getAction()).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(Status status) {
+                if (status.isSuccess()) {
+                    Log.d(TAG, "App Indexing API - END : Player view recorded successfully.");
+                } else {
+                    Log.e(TAG, "App Indexing API - END : There was an error recording the player view :"+ status.toString());
+                }
+            }
+        });
         googleApiClient.disconnect();
         super.onStop();
     }
