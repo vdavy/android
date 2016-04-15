@@ -116,13 +116,14 @@ public class PlayerActivity extends AppCompatActivity {
         //image switcher
         imageSwitcher = (ImageSwitcher) findViewById(R.id.player_image_switcher);
         final Context context = this;
+        final int color = getResources().getColor(android.R.color.transparent, null);
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
              @Override
              public View makeView() {
                  ImageView imageView = new ImageView(context);
                  imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                  imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-                 imageView.setBackgroundColor(getResources().getColor(android.R.color.transparent, null));
+                 imageView.setBackgroundColor(color);
                  return imageView;
              }
          });
