@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.stationmillenium.android.R;
 
+import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 import org.acra.config.ACRAConfiguration;
 import org.acra.config.ConfigurationBuilder;
@@ -45,6 +46,23 @@ public class StationMilleniumApp extends Application {
     private Tracker piwikAppTracker;
     private Tracker piwikStreamTracker;
 
+    private static class AppKeySoreFactory implements  KeyStoreFactory {
+        @Nullable
+        @Override
+        public KeyStore create(@NonNull Context context) {
+            KeyStore keyStore = null;
+            try {
+                InputStream keystoreInputStream = context.getAssets().open(KEYSTORE_NAME);
+                keyStore = KeyStore.getInstance("BKS");
+                keyStore.load(keystoreInputStream, KEYSTORE_PASS.toCharArray());
+                keystoreInputStream.close();
+            } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
+                Log.w(TAG, "Error opening keystore", e);
+            }
+            return keyStore;
+        }
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -55,35 +73,13 @@ public class StationMilleniumApp extends Application {
     }
 
     private void initACRA() {
-        final KeyStore keyStore = getKeyStore();
-
         // The following line triggers the initialization of ACRA
         ConfigurationBuilder configurationBuilder = new ConfigurationBuilder(this);
-        configurationBuilder.setKeyStoreFactory(new KeyStoreFactory() {
-            @Nullable
-            @Override
-            public KeyStore create(@NonNull Context context) {
-                return keyStore;
-            }
-        });
+        configurationBuilder.setKeyStoreFactory(new AppKeySoreFactory());
         ACRAConfiguration acraConfiguration = configurationBuilder.build();
-        //ACRA.init(this, acraConfiguration);
+        ACRA.init(this, acraConfiguration);
 
-        //ACRA.getErrorReporter().setEnabled(getResources().getBoolean(R.bool.enable_acra));
-    }
-
-    @Nullable
-    private KeyStore getKeyStore() {
-        KeyStore keyStore = null;
-        try {
-            InputStream keystoreInputStream = getAssets().open(KEYSTORE_NAME);
-            keyStore = KeyStore.getInstance("BKS");
-            keyStore.load(keystoreInputStream, KEYSTORE_PASS.toCharArray());
-            keystoreInputStream.close();
-        } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
-            Log.w(TAG, "Error opening keystore", e);
-        }
-        return keyStore;
+        ACRA.getErrorReporter().setEnabled(getResources().getBoolean(R.bool.enable_acra));
     }
 
     private Tracker initPiwikAppTracker() {
