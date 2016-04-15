@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -116,14 +117,13 @@ public class PlayerActivity extends AppCompatActivity {
         //image switcher
         imageSwitcher = (ImageSwitcher) findViewById(R.id.player_image_switcher);
         final Context context = this;
-        final int color = getResources().getColor(android.R.color.transparent, null);
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
              @Override
              public View makeView() {
                  ImageView imageView = new ImageView(context);
                  imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                  imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-                 imageView.setBackgroundColor(color);
+                 imageView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
                  return imageView;
              }
          });
