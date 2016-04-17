@@ -1,0 +1,52 @@
+{
+  "project_info": {
+    "project_id": "station-millenium",
+    "project_number": "266541382627",
+    "name": "Station Millenium"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266541382627:android:232208db300b1e90",
+        "client_id": "android:com.stationmillenium.android",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.stationmillenium.android",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266541382627-e59r60mjmd13irl1te6g6ujb4sbi5fso.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stationmillenium.android",
+            "certificate_hash": "040547A845549548B0161C72B226BF74F8F35A86"
+          }
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 1
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

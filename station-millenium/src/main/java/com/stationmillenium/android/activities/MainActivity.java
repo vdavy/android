@@ -2,6 +2,7 @@ package com.stationmillenium.android.activities;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -11,7 +12,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.AbstractWebViewFragment;
@@ -23,7 +26,10 @@ import com.stationmillenium.android.activities.preferences.AlarmSharedPreference
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity;
 import com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity;
 import com.stationmillenium.android.utils.AppUtils;
+import com.stationmillenium.android.utils.PiwikTracker;
 import com.stationmillenium.android.utils.intents.LocalIntentsData;
+
+import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.APP_INVITE;
 
 /**
  * Main activity : drawer manager and home
@@ -33,6 +39,7 @@ import com.stationmillenium.android.utils.intents.LocalIntentsData;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private static final int APP_INVITE_INTENT = 10;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -75,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -86,8 +93,38 @@ public class MainActivity extends AppCompatActivity {
             Intent settingsIntent = new Intent(this, SharedPreferencesActivity.class);
             startActivity(settingsIntent);
             return true;
-        } else
+        } else if (item.getItemId() == R.id.action_invite) {
+            sendAppInvitationIntent();
+            return true;
+        } else {
             return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void sendAppInvitationIntent() {
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.app_invite_title))
+            .setMessage(getString(R.string.app_invite_message))
+            .setCustomImage(Uri.parse(getString(R.string.app_invite_image_url)))
+            .setCallToActionText(getString(R.string.app_invite_cta))
+            .build();
+        startActivityForResult(intent, APP_INVITE_INTENT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == APP_INVITE_INTENT) {
+            if (resultCode == RESULT_OK) {
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                Log.d(TAG, "Invitation sent - ids : " + (ids.length >= 1 ? ids[0] : "no id"));
+                PiwikTracker.trackScreenView(getApplication(), APP_INVITE);
+                Toast.makeText(this, R.string.app_invite_thanks, Toast.LENGTH_SHORT).show();
+            } else {
+                Log.d(TAG, "Invitation was cancelled");
+            }
+        }
     }
 
     /**

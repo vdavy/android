@@ -8,15 +8,15 @@ android {
         applicationId "com.stationmillenium.android"
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 89
-        versionName "1.9.0-beta3"
+        versionCode 90
+        versionName "1.9.0-beta4"
         testApplicationId "com.stationmillenium.android.test"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
 
     buildTypes {
         debug {
-            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
             resValue "bool", "enable_acra", "false"
         }
 
@@ -42,4 +42,7 @@ dependencies {
     compile 'com.android.support:support-annotations:23.3.0'
     compile 'org.piwik.sdk:piwik-sdk:0.0.4'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+    compile 'com.google.android.gms:play-services-appinvite:8.4.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
