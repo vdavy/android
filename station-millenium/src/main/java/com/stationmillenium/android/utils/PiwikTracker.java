@@ -27,7 +27,8 @@ public class PiwikTracker {
         ALARM("/alarm-preferences"),
         PREFERENCES("/preferences"),
         SONG_SEARCH_HISTORY("/song-search-history"),
-        SONG_HISTORY_DISPLAY_IMAGE("/song-search-history/display-image");
+        SONG_HISTORY_DISPLAY_IMAGE("/song-search-history/display-image"),
+        APP_INVITE("/app-invite");
 
         private String path;
 

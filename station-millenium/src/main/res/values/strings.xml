@@ -9,7 +9,15 @@
     <string name="antenna_grid_activity_title">La grille des programmes</string>
     <string name="links_activity_title">Les liens Millenium</string>
 
+    <!-- app invite texts -->
+    <string name="app_invite_title">Partager l\'appli Station Millenium</string>
+    <string name="app_invite_message">Télécharger gratuitement l\'appli officielle Station Millénium sur Google Play</string>
+    <string name="app_invite_image_url">http://www.station-millenium.com/logo-millenium-rond.png</string>
+    <string name="app_invite_cta">Télécharger</string>
+    <string name="app_invite_thanks">Merci d\'avoir partagé l\'appli Station Millenium</string>
+
     <!-- menu entries -->
+    <string name="action_invite">Envoyer une invitation</string>
     <string name="action_settings">Paramètres</string>
     <string name="action_reload_page">Recharger la page</string>
 
