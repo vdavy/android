@@ -229,7 +229,7 @@ public class MediaPlayerNotificationBuilder {
             } else {
                 //create notification
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mediaPlayerServiceRef.get())
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.mipmap.ic_launcher)
                         .setLargeIcon(Bitmap.createBitmap(titleArt)) //avoid recycled image
                         .setTicker(mediaPlayerServiceRef.get().getString(R.string.notification_ticker_text))
                         .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
