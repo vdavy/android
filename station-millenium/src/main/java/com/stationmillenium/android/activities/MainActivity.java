@@ -1,6 +1,7 @@
 package com.stationmillenium.android.activities;
 
 import android.annotation.TargetApi;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -104,7 +105,9 @@ public class MainActivity extends AppCompatActivity {
     private void sendAppInvitationIntent() {
         Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.app_invite_title))
             .setMessage(getString(R.string.app_invite_message))
-            .setCustomImage(Uri.parse(getString(R.string.app_invite_image_url)))
+            .setCustomImage(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                getPackageName() + "/" +
+                R.drawable.app_invite_image))
             .setCallToActionText(getString(R.string.app_invite_cta))
             .build();
         startActivityForResult(intent, APP_INVITE_INTENT);
