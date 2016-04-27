@@ -2,12 +2,14 @@ package com.stationmillenium.android.activities;
 
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -30,7 +32,7 @@ import com.stationmillenium.android.utils.AppUtils;
 import com.stationmillenium.android.utils.PiwikTracker;
 import com.stationmillenium.android.utils.intents.LocalIntentsData;
 
-import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.APP_INVITE;
+import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.SHARE_APP_INVITE;
 
 /**
  * Main activity : drawer manager and home
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final int APP_INVITE_INTENT = 10;
+    private static final int SOCIAL_NETWORKS_INDEX = 0;
+    private static final int EMAIL_SMS_INDEX = 1;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -95,13 +99,37 @@ public class MainActivity extends AppCompatActivity {
             startActivity(settingsIntent);
             return true;
         } else if (item.getItemId() == R.id.action_invite) {
-            sendAppInvitationIntent();
+            showShareMethodDialog();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
     }
 
+    /**
+     * Select the share method
+     */
+    private void showShareMethodDialog() {
+        new AlertDialog.Builder(this).setTitle(R.string.app_invite_send_by).setItems(R.array.send_by_mode, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case SOCIAL_NETWORKS_INDEX:
+                        Log.d(TAG, "Share through social networks");
+                        shareAppThroughSocialNetworks();
+                        break;
+                    case EMAIL_SMS_INDEX:
+                        Log.d(TAG, "Share through Email & SMS");
+                        sendAppInvitationIntent();
+                        break;
+                }
+            }
+        }).show();
+    }
+
+    /**
+     * Share through sms or email
+     */
     private void sendAppInvitationIntent() {
         Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.app_invite_title))
             .setMessage(getString(R.string.app_invite_message))
@@ -113,6 +141,14 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, APP_INVITE_INTENT);
     }
 
+    private void shareAppThroughSocialNetworks() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.google_play_url));
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.app_invite_share_through)));
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -122,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
                 Log.d(TAG, "Invitation sent - ids : " + (ids.length >= 1 ? ids[0] : "no id"));
-                PiwikTracker.trackScreenView(getApplication(), APP_INVITE);
+                PiwikTracker.trackScreenView(getApplication(), SHARE_APP_INVITE);
                 Toast.makeText(this, R.string.app_invite_thanks, Toast.LENGTH_SHORT).show();
             } else {
                 Log.d(TAG, "Invitation was cancelled");

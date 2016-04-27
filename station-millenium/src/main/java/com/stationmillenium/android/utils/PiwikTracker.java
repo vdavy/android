@@ -28,7 +28,8 @@ public class PiwikTracker {
         PREFERENCES("/preferences"),
         SONG_SEARCH_HISTORY("/song-search-history"),
         SONG_HISTORY_DISPLAY_IMAGE("/song-search-history/display-image"),
-        APP_INVITE("/app-invite");
+        SHARE_APP_INVITE("/share/app-invite"),
+        SHARE_SOCIAL_NETWORKS("/share/social-networks");
 
         private String path;
 

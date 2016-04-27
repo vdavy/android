@@ -11,9 +11,15 @@
 
     <!-- app invite texts -->
     <string name="app_invite_title">Partager l\'appli Station Millenium</string>
-    <string name="app_invite_message">Télécharger gratuitement l\'appli officielle Station Millénium sur Google Play</string>
+    <string name="app_invite_message">Télécharger gratuitement l\'appli officielle Station Millenium sur Google Play</string>
     <string name="app_invite_cta">Télécharger</string>
     <string name="app_invite_thanks">Merci d\'avoir partagé l\'appli Station Millenium</string>
+    <string name="app_invite_send_by">Envoyer une invitation via</string>
+    <string-array name="send_by_mode">
+        <item name="app_invite_send_by_social_networks">Réseaux sociaux</item>
+        <item name="app_invite_send_by_sms_email">Email &amp; SMS</item>
+    </string-array>
+    <string name="app_invite_share_through">Partager via</string>
 
     <!-- menu entries -->
     <string name="action_invite">Envoyer une invitation</string>

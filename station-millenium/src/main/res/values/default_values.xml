@@ -23,6 +23,7 @@
     <string name="twitter_internal_url">twitter://user?screen_name=millenium22</string>
     <string name="twitter_web_url">https://www.twitter.com/millenium22</string>
     <string name="web_site_url">http://www.station-millenium.com</string>
+    <string name="google_play_url">https://play.google.com/store/apps/details?id=com.stationmillenium.android</string>
 
     <!-- tracking URL -->
     <string name="piwik_url">http://www.station-millenium.com/piwik/piwik/piwik.php</string>
