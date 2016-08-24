@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.1"
 
     defaultConfig {
         applicationId "com.stationmillenium.android"
         minSdkVersion 10
-        targetSdkVersion 23
-        versionCode 95
-        versionName "1.9.2"
+        targetSdkVersion 24
+        versionCode 96
+        versionName "1.10.0-beta1"
         testApplicationId "com.stationmillenium.android.test"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
@@ -36,13 +36,13 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'org.twitter4j:twitter4j-core:4.0.4'
-    compile 'ch.acra:acra:4.8.5'
-    compile 'com.android.support:support-annotations:23.3.0'
-    compile 'org.piwik.sdk:piwik-sdk:0.0.4'
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
-    compile 'com.google.android.gms:play-services-appinvite:8.4.0'
+    compile 'ch.acra:acra:4.9.0'
+    compile 'com.android.support:support-annotations:24.2.0'
+    compile 'org.piwik.sdk:piwik-sdk:1.0.2'
+    compile 'com.google.android.gms:play-services-appindexing:9.4.0'
+    compile 'com.google.firebase:firebase-invites:9.4.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
