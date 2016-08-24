@@ -10,6 +10,8 @@ import com.stationmillenium.android.app.StationMilleniumApp;
 
 import org.piwik.sdk.Tracker;
 
+import static org.piwik.sdk.TrackHelper.track;
+
 /**
  * Utils to help with piwik tracker
  * Created by vdavy on 29/01/16.
@@ -50,7 +52,7 @@ public class PiwikTracker {
         Log.d(TAG, "PIWIK / Track stream");
         Tracker tracker = ((StationMilleniumApp) application).getPiwikStreamTracker();
         if (tracker != null) {
-            tracker.trackGoal(application.getResources().getInteger(R.integer.piwik_goal_id));
+            track().goal(application.getResources().getInteger(R.integer.piwik_goal_id)).with(tracker);
         }
     }
 
@@ -64,7 +66,7 @@ public class PiwikTracker {
         }
         Tracker tracker = ((StationMilleniumApp) application).getPiwikAppTracker();
         if (tracker != null) {
-            tracker.trackScreenView(page.getPath());
+            track().screen(page.getPath()).with(tracker);
         }
     }
 }

@@ -11,6 +11,7 @@ import com.stationmillenium.android.R;
 import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 import org.acra.config.ACRAConfiguration;
+import org.acra.config.ACRAConfigurationException;
 import org.acra.config.ConfigurationBuilder;
 import org.acra.security.KeyStoreFactory;
 import org.acra.sender.HttpSender;
@@ -46,7 +47,8 @@ public class StationMilleniumApp extends Application {
     private Tracker piwikAppTracker;
     private Tracker piwikStreamTracker;
 
-    private static class AppKeySoreFactory implements  KeyStoreFactory {
+    public static class AppKeySoreFactory implements KeyStoreFactory {
+
         @Nullable
         @Override
         public KeyStore create(@NonNull Context context) {
@@ -61,6 +63,7 @@ public class StationMilleniumApp extends Application {
             }
             return keyStore;
         }
+
     }
 
     @Override
@@ -73,13 +76,16 @@ public class StationMilleniumApp extends Application {
     }
 
     private void initACRA() {
-        // The following line triggers the initialization of ACRA
-        ConfigurationBuilder configurationBuilder = new ConfigurationBuilder(this);
-        configurationBuilder.setKeyStoreFactory(new AppKeySoreFactory());
-        ACRAConfiguration acraConfiguration = configurationBuilder.build();
-        ACRA.init(this, acraConfiguration);
-
-        ACRA.getErrorReporter().setEnabled(getResources().getBoolean(R.bool.enable_acra));
+        try {
+            // The following line triggers the initialization of ACRA
+            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder(this);
+            configurationBuilder.setKeyStoreFactoryClass(AppKeySoreFactory.class);
+            ACRAConfiguration acraConfiguration = configurationBuilder.build();
+            ACRA.init(this, acraConfiguration);
+            ACRA.getErrorReporter().setEnabled(getResources().getBoolean(R.bool.enable_acra));
+        } catch (ACRAConfigurationException e) {
+            Log.e(TAG, "Error with ACRA initialization", e);
+        }
     }
 
     private Tracker initPiwikAppTracker() {
