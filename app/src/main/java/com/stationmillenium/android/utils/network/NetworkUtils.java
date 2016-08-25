@@ -76,7 +76,7 @@ public class NetworkUtils {
      * Append params to connection
      *
      * @param params     the {@link Map} for params
-     * @param connection the base URL to append params
+     * @param baseURL the base URL to append params
      */
     private static String writeQueryString(Map<String, String> params, String baseURL) {
         if (params != null) {

@@ -22,7 +22,7 @@ import java.util.Calendar;
  * Implementation of {@link DialogFragment} to display a {@link TimePickerDialog}
  *
  * @author vincent
- * @see http://developer.android.com/guide/topics/ui/controls/pickers.html
+ * http://developer.android.com/guide/topics/ui/controls/pickers.html
  */
 public class TimePickerFragment extends DialogFragment implements OnTimeSetListener {
 

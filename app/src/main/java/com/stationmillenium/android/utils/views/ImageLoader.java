@@ -38,6 +38,8 @@ public class ImageLoader extends AsyncTask<String, Void, Bitmap> {
     private String imageFileName;
     private WeakReference<Context> contextRef;
     private boolean loadImageFromDiskIfExists;
+    private int imageWidth;
+    private int imageHeight;
 
     /**
      * Create a new {@link ImageLoader}
@@ -54,6 +56,12 @@ public class ImageLoader extends AsyncTask<String, Void, Bitmap> {
         this.imageFileName = imageFileName;
         contextRef = new WeakReference<>(context);
         this.loadImageFromDiskIfExists = loadImageFromDiskIfExists;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        imageWidth = imageViewRef.get().getWidth();
+        imageHeight = imageViewRef.get().getHeight();
     }
 
     @Override
@@ -95,7 +103,7 @@ public class ImageLoader extends AsyncTask<String, Void, Bitmap> {
                     Options bfo = new Options();
                     bfo.inJustDecodeBounds = true;
                     BitmapFactory.decodeFile(imageFile.getAbsolutePath(), bfo);
-                    int inSampleSize = calculateInSampleSize(bfo, imageViewRef.get().getWidth(), imageViewRef.get().getHeight());
+                    int inSampleSize = calculateInSampleSize(bfo, imageWidth, imageHeight);
 
                     //process new image
                     bfo = new Options();
