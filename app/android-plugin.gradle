@@ -1,0 +1,46 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.1"
+
+    defaultConfig {
+        applicationId "com.stationmillenium.android"
+        minSdkVersion 10
+        targetSdkVersion 24
+        versionCode 96
+        versionName "1.10.0-beta1"
+        testApplicationId "com.stationmillenium.android.test"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+    }
+
+    buildTypes {
+        debug {
+            versionNameSuffix "-debug"
+            resValue "bool", "enable_acra", "false"
+        }
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), "proguard-rules.txt"
+            signingConfig android.signingConfigs.debug
+            resValue "bool", "enable_acra", "true"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+
