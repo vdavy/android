@@ -2,13 +2,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
     <!-- default values for player -->
-    <string name="player_stream_url">http://www.station-millenium.com/millenium.mp3</string>
-    <string name="player_current_song_url">http://www.station-millenium.com/coverart/android/currentSongs</string>
+    <string name="player_stream_url">https://www.station-millenium.com/millenium.mp3</string>
+    <string name="player_current_song_url">https://www.station-millenium.com/coverart/android/currentSongs</string>
     <string name="player_connection_read_timeout">10000</string>
     <string name="player_connection_connect_timeout">15000</string>
     <string name="player_connection_request_method">GET</string>
     <string name="player_connection_content_type">text/xml; charset=utf-8</string>
-    <string name="player_image_url_root">http://www.station-millenium.com/coverart</string>
+    <string name="player_image_url_root">https://www.station-millenium.com/coverart</string>
 
     <!-- default values for replay part -->
     <string name="replay_url">https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/148534611&amp;color=ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false</string>
@@ -38,7 +38,7 @@
     <!-- cache size to reach when cleaning in percent -->
 
     <!-- song history values -->
-    <string name="song_history_url">http://www.station-millenium.com/coverart/android/searchSongsHistory</string>
+    <string name="song_history_url">https://www.station-millenium.com/coverart/android/searchSongsHistory</string>
     <string name="song_history_read_timeout">45000</string>
     <string name="song_history_connect_timeout">15000</string>
     <string name="song_history_request_method">GET</string>
