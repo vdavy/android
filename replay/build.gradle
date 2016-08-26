@@ -1,9 +1,21 @@
-apply from: 'android-plugin.gradle'
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
+
+    defaultConfig {
+        minSdkVersion 10
+        targetSdkVersion 24
+        versionCode 0
+        versionName ""
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        testApplicationId "com.stationmillenium.android.replay.test"
+    }
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':libutils')
-    compile project(':replay')
 
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'org.twitter4j:twitter4j-core:4.0.4'
@@ -23,4 +35,3 @@ dependencies {
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 }
 
-apply plugin: 'com.google.gms.google-services'
