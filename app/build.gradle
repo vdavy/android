@@ -2,6 +2,7 @@ apply from: 'android-plugin.gradle'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':libutils')
 
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'org.twitter4j:twitter4j-core:4.0.4'

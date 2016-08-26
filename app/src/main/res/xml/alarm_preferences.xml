@@ -23,7 +23,7 @@
             android:summary="@string/preferences_alarm_network_available_summary" />
 
         <!-- alarm volume -->
-        <com.stationmillenium.android.utils.preferences.SeekBarDialogPreference
+        <com.stationmillenium.android.libutils.preferences.SeekBarDialogPreference
             android:dialogMessage="@string/preferences_alarm_volume_dialog_message"
             android:icon="@drawable/ic_alarm_volume"
             android:key="preferences_alarm_volume"
@@ -36,7 +36,7 @@
     <PreferenceCategory android:title="@string/preferences_alarm_repeat">
 
         <!-- alarm hour preference -->
-        <com.stationmillenium.android.utils.preferences.TimePreference
+        <com.stationmillenium.android.libutils.preferences.TimePreference
             android:icon="@drawable/ic_alarm_time"
             android:key="preferences_alarm_time"
             android:title="@string/preferences_alarm_time" />

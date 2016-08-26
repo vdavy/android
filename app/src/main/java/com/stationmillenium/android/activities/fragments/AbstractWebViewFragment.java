@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.utils.AppUtils;
+import com.stationmillenium.android.libutils.AppUtils;
 
 /**
  * Abstract webview fragment

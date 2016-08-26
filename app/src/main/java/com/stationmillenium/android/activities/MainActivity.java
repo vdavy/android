@@ -28,11 +28,11 @@ import com.stationmillenium.android.activities.fragments.ReplayWebViewFragement;
 import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity;
 import com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity;
-import com.stationmillenium.android.utils.AppUtils;
-import com.stationmillenium.android.utils.PiwikTracker;
-import com.stationmillenium.android.utils.intents.LocalIntentsData;
+import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.PiwikTracker;
+import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 
-import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.SHARE_APP_INVITE;
+import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SHARE_APP_INVITE;
 
 /**
  * Main activity : drawer manager and home

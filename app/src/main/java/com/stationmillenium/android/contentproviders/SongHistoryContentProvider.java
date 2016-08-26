@@ -22,11 +22,11 @@ import android.widget.Toast;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.R.string;
-import com.stationmillenium.android.dto.CurrentTitleDTO.Song;
-import com.stationmillenium.android.exceptions.XMLParserException;
-import com.stationmillenium.android.utils.AppUtils;
-import com.stationmillenium.android.utils.network.NetworkUtils;
-import com.stationmillenium.android.utils.xml.XMLSongHistoryParser;
+import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.dto.CurrentTitleDTO.Song;
+import com.stationmillenium.android.libutils.exceptions.XMLParserException;
+import com.stationmillenium.android.libutils.network.NetworkUtils;
+import com.stationmillenium.android.libutils.xml.XMLSongHistoryParser;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;

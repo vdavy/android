@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.utils.PiwikTracker;
+import com.stationmillenium.android.libutils.PiwikTracker;
 
-import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.HOME;
+import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.HOME;
 
 /**
  * Home fragment for app

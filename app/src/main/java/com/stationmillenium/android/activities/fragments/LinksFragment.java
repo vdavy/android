@@ -24,9 +24,9 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.MainActivity;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
-import com.stationmillenium.android.utils.AppUtils;
-import com.stationmillenium.android.utils.PiwikTracker;
-import com.stationmillenium.android.utils.dtos.TweetItem;
+import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.PiwikTracker;
+import com.stationmillenium.android.libutils.dtos.TweetItem;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.LINKS;
+import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.LINKS;
 
 /**
  * Links fragment

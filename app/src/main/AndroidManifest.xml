@@ -15,7 +15,7 @@
 
     <application
         android:name=".app.StationMilleniumApp"
-        android:backupAgent=".utils.backup.AppBackupAgent"
+        android:backupAgent=".libutils.backup.AppBackupAgent"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
@@ -155,7 +155,7 @@
         </service>
 
         <!-- broadcast receiver for playback buttons -->
-        <receiver android:name=".utils.mediaplayer.receivers.PlaybackControlButtonsBroadcastReceiver">
+        <receiver android:name=".libutils.mediaplayer.receivers.PlaybackControlButtonsBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>

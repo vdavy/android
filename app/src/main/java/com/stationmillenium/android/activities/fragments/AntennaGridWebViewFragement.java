@@ -3,9 +3,9 @@ package com.stationmillenium.android.activities.fragments;
 import android.os.Bundle;
 
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.utils.PiwikTracker;
+import com.stationmillenium.android.libutils.PiwikTracker;
 
-import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.ANTENNA_GRID;
+import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.ANTENNA_GRID;
 
 /**
  * Antenna grid webview fragment

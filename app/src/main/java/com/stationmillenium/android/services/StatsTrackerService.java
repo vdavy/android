@@ -6,7 +6,7 @@ package com.stationmillenium.android.services;
 import android.app.IntentService;
 import android.content.Intent;
 
-import com.stationmillenium.android.utils.PiwikTracker;
+import com.stationmillenium.android.libutils.PiwikTracker;
 
 /**
  * Service to track player starts for statistics

@@ -32,13 +32,13 @@ import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
+import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.PiwikTracker;
+import com.stationmillenium.android.libutils.intents.LocalIntents;
+import com.stationmillenium.android.libutils.preferences.ListPreferenceMultiSelect;
+import com.stationmillenium.android.libutils.preferences.SeekBarDialogPreference;
+import com.stationmillenium.android.libutils.preferences.TimePreference;
 import com.stationmillenium.android.services.AlarmService;
-import com.stationmillenium.android.utils.AppUtils;
-import com.stationmillenium.android.utils.PiwikTracker;
-import com.stationmillenium.android.utils.intents.LocalIntents;
-import com.stationmillenium.android.utils.preferences.ListPreferenceMultiSelect;
-import com.stationmillenium.android.utils.preferences.SeekBarDialogPreference;
-import com.stationmillenium.android.utils.preferences.TimePreference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +47,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.ALARM;
+import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.ALARM;
 
 /**
  * Activity to manage alarm preferences

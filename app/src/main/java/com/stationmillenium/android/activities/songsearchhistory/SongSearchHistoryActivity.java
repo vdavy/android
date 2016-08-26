@@ -48,15 +48,15 @@ import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.datetime.DatePickerFragment;
 import com.stationmillenium.android.activities.fragments.datetime.TimePickerFragment;
 import com.stationmillenium.android.contentproviders.SongHistoryContentProvider.SongHistoryContract;
-import com.stationmillenium.android.utils.AppUtils;
-import com.stationmillenium.android.utils.PiwikTracker;
-import com.stationmillenium.android.utils.intents.LocalIntents;
-import com.stationmillenium.android.utils.intents.LocalIntentsData;
+import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.PiwikTracker;
+import com.stationmillenium.android.libutils.intents.LocalIntents;
+import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.SONG_SEARCH_HISTORY;
+import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SONG_SEARCH_HISTORY;
 
 /**
  * Activity to display the song search history

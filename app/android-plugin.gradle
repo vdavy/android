@@ -10,8 +10,8 @@ android {
         targetSdkVersion 24
         versionCode 97
         versionName "1.10.0-beta2"
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         testApplicationId "com.stationmillenium.android.test"
-        testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
 
     buildTypes {
@@ -23,7 +23,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), "proguard-rules.txt"
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), "proguard-rules.pro"
             signingConfig android.signingConfigs.debug
             resValue "bool", "enable_acra", "true"
         }

@@ -19,9 +19,9 @@ import android.widget.Toast;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity.AlarmSharedPreferencesConstants;
-import com.stationmillenium.android.utils.AppUtils;
-import com.stationmillenium.android.utils.intents.LocalIntents;
-import com.stationmillenium.android.utils.intents.LocalIntentsData;
+import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.intents.LocalIntents;
+import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 
 import java.util.ArrayList;
 import java.util.Arrays;

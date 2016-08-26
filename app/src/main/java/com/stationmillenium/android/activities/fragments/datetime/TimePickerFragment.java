@@ -13,8 +13,8 @@ import android.widget.TimePicker;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity;
-import com.stationmillenium.android.utils.intents.LocalIntents;
-import com.stationmillenium.android.utils.intents.LocalIntentsData;
+import com.stationmillenium.android.libutils.intents.LocalIntents;
+import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 
 import java.util.Calendar;
 

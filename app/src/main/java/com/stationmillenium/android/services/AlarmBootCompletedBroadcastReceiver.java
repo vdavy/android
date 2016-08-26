@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.stationmillenium.android.BuildConfig;
-import com.stationmillenium.android.utils.intents.LocalIntents;
+import com.stationmillenium.android.libutils.intents.LocalIntents;
 
 /**
  * {@link BroadcastReceiver} to program alarm on phone startup

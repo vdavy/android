@@ -11,13 +11,13 @@ import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.dto.CurrentTitleDTO;
-import com.stationmillenium.android.exceptions.XMLParserException;
-import com.stationmillenium.android.utils.AppUtils;
-import com.stationmillenium.android.utils.intents.LocalIntents;
-import com.stationmillenium.android.utils.intents.LocalIntentsData;
-import com.stationmillenium.android.utils.network.NetworkUtils;
-import com.stationmillenium.android.utils.xml.XMLCurrentTitleParser;
+import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.dto.CurrentTitleDTO;
+import com.stationmillenium.android.libutils.exceptions.XMLParserException;
+import com.stationmillenium.android.libutils.intents.LocalIntents;
+import com.stationmillenium.android.libutils.intents.LocalIntentsData;
+import com.stationmillenium.android.libutils.network.NetworkUtils;
+import com.stationmillenium.android.libutils.xml.XMLCurrentTitleParser;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

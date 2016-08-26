@@ -15,14 +15,14 @@ import android.widget.ProgressBar;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.utils.AppUtils;
-import com.stationmillenium.android.utils.PiwikTracker;
-import com.stationmillenium.android.utils.intents.LocalIntentsData;
-import com.stationmillenium.android.utils.views.ImageLoader;
+import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.PiwikTracker;
+import com.stationmillenium.android.libutils.intents.LocalIntentsData;
+import com.stationmillenium.android.libutils.views.ImageLoader;
 
 import java.util.Date;
 
-import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.SONG_HISTORY_DISPLAY_IMAGE;
+import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SONG_HISTORY_DISPLAY_IMAGE;
 
 /**
  * Song search image display activity

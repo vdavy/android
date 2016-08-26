@@ -24,10 +24,10 @@ import android.widget.LinearLayout;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.utils.AppUtils;
-import com.stationmillenium.android.utils.PiwikTracker;
+import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.PiwikTracker;
 
-import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.PREFERENCES;
+import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.PREFERENCES;
 
 /**
  * Activity to manage application preferences

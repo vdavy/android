@@ -8,8 +8,8 @@ import android.os.Message;
 import android.util.Log;
 
 import com.stationmillenium.android.activities.PlayerActivity;
-import com.stationmillenium.android.utils.AppUtils;
-import com.stationmillenium.android.utils.intents.LocalIntents;
+import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.intents.LocalIntents;
 
 /**
  * Service to auto restart player in case of network break

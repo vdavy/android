@@ -42,14 +42,14 @@ import com.google.android.gms.common.api.Status;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
-import com.stationmillenium.android.dto.CurrentTitleDTO;
-import com.stationmillenium.android.dto.CurrentTitleDTO.Song;
+import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.PiwikTracker;
+import com.stationmillenium.android.libutils.dto.CurrentTitleDTO;
+import com.stationmillenium.android.libutils.dto.CurrentTitleDTO.Song;
+import com.stationmillenium.android.libutils.intents.LocalIntents;
+import com.stationmillenium.android.libutils.intents.LocalIntentsData;
+import com.stationmillenium.android.libutils.mediaplayer.utils.MediaPlayerCurrentPositionGrabber;
 import com.stationmillenium.android.services.MediaPlayerService;
-import com.stationmillenium.android.utils.AppUtils;
-import com.stationmillenium.android.utils.PiwikTracker;
-import com.stationmillenium.android.utils.intents.LocalIntents;
-import com.stationmillenium.android.utils.intents.LocalIntentsData;
-import com.stationmillenium.android.utils.mediaplayer.utils.MediaPlayerCurrentPositionGrabber;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -59,7 +59,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.stationmillenium.android.utils.PiwikTracker.PiwikPages.PLAYER;
+import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.PLAYER;
 
 /**
  * Activity to display the player
