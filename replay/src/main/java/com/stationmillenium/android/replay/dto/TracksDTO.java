@@ -19,7 +19,7 @@ public class TracksDTO implements Serializable {
     private String title;
     private String description;
     @JsonProperty("last_modified")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "YYYY-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm:ss ZZZZZ")
     private Date lastModified;
     @JsonProperty("tag_list")
     private String tagList;
