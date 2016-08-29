@@ -8,6 +8,12 @@
                  android:supportsRtl="true"
     >
 
+        <!-- song history content provider -->
+        <provider
+            android:name=".provider.ReplayProvider"
+            android:authorities="com.stationmillenium.android.replay.provider.ReplayProvider"
+            android:exported="false" />
+
     </application>
 
 </manifest>

@@ -12,6 +12,10 @@ android {
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         testApplicationId "com.stationmillenium.android.libutils.test"
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
