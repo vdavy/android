@@ -47,7 +47,7 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.datetime.DatePickerFragment;
 import com.stationmillenium.android.activities.fragments.datetime.TimePickerFragment;
-import com.stationmillenium.android.contentproviders.SongHistoryContentProvider.SongHistoryContract;
+import com.stationmillenium.android.contentproviders.SongHistoryContract;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.intents.LocalIntents;

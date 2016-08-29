@@ -193,8 +193,7 @@
         <provider
             android:name=".contentproviders.SongHistoryContentProvider"
             android:authorities="com.stationmillenium.android.contentproviders.SongHistoryContentProvider"
-            android:exported="false"
-            android:label="@string/app_name" />
+            android:exported="false" />
 
         <!-- auto restart player service -->
         <service

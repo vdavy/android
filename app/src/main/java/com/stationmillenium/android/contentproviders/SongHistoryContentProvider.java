@@ -12,10 +12,8 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
-import android.net.Uri.Builder;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.BaseColumns;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -34,6 +32,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.stationmillenium.android.contentproviders.SongHistoryContract.ALL_SONGS_SEARCH;
+import static com.stationmillenium.android.contentproviders.SongHistoryContract.DATE_SEARCH_INDEX;
+import static com.stationmillenium.android.contentproviders.SongHistoryContract.FULL_TEXT_SEARCH_INDEX;
+import static com.stationmillenium.android.contentproviders.SongHistoryContract.SUGGEST_SEARCH;
+import static com.stationmillenium.android.contentproviders.SongHistoryContract.SUGGEST_SEARCH_NO_SUGGEST;
+
 /**
  * Content provider for songs history search
  *
@@ -46,30 +50,10 @@ public class SongHistoryContentProvider extends ContentProvider {
     private static final String ACTION_PARAM_NAME = "action";
     private static final String QUERY_PARAM_NAME = "query";
     private static final String SONG_SUGGEST_SEPARATOR = " - ";
-    //list of uri matcher states
-    private static final int ALL_SONGS_SEARCH = 0;
-    private static final int FULL_TEXT_SEARCH = 1;
-    private static final int DATE_SEARCH = 2;
-    private static final int SUGGEST_SEARCH = 3;
-    private static final int SUGGEST_SEARCH_NO_SUGGEST = 4;
-    private static final UriMatcher URI_MATCHER = buildURIMatcher();
+
+    private static final UriMatcher URI_MATCHER = SongHistoryContract.buildURIMatcher();
     //instance vars
     private SimpleDateFormat sdf;
-
-    /**
-     * Build the {@link UriMatcher} for {@link SongHistoryContentProvider}
-     *
-     * @return the {@link UriMatcher}
-     */
-    private static UriMatcher buildURIMatcher() {
-        UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-        matcher.addURI(SongHistoryContract.AUTHORITY, SongHistoryContract.DEFAULT_MATCH, ALL_SONGS_SEARCH);
-        matcher.addURI(SongHistoryContract.AUTHORITY, SongHistoryContract.FULL_TEXT_SEARCH, FULL_TEXT_SEARCH);
-        matcher.addURI(SongHistoryContract.AUTHORITY, SongHistoryContract.DATE_SEARCH, DATE_SEARCH);
-        matcher.addURI(SongHistoryContract.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SUGGEST_SEARCH);
-        matcher.addURI(SongHistoryContract.AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SUGGEST_SEARCH);
-        return matcher;
-    }
 
     /**
      * @see android.content.ContentProvider#onCreate()
@@ -97,10 +81,10 @@ public class SongHistoryContentProvider extends ContentProvider {
                 Map<String, String> params = prepareHttpQueryParams(HttpActionCode.DEFAULT, null);
                 return sendQueryAndGetCursor(params);
 
-            case DATE_SEARCH: //case of full text query, process query string
+            case DATE_SEARCH_INDEX: //case of full text query, process query string
                 return sendRequestFromURI(uri, HttpActionCode.DATE);
 
-            case FULL_TEXT_SEARCH: //case of full text query, process query string
+            case FULL_TEXT_SEARCH_INDEX: //case of full text query, process query string
                 return sendRequestFromURI(uri, HttpActionCode.FULL_TEXT);
 
             case SUGGEST_SEARCH: //case of suggest query, process query string as full text with suggest projection
@@ -230,8 +214,8 @@ public class SongHistoryContentProvider extends ContentProvider {
 
         switch (URI_MATCHER.match(uri)) { //return the proper mime type
             case ALL_SONGS_SEARCH:
-            case DATE_SEARCH:
-            case FULL_TEXT_SEARCH:
+            case DATE_SEARCH_INDEX:
+            case FULL_TEXT_SEARCH_INDEX:
                 return ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + SongHistoryContract.MIME_TYPE;
 
             case SUGGEST_SEARCH:
@@ -334,59 +318,4 @@ public class SongHistoryContentProvider extends ContentProvider {
         SUGGEST
     }
 
-    /**
-     * Contract for the {@link SongHistoryContentProvider}
-     *
-     * @author vincent
-     */
-    public static final class SongHistoryContract {
-        public static final String AUTHORITY = "com.stationmillenium.android.contentproviders.SongHistoryContentProvider";
-        public static final Uri CONTENT_URI = buildContentURI();
-        public static final Uri ROOT_URI = buildRootURI();
-        public static final String DATE_SEARCH_FORMAT = "yyyyMMdd-HHmm";
-        private static final String DEFAULT_MATCH = "songHistory";
-        public static final String DATE_SEARCH_SEGMENT = DEFAULT_MATCH + "Date";
-        private static final String FULL_TEXT_SEARCH = DEFAULT_MATCH + "/*";
-        private static final String DATE_SEARCH = DEFAULT_MATCH + "Date/*";
-        private static final String MIME_TYPE = "vnd." + AUTHORITY + "." + DEFAULT_MATCH;
-
-        /**
-         * Init the content {@link Uri}
-         *
-         * @return the {@link Uri}
-         */
-        private static Uri buildContentURI() {
-            Builder uriBuilder = new Builder();
-            uriBuilder.scheme(ContentResolver.SCHEME_CONTENT)
-                    .authority(AUTHORITY)
-                    .appendPath(DEFAULT_MATCH);
-            return uriBuilder.build();
-        }
-
-        /**
-         * Init the root {@link Uri} with no specified segment
-         *
-         * @return the {@link Uri}
-         */
-        private static Uri buildRootURI() {
-            Builder uriBuilder = new Builder();
-            uriBuilder.scheme(ContentResolver.SCHEME_CONTENT)
-                    .authority(AUTHORITY);
-            return uriBuilder.build();
-        }
-
-        /**
-         * List of available columns in the returned {@link Cursor}
-         *
-         * @author vincent
-         */
-        public interface Columns extends BaseColumns {
-            String ARTIST = "artist";
-            String TITLE = "title";
-            String DATE = "date";
-            String IMAGE_PATH = "image_path";
-            String IMAGE_WIDTH = "image_width";
-            String IMAGE_HEIGHT = "image_height";
-        }
-    }
 }
