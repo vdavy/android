@@ -28,7 +28,7 @@ public class URIMatcherTest {
 
     @Test
     public void testUriMatcherMatch() {
-        Uri uriToTest = ReplayContract.ROOT_URI;
+        Uri uriToTest = ReplayContract.ROOT_URI.buildUpon().appendPath(ReplayContract.DEFAULT_MATCH).build();
         Assert.assertEquals(ReplayContract.ALL_REPLAY, ReplayContract.URI_MATCHER.match(uriToTest));
     }
 

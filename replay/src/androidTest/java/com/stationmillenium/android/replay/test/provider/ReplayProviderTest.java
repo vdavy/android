@@ -38,7 +38,7 @@ public class ReplayProviderTest {
 
     @Test
     public void testUriMatcherMatch() {
-        Uri uriToTest = ReplayContract.ROOT_URI;
+        Uri uriToTest = ReplayContract.ROOT_URI.buildUpon().appendPath(ReplayContract.DEFAULT_MATCH).build();
         Assert.assertEquals(ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + ReplayContract.MIME_TYPE, replayProvider.getType(uriToTest));
     }
 
