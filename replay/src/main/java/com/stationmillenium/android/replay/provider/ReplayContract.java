@@ -11,7 +11,7 @@ import android.provider.BaseColumns;
  *
  * @author vincent
  */
-public final class ReplayContract {
+public class ReplayContract {
 
     public static final String AUTHORITY = "com.stationmillenium.android.replay.provider.ReplayProvider";
     public static final UriMatcher URI_MATCHER = buildURIMatcher();
