@@ -12,7 +12,7 @@ import java.util.Date;
  * Created by vincent on 28/08/16.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TracksDTO implements Serializable {
+public class TrackDTO implements Serializable {
 
     private int id;
     private int duration;

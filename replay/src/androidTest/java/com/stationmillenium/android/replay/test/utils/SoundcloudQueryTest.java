@@ -5,7 +5,7 @@ import android.support.test.filters.MediumTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.stationmillenium.android.replay.SoundcloudRestClient;
-import com.stationmillenium.android.replay.dto.TracksDTO;
+import com.stationmillenium.android.replay.dto.TrackDTO;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,20 +34,20 @@ public class SoundcloudQueryTest {
 
     @Test
     public void testTracksList() {
-        List<TracksDTO> tracksDTOs = restClient.getTracksList();
-        assertNotNull(tracksDTOs);
-        assertFalse(0 == tracksDTOs.size());
-        for (TracksDTO tracksDTO : tracksDTOs) {
-            assertNotNull(tracksDTO);
-            assertTrue(tracksDTO.getId() > 0);
-            assertTrue(tracksDTO.getDuration() > 0);
-            assertNotNull(tracksDTO.getTitle());
-            assertNotNull(tracksDTO.getDescription());
-            assertNotNull(tracksDTO.getLastModified());
-            assertNotNull(tracksDTO.getTagList());
-            assertNotNull(tracksDTO.getGenre());
-            assertNotNull(tracksDTO.getStreamURL());
-            assertNotNull(tracksDTO.getWaveformURL());
+        List<TrackDTO> trackDTOs = restClient.getTracksList();
+        assertNotNull(trackDTOs);
+        assertFalse(0 == trackDTOs.size());
+        for (TrackDTO trackDTO : trackDTOs) {
+            assertNotNull(trackDTO);
+            assertTrue(trackDTO.getId() > 0);
+            assertTrue(trackDTO.getDuration() > 0);
+            assertNotNull(trackDTO.getTitle());
+            assertNotNull(trackDTO.getDescription());
+            assertNotNull(trackDTO.getLastModified());
+            assertNotNull(trackDTO.getTagList());
+            assertNotNull(trackDTO.getGenre());
+            assertNotNull(trackDTO.getStreamURL());
+            assertNotNull(trackDTO.getWaveformURL());
         }
     }
 
