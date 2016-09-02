@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/home_item_background_shape"
-    android:gravity="left"
-    android:paddingLeft="3dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/home_item_background_shape"
+                android:gravity="left"
+                android:paddingLeft="3dp">
 
     <ImageView
         android:id="@+id/player_history_item_icon"
@@ -13,7 +13,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
         android:contentDescription="@string/empty_string"
-        android:src="@drawable/playlist_history_entry_icon" />
+        android:src="@drawable/playlist_history_entry_icon"/>
 
     <TextView
         android:id="@+id/player_history_item_text"
@@ -23,7 +23,8 @@
         android:layout_toRightOf="@id/player_history_item_icon"
         android:paddingLeft="5dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="11sp"
-        android:textStyle="italic" />
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:textStyle="italic"/>
 
 </RelativeLayout>
