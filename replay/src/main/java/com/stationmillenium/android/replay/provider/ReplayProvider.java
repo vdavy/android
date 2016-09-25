@@ -10,8 +10,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.stationmillenium.android.replay.BuildConfig;
-import com.stationmillenium.android.replay.SoundcloudRestClient;
 import com.stationmillenium.android.replay.dto.TrackDTO;
+import com.stationmillenium.android.replay.utils.SoundcloudRestClient;
 
 import java.util.List;
 
@@ -36,10 +36,11 @@ public class ReplayProvider extends ContentProvider {
             ReplayContract.Columns.WAVEFORM_URL,
             ReplayContract.Columns.ARTWORK_URL};
 
-    private SoundcloudRestClient soundcloudRestClient = new SoundcloudRestClient(getContext());
+    private SoundcloudRestClient soundcloudRestClient;
 
     @Override
     public boolean onCreate() {
+        soundcloudRestClient = new SoundcloudRestClient(getContext());
         return true;
     }
 

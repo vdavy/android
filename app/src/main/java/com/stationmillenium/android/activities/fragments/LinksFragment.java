@@ -125,7 +125,7 @@ public class LinksFragment extends ListFragment {
             }
         });
 
-        PiwikTracker.trackScreenView(getActivity().getApplication(), LINKS);
+        PiwikTracker.trackScreenView(LINKS);
     }
 
     @Override

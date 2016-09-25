@@ -30,6 +30,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        PiwikTracker.trackScreenView(getActivity().getApplication(), HOME);
+        PiwikTracker.trackScreenView(HOME);
     }
 }

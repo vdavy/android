@@ -182,7 +182,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     @Override
     protected void onResume() {
         super.onResume();
-        PiwikTracker.trackScreenView(getApplication(), SONG_SEARCH_HISTORY);
+        PiwikTracker.trackScreenView(SONG_SEARCH_HISTORY);
     }
 
     @Override

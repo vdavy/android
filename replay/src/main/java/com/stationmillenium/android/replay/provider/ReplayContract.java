@@ -39,7 +39,7 @@ public class ReplayContract {
      *
      * @return the {@link UriMatcher}
      */
-    public static UriMatcher buildURIMatcher() {
+    private static UriMatcher buildURIMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         matcher.addURI(AUTHORITY, DEFAULT_MATCH, ALL_REPLAY);
         return matcher;

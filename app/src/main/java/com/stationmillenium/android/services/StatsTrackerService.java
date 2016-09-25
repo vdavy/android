@@ -30,6 +30,6 @@ public class StatsTrackerService extends IntentService {
      */
     @Override
     protected void onHandleIntent(Intent intent) {
-        PiwikTracker.trackStream(getApplication());
+        PiwikTracker.trackStream();
     }
 }

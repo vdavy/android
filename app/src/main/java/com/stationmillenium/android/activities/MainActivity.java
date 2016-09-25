@@ -20,17 +20,16 @@ import android.widget.Toast;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.activities.fragments.AbstractWebViewFragment;
 import com.stationmillenium.android.activities.fragments.AntennaGridWebViewFragement;
 import com.stationmillenium.android.activities.fragments.HomeFragment;
 import com.stationmillenium.android.activities.fragments.LinksFragment;
-import com.stationmillenium.android.activities.fragments.ReplayWebViewFragement;
 import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity;
 import com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
+import com.stationmillenium.android.replay.activities.ReplayActivity;
 
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SHARE_APP_INVITE;
 
@@ -158,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
                 Log.d(TAG, "Invitation sent - ids : " + (ids.length >= 1 ? ids[0] : "no id"));
-                PiwikTracker.trackScreenView(getApplication(), SHARE_APP_INVITE);
+                PiwikTracker.trackScreenView(SHARE_APP_INVITE);
                 Toast.makeText(this, R.string.app_invite_thanks, Toast.LENGTH_SHORT).show();
             } else {
                 Log.d(TAG, "Invitation was cancelled");
@@ -182,14 +181,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Display the {@link AbstractWebViewFragment}
+     * Start the {@link ReplayActivity}
      *
      * @param view the {@link View} originating the event
      */
-    public void displayReplayFragment(View view) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Display the replay fragment");
-        displayFragment(new ReplayWebViewFragement());
+    public void startReplay(View view) {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Launch replay");
+        }
+        Intent replayIntent = new Intent(this, ReplayActivity.class);
+        startActivity(replayIntent);
     }
 
     /**

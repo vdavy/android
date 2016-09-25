@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.stationmillenium.android.R;
+import com.stationmillenium.android.libutils.PiwikTracker;
 
 import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
@@ -15,12 +16,9 @@ import org.acra.config.ACRAConfigurationException;
 import org.acra.config.ConfigurationBuilder;
 import org.acra.security.KeyStoreFactory;
 import org.acra.sender.HttpSender;
-import org.piwik.sdk.Piwik;
-import org.piwik.sdk.Tracker;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -44,8 +42,7 @@ public class StationMilleniumApp extends Application {
     private static final String KEYSTORE_NAME = "millenium.store";
     private static final String KEYSTORE_PASS = "MilleniumAcralyzerSSL";
 
-    private Tracker piwikAppTracker;
-    private Tracker piwikStreamTracker;
+
 
     public static class AppKeySoreFactory implements KeyStoreFactory {
 
@@ -70,9 +67,7 @@ public class StationMilleniumApp extends Application {
     public void onCreate() {
         super.onCreate();
         initACRA();
-
-        piwikAppTracker = initPiwikAppTracker();
-        piwikStreamTracker = initPiwikStreamTracker();
+        PiwikTracker.initPiwikTrackers(this);
     }
 
     private void initACRA() {
@@ -88,30 +83,5 @@ public class StationMilleniumApp extends Application {
         }
     }
 
-    private Tracker initPiwikAppTracker() {
-        try {
-            return Piwik.getInstance(this).newTracker(getString(R.string.piwik_url), getResources().getInteger(R.integer.piwik_app_site_id));
-        } catch (MalformedURLException e) {
-            Log.w(TAG, "Error while piwik app tracker init", e);
-            return null;
-        }
-    }
-
-    private Tracker initPiwikStreamTracker() {
-        try {
-            return Piwik.getInstance(this).newTracker(getString(R.string.piwik_url), getResources().getInteger(R.integer.piwik_stream_site_id));
-        } catch (MalformedURLException e) {
-            Log.w(TAG, "Error while piwik stream tracker init", e);
-            return null;
-        }
-    }
-
-    public Tracker getPiwikAppTracker() {
-        return piwikAppTracker;
-    }
-
-    public Tracker getPiwikStreamTracker() {
-        return piwikStreamTracker;
-    }
 }
 

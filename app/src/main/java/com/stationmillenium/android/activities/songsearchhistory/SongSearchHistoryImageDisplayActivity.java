@@ -106,7 +106,7 @@ public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity imp
             Log.d(TAG, "Launch song search image loading...");
         imageLoader = new ImageLoader(imageView, progressBar, imageFileName, this, true);
 
-        PiwikTracker.trackScreenView(getApplication(), SONG_HISTORY_DISPLAY_IMAGE);
+        PiwikTracker.trackScreenView(SONG_HISTORY_DISPLAY_IMAGE);
     }
 
     @Override

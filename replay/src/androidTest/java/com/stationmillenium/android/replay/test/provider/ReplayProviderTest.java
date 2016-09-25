@@ -7,10 +7,10 @@ import android.net.Uri;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.stationmillenium.android.replay.SoundcloudRestClient;
 import com.stationmillenium.android.replay.dto.TrackDTO;
 import com.stationmillenium.android.replay.provider.ReplayContract;
 import com.stationmillenium.android.replay.provider.ReplayProvider;
+import com.stationmillenium.android.replay.utils.SoundcloudRestClient;
 
 import junit.framework.Assert;
 
