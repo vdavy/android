@@ -1,17 +1,24 @@
 package com.stationmillenium.android.replay.activities;
 
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.replay.BuildConfig;
 import com.stationmillenium.android.replay.R;
@@ -47,15 +54,36 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void initCursorAdapter() {
-        cursorAdapter = new SimpleCursorAdapter(this, R.layout.replay_list_item, null,
-                new String[]{
-                        ReplayContract.Columns.TITLE,
-                        ReplayContract.Columns.STREAM_URL
-                },
-                new int[]{
-                        R.id.artist,
-                        R.id.title
-                }, 0);
+        cursorAdapter = new SimpleCursorAdapter(this, R.layout.replay_list_item, null, new String[]{
+                ReplayContract.Columns.TITLE,
+                ReplayContract.Columns.DESCRIPTION,
+                ReplayContract.Columns.ARTWORK_URL
+        },
+        new int[]{
+                R.id.replay_title,
+                R.id.replay_description,
+                R.id.replay_artwork
+        }, 0);
+        cursorAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+                if (view.getId() == R.id.replay_artwork) {
+                    // set round image : http://stackoverflow.com/questions/25278821/how-do-rounded-image-with-glide-library
+                    Glide.with(ReplayActivity.this)
+                    .load(cursor.getString(columnIndex)).asBitmap().centerCrop().into(new BitmapImageViewTarget((ImageView) view) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(ReplayActivity.this.getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            view.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
         replayFragment.setListAdapter(cursorAdapter);
     }
 

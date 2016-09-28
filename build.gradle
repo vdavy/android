@@ -16,6 +16,7 @@ ext {
     playServicesVersion = '9.6.1'
     acraVersion = "4.9.0"
     twitterVersion = "4.0.4"
+    glideVersion = "3.7.0"
 }
 
 allprojects {
