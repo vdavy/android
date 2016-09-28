@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.firebase.crash.FirebaseCrash;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.AbstractWebViewFragment;
@@ -83,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
+        FirebaseCrash.log("Main activity started");
+        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
     }
 
     @Override
