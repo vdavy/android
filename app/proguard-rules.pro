@@ -7,5 +7,7 @@
 -keep class android.support.v7.widget.SearchView { *; }
 -keep class twitter4j.** { *; }
 
+-keepattributes EnclosingMethod
+
 # keep map for debug
 #-printmapping mapping.txt
