@@ -208,4 +208,7 @@
     <string name="song_search_history_menu_time_search_select_date">Sélectionner une date</string>
     <string name="song_search_history_menu_time_search_select_time">Sélectionner une heure</string>
 
+    <!-- replay -->
+    <string name="replay_activity_title">Le replay</string>
+
 </resources>

@@ -136,7 +136,7 @@
         <!-- song history search image display activity -->
         <activity
             android:name=".replay.activities.ReplayActivity"
-            android:label="@string/song_search_history_image"
+            android:label="@string/replay_activity_title"
             android:parentActivityName=".activities.MainActivity"
             tools:ignore="UnusedAttribute"
             android:theme="@style/Theme.Design.NoActionBar">
