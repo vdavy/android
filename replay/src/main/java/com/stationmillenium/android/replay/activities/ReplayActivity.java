@@ -105,6 +105,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
             Log.d(TAG, "Loading is finished - display data...");
         }
         cursorAdapter.swapCursor(data);
+        replayFragment.getBinding().setReplayData(data);
     }
 
     @Override
@@ -113,5 +114,6 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
             Log.d(TAG, "Reset the loader");
         }
         cursorAdapter.swapCursor(null);
+        replayFragment.getBinding().setReplayData(null);
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <plurals name="replay_count">
+        <item quantity="one">%d replay disponible</item>
+        <item quantity="other">%d replays disponibles</item>
+    </plurals>
+
+</resources>

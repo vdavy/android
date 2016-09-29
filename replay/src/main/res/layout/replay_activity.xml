@@ -18,6 +18,18 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
+        <TextView
+            android:id="@+id/replay_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="2dp"
+            android:text="top"
+            android:textColor="#ff9900cc"
+            android:textSize="14sp"
+            app:layout_scrollFlags="scroll|enterAlways"
+            android:background="#ffffffff"/>
+
     </android.support.design.widget.AppBarLayout>
 
     <fragment android:name="com.stationmillenium.android.replay.activities.ReplayFragment"

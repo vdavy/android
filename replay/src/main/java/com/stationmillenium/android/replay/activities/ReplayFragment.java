@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.stationmillenium.android.replay.R;
+import com.stationmillenium.android.replay.databinding.ReplayFragmentBinding;
 
 /**
  * Replay fragment
@@ -16,10 +16,12 @@ import com.stationmillenium.android.replay.R;
 public class ReplayFragment extends ListFragment {
 
     private static final String TAG = "ReplayFragment";
+    private ReplayFragmentBinding replayFragmentBinding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.replay_fragment, container);
+        replayFragmentBinding = ReplayFragmentBinding.inflate(inflater);
+        return replayFragmentBinding.getRoot();
     }
 
     @Override
@@ -28,5 +30,9 @@ public class ReplayFragment extends ListFragment {
             getListView().setNestedScrollingEnabled(true);
         }
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    public ReplayFragmentBinding getBinding() {
+        return replayFragmentBinding;
     }
 }
