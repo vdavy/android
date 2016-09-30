@@ -17,7 +17,6 @@ android {
     buildTypes {
         debug {
             versionNameSuffix "-debug"
-            resValue "bool", "enable_acra", "false"
         }
 
         release {
@@ -25,7 +24,6 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), "proguard-rules.pro"
             signingConfig android.signingConfigs.debug
-            resValue "bool", "enable_acra", "true"
         }
     }
 
