@@ -139,8 +139,8 @@
     </string-array>
     <string name="preferences_alarm_volume_title">Volume de l\'alarme</string>
     <string name="preferences_alarm_volume_dialog_message">Sélectionner le volume du son de l\'alarme :</string>
-    <string name="preferences_alarm_volume_progress_text_suffix">sur %1$s</string>
-    <string name="preferences_alarm_volume_summary">%1$s sur %2$s</string>
+    <string name="preferences_alarm_volume_progress_text_suffix">sur %1$d</string>
+    <string name="preferences_alarm_volume_summary">%1$d sur %2$d</string>
     <string name="preferences_app_version">Version de l\'application</string>
     <string name="preferences_app_version_not_available">Station Millenium</string>
     <string name="preferences_alarm_network_available_summary">Pour que l\'alarme puisse fonctionner, le Wifi ou les données mobiles doivent être activés.</string>
