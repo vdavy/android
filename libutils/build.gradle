@@ -7,10 +7,11 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
 
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile "com.android.support.test:runner:${supportTestVersion}"
+    androidTestCompile "com.android.support.test:rules:${supportTestVersion}"
+    androidTestCompile "com.android.support.test.espresso:espresso-core:${espressoCoreVersion}"
     androidTestCompile "com.android.support:support-annotations:${supportLibVersion}"
-    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+    androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:${uiautomatorVersion}"
+    androidTestCompile "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
 }
 
