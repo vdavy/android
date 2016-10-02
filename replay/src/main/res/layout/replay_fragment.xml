@@ -1,43 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/replay_srl"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <data>
-
-        <variable
-            name="replayData"
-            type="android.database.Cursor"/>
-    </data>
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/replay_srl"
+    <ListView
+        android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:dividerHeight="5dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/replay_count"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="2dp"
-                android:text="@{@plurals/replay_count(replayData.count, replayData.count)}"
-                android:textColor="#ff9900cc"
-                android:textSize="14sp"
-                app:layout_scrollFlags="scroll|enterAlways"/>
-
-            <ListView
-                android:id="@android:id/list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:dividerHeight="5dp"
-                android:padding="5dp"/>
-
-        </LinearLayout>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
-</layout>
+</android.support.v4.widget.SwipeRefreshLayout>

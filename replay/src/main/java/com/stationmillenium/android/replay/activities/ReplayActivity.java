@@ -1,7 +1,9 @@
 package com.stationmillenium.android.replay.activities;
 
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,16 +14,18 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.replay.BuildConfig;
 import com.stationmillenium.android.replay.R;
+import com.stationmillenium.android.replay.databinding.ReplayActivityBinding;
 import com.stationmillenium.android.replay.provider.ReplayContract;
 
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.REPLAY;
@@ -35,14 +39,15 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     private static final String TAG = "ReplayActivity";
     private static final int LOADER_INDEX = 0;
 
+    private ReplayActivityBinding replayActivityBinding;
     private ReplayFragment replayFragment;
     private SimpleCursorAdapter cursorAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.replay_activity);
-        setSupportActionBar((Toolbar) findViewById(R.id.replay_toolbar));
+        replayActivityBinding = DataBindingUtil.setContentView(this, R.layout.replay_activity);
+        setSupportActionBar(replayActivityBinding.replayToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -57,16 +62,18 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         cursorAdapter = new SimpleCursorAdapter(this, R.layout.replay_list_item, null, new String[]{
                 ReplayContract.Columns.TITLE,
                 ReplayContract.Columns.DESCRIPTION,
-                ReplayContract.Columns.ARTWORK_URL
+                ReplayContract.Columns.ARTWORK_URL,
+                ReplayContract.Columns.WAVEFORM_URL
         },
         new int[]{
                 R.id.replay_title,
                 R.id.replay_description,
-                R.id.replay_artwork
+                R.id.replay_artwork,
+                R.id.replay_layout
         }, 0);
         cursorAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
             @Override
-            public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+            public boolean setViewValue(final View view, Cursor cursor, int columnIndex) {
                 if (view.getId() == R.id.replay_artwork) {
                     // set round image : http://stackoverflow.com/questions/25278821/how-do-rounded-image-with-glide-library
                     Glide.with(ReplayActivity.this)
@@ -79,9 +86,17 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
                         }
                     });
                     return true;
-                } else {
-                    return false;
+                } else if (view.getId() == R.id.replay_layout){
+                    Glide.with(ReplayActivity.this)
+                            .load(cursor.getString(columnIndex)).asBitmap().centerCrop().into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            view.setBackground(new BitmapDrawable(resource));
+                        }
+                    });
+                    return true;
                 }
+                return false;
             }
         });
         replayFragment.setListAdapter(cursorAdapter);
@@ -105,7 +120,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
             Log.d(TAG, "Loading is finished - display data...");
         }
         cursorAdapter.swapCursor(data);
-        replayFragment.getBinding().setReplayData(data);
+        replayActivityBinding.setReplayData(data);
     }
 
     @Override
@@ -114,6 +129,6 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
             Log.d(TAG, "Reset the loader");
         }
         cursorAdapter.swapCursor(null);
-        replayFragment.getBinding().setReplayData(null);
+        replayActivityBinding.setReplayData(null);
     }
 }

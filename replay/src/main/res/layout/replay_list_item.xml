@@ -3,31 +3,44 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/replay_layout"
+    android:backgroundTint="#700f"
+    android:backgroundTintMode="src_atop">
 
     <ImageView
         android:id="@+id/replay_artwork"
-        android:layout_height="40dp"
-        android:layout_width="40dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/replay_title"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="8dp"
-        app:layout_constraintLeft_toRightOf="@+id/replay_artwork"
-        android:layout_marginLeft="8dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/replay_description"
-        android:layout_marginStart="8dp"
-        app:layout_constraintLeft_toRightOf="@+id/replay_artwork"
+        android:layout_width="50dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="8dp"
+        android:layout_height="50dp"/>
+
+    <TextView
+        android:id="@+id/replay_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintLeft_toRightOf="@+id/replay_artwork"
+        app:layout_constraintTop_toTopOf="parent"
+        android:autoText="false"
+        android:textStyle="normal|bold"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/replay_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/replay_artwork"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.stationmillenium.android.replay.databinding.ReplayFragmentBinding;
+import com.stationmillenium.android.replay.R;
 
 /**
  * Replay fragment
@@ -15,13 +15,9 @@ import com.stationmillenium.android.replay.databinding.ReplayFragmentBinding;
  */
 public class ReplayFragment extends ListFragment {
 
-    private static final String TAG = "ReplayFragment";
-    private ReplayFragmentBinding replayFragmentBinding;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        replayFragmentBinding = ReplayFragmentBinding.inflate(inflater);
-        return replayFragmentBinding.getRoot();
+        return inflater.inflate(R.layout.replay_fragment, container, false);
     }
 
     @Override
@@ -32,7 +28,4 @@ public class ReplayFragment extends ListFragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public ReplayFragmentBinding getBinding() {
-        return replayFragmentBinding;
-    }
 }
