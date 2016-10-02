@@ -302,16 +302,21 @@ public class AlarmSharedPreferencesActivity extends PreferenceActivity implement
 
             //manage summary
             if (!selectedDaysList.isEmpty()) { //if some data - set up summary
-                String summary = "";
-                int i = 1;
-                for (String day : selectedDaysList) {
-                    summary += dayNames[Integer.parseInt(day)];
-                    if (i < selectedDaysList.size()) {
-                        summary += getString(R.string.preferences_alarm_activation_days_separator) + " ";
-                        i++;
+                try {
+                    String summary = "";
+                    int i = 1;
+                    for (String day : selectedDaysList) {
+                        summary += dayNames[Integer.parseInt(day)];
+                        if (i < selectedDaysList.size()) {
+                            summary += getString(R.string.preferences_alarm_activation_days_separator) + " ";
+                            i++;
+                        }
                     }
+                    alarmDaysList.setSummary(summary);
+                } catch (NumberFormatException e) {
+                    Log.w(TAG, "Format exception", e);
+                    alarmDaysList.setSummary("");
                 }
-                alarmDaysList.setSummary(summary);
 
             } else { //display no data summary
                 alarmDaysList.setSummary(getString(R.string.preferences_alarm_activation_days_no_selection));
@@ -375,14 +380,16 @@ public class AlarmSharedPreferencesActivity extends PreferenceActivity implement
         super.onPostCreate(savedInstanceState);
 
         LinearLayout root = (LinearLayout) findViewById(android.R.id.list).getParent().getParent().getParent();
-        Toolbar bar = (Toolbar) LayoutInflater.from(this).inflate(R.layout.preferences_alarm_toolbar, root, false);
-        root.addView(bar, 0); // insert at top
-        bar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        if (root != null) {
+            Toolbar bar = (Toolbar) LayoutInflater.from(this).inflate(R.layout.preferences_alarm_toolbar, root, false);
+            root.addView(bar, 0); // insert at top
+            bar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+        }
     }
 
 }
