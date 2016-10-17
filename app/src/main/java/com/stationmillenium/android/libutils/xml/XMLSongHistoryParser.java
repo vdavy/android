@@ -32,7 +32,7 @@ import java.util.List;
 public class XMLSongHistoryParser extends AbstractXMLParser<List<Song>> {
 
     private static final String TAG = "XMLSongHistoryParser";
-    private static final String DATE_FORMAT = "yyyyMMdd-hhmm";
+    private static final String DATE_FORMAT = "yyyyMMdd-HHmm";
 
     /**
      * Create a new {@link XMLSongHistoryParser}
