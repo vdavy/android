@@ -11,10 +11,11 @@ android {
         versionName ""
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         testApplicationId "com.stationmillenium.android.replay.test"
+        multiDexEnabled true
+    }
 
-        dataBinding {
-            enabled = true
-        }
+    dataBinding {
+        enabled = true
     }
 
     // see : http://stackoverflow.com/questions/20827885/android-studio-0-4-duplicate-files-copied-in-apk-meta-inf-license-txt

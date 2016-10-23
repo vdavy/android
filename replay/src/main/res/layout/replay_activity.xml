@@ -6,13 +6,13 @@
     <data>
         <variable
             name="replayData"
-            type="android.database.Cursor"/>
+            type="java.util.List"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/home_background">
+        style="@style/ThemeReplay">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                 android:id="@+id/replay_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{@plurals/replay_count(replayData.count, replayData.count)}"
+                android:text="@{@plurals/replay_count(replayData.size, replayData.size)}"
                 android:textColor="#ff9900cc"
                 android:textSize="15sp"
                 android:textStyle="bold"

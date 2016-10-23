@@ -23,7 +23,7 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 @MediumTest
-public class SoundcloudRestClientTest {
+public class SoundcloudRestLoaderTest {
 
     private SoundcloudRestClient restClient;
 

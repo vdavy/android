@@ -1,6 +1,7 @@
 package com.stationmillenium.android.replay;
 
 import android.content.Context;
+import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import com.stationmillenium.android.replay.dto.TrackDTO;
@@ -18,36 +19,37 @@ import static java.util.Collections.EMPTY_LIST;
  * Class to query Soundcloud info
  * Created by vincent on 28/08/16.
  */
-public class SoundcloudRestClient {
+public class SoundcloudRestLoader extends AsyncTaskLoader<List<TrackDTO>> {
 
-    private static final String TAG = "SoundcloudRestClient";
+    private static final String TAG = "SoundcloudRestLoader";
 
-    private Context context;
-
-    /**
-     *
-     * @param context need context for resources
-     */
-    public SoundcloudRestClient(Context context) {
-        this.context = context;
+    public SoundcloudRestLoader(Context context) {
+        super(context);
     }
 
     /**
      * Get the track list
      * @return the track list, empty list if error or no data
      */
-    public List<TrackDTO> getTracksList() {
+    @Override
+    public List<TrackDTO> loadInBackground() {
         try {
             Log.v(TAG, "Get tracks list");
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            TrackDTO[] trackDTOs = restTemplate.getForObject(URLManager.getTracksURL(context), TrackDTO[].class);
-            Log.d(TAG, "Got tracks list : " + trackDTOs.length);
-            return Arrays.asList(trackDTOs);
+            if (!isLoadInBackgroundCanceled()) {
+                TrackDTO[] trackDTOs = restTemplate.getForObject(URLManager.getTracksURL(getContext()), TrackDTO[].class);
+                Log.d(TAG, "Got tracks list : " + trackDTOs.length);
+                return Arrays.asList(trackDTOs);
+            } else {
+                Log.d(TAG, "Load in background cancelled");
+                return EMPTY_LIST;
+            }
 
         } catch (Exception e) {
             Log.w(TAG, "Error with tracks list", e);
             return EMPTY_LIST;
         }
     }
+
 }
