@@ -139,7 +139,7 @@
             android:label="@string/replay_activity_title"
             android:parentActivityName=".activities.MainActivity"
             tools:ignore="UnusedAttribute"
-            android:theme="@style/Theme.Design.NoActionBar">
+            android:theme="@style/ThemeReplay">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.stationmillenium.android.activities.MainActivity" />
