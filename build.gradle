@@ -14,7 +14,7 @@ ext {
     supportLibVersion = '25.0.0'
     jacksonVersion = '2.8.2'
     piwikSdkVersion = '1.0.2'
-    playServicesVersion = '9.8.00'
+    playServicesVersion = '9.6.1'
     twitterVersion = "4.0.4"
     glideVersion = "3.7.0"
 
