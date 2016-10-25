@@ -12,15 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_margin="5dp"
-        app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="3dp"
-        app:cardElevation="3dp"
-        >
+        app:cardElevation="3dp">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/replay_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/replay_cardview_shape">
 
             <ImageView
                 android:id="@+id/replay_artwork"

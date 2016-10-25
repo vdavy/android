@@ -3,12 +3,6 @@
 
     <style name="ThemeReplay" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:textColorPrimary">@color/primary_text_material_light</item>
+        <item name="android:navigationBarColor">@color/navigation_bar_color</item>
     </style>
-
-    <style name="ThemeReplay.PinkText">
-        <item name="android:textColor">@color/material_purple_500</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
 </resources>
