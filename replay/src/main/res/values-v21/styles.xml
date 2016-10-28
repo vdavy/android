@@ -2,7 +2,7 @@
 <resources>
 
     <style name="ThemeReplay" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:textColorPrimary">@color/primary_text</item>
+        <item name="android:textColorPrimary">@color/icons</item>
         <item name="android:navigationBarColor">@color/primary_dark</item>
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>

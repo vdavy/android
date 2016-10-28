@@ -15,4 +15,9 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="ThemeReplay.Toolbar">
+        <item name="android:textColorPrimary">@color/icons</item>
+        <item name="android:textColorSecondary">@color/icons</item>
+    </style>
+
 </resources>
