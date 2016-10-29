@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.databinding.ReplayListItemBinding;
 import com.stationmillenium.android.replay.dto.TrackDTO;
 
@@ -28,7 +29,10 @@ public class ReplayViewHolder extends ViewHolder {
         binding.setReplayItem(trackDTO);
         // set round image : http://stackoverflow.com/questions/25278821/how-do-rounded-image-with-glide-library
         Glide.with(binding.replayArtwork.getContext())
-                .load(trackDTO.getArtworkURL()).asBitmap().centerCrop().into(new BitmapImageViewTarget(binding.replayArtwork) {
+                .load(trackDTO.getArtworkURL())
+                .asBitmap()
+                .placeholder(R.drawable.default_replay)
+                .centerCrop().into(new BitmapImageViewTarget(binding.replayArtwork) {
             @Override
             protected void setResource(Bitmap resource) {
                 RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(binding.replayArtwork.getResources(), resource);
