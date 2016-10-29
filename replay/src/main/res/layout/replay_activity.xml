@@ -28,7 +28,7 @@
 
             <TextView
                 android:id="@+id/replay_count"
-                style="@style/ThemeReplay.PinkText"
+                style="@style/ThemeReplay.ReplayCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{@plurals/replay_count(replayData.size, replayData.size)}"
