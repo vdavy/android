@@ -39,4 +39,12 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
+    <style name="ThemeReplay.ReplayText.Genre">
+        <item name="android:textColor">@color/icons</item>
+        <item name="android:gravity">center_vertical|end</item>
+        <item name="android:background">@drawable/replay_genre_background</item>
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingRight">2dp</item>
+    </style>
+
 </resources>

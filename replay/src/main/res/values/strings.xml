@@ -6,4 +6,6 @@
         <item quantity="other">%d replays disponibles</item>
     </plurals>
 
+    <string name="replay_genre">#%s</string>
+
 </resources>

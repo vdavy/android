@@ -11,4 +11,6 @@
     <color name="icons">#ffffff</color>
     <color name="divider">#BDBDBD</color>
 
+    <color name="material_blue_grey_600">#546E7A</color>
+
 </resources>
