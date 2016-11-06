@@ -46,8 +46,6 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="2dp"
                 android:paddingBottom="2dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/replay_artwork"
@@ -56,7 +54,6 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                app:layout_constraintVertical_bias="0.0"
                 android:layout_width="0dp"/>
 
             <TextView
@@ -76,28 +73,25 @@
                 />
 
             <TextView
-                android:text="Date"
+                android:text="@{replayItem.lastModified}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/replay_date"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="8dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="10dp"
                 app:layout_constraintLeft_toRightOf="@+id/replay_artwork"
-                android:layout_marginLeft="8dp"/>
+                android:layout_marginLeft="10dp"/>
 
             <TextView
-                android:text="Durée"
+                android:text="@{replayItem.duration}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/replay_duration"
-                android:layout_marginStart="8dp"
-                app:layout_constraintLeft_toRightOf="@+id/replay_date"
-                android:layout_marginLeft="8dp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/replay_date"
-                app:layout_constraintRight_toLeftOf="@+id/replay_genre"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"/>
+                app:layout_constraintLeft_toRightOf="@+id/replay_date"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"/>
 
             <TextView
                 style="@style/ThemeReplay.ReplayText.Genre"
@@ -110,7 +104,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginRight="8dp"
+                android:paddingRight="3dp"
+                android:paddingLeft="3dp"/>
 
         </android.support.constraint.ConstraintLayout>
 

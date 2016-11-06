@@ -3,6 +3,7 @@ package com.stationmillenium.android.replay.activities;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +28,20 @@ public class ReplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.replay_fragment, container, false);
         binding.replayRecyclerview.setAdapter(replayAdapter);
+        binding.replaySrl.setColorSchemeResources(R.color.primary, R.color.accent);
         return binding.getRoot();
     }
 
     public void setReplayList(List<TrackDTO> replayList) {
         replayAdapter.setTrackDTOs(replayList);
         replayAdapter.notifyDataSetChanged();
+    }
+
+    public void setRefreshing(boolean refreshing) {
+        binding.replaySrl.setRefreshing(refreshing);
+    }
+
+    public void setRefreshListener(SwipeRefreshLayout.OnRefreshListener onRefreshListener) {
+        binding.replaySrl.setOnRefreshListener(onRefreshListener);
     }
 }

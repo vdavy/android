@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.stationmillenium.android.libutils.PiwikTracker;
-import com.stationmillenium.android.replay.BuildConfig;
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.SoundcloudRestLoader;
 import com.stationmillenium.android.replay.databinding.ReplayActivityBinding;
@@ -23,7 +23,7 @@ import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.REPL
  * Activity for the replay
  * Created by vincent on 01/09/16.
  */
-public class ReplayActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<TrackDTO>> {
+public class ReplayActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<TrackDTO>>, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "ReplayActivity";
     private static final int LOADER_INDEX = 0;
@@ -41,6 +41,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         }
 
         replayFragment = (ReplayFragment) getSupportFragmentManager().findFragmentById(R.id.replay_fragment);
+        replayFragment.setRefreshListener(this);
         getSupportLoaderManager().initLoader(LOADER_INDEX, null, this).forceLoad();
     }
 
@@ -52,24 +53,30 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public Loader<List<TrackDTO>> onCreateLoader(int id, Bundle args) {
+        replayFragment.setRefreshing(true);
         return new SoundcloudRestLoader(this);
     }
 
     @Override
     public void onLoadFinished(Loader<List<TrackDTO>> loader, List<TrackDTO> data) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Loading is finished - display data...");
-        }
+        Log.d(TAG, "Loading is finished - display data...");
         replayFragment.setReplayList(data);
+        replayFragment.setRefreshing(false);
         replayActivityBinding.setReplayData(data);
     }
 
     @Override
     public void onLoaderReset(Loader<List<TrackDTO>> loader) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Reset the loader");
-        }
+        Log.d(TAG, "Reset the loader");
         replayFragment.setReplayList(null);
+        replayFragment.setRefreshing(false);
         replayActivityBinding.setReplayData(null);
     }
+
+    @Override
+    public void onRefresh() {
+        Log.d(TAG, "Data refresh requested");
+        getSupportLoaderManager().restartLoader(LOADER_INDEX, null, this).forceLoad();
+    }
+
 }
