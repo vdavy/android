@@ -32,16 +32,29 @@ public class ReplayFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /**
+     * Set the data list for display
+     * @param replayList the replay items
+     */
     public void setReplayList(List<TrackDTO> replayList) {
         replayAdapter.setTrackDTOs(replayList);
         replayAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Are we refreshing data ?
+     * @param refreshing {@code true} for yes, {@code false} if not
+     */
     public void setRefreshing(boolean refreshing) {
         binding.replaySrl.setRefreshing(refreshing);
     }
 
+    /**
+     * Set the handler for refresh when swiping
+     * @param onRefreshListener the listener
+     */
     public void setRefreshListener(SwipeRefreshLayout.OnRefreshListener onRefreshListener) {
         binding.replaySrl.setOnRefreshListener(onRefreshListener);
     }
+
 }
