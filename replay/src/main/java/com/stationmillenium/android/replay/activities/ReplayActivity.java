@@ -3,6 +3,7 @@ package com.stationmillenium.android.replay.activities;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -35,6 +36,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         replayActivityBinding = DataBindingUtil.setContentView(this, R.layout.replay_activity);
+        replayActivityBinding.setActivity(this);
         setSupportActionBar(replayActivityBinding.replayToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -78,8 +80,28 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         getSupportLoaderManager().restartLoader(LOADER_INDEX, null, this).forceLoad();
     }
 
+    /**
+     * Search for the specified genre
+     * @param genre the genre to search for
+     */
     public void searchGenre(String genre) {
         Log.d(TAG, "Search genre : " + genre);
+    }
+
+    /**
+     * End scrolling happened
+     * Trigger extra data load
+     */
+    public void triggerExtraDataLoad() {
+        Log.d(TAG, "Load extra data");
+        Snackbar.make(replayActivityBinding.replayCoordinatorLayout, R.string.replay_load_more, Snackbar.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Launch replay search
+     */
+    public void triggerSearch() {
+        Log.d(TAG, "Trigger search");
     }
 
 }

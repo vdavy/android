@@ -7,9 +7,13 @@
         <variable
             name="replayData"
             type="java.util.List"/>
+        <variable
+            name="activity"
+            type="com.stationmillenium.android.replay.activities.ReplayActivity"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/replay_coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -31,10 +35,10 @@
                 style="@style/ThemeReplay.ReplayCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{@plurals/replay_count(replayData.size, replayData.size)}"
+                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginStart="5dp"
-                android:layout_marginBottom="5dp"
+                android:text="@{@plurals/replay_count(replayData.size, replayData.size)}"
                 app:layout_scrollFlags="scroll|enterAlways"/>
 
         </android.support.design.widget.AppBarLayout>
@@ -50,11 +54,14 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:backgroundTint="@color/primary_dark"
-            app:useCompatPadding="true"
+            android:layout_marginBottom="@dimen/action_button_margin"
+            android:layout_marginEnd="@dimen/action_button_margin"
+            android:layout_marginRight="@dimen/action_button_margin"
             android:src="@drawable/ic_replay_search"
+            app:backgroundTint="@color/primary_dark"
+            app:layout_anchor="@id/replay_fragment"
             app:layout_anchorGravity="bottom|right|end"
-            app:layout_anchor="@id/replay_fragment"/>
+            android:onClick="@{() -> activity.triggerSearch()}"/>
 
     </android.support.design.widget.CoordinatorLayout>
 
