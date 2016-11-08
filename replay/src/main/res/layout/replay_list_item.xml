@@ -9,6 +9,9 @@
         <variable
             name="replayItem"
             type="com.stationmillenium.android.replay.dto.TrackDTO"/>
+        <variable
+            name="activity"
+            type="com.stationmillenium.android.replay.activities.ReplayActivity"/>
     </data>
 
     <android.support.v7.widget.CardView
@@ -106,7 +109,8 @@
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginRight="8dp"
                 android:paddingRight="3dp"
-                android:paddingLeft="3dp"/>
+                android:paddingLeft="3dp"
+                android:onClick="@{() -> activity.searchGenre(replayItem.genre)}"/>
 
         </android.support.constraint.ConstraintLayout>
 

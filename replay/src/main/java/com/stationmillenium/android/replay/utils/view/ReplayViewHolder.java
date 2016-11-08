@@ -9,6 +9,7 @@ import android.view.View;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.stationmillenium.android.replay.R;
+import com.stationmillenium.android.replay.activities.ReplayActivity;
 import com.stationmillenium.android.replay.databinding.ReplayListItemBinding;
 import com.stationmillenium.android.replay.dto.TrackDTO;
 
@@ -20,9 +21,10 @@ public class ReplayViewHolder extends ViewHolder {
 
     private ReplayListItemBinding binding;
 
-    public ReplayViewHolder(View itemView) {
+    public ReplayViewHolder(View itemView, ReplayActivity replayActivity) {
         super(itemView);
         binding = ReplayListItemBinding.bind(itemView);
+        binding.setActivity(replayActivity);
     }
 
     public void bindReplay(TrackDTO trackDTO) {
@@ -41,4 +43,5 @@ public class ReplayViewHolder extends ViewHolder {
             }
         });
     }
+
 }

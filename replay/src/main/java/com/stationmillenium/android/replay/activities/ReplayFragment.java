@@ -22,13 +22,15 @@ import java.util.List;
 public class ReplayFragment extends Fragment {
 
     private ReplayFragmentBinding binding;
-    private ReplayAdapter replayAdapter = new ReplayAdapter();
+    private ReplayAdapter replayAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        replayAdapter = new ReplayAdapter((ReplayActivity) getActivity());
         binding = DataBindingUtil.inflate(inflater, R.layout.replay_fragment, container, false);
         binding.replayRecyclerview.setAdapter(replayAdapter);
         binding.replaySrl.setColorSchemeResources(R.color.primary, R.color.accent);
+        binding.replaySrl.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) getActivity());
         return binding.getRoot();
     }
 
@@ -47,14 +49,6 @@ public class ReplayFragment extends Fragment {
      */
     public void setRefreshing(boolean refreshing) {
         binding.replaySrl.setRefreshing(refreshing);
-    }
-
-    /**
-     * Set the handler for refresh when swiping
-     * @param onRefreshListener the listener
-     */
-    public void setRefreshListener(SwipeRefreshLayout.OnRefreshListener onRefreshListener) {
-        binding.replaySrl.setOnRefreshListener(onRefreshListener);
     }
 
 }

@@ -41,7 +41,6 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         }
 
         replayFragment = (ReplayFragment) getSupportFragmentManager().findFragmentById(R.id.replay_fragment);
-        replayFragment.setRefreshListener(this);
         getSupportLoaderManager().initLoader(LOADER_INDEX, null, this).forceLoad();
     }
 
@@ -77,6 +76,10 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     public void onRefresh() {
         Log.d(TAG, "Data refresh requested");
         getSupportLoaderManager().restartLoader(LOADER_INDEX, null, this).forceLoad();
+    }
+
+    public void searchGenre(String genre) {
+        Log.d(TAG, "Search genre : " + genre);
     }
 
 }

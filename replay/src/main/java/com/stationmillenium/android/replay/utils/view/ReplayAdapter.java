@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stationmillenium.android.replay.R;
+import com.stationmillenium.android.replay.activities.ReplayActivity;
 import com.stationmillenium.android.replay.dto.TrackDTO;
 
 import java.util.List;
@@ -18,13 +19,18 @@ import java.util.List;
 public class ReplayAdapter extends Adapter<ReplayViewHolder> {
 
     private static final String TAG = "ReplayAdapter";
+    private ReplayActivity replayActivity;
     private List<TrackDTO> trackDTOs;
+
+    public ReplayAdapter(ReplayActivity replayActivity) {
+        this.replayActivity = replayActivity;
+    }
 
     @Override
     public ReplayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.v(TAG, "Create view...");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.replay_list_item, parent, false);
-        return new ReplayViewHolder(view);
+        return new ReplayViewHolder(view, replayActivity);
     }
 
     @Override
