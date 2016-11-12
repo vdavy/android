@@ -104,4 +104,8 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         Log.d(TAG, "Trigger search");
     }
 
+    public void openReplay(TrackDTO replayItem) {
+        Log.d(TAG, "Open replay ; " + replayItem) ;
+    }
+
 }

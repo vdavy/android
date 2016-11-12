@@ -19,7 +19,8 @@
         android:layout_margin="5dp"
         app:cardCornerRadius="3dp"
         app:cardElevation="3dp"
-        android:layout_height="90dp">
+        android:layout_height="90dp"
+        android:onClick="@{() -> activity.openReplay(replayItem)}">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/replay_layout"
