@@ -31,6 +31,14 @@ public class TrackDTO implements Serializable {
     @JsonProperty("artwork_url")
     private String artworkURL;
 
+    @Override
+    public String toString() {
+        return "TrackDTO{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                '}';
+    }
+
     public int getId() {
         return id;
     }
