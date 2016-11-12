@@ -8,4 +8,5 @@
     <string name="soundcloud_playlists_URL">https://api.soundcloud.com/users/%1$s/playlists?client_id=%2$s</string>
     <string name="soundcloud_stream_URL">https://api.soundcloud.com/tracks/%1$s/stream?client_id=%2$s</string>
 
+    <string name="limit_param">limit</string>
 </resources>
