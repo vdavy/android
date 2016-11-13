@@ -5,38 +5,42 @@ import android.support.test.filters.MediumTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.stationmillenium.android.replay.dto.TrackDTO;
-import com.stationmillenium.android.replay.utils.SoundcloudRestClient;
+import com.stationmillenium.android.replay.utils.SoundcloudRestLoader;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * Test {@link SoundcloudRestClient}
+ * Test {@link SoundcloudRestLoader}
  * Created by vincent on 28/08/16.
  */
 @RunWith(AndroidJUnit4.class)
 @MediumTest
 public class SoundcloudRestLoaderTest {
 
-    private SoundcloudRestClient restClient;
-
-    @Before
-    public void beforeTest() {
-        restClient = new SoundcloudRestClient(InstrumentationRegistry.getTargetContext());
+    @Test
+    public void testTracksList() {
+        List<TrackDTO> trackDTOs = new SoundcloudRestLoader(InstrumentationRegistry.getTargetContext()).loadInBackground();
+        assertNotNull(trackDTOs);
+        assertEquals(50, trackDTOs.size());
+        assertReplayList(trackDTOs);
     }
 
     @Test
-    public void testTracksList() {
-        List<TrackDTO> trackDTOs = restClient.getTracksList();
+    public void testTracksListWithLimit() {
+        List<TrackDTO> trackDTOs = new SoundcloudRestLoader(InstrumentationRegistry.getTargetContext(), 10).loadInBackground();
         assertNotNull(trackDTOs);
-        assertFalse(0 == trackDTOs.size());
+        assertEquals(10, trackDTOs.size());
+        assertReplayList(trackDTOs);
+    }
+
+    private void assertReplayList(List<TrackDTO> trackDTOs) {
         for (TrackDTO trackDTO : trackDTOs) {
             assertNotNull(trackDTO);
             assertTrue(trackDTO.getId() > 0);
@@ -50,5 +54,6 @@ public class SoundcloudRestLoaderTest {
             assertNotNull(trackDTO.getWaveformURL());
         }
     }
+
 
 }

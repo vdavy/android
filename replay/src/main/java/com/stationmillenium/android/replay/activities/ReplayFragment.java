@@ -42,7 +42,7 @@ public class ReplayFragment extends Fragment {
                 if (newState == SCROLL_STATE_IDLE
                         && linearLayoutManager.findLastVisibleItemPosition() == (replayAdapter.getItemCount() - 1)
                         && linearLayoutManager.findLastCompletelyVisibleItemPosition() == (replayAdapter.getItemCount() - 1)) {
-                    ((ReplayActivity) getActivity()).triggerExtraDataLoad();
+                    ((ReplayActivity) getActivity()).triggerExtraDataLoad(replayAdapter.getItemCount());
                 }
             }
         });

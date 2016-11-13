@@ -4,8 +4,8 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.MediumTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.stationmillenium.android.replay.SoundcloudRestLoader;
 import com.stationmillenium.android.replay.dto.TrackDTO;
+import com.stationmillenium.android.replay.utils.SoundcloudRestLoader;
 
 import org.junit.Before;
 import org.junit.Test;

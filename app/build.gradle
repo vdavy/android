@@ -24,3 +24,8 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+android {
+    defaultConfig {
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    }
+}

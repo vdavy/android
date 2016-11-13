@@ -22,6 +22,7 @@ dependencies {
     androidTestCompile "com.android.support.test:runner:${supportTestVersion}"
     androidTestCompile "com.android.support.test:rules:${supportTestVersion}"
     androidTestCompile "com.android.support.test.espresso:espresso-core:${espressoCoreVersion}"
+    androidTestCompile "com.android.support.test.espresso:espresso-contrib:${espressoCoreVersion}"
     androidTestCompile "com.android.support:support-annotations:${supportLibVersion}"
     androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:${uiautomatorVersion}"
     androidTestCompile "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
