@@ -27,6 +27,17 @@ public class URLManager {
         return context.getString(R.string.soundcloud_stream_URL, trackID, context.getString(R.string.soudncloud_client_id));
     }
 
+    @NonNull
+    public static String getGenreTracksURL(@NonNull Context context, String genre) {
+        return context.getString(R.string.soundcloud_genre_tracklist_URL, context.getString(R.string.soundcloud_user_id), context.getString(R.string.soudncloud_client_id), genre);
+    }
+
+    @NonNull
+    public static String getSearchTracksURL(@NonNull Context context, String genre) {
+        return context.getString(R.string.soundcloud_search_tracklist_URL, context.getString(R.string.soundcloud_user_id), context.getString(R.string.soudncloud_client_id), genre);
+    }
+
+    @NonNull
     public static String addLimitClause(@NonNull Context context, @NonNull String baseURL, int limitSize) {
          return Uri.parse(baseURL).buildUpon().appendQueryParameter(context.getString(R.string.limit_param), String.valueOf(limitSize)).build().toString();
     }
