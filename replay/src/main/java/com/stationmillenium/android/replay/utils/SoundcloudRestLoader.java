@@ -1,6 +1,7 @@
 package com.stationmillenium.android.replay.utils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
@@ -20,17 +21,59 @@ import static java.util.Collections.EMPTY_LIST;
  */
 public class SoundcloudRestLoader extends AsyncTaskLoader<List<TrackDTO>> {
 
+    public enum QueryType {
+        SEARCH,
+        GENRE
+    }
+
     private static final String TAG = "SoundcloudRestLoader";
     private int limit;
+    private String query;
+    private QueryType queryType;
 
-    public SoundcloudRestLoader(Context context) {
+    /**
+     * Simple search (no query / no query / no limit)
+     * @param context context
+     */
+    public SoundcloudRestLoader(@NonNull Context context) {
         super(context);
     }
 
-    public SoundcloudRestLoader(Context context, int limit) {
+    /**
+     * Simple search (no query / no query) with limit
+     * @param context context
+     * @param limit max replay count to search
+     */
+    public SoundcloudRestLoader(@NonNull Context context, int limit) {
         this(context);
         this.limit = limit;
         Log.d(TAG, "Init REST loader with limit param : " + limit);
+    }
+
+    /**
+     * Search with param - no limit
+     * @param context context
+     * @param query the search query
+     * @param queryType the type of query
+     */
+    public SoundcloudRestLoader(@NonNull Context context, @NonNull QueryType queryType, @NonNull String query) {
+        this(context);
+        this.query = query;
+        this.queryType = queryType;
+        Log.d(TAG, "Init REST loader with query search : " + this.query + " - and query type : " + queryType);
+    }
+
+    /**
+     * Search with param and limit
+     * @param context context
+     * @param query the search query
+     * @param queryType the type of query
+     * @param limit max replay count to search
+     */
+    public SoundcloudRestLoader(@NonNull Context context, @NonNull QueryType queryType, @NonNull String query, int limit) {
+        this(context, queryType, query);
+        this.limit= limit;
+        Log.d(TAG, "Search limit is : " + this.limit);
     }
 
     /**
