@@ -24,6 +24,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.any;
 
 /**
+ * Test for replay activity
  * Created by vincent on 12/11/16.
  */
 @RunWith(AndroidJUnit4.class)
