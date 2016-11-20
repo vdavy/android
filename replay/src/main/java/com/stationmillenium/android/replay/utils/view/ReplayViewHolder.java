@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -26,9 +25,6 @@ public class ReplayViewHolder extends ViewHolder {
         super(itemView);
         binding = ReplayListItemBinding.bind(itemView);
         binding.setActivity(replayActivity);
-        Log.v("tatabub date", binding.replayDate.getTextColors().toString());
-        Log.v("tatabub sep", binding.replaySeparator.getTextColors().toString());
-        Log.v("tatabub dur", binding.replayDuration.getTextColors().toString());
     }
 
     public void bindReplay(TrackDTO trackDTO) {
