@@ -77,10 +77,11 @@
                 />
 
             <TextView
-                android:text="@{replayItem.lastModified}"
+                style="@style/ThemeReplay.ReplayText.Duration"
+                android:text="@{replayItem.duration}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/replay_date"
+                android:id="@+id/replay_duration"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="10dp"
@@ -88,12 +89,23 @@
                 android:layout_marginLeft="10dp"/>
 
             <TextView
-                android:text="@{replayItem.duration}"
+                android:text="@string/replay_date_duration_separator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/replay_duration"
-                app:layout_constraintBaseline_toBaselineOf="@+id/replay_date"
-                app:layout_constraintLeft_toRightOf="@+id/replay_date"
+                android:id="@+id/replay_separator"
+                app:layout_constraintBaseline_toBaselineOf="@+id/replay_duration"
+                app:layout_constraintLeft_toRightOf="@+id/replay_duration"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"/>
+
+            <TextView
+                style="@style/ThemeReplay.ReplayText.Date"
+                android:text="@{replayItem.lastModified}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/replay_date"
+                app:layout_constraintBaseline_toBaselineOf="@+id/replay_duration"
+                app:layout_constraintLeft_toRightOf="@+id/replay_separator"
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"/>
 
