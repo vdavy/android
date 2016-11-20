@@ -10,6 +10,7 @@ import com.stationmillenium.android.replay.dto.TrackDTO;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.List;
 
@@ -59,7 +60,8 @@ public class SoundcloudRestLoader extends AsyncTaskLoader<List<TrackDTO>> {
      */
     public SoundcloudRestLoader(@NonNull Context context, @NonNull QueryType queryType, @NonNull String query) {
         this(context);
-        this.query = query;
+        // clean up wrong chars : http://glaforge.appspot.com/article/how-to-remove-accents-from-a-string
+        this.query = Normalizer.normalize(query, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         this.queryType = queryType;
         Log.d(TAG, "Init REST loader with query search : " + this.query + " - and query type : " + this.queryType);
     }
@@ -84,11 +86,12 @@ public class SoundcloudRestLoader extends AsyncTaskLoader<List<TrackDTO>> {
     @Override
     public List<TrackDTO> loadInBackground() {
         try {
-            Log.v(TAG, "Get tracks list");
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
             if (!isLoadInBackgroundCanceled()) {
-                TrackDTO[] trackDTOs = restTemplate.getForObject(getGoodURL(), TrackDTO[].class);
+                String url = getGoodURL();
+                Log.v(TAG, "Query tracks list at URL " + url);
+                TrackDTO[] trackDTOs = restTemplate.getForObject(url, TrackDTO[].class);
                 Log.d(TAG, "Got tracks list : " + trackDTOs.length);
                 return Arrays.asList(trackDTOs);
             } else {

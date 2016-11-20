@@ -15,6 +15,7 @@ import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.databinding.ReplayActivityBinding;
 import com.stationmillenium.android.replay.dto.TrackDTO;
 import com.stationmillenium.android.replay.utils.SoundcloudRestLoader;
+import com.stationmillenium.android.replay.utils.SoundcloudRestLoader.QueryType;
 
 import java.util.List;
 
@@ -29,11 +30,16 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     private static final String TAG = "ReplayActivity";
     private static final int LOADER_INDEX = 0;
     private static final String LIMIT = "limit";
+    private static final String SEARCH_TYPE = "search_type";
+    private static final String SEARCH_QUERY = "search_query";
+    private static final String SEARCH_PARAMS = "search_params";
     private static final int EXTRA_REPLAY_COUNT = 30;
     private static final int TOTAL_MAX_REPLAY = 200;
 
     private ReplayActivityBinding replayActivityBinding;
     private ReplayFragment replayFragment;
+
+    private Bundle searchParams;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +49,10 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         setSupportActionBar(replayActivityBinding.replayToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(SEARCH_PARAMS)) {
+            searchParams = savedInstanceState.getBundle(SEARCH_PARAMS);
         }
 
         replayFragment = (ReplayFragment) getSupportFragmentManager().findFragmentById(R.id.replay_fragment);
@@ -58,11 +68,16 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public Loader<List<TrackDTO>> onCreateLoader(int id, Bundle args) {
         replayFragment.setRefreshing(true);
-        if (args != null && args.containsKey(LIMIT)) {
-            return new SoundcloudRestLoader(this, args.getInt(LIMIT));
-        } else {
-            return new SoundcloudRestLoader(this);
+        if (args != null) {
+            if (args.containsKey(SEARCH_TYPE)) {
+                return (args.containsKey(LIMIT))
+                        ? new SoundcloudRestLoader(this, (QueryType) args.getSerializable(SEARCH_TYPE), args.getString(SEARCH_QUERY), args.getInt(LIMIT))
+                        : new SoundcloudRestLoader(this, (QueryType) args.getSerializable(SEARCH_TYPE), args.getString(SEARCH_QUERY));
+            } else if (args.containsKey(LIMIT)) {
+                return new SoundcloudRestLoader(this, args.getInt(LIMIT));
+            }
         }
+        return new SoundcloudRestLoader(this);
     }
 
     @Override
@@ -84,6 +99,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onRefresh() {
         Log.d(TAG, "Data refresh requested");
+        searchParams = null; // we reinit the search params to default
         getSupportLoaderManager().restartLoader(LOADER_INDEX, null, this).forceLoad();
     }
 
@@ -93,6 +109,11 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
      */
     public void searchGenre(String genre) {
         Log.d(TAG, "Search genre : " + genre);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(SEARCH_TYPE, QueryType.GENRE);
+        bundle.putString(SEARCH_QUERY, genre);
+        searchParams = bundle;
+        getSupportLoaderManager().restartLoader(LOADER_INDEX, bundle, this).forceLoad();
     }
 
     /**
@@ -101,15 +122,23 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
      * @param replayCount the current replay count
      */
     public void triggerExtraDataLoad(int replayCount) {
-        if (replayCount < TOTAL_MAX_REPLAY) {
-            Log.d(TAG, "Load extra data");
-            Bundle bundle = new Bundle();
-            bundle.putInt(LIMIT, replayCount + EXTRA_REPLAY_COUNT);
-            Snackbar.make(replayActivityBinding.replayCoordinatorLayout, R.string.replay_load_more, Snackbar.LENGTH_SHORT).show();
-            getSupportLoaderManager().restartLoader(LOADER_INDEX, bundle, this).forceLoad();
+        if (replayCount > 0) {
+            if (replayCount <= TOTAL_MAX_REPLAY) {
+                Log.d(TAG, "Load extra data");
+                Bundle bundle = new Bundle();
+                bundle.putInt(LIMIT, replayCount + EXTRA_REPLAY_COUNT);
+                if (searchParams != null) {
+                    Log.v(TAG, "Add search params for extra data load");
+                    bundle.putAll(searchParams);
+                }
+                Snackbar.make(replayActivityBinding.replayCoordinatorLayout, R.string.replay_load_more, Snackbar.LENGTH_SHORT).show();
+                getSupportLoaderManager().restartLoader(LOADER_INDEX, bundle, this).forceLoad();
+            } else {
+                Log.v(TAG, "All extra data already loaded");
+                Snackbar.make(replayActivityBinding.replayCoordinatorLayout, R.string.replay_load_more_max_reached, Snackbar.LENGTH_SHORT).show();
+            }
         } else {
-            Log.v(TAG, "Load extra data");
-            Snackbar.make(replayActivityBinding.replayCoordinatorLayout, R.string.replay_load_more_max_reached, Snackbar.LENGTH_SHORT).show();
+            Log.v(TAG, "Empty replay list - extra load disabled");
         }
     }
 
@@ -124,4 +153,11 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         Log.d(TAG, "Open replay ; " + replayItem) ;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (searchParams != null) {
+            outState.putBundle(SEARCH_PARAMS, searchParams);
+        }
+        super.onSaveInstanceState(outState);
+    }
 }
