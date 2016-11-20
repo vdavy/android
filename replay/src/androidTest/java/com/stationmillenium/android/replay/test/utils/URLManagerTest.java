@@ -65,6 +65,13 @@ public class URLManagerTest {
     }
 
     @Test
+    public void testTagTracksURL() {
+        String url = URLManager.getTagTracksURL(context, "comédie");
+        assertNotNull(url);
+        assertEquals("https://api.soundcloud.com/users/148534611/tracks?client_id=8a934c041fbb1f823f9eea645799f03f&tags=comédie", url);
+    }
+
+    @Test
     public void testLimitParam() {
         String url = URLManager.getTracksURL(context);
         String limitURL = URLManager.addLimitClause(context, url, 10);

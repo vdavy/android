@@ -23,7 +23,8 @@ public class SoundcloudRestLoader extends AsyncTaskLoader<List<TrackDTO>> {
 
     public enum QueryType {
         SEARCH,
-        GENRE
+        GENRE,
+        TAG
     }
 
     private static final String TAG = "SoundcloudRestLoader";
@@ -60,7 +61,7 @@ public class SoundcloudRestLoader extends AsyncTaskLoader<List<TrackDTO>> {
         this(context);
         this.query = query;
         this.queryType = queryType;
-        Log.d(TAG, "Init REST loader with query search : " + this.query + " - and query type : " + queryType);
+        Log.d(TAG, "Init REST loader with query search : " + this.query + " - and query type : " + this.queryType);
     }
 
     /**
@@ -87,7 +88,7 @@ public class SoundcloudRestLoader extends AsyncTaskLoader<List<TrackDTO>> {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
             if (!isLoadInBackgroundCanceled()) {
-                TrackDTO[] trackDTOs = restTemplate.getForObject(processLimitClause(), TrackDTO[].class);
+                TrackDTO[] trackDTOs = restTemplate.getForObject(getGoodURL(), TrackDTO[].class);
                 Log.d(TAG, "Got tracks list : " + trackDTOs.length);
                 return Arrays.asList(trackDTOs);
             } else {
@@ -102,11 +103,37 @@ public class SoundcloudRestLoader extends AsyncTaskLoader<List<TrackDTO>> {
     }
 
     /**
+     * Get the good request URL according to search type
+     * @return the good URL to query, with clause limit
+     */
+    private String getGoodURL() {
+        String url = null;
+        if (queryType != null) {
+            switch (queryType) {
+                case GENRE:
+                    url = URLManager.getGenreTracksURL(getContext(), query);
+                    break;
+
+                case SEARCH:
+                    url = URLManager.getSearchTracksURL(getContext(), query);
+                    break;
+
+                case TAG:
+                    url = URLManager.getTagTracksURL(getContext(), query);
+                    break;
+            }
+        } else {
+            url = URLManager.getTracksURL(getContext());
+        }
+        return processLimitClause(url);
+    }
+    /**
      * Add the limit clause if needed
+     * @param url the URL to add limit clause
      * @return URL with limit clause, if requested
      */
-    private String processLimitClause() {
-        return (limit > 0 ) ? URLManager.addLimitClause(getContext(), URLManager.getTracksURL(getContext()), limit) : URLManager.getTracksURL(getContext());
+    private String processLimitClause(String url) {
+        return (limit > 0 ) ? URLManager.addLimitClause(getContext(), url, limit) : url;
     }
 
 }

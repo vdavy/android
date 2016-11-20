@@ -27,17 +27,59 @@ public class SoundcloudRestLoaderTest {
     @Test
     public void testTracksList() {
         List<TrackDTO> trackDTOs = new SoundcloudRestLoader(InstrumentationRegistry.getTargetContext()).loadInBackground();
+        assertCompleteList(trackDTOs);
+    }
+
+    @Test
+    public void test10TracksList() {
+        List<TrackDTO> trackDTOs = new SoundcloudRestLoader(InstrumentationRegistry.getTargetContext(), 5).loadInBackground();
+        assertItemList(trackDTOs, 5);
+    }
+
+    private void assertItemList(List<TrackDTO> trackDTOs, int expected) {
         assertNotNull(trackDTOs);
-        assertEquals(50, trackDTOs.size());
+        assertEquals(expected, trackDTOs.size());
         assertReplayList(trackDTOs);
     }
 
     @Test
-    public void testTracksListWithLimit() {
-        List<TrackDTO> trackDTOs = new SoundcloudRestLoader(InstrumentationRegistry.getTargetContext(), 10).loadInBackground();
-        assertNotNull(trackDTOs);
-        assertEquals(10, trackDTOs.size());
-        assertReplayList(trackDTOs);
+    public void testGenreList() {
+        List<TrackDTO> trackDTOs = new SoundcloudRestLoader(InstrumentationRegistry.getTargetContext(), SoundcloudRestLoader.QueryType.GENRE, "Sports").loadInBackground();
+        assertCompleteList(trackDTOs);
+    }
+
+    @Test
+    public void testSearchList() {
+        List<TrackDTO> trackDTOs = new SoundcloudRestLoader(InstrumentationRegistry.getTargetContext(), SoundcloudRestLoader.QueryType.SEARCH, "Sports").loadInBackground();
+        assertCompleteList(trackDTOs);
+    }
+
+    @Test
+    public void test5SearchList() {
+        List<TrackDTO> trackDTOs = new SoundcloudRestLoader(InstrumentationRegistry.getTargetContext(), SoundcloudRestLoader.QueryType.SEARCH, "Sports", 5).loadInBackground();
+        assertItemList(trackDTOs, 5);
+    }
+
+    @Test
+    public void test2GenreList() {
+        List<TrackDTO> trackDTOs = new SoundcloudRestLoader(InstrumentationRegistry.getTargetContext(), SoundcloudRestLoader.QueryType.GENRE, "Sport", 2).loadInBackground();
+        assertItemList(trackDTOs, 2);
+    }
+
+    @Test
+    public void test5TagsList() {
+        List<TrackDTO> trackDTOs = new SoundcloudRestLoader(InstrumentationRegistry.getTargetContext(), SoundcloudRestLoader.QueryType.TAG, "Sports", 5).loadInBackground();
+        assertItemList(trackDTOs, 5);
+    }
+
+    @Test
+    public void testTagList() {
+        List<TrackDTO> trackDTOs = new SoundcloudRestLoader(InstrumentationRegistry.getTargetContext(), SoundcloudRestLoader.QueryType.TAG, "Sports").loadInBackground();
+        assertCompleteList(trackDTOs);
+    }
+
+    private void assertCompleteList(List<TrackDTO> trackDTOs) {
+        assertItemList(trackDTOs, 50);
     }
 
     private void assertReplayList(List<TrackDTO> trackDTOs) {
@@ -46,10 +88,8 @@ public class SoundcloudRestLoaderTest {
             assertTrue(trackDTO.getId() > 0);
             assertTrue(trackDTO.getDuration() > 0);
             assertNotNull(trackDTO.getTitle());
-            assertNotNull(trackDTO.getDescription());
             assertNotNull(trackDTO.getLastModified());
             assertNotNull(trackDTO.getTagList());
-            assertNotNull(trackDTO.getGenre());
             assertNotNull(trackDTO.getStreamURL());
             assertNotNull(trackDTO.getWaveformURL());
         }
