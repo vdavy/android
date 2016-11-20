@@ -52,7 +52,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         }
 
         if (savedInstanceState != null && savedInstanceState.containsKey(SEARCH_PARAMS)) {
-            searchParams = savedInstanceState.getBundle(SEARCH_PARAMS);
+            setToolbarTitle(savedInstanceState.getBundle(SEARCH_PARAMS));
         }
 
         replayFragment = (ReplayFragment) getSupportFragmentManager().findFragmentById(R.id.replay_fragment);
@@ -99,7 +99,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public void onRefresh() {
         Log.d(TAG, "Data refresh requested");
-        searchParams = null; // we reinit the search params to default
+        setToolbarTitle(null); // we reinit the search params to default
         getSupportLoaderManager().restartLoader(LOADER_INDEX, null, this).forceLoad();
     }
 
@@ -112,7 +112,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         Bundle bundle = new Bundle();
         bundle.putSerializable(SEARCH_TYPE, QueryType.GENRE);
         bundle.putString(SEARCH_QUERY, genre);
-        searchParams = bundle;
+        setToolbarTitle(bundle);
         getSupportLoaderManager().restartLoader(LOADER_INDEX, bundle, this).forceLoad();
     }
 
@@ -159,5 +159,20 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
             outState.putBundle(SEARCH_PARAMS, searchParams);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * Setup the correct toolbar title according to the search params
+     * @param searchParams the search params
+     */
+    private void setToolbarTitle(Bundle searchParams) {
+        this.searchParams = searchParams;
+        if (searchParams != null) {
+            getSupportActionBar().setTitle(getString((searchParams.getSerializable(SEARCH_TYPE) == QueryType.SEARCH)
+                    ? R.string.replay_toolbar_search_title : R.string.replay_toolbar_hash_title,
+                    searchParams.getString(SEARCH_QUERY)));
+        } else {
+            getSupportActionBar().setTitle(R.string.replay_toolbar_normal_title);
+        }
     }
 }
