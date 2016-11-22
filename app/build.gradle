@@ -8,7 +8,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:${supportLibVersion}"
     compile "org.twitter4j:twitter4j-core:${twitterVersion}"
     compile "com.android.support:support-annotations:${supportLibVersion}"
-    compile "com.google.android.gms:play-services-appindexing:${playServicesVersion}"
+    compile "com.google.firebase:firebase-appindexing:${playServicesVersion}"
     compile "com.google.firebase:firebase-invites:${playServicesVersion}"
     compile "com.google.firebase:firebase-crash:${playServicesVersion}"
 

@@ -11,10 +11,10 @@ buildscript {
 
 ext {
     // libs version
-    supportLibVersion = '25.0.0'
-    jacksonVersion = '2.8.2'
+    supportLibVersion = '25.0.1'
+    jacksonVersion = '2.8.5'
     piwikSdkVersion = '1.0.2'
-    playServicesVersion = '9.8.0'
+    playServicesVersion = '10.0.0'
     twitterVersion = "4.0.4"
     glideVersion = "3.7.0"
 
