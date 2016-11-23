@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
 
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.replay.R;
@@ -76,10 +78,25 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-//        searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+
+        // see : http://stackoverflow.com/questions/9327826/searchviews-oncloselistener-doesnt-work
+        MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                replayActivityBinding.fab.setVisibility(View.VISIBLE);
+                return true;  // Return true to collapse action view
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                replayActivityBinding.fab.setVisibility(View.GONE);
+                return true;  // Return true to expand action view
+            }
+        });
 
         return super.onCreateOptionsMenu(menu);
-}
+    }
 
     @Override
     public void onResume() {
