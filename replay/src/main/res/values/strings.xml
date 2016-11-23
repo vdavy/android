@@ -19,4 +19,8 @@
     <string name="replay_toolbar_hash_title">Le replay : #%s</string>
     <string name="replay_toolbar_search_title">Le replay : %s</string>
 
+    <string name="replay_search_menu">Rechercher</string>
+    <string name="replay_search_text">Rechercher de replays</string>
+    <string name="replay_search_hint">Rechercher replays...</string>
+
 </resources>

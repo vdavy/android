@@ -1,0 +1,4 @@
+<!-- Searchable configuration for song search history -->
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:hint="@string/replay_search_hint"
+    android:label="@string/replay_search_text"/>

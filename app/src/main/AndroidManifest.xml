@@ -96,7 +96,7 @@
 
         <!-- song history search activity -->
         <activity
-            android:name="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity"
+            android:name=".activities.songsearchhistory.SongSearchHistoryActivity"
             android:label="@string/song_search_history"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity"
@@ -124,7 +124,7 @@
 
         <!-- song history search image display activity -->
         <activity
-            android:name="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryImageDisplayActivity"
+            android:name=".activities.songsearchhistory.SongSearchHistoryImageDisplayActivity"
             android:label="@string/song_search_history_image"
             android:parentActivityName=".activities.songsearchhistory.SongSearchHistoryActivity"
             tools:ignore="UnusedAttribute">
@@ -138,11 +138,17 @@
             android:name=".replay.activities.ReplayActivity"
             android:label="@string/replay_activity_title"
             android:parentActivityName=".activities.MainActivity"
-            tools:ignore="UnusedAttribute"
-            android:theme="@style/ThemeReplay">
+            android:theme="@style/ThemeReplay"
+            tools:ignore="UnusedAttribute">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.stationmillenium.android.activities.MainActivity" />
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/replay_searchable" />
         </activity>
 
         <!-- player service -->

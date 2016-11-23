@@ -1,14 +1,22 @@
 package com.stationmillenium.android.replay.activities;
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.replay.R;
@@ -58,6 +66,19 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         replayFragment = (ReplayFragment) getSupportFragmentManager().findFragmentById(R.id.replay_fragment);
         getSupportLoaderManager().initLoader(LOADER_INDEX, null, this).forceLoad();
     }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.replay_menu, menu);
+        MenuItem searchMenuItem = menu.findItem(R.id.replay_search_menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//        searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+
+        return super.onCreateOptionsMenu(menu);
+}
 
     @Override
     public void onResume() {
@@ -174,5 +195,11 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         } else {
             getSupportActionBar().setTitle(R.string.replay_toolbar_normal_title);
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d(TAG, "New intent : " + intent);
     }
 }
