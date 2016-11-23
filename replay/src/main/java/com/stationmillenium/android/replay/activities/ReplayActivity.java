@@ -46,6 +46,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
 
     private ReplayActivityBinding replayActivityBinding;
     private ReplayFragment replayFragment;
+    private MenuItem searchMenuItem;
 
     private Bundle searchParams;
 
@@ -70,7 +71,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.replay_menu, menu);
-        MenuItem searchMenuItem = menu.findItem(R.id.replay_search_menu);
+        searchMenuItem = menu.findItem(R.id.replay_search_menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
@@ -168,6 +169,9 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
      */
     public void triggerSearch() {
         Log.d(TAG, "Trigger search");
+        if (searchMenuItem != null) {
+            MenuItemCompat.expandActionView(searchMenuItem);
+        }
     }
 
     public void openReplay(TrackDTO replayItem) {
@@ -202,4 +206,5 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         super.onNewIntent(intent);
         Log.d(TAG, "New intent : " + intent);
     }
+
 }

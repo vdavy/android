@@ -8,6 +8,7 @@
         millenium:actionViewClass="android.support.v7.widget.SearchView"
         android:icon="@android:drawable/ic_menu_search"
         millenium:showAsAction="collapseActionView|ifRoom"
-        android:title="@string/replay_search_menu" />
+        android:title="@string/replay_search_menu"
+        android:visible="false"/>
 
 </menu>
