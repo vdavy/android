@@ -18,6 +18,7 @@
     <style name="ThemeReplay.Toolbar">
         <item name="android:textColorPrimary">@color/icons</item>
         <item name="android:textColorSecondary">@color/icons</item>
+        <item name="android:textColorHint">@color/icons</item>
     </style>
 
     <style name="ThemeReplay.ReplayText">
