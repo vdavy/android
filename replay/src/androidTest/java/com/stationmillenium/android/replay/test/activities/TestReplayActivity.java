@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
@@ -57,4 +58,9 @@ public class TestReplayActivity {
         onView(withId(R.id.replay_count)).check(matches(withText("50 replays disponibles")));
     }
 
+    @Test
+    public void testFABClick() {
+        onView(withId(R.id.replay_fab)).perform(click());
+
+    }
 }
