@@ -43,6 +43,8 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     private static final String SEARCH_TYPE = "search_type";
     private static final String SEARCH_QUERY = "search_query";
     private static final String SEARCH_PARAMS = "search_params";
+    private static final String IS_SEARCH_VIEW_EXPANDED_BUNDLE = "expand_search_view";
+    private static final String SEARCHVIEW_TEXT = "searchview_text";
     private static final int EXTRA_REPLAY_COUNT = 30;
     private static final int TOTAL_MAX_REPLAY = 200;
 
@@ -51,6 +53,8 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     private MenuItem searchMenuItem;
 
     private Bundle searchParams;
+    private boolean expandActionViewOnCreate;
+    private String searchviewText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,8 +66,10 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(SEARCH_PARAMS)) {
+        if (savedInstanceState != null) {
             setToolbarTitle(savedInstanceState.getBundle(SEARCH_PARAMS));
+            expandActionViewOnCreate = savedInstanceState.getBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE);
+            searchviewText = savedInstanceState.getString(SEARCHVIEW_TEXT);
         }
 
         replayFragment = (ReplayFragment) getSupportFragmentManager().findFragmentById(R.id.replay_fragment);
@@ -79,6 +85,11 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        if (expandActionViewOnCreate) {
+            MenuItemCompat.expandActionView(searchMenuItem);
+            replayActivityBinding.fab.setVisibility(View.GONE);
+            searchView.setQuery(searchviewText, false);
+        }
 
         // see : http://stackoverflow.com/questions/9327826/searchviews-oncloselistener-doesnt-work
         MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
@@ -200,6 +211,8 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         if (searchParams != null) {
             outState.putBundle(SEARCH_PARAMS, searchParams);
         }
+        outState.putBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE, ((searchMenuItem != null) && (MenuItemCompat.isActionViewExpanded(searchMenuItem))));
+        outState.putString(SEARCHVIEW_TEXT, ((SearchView) MenuItemCompat.getActionView(searchMenuItem)).getQuery().toString());
         super.onSaveInstanceState(outState);
     }
 
