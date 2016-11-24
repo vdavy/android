@@ -87,7 +87,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         if (expandActionViewOnCreate) {
             MenuItemCompat.expandActionView(searchMenuItem);
-            replayActivityBinding.fab.setVisibility(View.GONE);
+            replayActivityBinding.replayFab.setVisibility(View.GONE);
             searchView.setQuery(searchviewText, false);
         }
 
@@ -108,13 +108,13 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                replayActivityBinding.fab.setVisibility(View.VISIBLE);
+                replayActivityBinding.replayFab.setVisibility(View.VISIBLE);
                 return true;  // Return true to collapse action view
             }
 
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                replayActivityBinding.fab.setVisibility(View.GONE);
+                replayActivityBinding.replayFab.setVisibility(View.GONE);
                 return true;  // Return true to expand action view
             }
         });
