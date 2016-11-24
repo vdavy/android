@@ -247,7 +247,15 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d(TAG, "New intent : " + intent);
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.d(TAG, "Search : " + query);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(SEARCH_TYPE, QueryType.SEARCH);
+            bundle.putString(SEARCH_QUERY, query);
+            setToolbarTitle(bundle);
+            getSupportLoaderManager().restartLoader(LOADER_INDEX, bundle, this).forceLoad();
+        }
     }
 
 }
