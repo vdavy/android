@@ -82,7 +82,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         searchMenuItem = menu.findItem(R.id.replay_search_menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         if (expandActionViewOnCreate) {
@@ -90,6 +90,19 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
             replayActivityBinding.fab.setVisibility(View.GONE);
             searchView.setQuery(searchviewText, false);
         }
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                MenuItemCompat.collapseActionView(searchMenuItem);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
 
         // see : http://stackoverflow.com/questions/9327826/searchviews-oncloselistener-doesnt-work
         MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
