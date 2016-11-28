@@ -210,5 +210,6 @@
 
     <!-- replay -->
     <string name="replay_activity_title">Le replay</string>
+    <string name="replay_item_activity_title">Replay</string>
 
 </resources>

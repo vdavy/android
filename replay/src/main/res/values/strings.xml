@@ -23,4 +23,6 @@
     <string name="replay_search_text">Recherche de replays</string>
     <string name="replay_search_hint">Rechercher des replays...</string>
 
+    <string name="replay_unavailable">Replay indisponible</string>
+
 </resources>

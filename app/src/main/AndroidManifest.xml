@@ -133,7 +133,7 @@
                 android:value="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity" />
         </activity>
 
-        <!-- song history search image display activity -->
+        <!-- replay activity -->
         <activity
             android:name=".replay.activities.ReplayActivity"
             android:label="@string/replay_activity_title"
@@ -150,6 +150,18 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/replay_searchable" />
+        </activity>
+
+        <!-- replay item display activity -->
+        <activity
+            android:name=".replay.activities.ReplayItemActivity"
+            android:label="@string/replay_item_activity_title"
+            android:parentActivityName=".replay.activities.ReplayActivity"
+            android:theme="@style/ThemeReplay"
+            tools:ignore="UnusedAttribute">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.stationmillenium.android.replay.activities.ReplayItemActivity" />
         </activity>
 
         <!-- player service -->

@@ -217,6 +217,9 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
 
     public void openReplay(TrackDTO replayItem) {
         Log.d(TAG, "Open replay ; " + replayItem) ;
+        Intent replayItemIntent = new Intent(this, ReplayItemActivity.class);
+        replayItemIntent.putExtra(ReplayItemActivity.REPLAY_ITEM, replayItem);
+        startActivity(replayItemIntent);
     }
 
     @Override
