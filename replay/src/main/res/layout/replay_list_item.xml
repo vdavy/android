@@ -45,7 +45,7 @@
 
             <TextView
                 android:id="@+id/replay_title"
-                style="@style/ThemeReplay.ReplayText.Pink"
+                style="@style/ThemeReplay.ReplayText.Title"
                 android:text="@{replayItem.title}"
                 android:layout_height="wrap_content"
                 android:paddingTop="2dp"
@@ -63,7 +63,7 @@
             <TextView
                 android:id="@+id/replay_description"
                 android:text="@{replayItem.description}"
-                style="@style/ThemeReplay.ReplayText.Blue"
+                style="@style/ThemeReplay.ReplayText.Description"
                 app:layout_constraintLeft_toRightOf="@+id/replay_artwork"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintRight_toRightOf="parent"

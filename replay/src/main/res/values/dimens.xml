@@ -6,4 +6,7 @@
     <!-- http://stackoverflow.com/questions/30839465/floatingactionbutton-default-margin-not-working-in-lollipop -->
     <dimen name="action_button_margin">0dp</dimen>
 
+    <dimen name="replay_item_text_margin">8dp</dimen>
+    <dimen name="replay_item_text_size">18sp</dimen>
+
 </resources>

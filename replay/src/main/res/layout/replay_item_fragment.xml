@@ -7,25 +7,30 @@
             type="com.stationmillenium.android.replay.dto.TrackDTO" />
     </data>
 
-    <LinearLayout android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/replay_item_text_margin">
+
+        <ImageView
+            android:id="@+id/replay_item_artwork"
+            style="@style/ReplayItemImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"/>
 
         <TextView
+            style="@style/ThemeReplay.ReplayItemText.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{replayItem.title}"/>
 
         <TextView
+            style="@style/ThemeReplay.ReplayItemText.Description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{replayItem.description}"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom|start"
-            android:text="end - to be removed"/>
 
     </LinearLayout>
 

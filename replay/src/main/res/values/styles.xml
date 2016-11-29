@@ -27,7 +27,7 @@
         <item name="android:textColor">@color/secondary_text</item>
     </style>
 
-    <style name="ThemeReplay.ReplayText.Pink">
+    <style name="ThemeReplay.ReplayText.Title">
         <item name="android:textColor">@color/icons</item>
         <item name="android:textStyle">bold</item>
         <item name="android:paddingLeft">2dp</item>
@@ -35,7 +35,25 @@
         <item name="android:background">@drawable/replay_title_background</item>
     </style>
 
-    <style name="ThemeReplay.ReplayText.Blue">
+    <style name="ThemeReplay.ReplayItemText">
+        <item name="android:textColor">@color/secondary_text</item>
+        <item name="android:layout_marginTop">@dimen/replay_item_text_margin</item>
+        <item name="android:textSize">@dimen/replay_item_text_size</item>
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayItemText.Title">
+        <item name="android:textColor">@color/icons</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/replay_title_background</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayItemText.Description">
+        <item name="android:textColor">@color/primary_dark</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayText.Description">
         <item name="android:textColor">@color/primary_dark</item>
         <item name="android:paddingLeft">2dp</item>
         <item name="android:gravity">center_vertical</item>
@@ -60,5 +78,9 @@
         <item name="android:paddingRight">2dp</item>
     </style>
 
+    <style name="ReplayItemImage">
+        <item name="android:layout_margin">@dimen/replay_item_text_margin</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
 
 </resources>

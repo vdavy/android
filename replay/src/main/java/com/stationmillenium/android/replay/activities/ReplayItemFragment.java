@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.databinding.ReplayItemFragmentBinding;
 import com.stationmillenium.android.replay.dto.TrackDTO;
+import com.stationmillenium.android.replay.utils.GlideUtils;
 
 /**
  * Replay item fragment
@@ -27,6 +28,7 @@ public class ReplayItemFragment extends Fragment {
 
     public void setReplay(TrackDTO replay) {
         binding.setReplayItem(replay);
+        GlideUtils.setReplayImage(binding.replayItemArtwork, replay);
     }
 
 }
