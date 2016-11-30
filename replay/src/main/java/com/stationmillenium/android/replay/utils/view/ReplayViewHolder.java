@@ -6,7 +6,6 @@ import android.view.View;
 import com.stationmillenium.android.replay.activities.ReplayActivity;
 import com.stationmillenium.android.replay.databinding.ReplayListItemBinding;
 import com.stationmillenium.android.replay.dto.TrackDTO;
-import com.stationmillenium.android.replay.utils.GlideUtils;
 
 /**
  * Binding and view holder for replay item in list
@@ -24,7 +23,6 @@ public class ReplayViewHolder extends ViewHolder {
 
     public void bindReplay(TrackDTO trackDTO) {
         binding.setReplayItem(trackDTO);
-        GlideUtils.setReplayImage(binding.replayArtwork, trackDTO);
     }
 
 }

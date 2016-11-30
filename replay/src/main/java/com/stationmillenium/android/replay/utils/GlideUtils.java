@@ -1,5 +1,6 @@
 package com.stationmillenium.android.replay.utils;
 
+import android.databinding.BindingAdapter;
 import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -21,6 +22,7 @@ public class GlideUtils {
      * @param replayArtwork the image view destination
      * @param replay the replay item
      */
+    @BindingAdapter({"bind:replayImage"})
     public static void setReplayImage(final ImageView replayArtwork, TrackDTO replay) {
         // set round image : http://stackoverflow.com/questions/25278821/how-do-rounded-image-with-glide-library
         Glide.with(replayArtwork.getContext())

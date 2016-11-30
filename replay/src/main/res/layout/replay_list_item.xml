@@ -30,6 +30,7 @@
 
             <ImageView
                 android:id="@+id/replay_artwork"
+                app:replayImage="@{replayItem}"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginBottom="8dp"
