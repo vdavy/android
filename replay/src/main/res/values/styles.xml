@@ -70,6 +70,14 @@
         <item name="android:paddingRight">2dp</item>
     </style>
 
+    <style name="ThemeReplay.ReplayText.Duration.Item">
+        <item name="android:textSize">@dimen/replay_count_text_size</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayText.Date.Item">
+        <item name="android:textSize">@dimen/replay_count_text_size</item>
+    </style>
+
     <style name="ThemeReplay.ReplayText.Genre">
         <item name="android:textColor">@color/icons</item>
         <item name="android:gravity">center_vertical|end</item>

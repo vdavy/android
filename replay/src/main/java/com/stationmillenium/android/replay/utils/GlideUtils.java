@@ -2,12 +2,19 @@ package com.stationmillenium.android.replay.utils;
 
 import android.databinding.BindingAdapter;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.dto.TrackDTO;
 
@@ -29,7 +36,8 @@ public class GlideUtils {
                 .load(replay.getArtworkURL())
                 .asBitmap()
                 .placeholder(R.drawable.default_replay)
-                .centerCrop().into(new BitmapImageViewTarget(replayArtwork) {
+                .centerCrop()
+                .into(new BitmapImageViewTarget(replayArtwork) {
             @Override
             protected void setResource(Bitmap resource) {
                 RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(replayArtwork.getResources(), resource);
@@ -38,4 +46,29 @@ public class GlideUtils {
             }
         });
     }
+
+    /**
+     * Set replay image for replay item
+     * @param linearLayout the linear layout to put background sound image in
+     * @param replay the replay item
+     */
+    @BindingAdapter({"bind:replayBackground"})
+    public static void setReplaySoundImageAsBackground(final LinearLayout linearLayout, TrackDTO replay) {
+        // set image as background : http://stackoverflow.com/questions/33971626/set-background-image-to-relative-layout-using-glide-in-android
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            Glide.with(linearLayout.getContext())
+                    .load(replay.getWaveformURL())
+                    .asBitmap()
+                    .into(new SimpleTarget<Bitmap>() {
+                        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            BitmapDrawable bitmapDrawable = new BitmapDrawable(linearLayout.getResources(), resource);
+                            bitmapDrawable.mutate().setColorFilter(0xffff0000, PorterDuff.Mode.MULTIPLY);
+                            linearLayout.setBackground(bitmapDrawable);
+                        }
+                    });
+        }
+    }
 }
+

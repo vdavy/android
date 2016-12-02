@@ -34,6 +34,52 @@
             android:layout_height="wrap_content"
             android:text="@{replayItem.description}"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/replay_item_text_margin">
+
+            <TextView
+                style="@style/ThemeReplay.ReplayText.Duration.Item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{replayItem.duration}"/>
+
+            <TextView
+                android:text="@string/replay_date_duration_separator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/replay_separator"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"/>
+
+            <TextView
+                style="@style/ThemeReplay.ReplayText.Date.Item"
+                android:text="@{replayItem.lastModified}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/replay_date"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/replay_item_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:replayBackground="@{replayItem}"
+            android:gravity="center">
+
+            <TextView
+                style="@style/ThemeReplay.ReplayText.Genre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </layout>
