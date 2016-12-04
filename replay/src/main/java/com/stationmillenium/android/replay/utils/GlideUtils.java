@@ -1,22 +1,17 @@
 package com.stationmillenium.android.replay.utils;
 
 import android.databinding.BindingAdapter;
-import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.content.res.ResourcesCompat;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.dto.TrackDTO;
+
+import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.ColorFilterTransformation;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Glide utils
@@ -37,38 +32,27 @@ public class GlideUtils {
                 .asBitmap()
                 .placeholder(R.drawable.default_replay)
                 .centerCrop()
-                .into(new BitmapImageViewTarget(replayArtwork) {
-            @Override
-            protected void setResource(Bitmap resource) {
-                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(replayArtwork.getResources(), resource);
-                circularBitmapDrawable.setCircular(true);
-                view.setImageDrawable(circularBitmapDrawable);
-            }
-        });
+                .transform(new CropCircleTransformation(replayArtwork.getContext()))
+                .into(replayArtwork);
     }
 
     /**
      * Set replay image for replay item
-     * @param linearLayout the linear layout to put background sound image in
+     * @param imageView the linear layout to put background sound image in
      * @param replay the replay item
      */
     @BindingAdapter({"bind:replayBackground"})
-    public static void setReplaySoundImageAsBackground(final LinearLayout linearLayout, TrackDTO replay) {
-        // set image as background : http://stackoverflow.com/questions/33971626/set-background-image-to-relative-layout-using-glide-in-android
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            Glide.with(linearLayout.getContext())
-                    .load(replay.getWaveformURL())
-                    .asBitmap()
-                    .into(new SimpleTarget<Bitmap>() {
-                        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            BitmapDrawable bitmapDrawable = new BitmapDrawable(linearLayout.getResources(), resource);
-                            bitmapDrawable.mutate().setColorFilter(0xffff0000, PorterDuff.Mode.MULTIPLY);
-                            linearLayout.setBackground(bitmapDrawable);
-                        }
-                    });
-        }
+    public static void setReplaySoundImageAsBackground(final ImageView imageView, TrackDTO replay) {
+        Glide.with(imageView.getContext())
+                .load(replay.getWaveformURL())
+                .asBitmap()
+                .centerCrop()
+                .transform(
+                        new ColorFilterTransformation(imageView.getContext(), ResourcesCompat.getColor(imageView.getContext().getResources(), R.color.accent, null)),
+                        new BlurTransformation(imageView.getContext(), 10),
+                        new RoundedCornersTransformation(imageView.getContext(), imageView.getResources().getDimensionPixelSize(R.dimen.replay_item_tag_space), 0))
+                .into(imageView);
     }
+
 }
 

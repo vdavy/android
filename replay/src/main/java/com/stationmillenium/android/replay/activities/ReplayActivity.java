@@ -47,6 +47,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     private static final String SEARCHVIEW_TEXT = "searchview_text";
     private static final int EXTRA_REPLAY_COUNT = 30;
     private static final int TOTAL_MAX_REPLAY = 200;
+    public static final String REPLAY_TAG = "ReplayTag";
 
     private ReplayActivityBinding replayActivityBinding;
     private ReplayFragment replayFragment;
@@ -73,7 +74,12 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         }
 
         replayFragment = (ReplayFragment) getSupportFragmentManager().findFragmentById(R.id.replay_fragment);
-        getSupportLoaderManager().initLoader(LOADER_INDEX, null, this).forceLoad();
+        if (getIntent().getStringExtra(REPLAY_TAG) != null) {
+            Log.v(TAG, "Direct tag search");
+            searchGenre(getIntent().getStringExtra(REPLAY_TAG));
+        } else {
+            getSupportLoaderManager().initLoader(LOADER_INDEX, null, this).forceLoad();
+        }
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

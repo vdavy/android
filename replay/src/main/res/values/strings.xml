@@ -11,7 +11,7 @@
     <string name="replay_duration">%1$s:%2$s</string>
     <string name="replay_duration_hours">%1$s:%2$s:%3$s</string>
 
-    <string name="replay_load_more">Chargement de plus de replays...</string>
+    <string name="replay_load_more">Chargement de plus de replays&#8230;</string>
     <string name="replay_load_more_max_reached">Nombre maxi de replays atteint</string>
     <string name="replay_date_duration_separator">-</string>
 
@@ -21,8 +21,10 @@
 
     <string name="replay_search_menu">Rechercher</string>
     <string name="replay_search_text">Recherche de replays</string>
-    <string name="replay_search_hint">Rechercher des replays...</string>
+    <string name="replay_search_hint">Rechercher des replays&#8230;</string>
 
     <string name="replay_unavailable">Replay indisponible</string>
+
+    <string name="replay_item_toolbar_title">Replay : %s</string>
 
 </resources>

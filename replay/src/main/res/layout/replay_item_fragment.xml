@@ -65,20 +65,22 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <com.stationmillenium.android.replay.utils.view.FlowLayout
             android:id="@+id/replay_item_linear_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/replay_item_text_margin">
+
+        </com.stationmillenium.android.replay.utils.view.FlowLayout>
+
+        <ImageView
+            android:layout_marginTop="@dimen/replay_item_text_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/replay_cardview_shape"
             app:replayBackground="@{replayItem}"
-            android:gravity="center">
-
-            <TextView
-                style="@style/ThemeReplay.ReplayText.Genre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="test"/>
-
-        </LinearLayout>
+            android:scaleType="fitXY"
+            android:padding="2dp"/>
 
     </LinearLayout>
 

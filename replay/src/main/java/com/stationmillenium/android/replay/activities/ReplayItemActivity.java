@@ -44,8 +44,21 @@ public class ReplayItemActivity extends AppCompatActivity {
         if (replay != null) {
             Log.v(TAG, "Display replay item : " + replay);
             replayItemFragment.setReplay(replay);
+            getSupportActionBar().setTitle(getString( R.string.replay_item_toolbar_title, replay.getTitle()));
         } else {
             Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_unavailable, Snackbar.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * Search tag for replay from replay item
+     * @param tag the tag to search for
+     */
+    public void searchTag(String tag) {
+        Log.d(TAG, "Search tag : " + tag);
+        Intent searchTagIntent = new Intent(this, ReplayActivity.class);
+        searchTagIntent.putExtra(ReplayActivity.REPLAY_TAG, tag);
+        startActivity(searchTagIntent);
+        finish();
     }
 }
