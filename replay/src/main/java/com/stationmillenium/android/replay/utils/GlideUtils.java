@@ -24,7 +24,7 @@ public class GlideUtils {
      * @param replayArtwork the image view destination
      * @param replay the replay item
      */
-    @BindingAdapter({"bind:replayImage"})
+    @BindingAdapter({"replayImage"})
     public static void setReplayImage(final ImageView replayArtwork, TrackDTO replay) {
         // set round image : http://stackoverflow.com/questions/25278821/how-do-rounded-image-with-glide-library
         Glide.with(replayArtwork.getContext())
@@ -41,7 +41,7 @@ public class GlideUtils {
      * @param imageView the linear layout to put background sound image in
      * @param replay the replay item
      */
-    @BindingAdapter({"bind:replayBackground"})
+    @BindingAdapter({"replayBackground"})
     public static void setReplaySoundImageAsBackground(final ImageView imageView, TrackDTO replay) {
         Glide.with(imageView.getContext())
                 .load(replay.getWaveformURL())
