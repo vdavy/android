@@ -7,6 +7,7 @@
     <dimen name="action_button_margin">0dp</dimen>
 
     <dimen name="replay_item_text_margin">10dp</dimen>
+    <dimen name="replay_item_image_text_margin">15dp</dimen>
     <dimen name="replay_item_text_size">18sp</dimen>
 
     <dimen name="replay_item_textview_padding">2dp</dimen>

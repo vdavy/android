@@ -53,7 +53,7 @@
                 android:text="@string/replay_date_duration_separator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/replay_separator"
+                android:id="@+id/replay_item_separator"
                 android:layout_marginStart="@dimen/replay_item_textview_left_margin"
                 android:layout_marginLeft="@dimen/replay_item_textview_left_margin"/>
 

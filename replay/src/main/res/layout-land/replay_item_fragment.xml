@@ -9,11 +9,22 @@
             type="com.stationmillenium.android.replay.dto.TrackDTO" />
     </data>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/replay_item_text_margin">
+
+        <ImageView
+            android:id="@+id/replay_item_waveform"
+            style="@style/ReplayItemWaveform"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:replayBackground="@{replayItem}"
+            tools:ignore="ContentDescription"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
 
         <ImageView
             android:id="@+id/replay_item_artwork"
@@ -21,71 +32,81 @@
             app:replayImage="@{replayItem}"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_gravity="center_horizontal"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/replay_item_waveform"/>
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/replay_item_title"
+            style="@style/ThemeReplay.ReplayItemText.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="@{replayItem.title}"
+            tools:ignore="ContentDescription"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/replay_item_artwork"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="@dimen/replay_item_image_text_margin"
+            android:layout_marginStart="@dimen/replay_item_image_text_margin" />
 
-            <TextView
-                style="@style/ThemeReplay.ReplayItemText.Title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{replayItem.title}"
-                tools:ignore="ContentDescription"/>
+        <TextView
+            android:id="@+id/replay_item_description"
+            style="@style/ThemeReplay.ReplayItemText.Description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{replayItem.description}"
+            app:layout_constraintTop_toBottomOf="@id/replay_item_title"
+            app:layout_constraintLeft_toRightOf="@id/replay_item_artwork"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="@dimen/replay_item_image_text_margin"
+            android:layout_marginStart="@dimen/replay_item_image_text_margin"
+            android:layout_marginTop="@dimen/replay_item_text_margin"/>
 
-            <TextView
-                style="@style/ThemeReplay.ReplayItemText.Description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{replayItem.description}"/>
+        <TextView
+            android:id="@+id/replay_item_duration"
+            style="@style/ThemeReplay.ReplayText.Duration.Item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{replayItem.duration}"
+            app:layout_constraintTop_toBottomOf="@id/replay_item_description"
+            app:layout_constraintLeft_toRightOf="@id/replay_item_artwork"
+            android:layout_marginLeft="@dimen/replay_item_image_text_margin"
+            android:layout_marginStart="@dimen/replay_item_image_text_margin"
+            android:layout_marginTop="@dimen/replay_item_text_margin" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="@dimen/replay_item_text_margin">
+        <TextView
+            android:id="@+id/replay_item_separator"
+            android:text="@string/replay_date_duration_separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBaseline_toBaselineOf="@id/replay_item_duration"
+            app:layout_constraintLeft_toRightOf="@id/replay_item_duration"
+            android:layout_marginStart="@dimen/replay_item_textview_left_margin"
+            android:layout_marginLeft="@dimen/replay_item_textview_left_margin"/>
 
-                <TextView
-                    style="@style/ThemeReplay.ReplayText.Duration.Item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{replayItem.duration}"/>
+        <TextView
+            style="@style/ThemeReplay.ReplayText.Date.Item"
+            android:text="@{replayItem.lastModified}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/replay_date"
+            app:layout_constraintBaseline_toBaselineOf="@id/replay_item_duration"
+            app:layout_constraintLeft_toRightOf="@id/replay_item_separator"
+            android:layout_marginStart="@dimen/replay_item_textview_left_margin"
+            android:layout_marginLeft="@dimen/replay_item_textview_left_margin"/>
 
-                <TextView
-                    android:text="@string/replay_date_duration_separator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/replay_separator"
-                    android:layout_marginStart="@dimen/replay_item_textview_left_margin"
-                    android:layout_marginLeft="@dimen/replay_item_textview_left_margin"/>
+        <com.stationmillenium.android.replay.utils.view.FlowLayout
+            android:id="@+id/replay_item_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/replay_item_duration"
+            app:layout_constraintLeft_toRightOf="@id/replay_item_artwork"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="@dimen/replay_item_image_text_margin"
+            android:layout_marginStart="@dimen/replay_item_image_text_margin"
+            android:layout_marginTop="@dimen/replay_item_text_margin"  />
 
-                <TextView
-                    style="@style/ThemeReplay.ReplayText.Date.Item"
-                    android:text="@{replayItem.lastModified}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/replay_date"/>
-
-            </LinearLayout>
-
-            <com.stationmillenium.android.replay.utils.view.FlowLayout
-                android:id="@+id/replay_item_linear_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/replay_item_text_margin" />
-
-            <ImageView
-                style="@style/ReplayItemWaveform"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:replayBackground="@{replayItem}"
-                tools:ignore="ContentDescription"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </layout>
