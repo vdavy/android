@@ -49,7 +49,7 @@ public class ReplayItemFragment extends Fragment {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 tagTextView.setBackground(getResources().getDrawable(R.drawable.replay_genre_background));
             }
-            tagTextView.setTextAppearance(getContext(), R.style.ReplayTag);
+            tagTextView.setTextAppearance(getContext(), R.style.ReplayItemTag);
             tagTextView.setPadding(getResources().getDimensionPixelSize(R.dimen.replay_item_textview_padding), 0,
                     getResources().getDimensionPixelSize(R.dimen.replay_item_textview_padding), 0);
             tagTextView.setOnClickListener(new View.OnClickListener() {

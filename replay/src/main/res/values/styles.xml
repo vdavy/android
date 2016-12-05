@@ -76,6 +76,7 @@
 
     <style name="ThemeReplay.ReplayText.Date.Item">
         <item name="android:textSize">@dimen/replay_count_text_size</item>
+        <item name="android:layout_marginLeft">@dimen/replay_item_textview_left_margin</item>
     </style>
 
     <style name="ThemeReplay.ReplayText.Genre">
@@ -91,9 +92,16 @@
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
-    <style name="ReplayTag">
+    <style name="ReplayItemTag">
         <item name="android:textColor">@color/icons</item>
         <item name="android:textSize">@dimen/replay_item_text_size</item>
+    </style>
+
+    <style name="ReplayItemWaveform">
+        <item name="android:layout_marginTop">@dimen/replay_item_text_margin</item>
+        <item name="android:background">@drawable/replay_cardview_shape</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:padding">@dimen/replay_item_textview_padding</item>
     </style>
 
 </resources>

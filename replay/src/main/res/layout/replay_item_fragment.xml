@@ -51,17 +51,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/replay_separator"
-                android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"/>
+                android:layout_marginStart="@dimen/replay_item_textview_left_margin"
+                android:layout_marginLeft="@dimen/replay_item_textview_left_margin"/>
 
             <TextView
                 style="@style/ThemeReplay.ReplayText.Date.Item"
                 android:text="@{replayItem.lastModified}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/replay_date"
-                android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"/>
+                android:id="@+id/replay_date"/>
 
         </LinearLayout>
 
@@ -74,13 +72,10 @@
         </com.stationmillenium.android.replay.utils.view.FlowLayout>
 
         <ImageView
-            android:layout_marginTop="@dimen/replay_item_text_margin"
+            style="@style/ReplayItemWaveform"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/replay_cardview_shape"
-            app:replayBackground="@{replayItem}"
-            android:scaleType="fitXY"
-            android:padding="2dp"/>
+            app:replayBackground="@{replayItem}" />
 
     </LinearLayout>
 
