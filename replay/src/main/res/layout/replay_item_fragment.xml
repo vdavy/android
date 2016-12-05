@@ -21,7 +21,8 @@
             app:replayImage="@{replayItem}"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            tools:ignore="ContentDescription"/>
 
         <TextView
             style="@style/ThemeReplay.ReplayItemText.Title"
