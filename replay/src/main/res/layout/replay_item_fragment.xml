@@ -70,9 +70,7 @@
             android:id="@+id/replay_item_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/replay_item_text_margin">
-
-        </com.stationmillenium.android.replay.utils.view.FlowLayout>
+            android:layout_marginTop="@dimen/replay_item_text_margin" />
 
         <ImageView
             style="@style/ReplayItemWaveform"
