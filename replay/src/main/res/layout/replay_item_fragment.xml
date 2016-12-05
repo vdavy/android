@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -26,7 +27,8 @@
             style="@style/ThemeReplay.ReplayItemText.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{replayItem.title}"/>
+            android:text="@{replayItem.title}"
+            tools:ignore="ContentDescription"/>
 
         <TextView
             style="@style/ThemeReplay.ReplayItemText.Description"
@@ -75,7 +77,8 @@
             style="@style/ReplayItemWaveform"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:replayBackground="@{replayItem}" />
+            app:replayBackground="@{replayItem}"
+            tools:ignore="ContentDescription"/>
 
     </LinearLayout>
 
