@@ -96,4 +96,8 @@ public class ReplayItemFragment extends Fragment {
             return Collections.EMPTY_LIST;
         }
     }
+
+    public View getRootView() {
+        return binding.getRoot();
+    }
 }

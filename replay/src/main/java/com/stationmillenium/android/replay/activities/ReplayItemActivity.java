@@ -3,16 +3,20 @@ package com.stationmillenium.android.replay.activities;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnBufferingUpdateListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.MediaController;
+import android.widget.MediaController.MediaPlayerControl;
 
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.databinding.ReplayItemActivityBinding;
 import com.stationmillenium.android.replay.dto.TrackDTO;
+import com.stationmillenium.android.replay.utils.URLManager;
 
 import java.io.IOException;
 
@@ -21,7 +25,7 @@ import java.io.IOException;
  * Created by vincent on 28/11/16.
  */
 
-public class ReplayItemActivity extends AppCompatActivity implements android.widget.MediaController.MediaPlayerControl {
+public class ReplayItemActivity extends AppCompatActivity implements MediaPlayerControl, OnPreparedListener, OnBufferingUpdateListener {
 
     private static final String TAG = "ReplayItemActivity";
     public static final String REPLAY_ITEM = "ReplayItem";
@@ -33,6 +37,7 @@ public class ReplayItemActivity extends AppCompatActivity implements android.wid
     private MediaController mediaController;
 
     private TrackDTO replay;
+    private int bufferPercentage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,23 +50,27 @@ public class ReplayItemActivity extends AppCompatActivity implements android.wid
 
         replayItemFragment = (ReplayItemFragment) getSupportFragmentManager().findFragmentById(R.id.replay_item_fragment);
         extractReplayData();
+        initMediaPlayer();
+    }
 
+    private void initMediaPlayer() {
+        //TODO : in another thread
         mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnPreparedListener(this);
         mediaController = new MediaController(this);
         mediaController.setMediaPlayer(this);
-        mediaController.setAnchorView(replayItemFragment.getView());
+        mediaController.setAnchorView(replayItemActivityBinding.replayItemCoordinatorLayout);
 
-        if (replay != null) {
-            try {
-                mediaPlayer.setDataSource(replay.getStreamURL());
-                mediaPlayer.prepare();
-                mediaPlayer.start();
-                mediaController.setEnabled(true);
-                mediaController.show();
-            } catch (IOException e) {
-                Log.e(TAG, "Could not open file " + replay.getStreamURL() + " for playback.", e);
-            }
-        }
+//        if (replay != null) {
+//            try {
+//                mediaPlayer.setDataSource(URLManager.getStreamURLFromTrack(this, replay));
+//                mediaPlayer.prepare();
+//                mediaPlayer.start();
+//            } catch (IOException e) {
+//                Log.e(TAG, "Could not open file " + replay.getStreamURL() + " for playback.", e);
+//                //TODO : snackbar
+//            }
+//        }
     }
 
     private void extractReplayData() {
@@ -90,6 +99,26 @@ public class ReplayItemActivity extends AppCompatActivity implements android.wid
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mediaPlayer.stop();
+        mediaPlayer.release();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            mediaPlayer.setDataSource(URLManager.getStreamURLFromTrack(this, replay));
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            Log.e(TAG, "Could not open file " + replay.getStreamURL() + " for playback.", e);
+            //TODO : snackbar
+        }
+    }
+
+    @Override
     public void start() {
         mediaPlayer.start();
     }
@@ -106,6 +135,7 @@ public class ReplayItemActivity extends AppCompatActivity implements android.wid
 
     @Override
     public int getCurrentPosition() {
+        //TODO : check state
         return mediaPlayer.getCurrentPosition();
     }
 
@@ -121,7 +151,7 @@ public class ReplayItemActivity extends AppCompatActivity implements android.wid
 
     @Override
     public int getBufferPercentage() {
-        return 0; //mediaPlayer.bu;
+        return bufferPercentage;
     }
 
     @Override
@@ -131,16 +161,36 @@ public class ReplayItemActivity extends AppCompatActivity implements android.wid
 
     @Override
     public boolean canSeekBackward() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean canSeekForward() {
-        return false;
+        return true;
     }
 
     @Override
     public int getAudioSessionId() {
         return mediaPlayer.getAudioSessionId();
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer) {
+        Log.d(TAG, "onPrepared");
+        mediaController.setMediaPlayer(this);
+        mediaController.setAnchorView(replayItemFragment.getRootView());
+
+//        Looper.getMainLooper()..post(new Runnable() {
+//            public void run() {
+                mediaController.setEnabled(true);
+                mediaController.show(0);
+//            }
+//        });
+    }
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+        Log.v(TAG, "Buffer update : " + percent);
+        bufferPercentage = percent;
     }
 }

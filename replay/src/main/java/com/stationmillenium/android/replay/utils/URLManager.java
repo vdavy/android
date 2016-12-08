@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.stationmillenium.android.replay.R;
+import com.stationmillenium.android.replay.dto.TrackDTO;
 
 /**
  * Create the correct URL
@@ -20,11 +21,6 @@ public class URLManager {
     @NonNull
     public static String getPlaylistsURL(@NonNull Context context) {
         return context.getString(R.string.soundcloud_playlists_URL, context.getString(R.string.soundcloud_user_id), context.getString(R.string.soudncloud_client_id));
-    }
-
-    @NonNull
-    public static String getStreamURL(@NonNull Context context, @NonNull String trackID) {
-        return context.getString(R.string.soundcloud_stream_URL, trackID, context.getString(R.string.soudncloud_client_id));
     }
 
     @NonNull
@@ -45,5 +41,10 @@ public class URLManager {
     @NonNull
     public static String addLimitClause(@NonNull Context context, @NonNull String baseURL, int limitSize) {
          return Uri.parse(baseURL).buildUpon().appendQueryParameter(context.getString(R.string.limit_param), String.valueOf(limitSize)).build().toString();
+    }
+
+    @NonNull
+    public static String getStreamURLFromTrack(@NonNull Context context, @NonNull TrackDTO replay) {
+        return Uri.parse(replay.getStreamURL()).buildUpon().appendQueryParameter(context.getString(R.string.client_id_param), context.getString(R.string.soudncloud_client_id)).build().toString();
     }
 }

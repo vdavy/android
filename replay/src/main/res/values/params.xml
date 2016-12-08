@@ -12,4 +12,6 @@
     <string name="soundcloud_tag_tracklist_URL">https://api.soundcloud.com/users/%1$s/tracks?client_id=%2$s&amp;tags=%3$s</string>
 
     <string name="limit_param">limit</string>
+    <string name="client_id_param">client_id</string>
+
 </resources>
