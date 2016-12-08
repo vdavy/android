@@ -32,6 +32,10 @@ public class ReplayItemFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /**
+     * Bind the replay data
+     * @param replay replay to display
+     */
     public void setReplay(TrackDTO replay) {
         binding.setReplayItem(replay);
         displayTags(replay);
