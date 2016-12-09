@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
 
@@ -22,9 +23,9 @@ import java.io.IOException;
 
 /**
  * Activity to play a replay
+ * Inspired from http://stackoverflow.com/questions/3747139/how-can-i-show-a-mediacontroller-while-playing-audio-in-android/5265629#5265629
  * Created by vincent on 28/11/16.
  */
-
 public class ReplayItemActivity extends AppCompatActivity implements MediaPlayerControl, OnPreparedListener, OnBufferingUpdateListener {
 
     private static final String TAG = "ReplayItemActivity";
@@ -38,6 +39,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
 
     private TrackDTO replay;
     private int bufferPercentage;
+    private boolean mediaPlayerStopped;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,27 +52,26 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
 
         replayItemFragment = (ReplayItemFragment) getSupportFragmentManager().findFragmentById(R.id.replay_item_fragment);
         extractReplayData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         initMediaPlayer();
     }
 
     private void initMediaPlayer() {
-        //TODO : in another thread
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnPreparedListener(this);
         mediaController = new MediaController(this);
-        mediaController.setMediaPlayer(this);
-        mediaController.setAnchorView(replayItemActivityBinding.replayItemCoordinatorLayout);
-
-//        if (replay != null) {
-//            try {
-//                mediaPlayer.setDataSource(URLManager.getStreamURLFromTrack(this, replay));
-//                mediaPlayer.prepare();
-//                mediaPlayer.start();
-//            } catch (IOException e) {
-//                Log.e(TAG, "Could not open file " + replay.getStreamURL() + " for playback.", e);
-//                //TODO : snackbar
-//            }
-//        }
+        try {
+            mediaPlayer.setDataSource(URLManager.getStreamURLFromTrack(getBaseContext(), replay));
+            mediaPlayer.prepareAsync();
+            mediaPlayerStopped = false;
+        } catch (IOException e) {
+            Log.e(TAG, "Can't read replay : " + URLManager.getStreamURLFromTrack(getBaseContext(), replay), e);
+            Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_unavailable, Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     private void extractReplayData() {
@@ -101,52 +102,46 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     @Override
     protected void onPause() {
         super.onPause();
+        mediaPlayerStopped = true;
         mediaPlayer.stop();
         mediaPlayer.release();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        try {
-            mediaPlayer.setDataSource(URLManager.getStreamURLFromTrack(this, replay));
-            mediaPlayer.prepare();
+    public void start() {
+        if (!mediaPlayerStopped) {
             mediaPlayer.start();
-        } catch (IOException e) {
-            Log.e(TAG, "Could not open file " + replay.getStreamURL() + " for playback.", e);
-            //TODO : snackbar
         }
     }
 
     @Override
-    public void start() {
-        mediaPlayer.start();
-    }
-
-    @Override
     public void pause() {
-        mediaPlayer.pause();
+        if (!mediaPlayerStopped) {
+            mediaPlayer.pause();
+        }
     }
 
     @Override
     public int getDuration() {
-        return mediaPlayer.getDuration();
+        return (!mediaPlayerStopped) ? mediaPlayer.getDuration() : 0;
     }
 
     @Override
     public int getCurrentPosition() {
-        //TODO : check state
-        return mediaPlayer.getCurrentPosition();
+        // call only when play, if not raise exception
+        return (!mediaPlayerStopped) ? mediaPlayer.getCurrentPosition() : 0;
     }
 
     @Override
     public void seekTo(int pos) {
-        mediaPlayer.seekTo(pos);
+        if (!mediaPlayerStopped) {
+            mediaPlayer.seekTo(pos);
+        }
     }
 
     @Override
     public boolean isPlaying() {
-        return mediaPlayer.isPlaying();
+        return !mediaPlayerStopped && mediaPlayer.isPlaying();
     }
 
     @Override
@@ -176,21 +171,23 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
 
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
-        Log.d(TAG, "onPrepared");
+        Log.d(TAG, "Media player ready");
+        mediaPlayer.start();
         mediaController.setMediaPlayer(this);
         mediaController.setAnchorView(replayItemFragment.getRootView());
-
-//        Looper.getMainLooper()..post(new Runnable() {
-//            public void run() {
-                mediaController.setEnabled(true);
-                mediaController.show(0);
-//            }
-//        });
+        mediaController.show();
     }
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
         Log.v(TAG, "Buffer update : " + percent);
         bufferPercentage = percent;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        //the MediaController will hide after 3 seconds - tap the screen to make it appear again
+        mediaController.show();
+        return false;
     }
 }
