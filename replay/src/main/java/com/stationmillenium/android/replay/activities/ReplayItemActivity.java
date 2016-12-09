@@ -30,6 +30,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
 
     private static final String TAG = "ReplayItemActivity";
     public static final String REPLAY_ITEM = "ReplayItem";
+    private static final String REPLAY_POSITION = "replay_position";
 
     private ReplayItemFragment replayItemFragment;
     private ReplayItemActivityBinding replayItemActivityBinding;
@@ -40,6 +41,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     private TrackDTO replay;
     private int bufferPercentage;
     private boolean mediaPlayerStopped;
+    private int replayPosition;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +54,10 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
 
         replayItemFragment = (ReplayItemFragment) getSupportFragmentManager().findFragmentById(R.id.replay_item_fragment);
         extractReplayData();
+        if (savedInstanceState != null && savedInstanceState.containsKey(REPLAY_POSITION)) {
+            replayPosition = savedInstanceState.getInt(REPLAY_POSITION);
+            Log.d(TAG, "Restore media player position to : " + replayPosition);
+        }
     }
 
     @Override
@@ -102,6 +108,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     @Override
     protected void onPause() {
         super.onPause();
+        replayPosition = mediaPlayer.getCurrentPosition(); // backup current position in case of screen rotation
         mediaPlayerStopped = true;
         mediaPlayer.stop();
         mediaPlayer.release();
@@ -172,7 +179,11 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         Log.d(TAG, "Media player ready");
+        // Media player ready - let's play sound
         mediaPlayer.start();
+        if (replayPosition > 0) {
+            mediaPlayer.seekTo(replayPosition);
+        }
         mediaController.setMediaPlayer(this);
         mediaController.setAnchorView(replayItemFragment.getRootView());
         mediaController.show();
@@ -189,5 +200,11 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         //the MediaController will hide after 3 seconds - tap the screen to make it appear again
         mediaController.show();
         return false;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(REPLAY_POSITION, replayPosition);
+        super.onSaveInstanceState(outState);
     }
 }
