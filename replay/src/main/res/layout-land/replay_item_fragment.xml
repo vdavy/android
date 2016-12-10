@@ -26,6 +26,17 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
+        <ProgressBar
+            android:id="@+id/replay_item_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/replay_item_waveform"
+            app:layout_constraintLeft_toLeftOf="@id/replay_item_waveform"
+            app:layout_constraintRight_toRightOf="@id/replay_item_waveform"
+            app:layout_constraintTop_toTopOf="@id/replay_item_waveform"/>
+
         <ImageView
             android:id="@+id/replay_item_artwork"
             style="@style/ReplayItemImage"

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
+import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,7 +27,7 @@ import java.io.IOException;
  * Inspired from http://stackoverflow.com/questions/3747139/how-can-i-show-a-mediacontroller-while-playing-audio-in-android/5265629#5265629
  * Created by vincent on 28/11/16.
  */
-public class ReplayItemActivity extends AppCompatActivity implements MediaPlayerControl, OnPreparedListener, OnBufferingUpdateListener {
+public class ReplayItemActivity extends AppCompatActivity implements MediaPlayerControl, OnPreparedListener, OnBufferingUpdateListener, OnInfoListener {
 
     private static final String TAG = "ReplayItemActivity";
     public static final String REPLAY_ITEM = "ReplayItem";
@@ -67,8 +68,10 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     }
 
     private void initMediaPlayer() {
+        replayItemFragment.setProgressBarVisible(true);
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnPreparedListener(this);
+        mediaPlayer.setOnInfoListener(this);
         mediaController = new MediaController(this);
         try {
             mediaPlayer.setDataSource(URLManager.getStreamURLFromTrack(getBaseContext(), replay));
@@ -181,6 +184,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         Log.d(TAG, "Media player ready");
         // Media player ready - let's play sound
         mediaPlayer.start();
+        replayItemFragment.setProgressBarVisible(false);
         if (replayPosition > 0) {
             mediaPlayer.seekTo(replayPosition);
         }
@@ -206,5 +210,21 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(REPLAY_POSITION, replayPosition);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+        // handle case with buffering
+        switch (what) {
+            case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                Log.v(TAG, "Media player buffering...");
+                replayItemFragment.setProgressBarVisible(true);
+                return true;
+            case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                Log.v(TAG, "Media player end buffering");
+                replayItemFragment.setProgressBarVisible(false);
+                return true;
+        }
+        return false;
     }
 }

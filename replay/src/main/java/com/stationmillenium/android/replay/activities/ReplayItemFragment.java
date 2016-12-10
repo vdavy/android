@@ -97,7 +97,19 @@ public class ReplayItemFragment extends Fragment {
         }
     }
 
+    /**
+     * Get the root view to dock media player controls
+     * @return the fragment root view
+     */
     public View getRootView() {
         return binding.getRoot();
+    }
+
+    /**
+     * Set the progress bar visibility
+     * @param visible <code>true</code> : visible, <code>false</code> : hidden
+     */
+    public void setProgressBarVisible(boolean visible) {
+        binding.replayItemProgressbar.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 }
