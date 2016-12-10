@@ -15,6 +15,8 @@ import android.view.MotionEvent;
 import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
 
+import com.stationmillenium.android.libutils.PiwikTracker;
+import com.stationmillenium.android.libutils.PiwikTracker.PiwikPages;
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.databinding.ReplayItemActivityBinding;
 import com.stationmillenium.android.replay.dto.TrackDTO;
@@ -65,6 +67,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     protected void onResume() {
         super.onResume();
         initMediaPlayer();
+        PiwikTracker.trackScreenViewWithTitle(PiwikPages.REPLAY_ITEM, replay.getTitle());
     }
 
     private void initMediaPlayer() {

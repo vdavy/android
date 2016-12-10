@@ -27,7 +27,8 @@ public class PiwikTracker {
         ANTENNA_GRID("/main/antenna-grid"),
         HOME("/main"),
         LINKS("/main/links"),
-        REPLAY("/main/replay"),
+        REPLAY("/replay"),
+        REPLAY_ITEM("/replay/item"),
         ALARM("/alarm-preferences"),
         PREFERENCES("/preferences"),
         SONG_SEARCH_HISTORY("/song-search-history"),
@@ -79,7 +80,7 @@ public class PiwikTracker {
     }
 
     /**
-     * Track stream goal
+     * Track activity view
      * @param page the page to track
      */
     public static void trackScreenView(@NonNull PiwikPages page) {
@@ -89,6 +90,24 @@ public class PiwikTracker {
         if (!BuildConfig.DEBUG) {
             if (piwikAppTracker != null) {
                 TrackHelper.track().screen(page.getPath()).with(piwikAppTracker);
+            }
+        } else {
+            Log.v(TAG, "Debug mode - not sending page tracking info");
+        }
+    }
+
+    /**
+     * Track activity view, with title
+     * @param page the page to track
+     * @param title the page title
+     */
+    public static void trackScreenViewWithTitle(@NonNull PiwikPages page, @NonNull String title) {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "PIWIK / Track page : " + page + " - with title : " + title);
+        }
+        if (!BuildConfig.DEBUG) {
+            if (piwikAppTracker != null) {
+                TrackHelper.track().screen(page.getPath()).title(title).with(piwikAppTracker);
             }
         } else {
             Log.v(TAG, "Debug mode - not sending page tracking info");
