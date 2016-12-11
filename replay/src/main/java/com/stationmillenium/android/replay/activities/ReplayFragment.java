@@ -39,7 +39,12 @@ public class ReplayFragment extends Fragment {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (newState == SCROLL_STATE_IDLE
+
+                if (newState == SCROLL_STATE_IDLE // we are not scrolling
+                        // list must be scrolled (not on first position) - avoid list too short and displayed on whole screen
+                        && linearLayoutManager.findFirstVisibleItemPosition() > 0
+                        && linearLayoutManager.findFirstCompletelyVisibleItemPosition() > 0
+                        // last item is fully displayed
                         && linearLayoutManager.findLastVisibleItemPosition() == (replayAdapter.getItemCount() - 1)
                         && linearLayoutManager.findLastCompletelyVisibleItemPosition() == (replayAdapter.getItemCount() - 1)) {
                     ((ReplayActivity) getActivity()).triggerExtraDataLoad(replayAdapter.getItemCount());
