@@ -1,0 +1,31 @@
+apply from: 'android-build.gradle'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':libutils')
+
+    compile "com.android.support:appcompat-v7:${supportLibVersion}"
+    compile "com.android.support:support-annotations:${supportLibVersion}"
+    compile "com.android.support:design:${supportLibVersion}"
+    compile "com.android.support:recyclerview-v7:${supportLibVersion}"
+    compile "com.android.support:cardview-v7:${supportLibVersion}"
+    compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
+    compile "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    compile "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    compile "com.github.bumptech.glide:glide:${glideVersion}"
+    compile 'jp.wasabeef:glide-transformations:2.0.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+
+    androidTestCompile "com.android.support.test:runner:${supportTestVersion}"
+    androidTestCompile "com.android.support.test:rules:${supportTestVersion}"
+    androidTestCompile "com.android.support.test.espresso:espresso-core:${espressoCoreVersion}"
+    androidTestCompile "com.android.support.test.espresso:espresso-contrib:${espressoCoreVersion}"
+    androidTestCompile "com.android.support:support-annotations:${supportLibVersion}"
+    androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:${uiautomatorVersion}"
+    androidTestCompile "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
+}
+

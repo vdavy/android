@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/widget_margin"
-    android:layout_marginRight="@dimen/widget_margin"
-    android:background="@drawable/widget_border"
-    android:gravity="left|top">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/widget_margin"
+                android:layout_marginRight="@dimen/widget_margin"
+                android:background="@drawable/widget_border"
+                android:gravity="left|top">
 
     <LinearLayout
         android:id="@+id/widget_image_layout"
@@ -22,7 +22,7 @@
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:contentDescription="@string/empty_string"
-            android:src="@drawable/player_default_image" />
+            android:src="@drawable/player_default_image"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -38,7 +38,7 @@
             android:layout_alignParentRight="true"
             android:background="@drawable/widget_buttons_border"
             android:gravity="right|center_vertical"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:paddingLeft="2dp"
             android:paddingRight="2dp">
 
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/player_play"
-                android:src="@drawable/ic_player_play" />
+                android:src="@drawable/ic_player_play"/>
 
             <ImageButton
                 android:id="@+id/widget_pause_button"
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/player_pause"
                 android:src="@drawable/ic_player_pause"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/widget_stop_button"
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/player_stop"
                 android:src="@drawable/ic_player_stop"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </LinearLayout>
 
         <LinearLayout
@@ -80,15 +80,15 @@
                 android:layout_marginTop="1dp"
                 android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
                 android:shadowColor="#ff000000"
                 android:shadowDx="4"
                 android:shadowDy="4"
                 android:shadowRadius="1.5"
-                android:singleLine="true"
                 android:text="@string/player_widget_title"
                 android:textColor="#ffffffff"
                 android:textSize="12sp"
-                android:typeface="sans" />
+                android:typeface="sans"/>
 
 
             <LinearLayout
@@ -111,10 +111,10 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="left"
-                        android:singleLine="true"
+                        android:maxLines="1"
                         android:textColor="#ffffffff"
                         android:textSize="13sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -131,7 +131,7 @@
                         android:gravity="left"
                         android:textColor="#ffffffff"
                         android:textSize="12sp"
-                        android:textStyle="italic" />
+                        android:textStyle="italic"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

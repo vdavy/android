@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="replayData"
+            type="java.util.List"/>
+        <variable
+            name="activity"
+            type="com.stationmillenium.android.replay.activities.ReplayActivity"/>
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/replay_coordinator_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/replay_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:theme="@style/ThemeReplay.Toolbar"/>
+
+            <TextView
+                android:id="@+id/replay_count"
+                style="@style/ThemeReplay.ReplayCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:text="@{@plurals/replay_count(replayData.size, replayData.size)}"
+                app:layout_scrollFlags="scroll|enterAlways"/>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <fragment
+            android:id="@+id/replay_fragment"
+            android:name="com.stationmillenium.android.replay.activities.ReplayFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/replay_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/action_button_margin"
+            android:layout_marginEnd="@dimen/action_button_margin"
+            android:layout_marginRight="@dimen/action_button_margin"
+            android:src="@drawable/ic_replay_search"
+            app:backgroundTint="@color/primary_dark"
+            app:layout_anchor="@id/replay_fragment"
+            app:layout_anchorGravity="bottom|right|end"
+            android:onClick="@{() -> activity.triggerSearch()}"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</layout>

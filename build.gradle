@@ -4,9 +4,25 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.1'
+        classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'com.google.gms:google-services:3.0.0'
     }
+}
+
+ext {
+    // libs version
+    supportLibVersion = '25.0.1'
+    jacksonVersion = '2.8.5'
+    piwikSdkVersion = '1.0.2'
+    playServicesVersion = '10.0.1'
+    twitterVersion = "4.0.4"
+    glideVersion = "3.7.0"
+
+    // test libs version
+    supportTestVersion = "0.5"
+    espressoCoreVersion = "2.2.2"
+    uiautomatorVersion = "2.1.2"
+    dexmakerVersion = "1.2"
 }
 
 allprojects {

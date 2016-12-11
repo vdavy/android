@@ -131,7 +131,7 @@ public class SharedPreferencesActivity extends PreferenceActivity implements Sha
     @Override
     protected void onResume() {
         super.onResume();
-        PiwikTracker.trackScreenView(getApplication(), PREFERENCES);
+        PiwikTracker.trackScreenView(PREFERENCES);
     }
 
     @Override

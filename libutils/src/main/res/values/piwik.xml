@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- tracking URL -->
+    <string name="piwik_url">http://www.station-millenium.com/piwik/piwik/piwik.php</string>
+    <integer name="piwik_app_site_id">4</integer>
+    <integer name="piwik_stream_site_id">2</integer>
+    <integer name="piwik_goal_id">4</integer>
+
+</resources>

@@ -23,6 +23,6 @@ public class AntennaGridWebViewFragement extends AbstractWebViewFragment {
     @Override
     public void onResume() {
         super.onResume();
-        PiwikTracker.trackScreenView(getActivity().getApplication(), ANTENNA_GRID);
+        PiwikTracker.trackScreenView(ANTENNA_GRID);
     }
 }

@@ -144,7 +144,7 @@ public class PlayerActivity extends AppCompatActivity {
         //set the volume stream will be controlled but pressing buttons
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-        PiwikTracker.trackScreenView(getApplication(), PLAYER);
+        PiwikTracker.trackScreenView(PLAYER);
         googleApiClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 

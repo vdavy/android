@@ -103,7 +103,7 @@ public class AlarmSharedPreferencesActivity extends PreferenceActivity implement
     @Override
     protected void onResume() {
         super.onResume();
-        PiwikTracker.trackScreenView(getApplication(), ALARM);
+        PiwikTracker.trackScreenView(ALARM);
     }
 
     /**

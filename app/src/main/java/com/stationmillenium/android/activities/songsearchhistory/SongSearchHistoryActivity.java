@@ -47,7 +47,7 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.datetime.DatePickerFragment;
 import com.stationmillenium.android.activities.fragments.datetime.TimePickerFragment;
-import com.stationmillenium.android.contentproviders.SongHistoryContentProvider.SongHistoryContract;
+import com.stationmillenium.android.contentproviders.SongHistoryContract;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
@@ -75,6 +75,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     private static final String DATE_PICKER_FRAGMENT = "DatePickerFragment";
     private static final String TIME_PICKER_FRAGMENT = "TimePickerFragment";
     private static final String IS_SEARCH_VIEW_EXPANDED_BUNDLE = "IsSearchViewExpandedBundle";
+    private static final String SEARCHVIEW_TEXT = "searchview_text";
 
     //widgets list
     private ListView historyListView;
@@ -89,6 +90,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     private String query;
     private Calendar searchTimeCalendar;
     private boolean expandActionViewOnCreate;
+    private String searchviewText;
 
     @SuppressLint("InlinedApi")
     @Override
@@ -106,7 +108,10 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.song_history_swipe_refresh_layout);
 
         //should we re-expand search view ?
-        expandActionViewOnCreate = (savedInstanceState != null) && savedInstanceState.getBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE);
+        if (savedInstanceState != null) {
+            expandActionViewOnCreate = savedInstanceState.getBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE);
+            searchviewText = savedInstanceState.getString(SEARCHVIEW_TEXT);
+        }
 
         //set up action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -182,7 +187,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     @Override
     protected void onResume() {
         super.onResume();
-        PiwikTracker.trackScreenView(getApplication(), SONG_SEARCH_HISTORY);
+        PiwikTracker.trackScreenView(SONG_SEARCH_HISTORY);
     }
 
     @Override
@@ -317,8 +322,35 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
-        if (expandActionViewOnCreate)
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                MenuItemCompat.collapseActionView(searchMenuItem);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                MenuItemCompat.collapseActionView(searchMenuItem);
+                return false;
+            }
+        });
+
+        if (expandActionViewOnCreate) {
             MenuItemCompat.expandActionView(searchMenuItem);
+            searchView.setQuery(searchviewText, false);
+        }
 
         return true;
     }
@@ -472,6 +504,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     protected void onSaveInstanceState(Bundle outState) {
         //save the expanded state for screen rotation
         outState.putBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE, ((searchMenuItem != null) && (MenuItemCompat.isActionViewExpanded(searchMenuItem))));
+        outState.putString(SEARCHVIEW_TEXT, ((SearchView) MenuItemCompat.getActionView(searchMenuItem)).getQuery().toString());
         super.onSaveInstanceState(outState);
     }
 

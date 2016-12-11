@@ -10,9 +10,6 @@
     <string name="player_connection_content_type">text/xml; charset=utf-8</string>
     <string name="player_image_url_root">https://www.station-millenium.com/coverart</string>
 
-    <!-- default values for replay part -->
-    <string name="replay_url">https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/148534611&amp;color=ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false</string>
-
     <!-- antenna grid -->
     <string name="antenna_grid_page_url">http://www.station-millenium.com/radio/la-grille-des-programmes/</string>
 
@@ -24,12 +21,6 @@
     <string name="twitter_web_url">https://www.twitter.com/millenium22</string>
     <string name="web_site_url">http://www.station-millenium.com</string>
     <string name="google_play_url">https://play.google.com/store/apps/details?id=com.stationmillenium.android</string>
-
-    <!-- tracking URL -->
-    <string name="piwik_url">http://www.station-millenium.com/piwik/piwik/piwik.php</string>
-    <integer name="piwik_app_site_id">4</integer>
-    <integer name="piwik_stream_site_id">2</integer>
-    <integer name="piwik_goal_id">4</integer>
 
     <!-- cache management -->
     <integer name="cache_size_max">3145728</integer>

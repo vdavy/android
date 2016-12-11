@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- http://stackoverflow.com/questions/30839465/floatingactionbutton-default-margin-not-working-in-lollipop -->
+    <dimen name="action_button_margin">16dp</dimen>
+
+</resources>

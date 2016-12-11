@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ThemeReplay" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColorPrimary">@color/icons</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/accent</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:textColorSecondary">@color/secondary_text</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayCount">
+        <item name="android:textColor">@color/icons</item>
+        <item name="android:textSize">@dimen/replay_count_text_size</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="ThemeReplay.Toolbar">
+        <item name="android:textColorPrimary">@color/icons</item>
+        <item name="android:textColorSecondary">@color/icons</item>
+        <item name="android:textColorHint">@color/icons</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayText">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/secondary_text</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayText.Title">
+        <item name="android:textColor">@color/icons</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">@dimen/replay_item_textview_padding</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/replay_title_background</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayItemText">
+        <item name="android:textColor">@color/secondary_text</item>
+        <item name="android:layout_marginTop">@dimen/replay_item_text_margin</item>
+        <item name="android:textSize">@dimen/replay_item_text_size</item>
+        <item name="android:paddingLeft">@dimen/replay_item_textview_padding</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayItemText.Title">
+        <item name="android:textColor">@color/icons</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/replay_title_background</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayItemText.Description">
+        <item name="android:textColor">@color/primary_dark</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayText.Description">
+        <item name="android:textColor">@color/primary_dark</item>
+        <item name="android:paddingLeft">@dimen/replay_item_textview_padding</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayText.Date">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayText.Duration">
+        <item name="android:textStyle">italic</item>
+        <item name="android:background">@drawable/replay_duration_background</item>
+        <item name="android:paddingLeft">@dimen/replay_item_textview_padding</item>
+        <item name="android:paddingRight">@dimen/replay_item_textview_padding</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayText.Duration.Item">
+        <item name="android:textSize">@dimen/replay_count_text_size</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayText.Date.Item">
+        <item name="android:textSize">@dimen/replay_count_text_size</item>
+        <item name="android:layout_marginLeft">@dimen/replay_item_textview_left_margin</item>
+    </style>
+
+    <style name="ThemeReplay.ReplayText.Genre">
+        <item name="android:textColor">@color/icons</item>
+        <item name="android:gravity">center_vertical|end</item>
+        <item name="android:background">@drawable/replay_genre_background</item>
+        <item name="android:paddingLeft">@dimen/replay_item_textview_padding</item>
+        <item name="android:paddingRight">@dimen/replay_item_textview_padding</item>
+    </style>
+
+    <style name="ReplayItemImage">
+        <item name="android:layout_margin">@dimen/replay_item_text_margin</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+    <style name="ReplayItemTag">
+        <item name="android:textColor">@color/icons</item>
+        <item name="android:textSize">@dimen/replay_item_text_size</item>
+    </style>
+
+    <style name="ReplayItemWaveform">
+        <item name="android:layout_marginTop">@dimen/replay_item_text_margin</item>
+        <item name="android:background">@drawable/replay_cardview_shape</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:padding">@dimen/replay_item_textview_padding</item>
+    </style>
+
+</resources>

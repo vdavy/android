@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Replay</string>
+
+    <string name="soudncloud_client_id">8a934c041fbb1f823f9eea645799f03f</string>
+    <string name="soundcloud_user_id">148534611</string>
+
+    <string name="soundcloud_tracklist_URL">https://api.soundcloud.com/users/%1$s/tracks?client_id=%2$s</string>
+    <string name="soundcloud_playlists_URL">https://api.soundcloud.com/users/%1$s/playlists?client_id=%2$s</string>
+    <string name="soundcloud_stream_URL">https://api.soundcloud.com/tracks/%1$s/stream?client_id=%2$s</string>
+    <string name="soundcloud_genre_tracklist_URL">https://api.soundcloud.com/users/%1$s/tracks?client_id=%2$s&amp;genres=%3$s</string>
+    <string name="soundcloud_search_tracklist_URL">https://api.soundcloud.com/users/%1$s/tracks?client_id=%2$s&amp;q=%3$s</string>
+    <string name="soundcloud_tag_tracklist_URL">https://api.soundcloud.com/users/%1$s/tracks?client_id=%2$s&amp;tags=%3$s</string>
+
+    <string name="limit_param">limit</string>
+    <string name="client_id_param">client_id</string>
+
+</resources>

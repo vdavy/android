@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="com.stationmillenium.android.replay.test"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18"/>
+    <!--<uses-permission android:name="android.permission.INJECT_EVENTS"/>-->
+
+    <application>
+        <!-- song history search image display activity -->
+        <activity
+            android:name="com.stationmillenium.android.replay.activities.ReplayActivity"
+            android:label=""
+            android:theme="@style/ThemeReplay"
+            tools:ignore="UnusedAttribute" />
+    </application>
+</manifest>

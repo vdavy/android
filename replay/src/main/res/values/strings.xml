@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <plurals name="replay_count">
+        <item quantity="one">%d replay disponible</item>
+        <item quantity="other">%d replays disponibles</item>
+    </plurals>
+
+    <string name="replay_genre">#%s</string>
+
+    <string name="replay_duration">%1$s:%2$s</string>
+    <string name="replay_duration_hours">%1$s:%2$s:%3$s</string>
+
+    <string name="replay_load_more">Chargement de plus de replays&#8230;</string>
+    <string name="replay_load_more_max_reached">Nombre maxi de replays atteint</string>
+    <string name="replay_date_duration_separator">-</string>
+
+    <string name="replay_toolbar_normal_title">Le replay</string>
+    <string name="replay_toolbar_hash_title">Le replay : #%s</string>
+    <string name="replay_toolbar_search_title">Le replay : %s</string>
+
+    <string name="replay_search_menu">Rechercher</string>
+    <string name="replay_search_text">Recherche de replays</string>
+    <string name="replay_search_hint">Rechercher des replays&#8230;</string>
+
+    <string name="replay_unavailable">Replay indisponible</string>
+
+    <string name="replay_item_toolbar_title">Replay : %s</string>
+
+</resources>

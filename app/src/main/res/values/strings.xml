@@ -5,7 +5,6 @@
     <string name="app_name">Station Millenium</string>
     <string name="player_activity_title">Player Live Millenium</string>
     <string name="preferences_activity_title">Paramètres</string>
-    <string name="replay_activity_title">Le replay</string>
     <string name="antenna_grid_activity_title">La grille des programmes</string>
     <string name="links_activity_title">Les liens Millenium</string>
 
@@ -208,5 +207,9 @@
     <string name="song_search_history_menu_time_search">Recherche par date</string>
     <string name="song_search_history_menu_time_search_select_date">Sélectionner une date</string>
     <string name="song_search_history_menu_time_search_select_time">Sélectionner une heure</string>
+
+    <!-- replay -->
+    <string name="replay_activity_title">Le replay</string>
+    <string name="replay_item_activity_title">Replay</string>
 
 </resources>

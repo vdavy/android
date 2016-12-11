@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.text.TextUtils"/>
+        <import type="android.view.View"/>
+        <variable
+            name="replayItem"
+            type="com.stationmillenium.android.replay.dto.TrackDTO"/>
+        <variable
+            name="activity"
+            type="com.stationmillenium.android.replay.activities.ReplayActivity"/>
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="3dp"
+        android:layout_height="90dp"
+        android:onClick="@{() -> activity.openReplay(replayItem)}">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/replay_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/replay_cardview_shape">
+
+            <ImageView
+                android:id="@+id/replay_artwork"
+                app:replayImage="@{replayItem}"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription=""
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription"
+                />
+
+            <TextView
+                android:id="@+id/replay_title"
+                style="@style/ThemeReplay.ReplayText.Title"
+                android:text="@{replayItem.title}"
+                android:layout_height="wrap_content"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/replay_artwork"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_width="0dp"/>
+
+            <TextView
+                android:id="@+id/replay_description"
+                android:text="@{replayItem.description}"
+                style="@style/ThemeReplay.ReplayText.Description"
+                app:layout_constraintLeft_toRightOf="@+id/replay_artwork"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                style="@style/ThemeReplay.ReplayText.Duration"
+                android:text="@{replayItem.duration}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/replay_duration"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintLeft_toRightOf="@+id/replay_artwork"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:text="@string/replay_date_duration_separator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/replay_separator"
+                app:layout_constraintBaseline_toBaselineOf="@+id/replay_duration"
+                app:layout_constraintLeft_toRightOf="@+id/replay_duration"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"/>
+
+            <TextView
+                style="@style/ThemeReplay.ReplayText.Date"
+                android:text="@{replayItem.lastModified}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/replay_date"
+                app:layout_constraintBaseline_toBaselineOf="@+id/replay_duration"
+                app:layout_constraintLeft_toRightOf="@+id/replay_separator"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"/>
+
+            <TextView
+                style="@style/ThemeReplay.ReplayText.Genre"
+                android:visibility="@{!TextUtils.isEmpty(replayItem.genre) ? View.VISIBLE : View.GONE}"
+                android:text="@{@string/replay_genre(replayItem.genre)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/replay_genre"
+                app:layout_constraintBaseline_toBaselineOf="@+id/replay_date"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="8dp"
+                android:paddingRight="3dp"
+                android:paddingLeft="3dp"
+                android:onClick="@{() -> activity.searchGenre(replayItem.genre)}"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+</layout>

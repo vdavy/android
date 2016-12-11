@@ -15,7 +15,7 @@ import android.util.Log;
 
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.contentproviders.SongHistoryContentProvider;
-import com.stationmillenium.android.contentproviders.SongHistoryContentProvider.SongHistoryContract;
+import com.stationmillenium.android.contentproviders.SongHistoryContract;
 
 /**
  * Test the {@link SongHistoryContentProvider}

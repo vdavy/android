@@ -65,7 +65,7 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/home_item_background"
                 android:contentDescription="@string/empty_string"
-                android:onClick="displayReplayFragment"
+                android:onClick="startReplay"
                 android:padding="8dp"
                 android:src="@drawable/ic_home_replay" />
 

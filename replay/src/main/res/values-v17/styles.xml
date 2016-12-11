@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- override to include layout_marginStart -->
+    <style name="ThemeReplay.ReplayText.Date.Item">
+        <item name="android:textSize">@dimen/replay_count_text_size</item>
+        <item name="android:layout_marginLeft">@dimen/replay_item_textview_left_margin</item>
+        <item name="android:layout_marginStart">@dimen/replay_item_textview_left_margin</item>
+    </style>
+
+</resources>

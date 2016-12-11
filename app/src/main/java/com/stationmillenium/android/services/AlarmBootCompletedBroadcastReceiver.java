@@ -25,13 +25,15 @@ public class AlarmBootCompletedBroadcastReceiver extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Boot completed broadcast intent received - lauch alarm programmation");
+        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, "Boot completed broadcast intent received - lauch alarm programmation");
 
-        //launch alarm service
-        Intent alarmIntent = new Intent(context, AlarmService.class);
-        alarmIntent.setAction(LocalIntents.SET_ALARM_TIME.toString());
-        context.startService(alarmIntent);
+            //launch alarm service
+            Intent alarmIntent = new Intent(context, AlarmService.class);
+            alarmIntent.setAction(LocalIntents.SET_ALARM_TIME.toString());
+            context.startService(alarmIntent);
+        }
     }
 
 }
