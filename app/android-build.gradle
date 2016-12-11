@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         applicationId "com.stationmillenium.android"
         minSdkVersion 11
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 104
         versionName "2.0.0-beta1"
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
