@@ -1,10 +1,14 @@
 package com.stationmillenium.android.replay.utils;
 
 import android.databinding.BindingAdapter;
+import android.graphics.Bitmap;
 import android.support.v4.content.res.ResourcesCompat;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.dto.TrackDTO;
 
@@ -32,7 +36,6 @@ public class GlideUtils {
                 .asBitmap()
                 .placeholder(R.drawable.default_replay)
                 .centerCrop()
-                .animate(R.anim.abc_fade_in)
                 .transform(new CropCircleTransformation(replayArtwork.getContext()))
                 .into(replayArtwork);
     }
@@ -48,11 +51,22 @@ public class GlideUtils {
                 .load(replay.getWaveformURL())
                 .asBitmap()
                 .centerCrop()
-                .animate(R.anim.abc_fade_in)
                 .transform(
                         new ColorFilterTransformation(imageView.getContext(), ResourcesCompat.getColor(imageView.getContext().getResources(), R.color.accent, null)),
                         new BlurTransformation(imageView.getContext(), 10),
                         new RoundedCornersTransformation(imageView.getContext(), imageView.getResources().getDimensionPixelSize(R.dimen.replay_item_tag_space), 0))
+                .listener(new RequestListener<String, Bitmap>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        imageView.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                })
                 .into(imageView);
     }
 

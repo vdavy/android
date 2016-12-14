@@ -72,28 +72,34 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/replay_item_text_margin" />
 
-        <ImageView
-            style="@style/ReplayItemWaveform"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:replayBackground="@{replayItem}"
-            tools:ignore="ContentDescription"/>
+            android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
+            <ImageView
+                style="@style/ReplayItemWaveform"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:replayBackground="@{replayItem}"
+                android:visibility="gone"
+                tools:ignore="ContentDescription"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
 
             <ProgressBar
                 android:id="@+id/replay_item_progressbar"
                 android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminate="true"/>
+                android:indeterminate="true"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintVertical_bias="0.7"/>
 
-        </LinearLayout>
-
+        </android.support.constraint.ConstraintLayout>
 
     </LinearLayout>
 
