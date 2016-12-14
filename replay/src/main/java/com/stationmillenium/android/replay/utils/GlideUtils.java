@@ -32,6 +32,7 @@ public class GlideUtils {
                 .asBitmap()
                 .placeholder(R.drawable.default_replay)
                 .centerCrop()
+                .animate(R.anim.abc_fade_in)
                 .transform(new CropCircleTransformation(replayArtwork.getContext()))
                 .into(replayArtwork);
     }
@@ -47,6 +48,7 @@ public class GlideUtils {
                 .load(replay.getWaveformURL())
                 .asBitmap()
                 .centerCrop()
+                .animate(R.anim.abc_fade_in)
                 .transform(
                         new ColorFilterTransformation(imageView.getContext(), ResourcesCompat.getColor(imageView.getContext().getResources(), R.color.accent, null)),
                         new BlurTransformation(imageView.getContext(), 10),
