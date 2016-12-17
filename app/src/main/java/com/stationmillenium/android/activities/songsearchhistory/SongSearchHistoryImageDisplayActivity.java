@@ -4,23 +4,23 @@
 package com.stationmillenium.android.activities.songsearchhistory;
 
 import android.os.AsyncTask;
-import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.libutils.views.ImageLoader;
-
-import java.util.Date;
 
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SONG_HISTORY_DISPLAY_IMAGE;
 
@@ -34,14 +34,10 @@ public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity imp
 
     //static parts
     private final static String TAG = "SongImageActivity";
-    private final static String IMAGE_FILE_NAME_BUNDLE = "ImageFileNameBundle";
     private final static String IMAGE_URL_BUNDLE = "ImageURLBundle";
     private final static String ACTIVITY_TITLE_BUNDLE = "ActivityTitleBundle";
-    private final static String GENERATED_FILE_NAME_KEY = "generated";
 
     //instance vars
-    private ImageLoader imageLoader;
-    private String imageFileName;
     private String imageURL;
     private String activityTitle;
 
@@ -53,7 +49,6 @@ public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity imp
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            imageFileName = savedInstanceState.getString(IMAGE_FILE_NAME_BUNDLE);
             imageURL = savedInstanceState.getString(IMAGE_URL_BUNDLE);
             activityTitle = savedInstanceState.getString(ACTIVITY_TITLE_BUNDLE);
         }
@@ -77,21 +72,6 @@ public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity imp
 
         //get widgets
         imageView = (ImageView) findViewById(R.id.image_display_imageview);
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.image_display_progressbar);
-
-        //try to get data in saved place
-        //file name part
-        if (imageFileName == null) { //set the file name
-            imageFileName = getIntent().getStringExtra(LocalIntentsData.IMAGE_FILE_PATH.toString());
-            if (imageFileName == null) {
-                imageFileName = GENERATED_FILE_NAME_KEY + new Date().getTime();
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "Name not found - use generated one : " + imageFileName);
-            } else
-                imageFileName = imageFileName.substring(imageFileName.lastIndexOf("/") + 1);
-        }
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Image file name : " + imageFileName);
 
         //image URL part
         if (imageURL == null) {
@@ -101,11 +81,6 @@ public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity imp
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Image URL : " + imageURL);
 
-        //start loader
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Launch song search image loading...");
-        imageLoader = new ImageLoader(imageView, progressBar, imageFileName, this, true);
-
         PiwikTracker.trackScreenView(SONG_HISTORY_DISPLAY_IMAGE);
     }
 
@@ -113,11 +88,6 @@ public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity imp
     public void onPause() {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Pause song search image display activity");
-        if (imageLoader != null) {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Cancel the async image loader");
-            imageLoader.cancel(true); //cancel loading if running
-        }
 
         //recycle image when pausing
         AppUtils.recycleBitmapFromImageView(imageView);
@@ -127,7 +97,6 @@ public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity imp
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(IMAGE_FILE_NAME_BUNDLE, imageFileName);
         outState.putString(IMAGE_URL_BUNDLE, imageURL);
         outState.putString(ACTIVITY_TITLE_BUNDLE, String.valueOf(getTitle()));
         super.onSaveInstanceState(outState);
@@ -138,16 +107,25 @@ public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity imp
      */
     @Override
     public void onGlobalLayout() {
-        if (imageLoader != null) {
-            if (imageLoader.getStatus() == Status.PENDING) {
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "Layout loaded - load image");
-                imageLoader.execute(imageURL);
-            } else if (BuildConfig.DEBUG)
-                Log.d(TAG, "Image loader already executed");
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "Layout loaded - load image");
         }
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Image loader is null");
+        Glide.with(this)
+            .load(imageURL)
+            .fitCenter()
+            .listener(new RequestListener<String, GlideDrawable>() {
+                @Override
+                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    findViewById(R.id.image_display_progressbar).setVisibility(View.GONE);
+                    return false;
+                }
+            })
+            .into(imageView);
     }
 
 }
