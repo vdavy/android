@@ -6,15 +6,11 @@ package com.stationmillenium.android.libutils;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
@@ -136,21 +132,6 @@ public class AppUtils {
             }
         }
         return false;
-    }
-
-    /**
-     * Recycle bitmap to avoid OOM from {@link ImageView}
-     *
-     * @param imageView the {@link ImageView} to get {@link Bitmap} to recycle
-     */
-    public static void recycleBitmapFromImageView(ImageView imageView) {
-        Drawable drawable = imageView.getDrawable();
-        imageView.setImageDrawable(null);
-        if (drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            Bitmap bitmap = bitmapDrawable.getBitmap();
-            bitmap.recycle();
-        }
     }
 
 }

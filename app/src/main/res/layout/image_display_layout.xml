@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/image_display_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ff000000">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ProgressBar
-        android:id="@+id/image_display_progressbar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+    <data>
+        <variable
+            name="imageURL"
+            type="java.lang.String"/>
+    </data>
 
-    <com.stationmillenium.android.libutils.views.TouchImageView
-        android:id="@+id/image_display_imageview"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/image_display_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/empty_string" />
+        android:background="#ff000000">
 
-</RelativeLayout>
+        <ProgressBar
+            android:id="@+id/image_display_progressbar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <com.stationmillenium.android.libutils.views.TouchImageView
+            android:id="@+id/image_display_imageview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/empty_string"
+            app:searchedSongImage="@{imageURL}"
+            app:progressBar="@{imageDisplayProgressbar}"/>
+
+    </RelativeLayout>
+
+</layout>
