@@ -4,7 +4,6 @@
 package com.stationmillenium.android.activities.songsearchhistory;
 
 import android.databinding.DataBindingUtil;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,13 +14,12 @@ import com.stationmillenium.android.R;
 import com.stationmillenium.android.databinding.ImageDisplayLayoutBinding;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
-import com.stationmillenium.android.libutils.views.ImageLoader;
 
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SONG_HISTORY_DISPLAY_IMAGE;
 
 /**
  * Song search image display activity
- * Implements {@link OnGlobalLayoutListener} to display image when the layout is full loaded (due to using {@link AsyncTask} in {@link ImageLoader})
+ * Implements {@link OnGlobalLayoutListener} to display image
  *
  * @author vincent
  */
