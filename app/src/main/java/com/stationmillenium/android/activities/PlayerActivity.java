@@ -33,6 +33,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -571,16 +575,17 @@ public class PlayerActivity extends AppCompatActivity {
 
                 if (songData != null) { //if data found
                     //update the image
-                    if (songData.getCurrentSong().getImage() != null) {
-                        if (BuildConfig.DEBUG)
-                            Log.d(TAG, "Image specified - update...");
-                        AsyncImageLoader ail = new AsyncImageLoader(imageSwitcher);
-                        ail.execute(songData.getCurrentSong().getImage());
-                    } else {
-                        if (BuildConfig.DEBUG)
-                            Log.d(TAG, "No image specified - use default");
-                        imageSwitcher.setImageResource(R.drawable.player_default_image);
-                    }
+                    Glide.with(context)
+                            .load(songData.getCurrentSong().getImageURL())
+                            .placeholder(R.drawable.player_default_image)
+                            .error(R.drawable.player_default_image)
+                            .centerCrop()
+                            .into(new SimpleTarget<GlideDrawable>() {
+                                @Override
+                                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                                    imageSwitcher.setImageDrawable(resource);
+                                }
+                            });
 
                     //update current title
                     if ((songData.getCurrentSong().getArtist() != null) && (songData.getCurrentSong().getTitle() != null)) {

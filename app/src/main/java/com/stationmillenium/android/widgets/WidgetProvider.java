@@ -12,14 +12,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.MainActivity;
@@ -30,8 +31,6 @@ import com.stationmillenium.android.libutils.dto.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.services.MediaPlayerService;
-
-import java.io.File;
 
 /**
  * Class to manage the widget
@@ -75,7 +74,7 @@ public class WidgetProvider extends AppWidgetProvider {
     }
 
     @Override
-    public void onReceive(@NonNull Context context, @NonNull Intent intent) {
+    public void onReceive(@NonNull final Context context, @NonNull Intent intent) {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Widget receiving intent : " + intent);
         super.onReceive(context, intent);
@@ -100,10 +99,22 @@ public class WidgetProvider extends AppWidgetProvider {
                     }
 
                     //update image
-                    if (songData.getCurrentSong().getImage() != null) {
-                        new WidgetAsyncImageLoader(context).execute(songData.getCurrentSong().getImage());
-                    } else
-                        remoteViews.setImageViewResource(R.id.widget_image, R.drawable.player_default_image);
+                    Glide.with(context)
+                        .load(songData.getCurrentSong().getImageURL())
+                        .asBitmap()
+                        .placeholder(R.drawable.player_default_image)
+                        .error(R.drawable.player_default_image)
+                        .centerCrop()
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+                                remoteView.setImageViewBitmap(R.id.widget_image, resource);
+
+                                //update the widget
+                                updateWidget(context, remoteView);
+                            }
+                        });
 
                     updateWidget(context, remoteViews);
                 }
@@ -237,46 +248,6 @@ public class WidgetProvider extends AppWidgetProvider {
             awm.partiallyUpdateAppWidget(awm.getAppWidgetIds(componentName), remoteViews);
         else
             awm.updateAppWidget(awm.getAppWidgetIds(componentName), remoteViews);
-    }
-
-    /**
-     * Async loader for title image
-     *
-     * @author vincent
-     */
-    private class WidgetAsyncImageLoader extends AsyncTask<File, Void, Bitmap> {
-
-        private static final String TAG = "WidgetAsyncImageLoader";
-
-        private Context context;
-
-        /**
-         * Create a {@link WidgetAsyncImageLoader}
-         *
-         * @param context the {@link Context}
-         */
-        public WidgetAsyncImageLoader(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected Bitmap doInBackground(File... params) {
-            return BitmapFactory.decodeFile(params[0].getAbsolutePath());
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            if (result != null) {
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "Update image view");
-                RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-                remoteView.setImageViewBitmap(R.id.widget_image, result);
-
-                //update the widget
-                updateWidget(context, remoteView);
-            }
-        }
-
     }
 
 }

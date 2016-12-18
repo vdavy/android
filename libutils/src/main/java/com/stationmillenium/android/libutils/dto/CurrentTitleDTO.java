@@ -3,7 +3,6 @@
  */
 package com.stationmillenium.android.libutils.dto;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -105,7 +104,7 @@ public class CurrentTitleDTO implements Serializable {
         private String artist;
         private String title;
         private Date playedDate;
-        private File image;
+        private String imageURL;
         private ImageMetadata metadata;
 
         /**
@@ -139,15 +138,15 @@ public class CurrentTitleDTO implements Serializable {
         /**
          * @return the image
          */
-        public File getImage() {
-            return image;
+        public String getImageURL() {
+            return imageURL;
         }
 
         /**
-         * @param image the image to set
+         * @param imageURL the image to set
          */
-        public void setImage(File image) {
-            this.image = image;
+        public void setImageURL(String imageURL) {
+            this.imageURL = imageURL;
         }
 
         /**
@@ -184,7 +183,7 @@ public class CurrentTitleDTO implements Serializable {
         @Override
         public String toString() {
             return "Song [artist=" + artist + ", title=" + title
-                    + ", playedDate=" + playedDate + ", image=" + image
+                    + ", playedDate=" + playedDate + ", imageURL=" + imageURL
                     + ", metadata=" + metadata + "]";
         }
 

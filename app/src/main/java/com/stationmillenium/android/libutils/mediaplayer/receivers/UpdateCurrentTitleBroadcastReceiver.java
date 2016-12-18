@@ -7,14 +7,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaMetadata;
 import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.PlayerActivity;
@@ -23,7 +24,6 @@ import com.stationmillenium.android.libutils.dto.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.services.MediaPlayerService;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 
 /**
@@ -32,75 +32,6 @@ import java.lang.ref.WeakReference;
  * @author vincent
  */
 public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
-
-    /**
-     * Async loader for title image
-     *
-     * @author vincent
-     */
-    private class AsyncImageLoader extends AsyncTask<File, Void, Bitmap> {
-
-        private CurrentTitleDTO song;
-
-        /**
-         * Create a new {@link AsyncImageLoader} with the song to update params
-         *
-         * @param song the {@link CurrentTitleDTO}
-         */
-        public AsyncImageLoader(CurrentTitleDTO song) {
-            this.song = song;
-        }
-
-        @Override
-        protected Bitmap doInBackground(File... params) {
-            if ((params.length >= 1) && (params[0] != null))
-                return BitmapFactory.decodeFile(params[0].getAbsolutePath());
-            else
-                return null;
-        }
-
-        @Override
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        protected void onPostExecute(Bitmap songArtBitmap) {
-            if (mediaPlayerServiceRef.get() != null) {
-                synchronized (mediaPlayerServiceRef.get().getCurrentSongImageLock()) { //save image
-                    mediaPlayerServiceRef.get().setCurrentSongImage(songArtBitmap);
-                }
-
-                //update the notification
-                boolean notificationUpdateNeeded = (((mediaPlayerServiceRef.get().getCurrentSong() != null)
-                        && (song != null)
-                        && (!mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().equals(song.getCurrentSong())))
-                        || ((mediaPlayerServiceRef.get().getCurrentSong() == null) && (song != null)));
-                mediaPlayerServiceRef.get().setCurrentSong(song);
-                if (notificationUpdateNeeded) {
-                    if (AppUtils.isAPILevel21Available()) { //we can update notification using new API
-                        MediaMetadata.Builder builder = new MediaMetadata.Builder();
-                        builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getArtist());
-                        builder.putString(MediaMetadata.METADATA_KEY_TITLE, mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getTitle());
-                        builder.putBitmap(MediaMetadata.METADATA_KEY_ART, songArtBitmap);
-                        mediaPlayerServiceRef.get().getMediaSession().setMetadata(builder.build());
-                    } else {
-                        Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().createNotification(mediaPlayerServiceRef.get().getPlayerState() == PlayerActivity.PlayerState.PLAYING);
-                        ((NotificationManager) mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE)).notify(MediaPlayerService.NOTIFICATION_ID, notification);
-                    }
-                }
-
-                //set metadata for remote control
-                if ((AppUtils.isAPILevel14Available()) && (mediaPlayerServiceRef.get().getRemoteControlClient() != null)) {
-                    RemoteControlClient.MetadataEditor metadataEditor = mediaPlayerServiceRef.get().getRemoteControlClient().editMetadata(false);
-                    metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, song.getCurrentSong().getArtist());
-                    metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, song.getCurrentSong().getArtist());
-                    metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, song.getCurrentSong().getTitle());
-                    if (songArtBitmap != null)
-                        metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, songArtBitmap);
-                    else
-                        metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, BitmapFactory.decodeResource(mediaPlayerServiceRef.get().getResources(), R.drawable.player_default_image));
-                    metadataEditor.apply();
-                }
-            }
-        }
-    }
 
     private static final String TAG = "UpdateCurrentTitleBR";
 
@@ -115,11 +46,61 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (BuildConfig.DEBUG)
             Log.d(TAG, "Update the current playing title");
-        CurrentTitleDTO songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());
-        if (songData != null)
-            new AsyncImageLoader(songData).execute(songData.getCurrentSong().getImage());
-        else
+        final CurrentTitleDTO songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());
+        if (songData != null) {
+            Glide.with(context)
+                    .load(songData.getCurrentSong().getImageURL())
+                    .asBitmap()
+                    .placeholder(R.drawable.player_default_image)
+                    .error(R.drawable.player_default_image)
+                    .centerCrop()
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            propagateMetaData(resource, songData);
+                        }
+                    });
+        } else {
             Log.w(TAG, "Current title DTO was null !");
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void propagateMetaData(Bitmap songArtBitmap, CurrentTitleDTO song) {
+        if (mediaPlayerServiceRef.get() != null) {
+            synchronized (mediaPlayerServiceRef.get().getCurrentSongImageLock()) { //save image
+                mediaPlayerServiceRef.get().setCurrentSongImage(songArtBitmap);
+            }
+
+            //update the notification
+            boolean notificationUpdateNeeded = (((mediaPlayerServiceRef.get().getCurrentSong() != null)
+                    && (song != null)
+                    && (!mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().equals(song.getCurrentSong())))
+                    || ((mediaPlayerServiceRef.get().getCurrentSong() == null) && (song != null)));
+            mediaPlayerServiceRef.get().setCurrentSong(song);
+            if (notificationUpdateNeeded) {
+                if (AppUtils.isAPILevel21Available()) { //we can update notification using new API
+                    MediaMetadata.Builder builder = new MediaMetadata.Builder();
+                    builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getArtist());
+                    builder.putString(MediaMetadata.METADATA_KEY_TITLE, mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getTitle());
+                    builder.putBitmap(MediaMetadata.METADATA_KEY_ART, songArtBitmap);
+                    mediaPlayerServiceRef.get().getMediaSession().setMetadata(builder.build());
+                } else {
+                    Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().createNotification(mediaPlayerServiceRef.get().getPlayerState() == PlayerActivity.PlayerState.PLAYING);
+                    ((NotificationManager) mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE)).notify(MediaPlayerService.NOTIFICATION_ID, notification);
+                }
+            }
+
+            //set metadata for remote control
+            if ((AppUtils.isAPILevel14Available()) && (mediaPlayerServiceRef.get().getRemoteControlClient() != null)) {
+                RemoteControlClient.MetadataEditor metadataEditor = mediaPlayerServiceRef.get().getRemoteControlClient().editMetadata(false);
+                metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, song.getCurrentSong().getArtist());
+                metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, song.getCurrentSong().getArtist());
+                metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, song.getCurrentSong().getTitle());
+                metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, songArtBitmap);
+                metadataEditor.apply();
+            }
+        }
     }
 
     /**

@@ -19,18 +19,7 @@ import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.libutils.network.NetworkUtils;
 import com.stationmillenium.android.libutils.xml.XMLCurrentTitleParser;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * Service to manage current title grabbering
@@ -40,7 +29,6 @@ import java.util.List;
 public class CurrentTitlePlayerService extends IntentService {
 
     private static final String TAG = "CurrentTitleService";
-    private static final String FILENAME_PATTERN = "\\p{Alnum}{32}.png";
 
     /**
      * Create a new player service
@@ -79,8 +67,7 @@ public class CurrentTitlePlayerService extends IntentService {
                         if ((songDataDTO != null)
                                 && (songDataDTO.getCurrentSong() != null)
                                 && (songDataDTO.getCurrentSong().getMetadata() != null)) {
-                            cleanupCache(); //clean up cache before adding new image
-                            manageBitmapImageWithCache(songDataDTO);
+                            songDataDTO.getCurrentSong().setImageURL(getResources().getString(R.string.player_image_url_root) + songDataDTO.getCurrentSong().getMetadata().getPath());
                         }
 
                         //send intent
@@ -111,145 +98,4 @@ public class CurrentTitlePlayerService extends IntentService {
         }
     }
 
-    /**
-     * Load the image into the cache if not found
-     *
-     * @param songDataDTO the song data
-     */
-    private void manageBitmapImageWithCache(CurrentTitleDTO songDataDTO) {
-        //extract file name
-        String fileName = songDataDTO.getCurrentSong().getMetadata().getPath();
-        fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
-
-        //check if the image exists in cache
-        File imageFile = new File(getCacheDir(), fileName);
-        if (!imageFile.exists()) {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, fileName + " does not exist - load it from server...");
-
-            String imageUrl = getResources().getString(R.string.player_image_url_root) + songDataDTO.getCurrentSong().getMetadata().getPath();
-
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Image URL : " + imageUrl);
-            InputStream imageIs = NetworkUtils.connectToURL(imageUrl,
-                    null,
-                    getResources().getString(R.string.player_connection_request_method),
-                    getResources().getString(R.string.player_connection_content_type),
-                    Integer.parseInt(getResources().getString(R.string.player_connection_connect_timeout)),
-                    Integer.parseInt(getResources().getString(R.string.player_connection_read_timeout)));
-
-            //write input stream data to file
-            OutputStream imageOs = null;
-            try {
-                imageOs = new BufferedOutputStream(new FileOutputStream(imageFile));
-                int bufferSize = 1024;
-                byte[] buffer = new byte[bufferSize];
-                int len;
-                while ((len = imageIs.read(buffer)) != -1) {
-                    imageOs.write(buffer, 0, len);
-                }
-
-            } catch (FileNotFoundException e) { //handle errors
-                Log.e(TAG, "Error while creating cache image file", e);
-            } catch (IOException e) {
-                Log.e(TAG, "IO error with cache image file", e);
-            } finally { //close streams
-                try {
-                    if (imageIs != null)
-                        imageIs.close();
-                    if (imageOs != null)
-                        imageOs.close();
-                } catch (IOException e) {
-                    Log.w(TAG, "Errors during closing of image streams", e);
-                }
-            }
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Image written to " + imageFile);
-        }
-
-        //image is cached - set the image file
-        songDataDTO.getCurrentSong().setImage(imageFile);
-    }
-
-    /**
-     * Cleanup the app cache if cache size is too big
-     */
-    private void cleanupCache() {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Start cache cleanup...");
-
-        //get image files from cache
-        File[] cacheFiles = getCacheDir().listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                return ((pathname != null) && (pathname.getName().matches(FILENAME_PATTERN)));
-            }
-        });
-        List<File> cacheFileList = Arrays.asList(cacheFiles);
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Found cache files : " + cacheFileList);
-
-        //compute cache size
-        long totalCacheSize = 0;
-        for (File cacheFile : cacheFileList)
-            totalCacheSize += cacheFile.length();
-
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Cache total size (KB) : " + (totalCacheSize / 1024));
-
-        //is cache too big ?
-        if (totalCacheSize > getResources().getInteger(R.integer.cache_size_max)) {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Cache size too big - cleanup needed");
-
-            //sort cache file list by last modified date
-            Collections.sort(cacheFileList, new Comparator<File>() {
-                @Override
-                public int compare(File lhs, File rhs) {
-                    if (lhs == null) //first file null
-                        return -1;
-                    else if (rhs == null) //second file null
-                        return 1;
-                    else if (lhs.length() < rhs.length()) //first file older than second
-                        return -1;
-                    else if (lhs.length() > rhs.length()) //second file older than first
-                        return 1;
-                    else //file have same age
-                        return 0;
-                }
-            });
-
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Sorted files by age : " + cacheFileList);
-
-            //compute cache size to reach
-            long cacheSizeToReach = getResources().getInteger(R.integer.cache_size_max) * getResources().getInteger(R.integer.cache_size_to_reach_percent) / 100;
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Cache size to reach (KB) : " + (cacheSizeToReach / 1024));
-
-            //clean cache
-            for (File cacheFile : cacheFileList) {
-                long cacheFileSize = cacheFile.length(); //save length before file deletion
-                cacheFile.delete();
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "File deleted : " + cacheFile);
-
-                //file deleted, so substract file length from cache
-                totalCacheSize -= cacheFileSize;
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "New cache size (KB) : " + (totalCacheSize / 1024));
-
-                //check if cache size is now acceptable
-                if (totalCacheSize <= cacheSizeToReach) {
-                    if (BuildConfig.DEBUG)
-                        Log.d(TAG, "Cache size reached requested value - stop cleanup");
-
-                    break;
-                } else if (BuildConfig.DEBUG)
-                    Log.d(TAG, "Requested size for cache not reached - continue cleanup");
-            }
-
-        } else
-            Log.d(TAG, "Cache size not too big");
-    }
 }
