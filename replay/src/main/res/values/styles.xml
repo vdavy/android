@@ -99,7 +99,7 @@
 
     <style name="ReplayItemWaveform">
         <item name="android:layout_marginTop">@dimen/replay_item_text_margin</item>
-        <item name="android:background">@drawable/replay_cardview_shape</item>
+        <item name="android:background">@drawable/replay_waveform_background</item>
         <item name="android:scaleType">fitXY</item>
         <item name="android:padding">@dimen/replay_item_textview_padding</item>
     </style>

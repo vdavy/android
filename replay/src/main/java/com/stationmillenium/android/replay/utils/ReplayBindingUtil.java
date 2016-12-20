@@ -2,7 +2,10 @@ package com.stationmillenium.android.replay.utils;
 
 import android.content.Context;
 import android.databinding.BindingAdapter;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.support.annotation.NonNull;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.stationmillenium.android.replay.R;
@@ -15,6 +18,8 @@ import java.util.Date;
  * Created by vincent on 06/11/16.
  */
 public class ReplayBindingUtil {
+
+    private static final int DRAWABLE_INDEX = 1;
 
     /**
      * Compute the replay duration
@@ -48,4 +53,11 @@ public class ReplayBindingUtil {
         textView.setText(DateFormat.getDateInstance().format(lastModified));
     }
 
+    @BindingAdapter("percentPlayed")
+    public static void setReplayPlayedDuration(@NonNull ImageView imageView, Integer playedPercent) {
+        Drawable background = imageView.getBackground();
+        if (background instanceof LayerDrawable) {
+            ((LayerDrawable) background).getDrawable(DRAWABLE_INDEX).setLevel(playedPercent);
+        }
+    }
 }

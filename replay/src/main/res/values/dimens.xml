@@ -14,4 +14,7 @@
     <dimen name="replay_item_tag_space">5dp</dimen>
     <dimen name="replay_item_textview_left_margin">4dp</dimen>
 
+    <dimen name="replay_cardview_corner_radius">3dp</dimen>
+    <dimen name="replay_cardview_padding">0dp</dimen>
+
 </resources>

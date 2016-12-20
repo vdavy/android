@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
@@ -23,17 +24,21 @@ import com.stationmillenium.android.replay.dto.TrackDTO;
 import com.stationmillenium.android.replay.utils.URLManager;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Activity to play a replay
  * Inspired from http://stackoverflow.com/questions/3747139/how-can-i-show-a-mediacontroller-while-playing-audio-in-android/5265629#5265629
  * Created by vincent on 28/11/16.
  */
-public class ReplayItemActivity extends AppCompatActivity implements MediaPlayerControl, OnPreparedListener, OnBufferingUpdateListener, OnInfoListener {
+public class ReplayItemActivity extends AppCompatActivity implements MediaPlayerControl, OnPreparedListener, OnBufferingUpdateListener, OnInfoListener, OnCompletionListener {
 
     private static final String TAG = "ReplayItemActivity";
     public static final String REPLAY_ITEM = "ReplayItem";
     private static final String REPLAY_POSITION = "replay_position";
+    private static final int PERCENT_PLAYED_TIMER_START = 0;
+    private static final int PERCENT_PLAYED_TIMER_UPDATE = 500;
 
     private ReplayItemFragment replayItemFragment;
     private ReplayItemActivityBinding replayItemActivityBinding;
@@ -45,6 +50,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     private int bufferPercentage;
     private boolean mediaPlayerStopped;
     private int replayPosition;
+    private Timer playedPercentTimer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,6 +81,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnInfoListener(this);
+        mediaPlayer.setOnCompletionListener(this);
         mediaController = new MediaController(this);
         try {
             mediaPlayer.setDataSource(URLManager.getStreamURLFromTrack(getBaseContext(), replay));
@@ -116,14 +123,20 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         super.onPause();
         replayPosition = mediaPlayer.getCurrentPosition(); // backup current position in case of screen rotation
         mediaPlayerStopped = true;
+        cancelTimer();
         mediaPlayer.stop();
         mediaPlayer.release();
+    }
+
+    private void cancelTimer() {
+        playedPercentTimer.cancel();
     }
 
     @Override
     public void start() {
         if (!mediaPlayerStopped) {
             mediaPlayer.start();
+            launchPlayedPercentimer();
         }
     }
 
@@ -131,6 +144,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     public void pause() {
         if (!mediaPlayerStopped) {
             mediaPlayer.pause();
+            cancelTimer();
         }
     }
 
@@ -187,6 +201,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         Log.d(TAG, "Media player ready");
         // Media player ready - let's play sound
         mediaPlayer.start();
+        launchPlayedPercentimer();
         replayItemFragment.setProgressBarVisible(false);
         if (replayPosition > 0) {
             mediaPlayer.seekTo(replayPosition);
@@ -229,5 +244,42 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
                 return true;
         }
         return false;
+    }
+
+    private void launchPlayedPercentimer() {
+        playedPercentTimer = new Timer();
+        TimerTask task = new TimerTask() {
+
+            @Override
+            public void run() {
+                //compute time
+                float duration = getDuration();
+                float playedPercent;
+                if (duration > 0) {
+                    playedPercent = getCurrentPosition() / duration;
+                    Log.v(TAG, "Played percent : " + playedPercent);
+                } else {
+                    Log.d(TAG, "Duration is 0 second");
+                    playedPercent = 0;
+                }
+                //update in ui thread
+                final int playedPercentIn10000 = (int) (playedPercent * 10000);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        replayItemFragment.setPercentPlayed(playedPercentIn10000);
+                    }
+                });
+            }
+
+        };
+        playedPercentTimer.schedule(task, PERCENT_PLAYED_TIMER_START, PERCENT_PLAYED_TIMER_UPDATE);
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        Log.d(TAG, "Replay done - stop timer");
+        cancelTimer();
+        replayItemFragment.setPercentPlayed(10000);
     }
 }

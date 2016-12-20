@@ -7,6 +7,9 @@
         <variable
             name="replayItem"
             type="com.stationmillenium.android.replay.dto.TrackDTO" />
+        <variable
+            name="percentPlayed"
+            type="java.lang.Integer" />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -116,6 +119,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             app:replayBackground="@{replayItem}"
+            app:percentPlayed="@{percentPlayed}"
             tools:ignore="ContentDescription"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

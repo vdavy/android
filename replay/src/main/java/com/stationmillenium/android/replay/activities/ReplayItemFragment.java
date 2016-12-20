@@ -39,6 +39,7 @@ public class ReplayItemFragment extends Fragment {
     public void setReplay(TrackDTO replay) {
         binding.setReplayItem(replay);
         displayTags(replay);
+        setPercentPlayed(0);
     }
 
     private void displayTags(TrackDTO replay) {
@@ -111,5 +112,13 @@ public class ReplayItemFragment extends Fragment {
      */
     public void setProgressBarVisible(boolean visible) {
         binding.replayItemProgressbar.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Set the played percent for waveform hiding
+     * @param playedPercent the played percent, starting from 0 and ending to 10000
+     */
+    public void setPercentPlayed(int playedPercent) {
+        binding.setPercentPlayed(playedPercent);
     }
 }
