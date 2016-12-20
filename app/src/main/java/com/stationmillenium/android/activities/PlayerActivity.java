@@ -82,7 +82,7 @@ public class PlayerActivity extends AppCompatActivity {
     private static final String IMAGE_SAVE = "IMAGE_SAVE";
     private static final int REFRESH_TIMEOUT = 1;
     private static final int CURRENT_TIME_TIMER_START = 0;
-    private static final int CURRENT_TIME_TIMER_UDAPTE = 1000;
+    private static final int CURRENT_TIME_TIMER_UPDATE = 1000;
     private static final String CURRENT_TIME_TIMER_NAME = "CurrentTimeTimer";
 
     //instances vars
@@ -279,7 +279,7 @@ public class PlayerActivity extends AppCompatActivity {
                 });
             }
 
-        }, CURRENT_TIME_TIMER_START, CURRENT_TIME_TIMER_UDAPTE);
+        }, CURRENT_TIME_TIMER_START, CURRENT_TIME_TIMER_UPDATE);
     }
 
     @Override
