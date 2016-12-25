@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "com.stationmillenium.android"
         minSdkVersion 11
         targetSdkVersion 25
-        versionCode 110
-        versionName "2.1.0-beta1"
+        versionCode 111
+        versionName "2.1.0-beta2"
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         testApplicationId "com.stationmillenium.android.test"
         multiDexEnabled true
