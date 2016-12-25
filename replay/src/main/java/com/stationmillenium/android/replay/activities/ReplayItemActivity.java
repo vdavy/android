@@ -129,7 +129,9 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     }
 
     private void cancelTimer() {
-        playedPercentTimer.cancel();
+        if  (playedPercentTimer != null) {
+            playedPercentTimer.cancel();
+        }
     }
 
     @Override
