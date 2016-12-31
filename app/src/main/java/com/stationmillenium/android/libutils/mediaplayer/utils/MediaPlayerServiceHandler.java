@@ -20,12 +20,14 @@ import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.services.MediaPlayerService;
 
 import java.lang.ref.WeakReference;
+
+import static android.media.AudioManager.STREAM_MUSIC;
+import static com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity.AlarmSharedPreferencesConstants.ALARM_VOLUME;
 
 /**
  * Service handler to run in another thread
@@ -53,47 +55,22 @@ public class MediaPlayerServiceHandler extends Handler {
         if (mediaPlayerServiceRef.get() != null) {
             try {
                 mediaPlayerServiceRef.get().setAudioManager((AudioManager) mediaPlayerServiceRef.get().getSystemService(Context.AUDIO_SERVICE));
-                int result = mediaPlayerServiceRef.get().getAudioManager().requestAudioFocus(mediaPlayerServiceRef.get().getMediaPlayerOnAudioFocusChangeHandler(), AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+                int result = mediaPlayerServiceRef.get().getAudioManager().requestAudioFocus(mediaPlayerServiceRef.get().getMediaPlayerOnAudioFocusChangeHandler(), STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
                 if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                    if (BuildConfig.DEBUG)
+                    if (BuildConfig.DEBUG) {
                         Log.d(TAG, "Audio focus request granted - start the stream");
-
+                    }
                     if (AppUtils.isNetworkAvailable(mediaPlayerServiceRef.get().getApplicationContext())) { //check if network is up
                         try {
                             //init player
                             mediaPlayerServiceRef.get().initMediaPlayer();
 
                             //add handlers
-                            if ((!AppUtils.isAPILevel21Available()) && (mediaPlayerServiceRef.get().getPcbbrComponentName() != null)) { //not used in Lollipop
-                                mediaPlayerServiceRef.get().getAudioManager().registerMediaButtonEventReceiver(mediaPlayerServiceRef.get().getPcbbrComponentName());
-                            }
-                            mediaPlayerServiceRef.get().registerReceiver(mediaPlayerServiceRef.get().getAbnbr(), new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
-                            mediaPlayerServiceRef.get().getAbnbr().setRegistered(true);
-                            LocalBroadcastManager.getInstance(mediaPlayerServiceRef.get()).registerReceiver(mediaPlayerServiceRef.get().getUctbr(), new IntentFilter(LocalIntents.CURRENT_TITLE_UPDATED.toString()));
-                            mediaPlayerServiceRef.get().getUctbr().setRegistered(true);
-                            if (msg.arg2 == 1) { //use volume manager from shared preferences
-                                if (BuildConfig.DEBUG)
-                                    Log.d(TAG, "Use volume from shared preferences");
-                                int volumeValue = PreferenceManager.getDefaultSharedPreferences(mediaPlayerServiceRef.get())
-                                        .getInt(AlarmSharedPreferencesActivity.AlarmSharedPreferencesConstants.ALARM_VOLUME, mediaPlayerServiceRef.get().getAudioManager().getStreamVolume(AudioManager.STREAM_MUSIC));
-                                mediaPlayerServiceRef.get().getAudioManager().setStreamVolume(AudioManager.STREAM_MUSIC, volumeValue, 0);
-                            }
-                            mediaPlayerServiceRef.get().setOriginalVolume(mediaPlayerServiceRef.get().getAudioManager().getStreamVolume(AudioManager.STREAM_MUSIC));
+                            addHandlers(msg);
 
                             //remote control if api level 14
-                            if ((AppUtils.isAPILevel14Available()) && (!AppUtils.isAPILevel21Available())) {
-                                //init the remote control client
-                                Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-                                mediaButtonIntent.setComponent(mediaPlayerServiceRef.get().getPcbbrComponentName());
-                                PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(mediaPlayerServiceRef.get().getApplicationContext(), 0, mediaButtonIntent, 0);
-                                mediaPlayerServiceRef.get().setRemoteControlClient(new RemoteControlClient(mediaPendingIntent));
-                                mediaPlayerServiceRef.get().getRemoteControlClient().setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY
-                                        | RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE
-                                        | RemoteControlClient.FLAG_KEY_MEDIA_PAUSE
-                                        | RemoteControlClient.FLAG_KEY_MEDIA_STOP);
-                                mediaPlayerServiceRef.get().getAudioManager().registerRemoteControlClient(mediaPlayerServiceRef.get().getRemoteControlClient());
-                            }
+                            setupRemoteControl();
 
                             //wifi lock
                             mediaPlayerServiceRef.get().setWifiLock(((WifiManager) mediaPlayerServiceRef.get().getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "StationMilleniumPlayerWifiLock"));
@@ -135,6 +112,38 @@ public class MediaPlayerServiceHandler extends Handler {
 
         } else
             Log.e(TAG, "Reference to MediaPlayerService is null ! Nothing can be done");
+    }
+
+    private void setupRemoteControl() {
+        if ((AppUtils.isAPILevel14Available()) && (!AppUtils.isAPILevel21Available())) {
+            //init the remote control client
+            Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+            mediaButtonIntent.setComponent(mediaPlayerServiceRef.get().getPcbbrComponentName());
+            PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(mediaPlayerServiceRef.get().getApplicationContext(), 0, mediaButtonIntent, 0);
+            mediaPlayerServiceRef.get().setRemoteControlClient(new RemoteControlClient(mediaPendingIntent));
+            mediaPlayerServiceRef.get().getRemoteControlClient().setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY
+                    | RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE
+                    | RemoteControlClient.FLAG_KEY_MEDIA_PAUSE
+                    | RemoteControlClient.FLAG_KEY_MEDIA_STOP);
+            mediaPlayerServiceRef.get().getAudioManager().registerRemoteControlClient(mediaPlayerServiceRef.get().getRemoteControlClient());
+        }
+    }
+
+    private void addHandlers(Message msg) {
+        if ((!AppUtils.isAPILevel21Available()) && (mediaPlayerServiceRef.get().getPcbbrComponentName() != null)) { //not used in Lollipop
+            mediaPlayerServiceRef.get().getAudioManager().registerMediaButtonEventReceiver(mediaPlayerServiceRef.get().getPcbbrComponentName());
+        }
+        mediaPlayerServiceRef.get().registerReceiver(mediaPlayerServiceRef.get().getAbnbr(), new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
+        mediaPlayerServiceRef.get().getAbnbr().setRegistered(true);
+        LocalBroadcastManager.getInstance(mediaPlayerServiceRef.get()).registerReceiver(mediaPlayerServiceRef.get().getUctbr(), new IntentFilter(LocalIntents.CURRENT_TITLE_UPDATED.toString()));
+        mediaPlayerServiceRef.get().getUctbr().setRegistered(true);
+        if (msg.arg2 == 1) { //use volume manager from shared preferences
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Use volume from shared preferences");
+            }
+            int volumeValue = PreferenceManager.getDefaultSharedPreferences(mediaPlayerServiceRef.get()).getInt(ALARM_VOLUME, mediaPlayerServiceRef.get().getAudioManager().getStreamVolume(STREAM_MUSIC));
+            mediaPlayerServiceRef.get().getAudioManager().setStreamVolume(STREAM_MUSIC, volumeValue, 0);
+        }
     }
 
 }

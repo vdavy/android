@@ -70,6 +70,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     private static final int UPDATE_TITLE_PERIOD_TIME = 10000;
     private static final String AUTO_RESTART_PLAYER_TIMER_NAME = "AutoRestartPlayerTimer";
     private static final String AUTO_RESTART_PLAYER_DEFAULT_DELAY = "10";
+    private static final int MEDIA_PLAYER_MAX_VOLUME = 101;
 
     private MediaPlayerServiceHandler mediaPlayerServiceHandler;
 
@@ -87,7 +88,6 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     //vars to manage stream
     private AudioManager audioManager;
     private MediaPlayer mediaPlayer;
-    private int originalVolume;
     private PlayerState playerState;
     private RemoteControlClient remoteControlClient;
 
@@ -162,8 +162,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             MediaController mediaController = new MediaController(getApplicationContext(), mediaSession.getSessionToken());
             transportControls = mediaController.getTransportControls();
             mediaController.registerCallback(mediaPlayerNotificationBuilder.getMediaControllerCallback());
-            mediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
-                    MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
+            mediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS | MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
             if (!mediaSession.isActive()) {
                 mediaSession.setActive(true);
             }
@@ -176,11 +175,11 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             //process specific intent
-            if (LocalIntents.PLAYER_PAUSE.toString().equals(intent.getAction()))
+            if (LocalIntents.PLAYER_PAUSE.toString().equals(intent.getAction())) {
                 pauseMediaPlayerNewWay();
-            else if (LocalIntents.PLAYER_PLAY.toString().equals(intent.getAction()))
+            } else if (LocalIntents.PLAYER_PLAY.toString().equals(intent.getAction())) {
                 playMediaPlayerNewWay();
-            else if (LocalIntents.PLAYER_PLAY_PAUSE.toString().equals(intent.getAction())) {
+            } else if (LocalIntents.PLAYER_PLAY_PAUSE.toString().equals(intent.getAction())) {
                 if (mediaPlayer != null) {
                     if (isMediaPlayerPlaying()) {
                         pauseMediaPlayerNewWay();
@@ -188,27 +187,30 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                         playMediaPlayerNewWay();
                     }
                 }
-            } else if (LocalIntents.PLAYER_STOP.toString().equals(intent.getAction()))
+            } else if (LocalIntents.PLAYER_STOP.toString().equals(intent.getAction())) {
                 if ((AppUtils.isAPILevel21Available()) && (transportControls != null)) {
                     transportControls.stop();
                 } else {
                     stopMediaPlayer();
                 }
-            else if (LocalIntents.PLAYER_OPEN.toString().equals(intent.getAction())) {
-                if (BuildConfig.DEBUG)
+            } else if (LocalIntents.PLAYER_OPEN.toString().equals(intent.getAction())) {
+                if (BuildConfig.DEBUG) {
                     Log.d(TAG, "Open the player with data");
+                }
                 playerActivityResumed = true; //player resumed at same time
                 Intent playerIntent = createPlayerActivityIntent();
                 startActivity(playerIntent);
 
             } else if (LocalIntents.PLAYER_ACTIVITY_PAUSE.toString().equals(intent.getAction())) {
-                if (BuildConfig.DEBUG)
+                if (BuildConfig.DEBUG) {
                     Log.d(TAG, "Player activity paused - don't send intents");
+                }
                 playerActivityResumed = false;
 
             } else if (LocalIntents.PLAYER_ACTIVITY_RESUME.toString().equals(intent.getAction())) {
-                if (BuildConfig.DEBUG)
+                if (BuildConfig.DEBUG) {
                     Log.d(TAG, "Player activity resumed - send intents");
+                }
                 playerActivityResumed = true;
 
             } else {
@@ -216,10 +218,11 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                 // start ID so we know which request we're stopping when we finish the job
                 Message msg = mediaPlayerServiceHandler.obtainMessage();
                 msg.arg1 = startId;
-                if (intent.getBooleanExtra(LocalIntentsData.GET_VOLUME_FROM_PREFERENCES.toString(), false))
+                if (intent.getBooleanExtra(LocalIntentsData.GET_VOLUME_FROM_PREFERENCES.toString(), false)) {
                     msg.arg2 = 1;
-                else
+                } else {
                     msg.arg2 = 0;
+                }
                 mediaPlayerServiceHandler.sendMessage(msg);
 
                 //if start media player is required, activity is resumed
@@ -258,9 +261,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Player is ready - let's start");
-        mp.start();
+        } mp.start();
 
         //send state intent
         sendStateIntent(PlayerState.PLAYING);
@@ -278,8 +281,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      * Setup the {@link CurrentTitlePlayerService} timer
      */
     private void setupCurrentTitlePlayerServiceTimer() {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Register current title service timer");
+        }
         updateCurrentTitleTimer = new Timer(UPDATE_CURRENT_TITLE_TIMER_NAME);
         updateCurrentTitleTimer.schedule(new TimerTask() {
 
@@ -334,10 +338,12 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      * @param context the {@link Context} to update notification
      */
     public void playMediaPlayer(Context context) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Play media player");
-        if (isMediaPlayerPlaying())
+        }
+        if (isMediaPlayerPlaying()) {
             mediaPlayer.start();
+        }
 
         //send state intent
         sendStateIntent(PlayerState.PLAYING);
@@ -359,8 +365,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      * @param context the {@link Context} to update notification
      */
     public void pauseMediaPlayer(Context context) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Pause media player");
+        }
         if (isMediaPlayerPlaying()) {
             mediaPlayer.pause();
         }
@@ -401,8 +408,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         cancelAutoRestartPlayerServiceTimer();
 
         //stop service
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Stop service");
+        }
         stopForeground(true);
         stopSelf();
     }
@@ -473,8 +481,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
             case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
                 Log.w(TAG, "Media player server died error - restarting");
-                if (mediaPlayer != null)
+                if (mediaPlayer != null) {
                     mediaPlayer.release();
+                }
                 mediaPlayer = null;
 
                 try { //reinit media player
@@ -501,8 +510,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onDestroy() {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Destroying service");
+        }
         //release media player
         if (mediaPlayer != null) {
             mediaPlayer.release();
@@ -514,8 +524,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         cancelAutoRestartPlayerServiceTimer();
 
         //free resources
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Free handlers");
+        }
         if (audioManager != null) {
             if ((AppUtils.isAPILevel14Available() && (remoteControlClient != null))) {
                 audioManager.unregisterRemoteControlClient(remoteControlClient);
@@ -549,20 +560,24 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      * Cancel {@link CurrentTitlePlayerService} timer
      */
     private void cancelCurrentTitleTimerServiceTimer() {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Cancel current title timer");
-        if (updateCurrentTitleTimer != null)
+        }
+        if (updateCurrentTitleTimer != null) {
             updateCurrentTitleTimer.cancel();
+        }
     }
 
     /**
      * Cancel {@link com.stationmillenium.android.services.AutoRestartPlayerService} timer
      */
     private void cancelAutoRestartPlayerServiceTimer() {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Cancel auto restart player service timer");
-        if (autoRestartPlayerTimer != null)
+        }
+        if (autoRestartPlayerTimer != null) {
             autoRestartPlayerTimer.cancel();
+        }
     }
 
     /**
@@ -571,8 +586,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      * @throws IOException if any error occurs
      */
     public void initMediaPlayer() throws IOException {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Init media player");
+        }
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setDataSource(getResources().getString(R.string.player_stream_url));
@@ -596,8 +612,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     @Override
     public boolean onInfo(MediaPlayer mp, int what, int extra) {
         if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Media player start buffering...");
+            }
             sendStateIntent(PlayerState.BUFFERING);
             cancelAutoRestartPlayerServiceTimer();
             //update notification
@@ -607,8 +624,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             }
             return true;
         } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Media player end buffering...");
+            }
             sendStateIntent(PlayerState.PLAYING);
             setupAutoRestartPlayerTimer();
             if (!AppUtils.isAPILevel21Available()) {
@@ -683,10 +701,6 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         return uctbr;
     }
 
-    public void setOriginalVolume(int originalVolume) {
-        this.originalVolume = originalVolume;
-    }
-
     public void setWifiLock(WifiLock wifiLock) {
         this.wifiLock = wifiLock;
     }
@@ -697,10 +711,6 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
     public MediaPlayerNotificationBuilder getMediaPlayerNotificationBuilder() {
         return mediaPlayerNotificationBuilder;
-    }
-
-    public int getOriginalVolume() {
-        return originalVolume;
     }
 
     public MediaPlayerOnAudioFocusChangeHandler getMediaPlayerOnAudioFocusChangeHandler() {
@@ -718,5 +728,15 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             Log.w(TAG, "Error in getCurrentPosition", e);
             return 0;
         }
+    }
+
+    /**
+     * Set the media player volume in percent (0 low volume, 100 max volume)
+     * @param volume the volume in percent
+     */
+    public void setMediaPlayerVolume(int volume) {
+        // see : http://stackoverflow.com/questions/5215459/android-mediaplayer-setvolume-function
+        float volumeLog = 1 - (float)(Math.log(MEDIA_PLAYER_MAX_VOLUME - volume) / Math.log(MEDIA_PLAYER_MAX_VOLUME));
+        mediaPlayer.setVolume(volumeLog, volumeLog);
     }
 }
