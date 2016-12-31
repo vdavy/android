@@ -18,8 +18,8 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.activities.PlayerState;
 import com.stationmillenium.android.libutils.dto.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.services.MediaPlayerService;
@@ -86,7 +86,7 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
                     builder.putBitmap(MediaMetadata.METADATA_KEY_ART, songArtBitmap);
                     mediaPlayerServiceRef.get().getMediaSession().setMetadata(builder.build());
                 } else {
-                    Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().createNotification(mediaPlayerServiceRef.get().getPlayerState() == PlayerActivity.PlayerState.PLAYING);
+                    Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().createNotification(mediaPlayerServiceRef.get().getPlayerState() == PlayerState.PLAYING);
                     ((NotificationManager) mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE)).notify(MediaPlayerService.NOTIFICATION_ID, notification);
                 }
             }

@@ -20,6 +20,7 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.activities.PlayerState;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.services.MediaPlayerService;
 
@@ -41,7 +42,7 @@ public class MediaPlayerNotificationBuilder {
 
     private String currentTitle;
     private Bitmap titleArt;
-    private PlayerActivity.PlayerState playerState;
+    private PlayerState playerState;
 
     /**
      * Create a new MediaPlayerNotificationBuilder
@@ -72,7 +73,7 @@ public class MediaPlayerNotificationBuilder {
                             ? BitmapFactory.decodeResource(mediaPlayerServiceRef.get().getResources(), R.drawable.player_default_image)
                             : metadata.getBitmap(MediaMetadata.METADATA_KEY_ART);
 
-                    Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().initializeNotification(mediaPlayerServiceRef.get().getPlayerState() == PlayerActivity.PlayerState.PLAYING);
+                    Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().initializeNotification(mediaPlayerServiceRef.get().getPlayerState() == PlayerState.PLAYING);
                     ((NotificationManager) mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE)).notify(MediaPlayerService.NOTIFICATION_ID, notification);
                 }
 
@@ -192,7 +193,7 @@ public class MediaPlayerNotificationBuilder {
             PendingIntent pausePlayPendingIntent = PendingIntent.getService(mediaPlayerServiceRef.get(), 0, pausePlayIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             if (AppUtils.isAPILevel21Available()) {
-                int[] compactViewActions = ((playerState == PlayerActivity.PlayerState.PLAYING) || (playerState == PlayerActivity.PlayerState.PAUSED))
+                int[] compactViewActions = ((playerState == PlayerState.PLAYING) || (playerState == PlayerState.PAUSED))
                         ? COMPACT_VIEW_DOUBLE_ACTIONS
                         : COMPACT_VIEW_SINGLE_ACTIONS;
 
@@ -210,14 +211,14 @@ public class MediaPlayerNotificationBuilder {
                         .setContentIntent(playerPendingIntent);
 
                 //add the chronometer
-                if (playerState == PlayerActivity.PlayerState.PLAYING) {
+                if (playerState == PlayerState.PLAYING) {
                     notificationBuilder.setWhen(System.currentTimeMillis() - mediaPlayerServiceRef.get().getPosition())
                             .setShowWhen(true)
                             .setUsesChronometer(true);
                 }
 
                 //don't add play/pause button if buffering
-                if (playerState != PlayerActivity.PlayerState.BUFFERING) {
+                if (playerState != PlayerState.BUFFERING) {
                     notificationBuilder.addAction((pauseAction) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play,
                             mediaPlayerServiceRef.get().getString((pauseAction) ? R.string.player_pause : R.string.player_play),
                             pausePlayPendingIntent);
@@ -242,14 +243,14 @@ public class MediaPlayerNotificationBuilder {
                         .setContentIntent(playerPendingIntent);
 
                 //add the chronometer
-                if (playerState == PlayerActivity.PlayerState.PLAYING) {
+                if (playerState == PlayerState.PLAYING) {
                     notificationBuilder.setWhen(System.currentTimeMillis() - mediaPlayerServiceRef.get().getPosition())
                             .setShowWhen(true)
                             .setUsesChronometer(true);
                 }
 
                 //don't add play/pause button if buffering
-                if (playerState != PlayerActivity.PlayerState.BUFFERING) {
+                if (playerState != PlayerState.BUFFERING) {
                     //add proper action (pause or play)
                     notificationBuilder.addAction((pauseAction) ? R.drawable.ic_player_pause : R.drawable.ic_player_play,
                             mediaPlayerServiceRef.get().getString((pauseAction) ? R.string.player_pause : R.string.player_play),

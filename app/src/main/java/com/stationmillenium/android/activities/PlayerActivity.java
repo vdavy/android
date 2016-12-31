@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -48,6 +47,7 @@ import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.PiwikTracker;
+import com.stationmillenium.android.libutils.activities.PlayerState;
 import com.stationmillenium.android.libutils.dto.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.dto.CurrentTitleDTO.Song;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
@@ -55,8 +55,6 @@ import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.libutils.mediaplayer.utils.MediaPlayerCurrentPositionGrabber;
 import com.stationmillenium.android.services.MediaPlayerService;
 
-import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -524,32 +522,7 @@ public class PlayerActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    /**
-     * Available player state, with associated {@link LocalIntents}
-     *
-     * @author vincent
-     */
-    public enum PlayerState {
-        PLAYING(LocalIntents.ON_PLAYER_PLAY),
-        PAUSED(LocalIntents.ON_PLAYER_PAUSE),
-        STOPPED(LocalIntents.ON_PLAYER_STOP),
-        BUFFERING(LocalIntents.ON_PLAYER_BUFFERING);
 
-        private LocalIntents associatedIntent;
-
-        PlayerState(LocalIntents associatedIntent) {
-            this.associatedIntent = associatedIntent;
-        }
-
-        /**
-         * Get the associated {@link LocalIntents}
-         *
-         * @return the {@link LocalIntents}
-         */
-        public LocalIntents getAssociatedIntent() {
-            return associatedIntent;
-        }
-    }
 
     /**
      * Receiver for the update title broadcast
@@ -618,42 +591,6 @@ public class PlayerActivity extends AppCompatActivity {
             }
         }
 
-        /**
-         * Async loader for title image
-         *
-         * @author vincent
-         */
-        private class AsyncImageLoader extends AsyncTask<File, Void, Bitmap> {
-
-            private static final String TAG = "AsyncImageLoader";
-
-            private WeakReference<ImageSwitcher> imageSwitcherRef;
-
-            /**
-             * Create a {@link AsyncImageLoader}
-             *
-             * @param imageSwitcher the {@link ImageSwitcher} to display image
-             */
-            public AsyncImageLoader(ImageSwitcher imageSwitcher) {
-                imageSwitcherRef = new WeakReference<>(imageSwitcher);
-            }
-
-            @Override
-            protected Bitmap doInBackground(File... params) {
-                return BitmapFactory.decodeFile(params[0].getAbsolutePath());
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap result) {
-                if ((imageSwitcherRef.get() != null) && (result != null)) {
-                    if (BuildConfig.DEBUG)
-                        Log.d(TAG, "Update image view");
-                    imageSwitcherRef.get().setImageDrawable(new BitmapDrawable(getResources(), result));
-                    currentTitleImage = result;
-                }
-            }
-
-        }
     }
 
     /**

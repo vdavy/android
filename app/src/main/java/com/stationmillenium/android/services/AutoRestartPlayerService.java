@@ -7,8 +7,8 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 
-import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.activities.PlayerState;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 
 /**
@@ -37,9 +37,9 @@ public class AutoRestartPlayerService extends IntentService {
         Log.d(TAG, "Check if we need to auto restart player");
         int previousPosition = intent.getIntExtra(PREVIOUS_POSITION, 0);
         int currentPosition = intent.getIntExtra(CURRENT_POSITION, 0);
-        PlayerActivity.PlayerState state = (PlayerActivity.PlayerState) intent.getSerializableExtra(PLAYER_STATE);
+        PlayerState state = (PlayerState) intent.getSerializableExtra(PLAYER_STATE);
 
-        if (state == PlayerActivity.PlayerState.PLAYING) {
+        if (state == PlayerState.PLAYING) {
             if ((previousPosition > 0) && (currentPosition > 0)) {
                 int delta = currentPosition - previousPosition;
                 if ((delta >= 0) && (delta < DELTA_MIN)) {
