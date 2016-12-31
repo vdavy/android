@@ -4,7 +4,6 @@
 package com.stationmillenium.android.activities;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -12,9 +11,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -32,10 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -44,23 +39,22 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.activities.PlayerState;
-import com.stationmillenium.android.libutils.dto.CurrentTitleDTO;
-import com.stationmillenium.android.libutils.dto.CurrentTitleDTO.Song;
+import com.stationmillenium.android.libutils.activities.UpdateTitleBroadcastReceiver;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.libutils.mediaplayer.utils.MediaPlayerCurrentPositionGrabber;
 import com.stationmillenium.android.services.MediaPlayerService;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import static com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants.AUTOSTART_RADIO;
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.PLAYER;
 
 /**
@@ -107,8 +101,9 @@ public class PlayerActivity extends AppCompatActivity {
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Create the activity");
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_activity);
 
@@ -184,31 +179,36 @@ public class PlayerActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Resume player activity");
+        }
         super.onResume();
-        if (currentTitleImage != null)
+        if (currentTitleImage != null) {
             imageSwitcher.setImageDrawable(new BitmapDrawable(getResources(), currentTitleImage));
-        else
+        } else {
             imageSwitcher.setImageResource(R.drawable.player_default_image);
+        }
 
         //record the update title broadcast receiver
-        if (updateTitleBroadcastReceiver == null)
-            updateTitleBroadcastReceiver = new UpdateTitleBroadcastReceiver();
-
+        if (updateTitleBroadcastReceiver == null) {
+            updateTitleBroadcastReceiver = new UpdateTitleBroadcastReceiver(this);
+        }
         LocalBroadcastManager.getInstance(this).registerReceiver(updateTitleBroadcastReceiver, new IntentFilter(LocalIntents.CURRENT_TITLE_UPDATED.toString()));
 
         //restore previous data for list
-        if (historyListValues != null)
+        if (historyListValues != null) {
             historyList.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.player_history_list_item, R.id.player_history_item_text, historyListValues));
-        else
+        } else {
             historyList.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.player_history_list_item, R.id.player_history_item_text, new String[]{"", "", "", "", ""}));
+        }
 
         //if the player is not running
         if (!AppUtils.isMediaPlayerServiceRunning(getApplicationContext())) {
             //auto start player
             if ((getIntent() != null) && (getIntent().getBooleanExtra(LocalIntentsData.ALLOW_AUTOSTART.toString(), false))) {
-                new SharedPrefAsyncLoader().execute((Void[]) null);
+                if (getDefaultSharedPreferences(this).getBoolean(AUTOSTART_RADIO, false)) {
+                    startPlayer(null);
+                }
                 getIntent().removeExtra(LocalIntentsData.ALLOW_AUTOSTART.toString());
             }
 
@@ -282,8 +282,9 @@ public class PlayerActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Pausing player activity");
+        }
         super.onPause();
 
         //cancel update title broadcast receiver
@@ -321,8 +322,9 @@ public class PlayerActivity extends AppCompatActivity {
         Calendar newDate = Calendar.getInstance();
         newDate.add(Calendar.SECOND, -REFRESH_TIMEOUT);
         if ((lastTimeUpdated == null) || (newDate.after(lastTimeUpdated))) { //it's time for a refresh
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Data refresh requested...");
+            }
             Intent mediaPlayerIntent = new Intent(this, MediaPlayerService.class);
             mediaPlayerIntent.setAction(LocalIntents.PLAYER_OPEN.toString());
             startService(mediaPlayerIntent);
@@ -337,18 +339,20 @@ public class PlayerActivity extends AppCompatActivity {
     /**
      * Start the player
      *
-     * @param view the view which triggered event
+     * @param view the view which triggered event - not used
      */
     public void startPlayer(View view) {
         //start player service
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Play player button clicked");
+        }
         if (playerState == PlayerState.STOPPED) {
             if (!AppUtils.isMediaPlayerServiceRunning(this)) {
                 if (!AppUtils.isWifiOnlyAndWifiNotConnected(this)) {
                     //start player service
-                    if (BuildConfig.DEBUG)
+                    if (BuildConfig.DEBUG) {
                         Log.d(TAG, "Start media player service");
+                    }
                     Intent mediaPlayerIntent = new Intent(this, MediaPlayerService.class);
                     startService(mediaPlayerIntent);
 
@@ -357,12 +361,13 @@ public class PlayerActivity extends AppCompatActivity {
                     Toast.makeText(this, R.string.player_no_wifi, Toast.LENGTH_SHORT).show();
                 }
 
-            } else if (BuildConfig.DEBUG)
+            } else if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Media player service already started");
-
+            }
         } else {
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Play the player");
+            }
             Intent playPlayerIntent = new Intent(this, MediaPlayerService.class);
             playPlayerIntent.setAction(LocalIntents.PLAYER_PLAY.toString());
             startService(playPlayerIntent);
@@ -375,7 +380,7 @@ public class PlayerActivity extends AppCompatActivity {
     private void playerBuffering() {
         progressBar.setVisibility(View.VISIBLE);
         playerLoadingTextView.setVisibility(View.VISIBLE);
-        currentTimeTextView.setText("");
+        currentTimeTextView.setVisibility(View.GONE);
         playButton.setVisibility(View.GONE);
         pauseButton.setClickable(false);
         pauseButton.setVisibility(View.VISIBLE);
@@ -388,7 +393,7 @@ public class PlayerActivity extends AppCompatActivity {
     private void playerPlaying() {
         progressBar.setVisibility(View.GONE);
         playerLoadingTextView.setVisibility(View.GONE);
-        currentTimeTextView.setText("");
+        currentTimeTextView.setVisibility(View.VISIBLE);
         stopButton.setVisibility(View.VISIBLE);
         pauseButton.setClickable(true);
         pauseButton.setVisibility(View.VISIBLE);
@@ -401,8 +406,9 @@ public class PlayerActivity extends AppCompatActivity {
      * @param view the view which triggered event
      */
     public void stopPlayer(View view) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Stop player button clicked");
+        }
         Intent stopPlayerIntent = new Intent(LocalIntents.PLAYER_STOP.toString());
         stopPlayerIntent.setClass(this, MediaPlayerService.class);
         startService(stopPlayerIntent);
@@ -414,8 +420,9 @@ public class PlayerActivity extends AppCompatActivity {
      * @param view the view which triggered event
      */
     public void pausePlayer(View view) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Pause player button clicked");
+        }
         Intent pausePlayerIntent = new Intent(LocalIntents.PLAYER_PAUSE.toString());
         pausePlayerIntent.setClass(this, MediaPlayerService.class);
         startService(pausePlayerIntent);
@@ -424,7 +431,7 @@ public class PlayerActivity extends AppCompatActivity {
     /**
      * Set widgets when player is stopped
      */
-    private void playerStopped() {
+    public void playerStopped() {
         //player has been stopped - reinit views
         imageSwitcher.setImageResource(R.drawable.player_default_image);
         currentTitleTextView.setText("");
@@ -434,7 +441,7 @@ public class PlayerActivity extends AppCompatActivity {
         stopButton.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
         playerLoadingTextView.setVisibility(View.GONE);
-        currentTimeTextView.setText("");
+        currentTimeTextView.setVisibility(View.GONE);
 
         //reinit local vars too
         historyListValues = null;
@@ -452,31 +459,37 @@ public class PlayerActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Player state intent received : " + intent);
+        }
         if (PlayerState.PAUSED.getAssociatedIntent().toString().equals(intent.getAction())) {
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Pause player");
+            }
             playerState = PlayerState.PAUSED;
 
         } else if (PlayerState.PLAYING.getAssociatedIntent().toString().equals(intent.getAction())) {
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Playing player");
+            }
             playerState = PlayerState.PLAYING;
 
         } else if (PlayerState.STOPPED.getAssociatedIntent().toString().equals(intent.getAction())) {
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Stop player");
+            }
             playerState = PlayerState.STOPPED;
 
         } else if (PlayerState.BUFFERING.getAssociatedIntent().toString().equals(intent.getAction())) {
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Buffering player");
+            }
             playerState = PlayerState.BUFFERING;
 
         } else if (LocalIntents.ON_PLAYER_OPEN.toString().equals(intent.getAction())) {
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Open player with data");
+            }
             updateTitleBroadcastReceiver.onReceive(getApplicationContext(), intent);
             playerState = (PlayerState) intent.getSerializableExtra(LocalIntentsData.CURRENT_STATE.toString());
         }
@@ -484,13 +497,15 @@ public class PlayerActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Save activity values...");
+        }
         outState.putCharSequence(CURRENT_TITLE_SAVE, currentTitleTextView.getText());
         outState.putCharSequence(CURRENT_TIME_SAVE, currentTimeTextView.getText());
         outState.putSerializable(PLAYER_STATE_SAVE, playerState);
-        if (historyListValues != null)
+        if (historyListValues != null) {
             outState.putStringArray(HISTORY_LIST_SAVE, historyListValues);
+        }
         outState.putParcelable(IMAGE_SAVE, currentTitleImage);
         super.onSaveInstanceState(outState);
     }
@@ -522,97 +537,26 @@ public class PlayerActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    public void setImageSwitcherDrawable(GlideBitmapDrawable drawable) {
+        imageSwitcher.setImageDrawable(drawable);
+        currentTitleImage = drawable.getBitmap();
+    }
 
+    public void setImageSwitcherResource(@DrawableRes int res) {
+        imageSwitcher.setImageResource(res);
+    }
 
-    /**
-     * Receiver for the update title broadcast
-     *
-     * @author vincent
-     */
-    private class UpdateTitleBroadcastReceiver extends BroadcastReceiver {
-
-        private static final String TAG = "UpdateTitleBR";
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Update title intent received - process...");
-
-            if (AppUtils.isMediaPlayerServiceRunning(getApplicationContext())) {
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "Media player service running - applying received data...");
-
-                CurrentTitleDTO songData = null;
-                if ((intent != null) && (intent.getExtras() != null))
-                    songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());
-
-                if (songData != null) { //if data found
-                    //update the image
-                    Glide.with(context)
-                            .load(songData.getCurrentSong().getImageURL())
-                            .placeholder(R.drawable.player_default_image)
-                            .error(R.drawable.player_default_image)
-                            .centerCrop()
-                            .into(new SimpleTarget<GlideDrawable>() {
-                                @Override
-                                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-                                    imageSwitcher.setImageDrawable(resource);
-                                }
-                            });
-
-                    //update current title
-                    if ((songData.getCurrentSong().getArtist() != null) && (songData.getCurrentSong().getTitle() != null)) {
-                        String titleText = getResources().getString(R.string.player_current_title, songData.getCurrentSong().getArtist(), songData.getCurrentSong().getTitle());
-                        currentTitleTextView.setText(titleText);
-                    } else
-                        currentTitleTextView.setText(getResources().getString(R.string.player_no_title));
-
-                    //update the history view
-                    List<String> historyTextList = new ArrayList<>();
-                    for (Song historySong : songData.getHistory()) {
-                        String historyText = getResources().getString(R.string.player_current_title, historySong.getArtist(), historySong.getTitle());
-                        historyTextList.add(historyText);
-                    }
-                    historyList.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.player_history_list_item, R.id.player_history_item_text, historyTextList));
-                    historyListValues = new String[historyTextList.size()];
-                    historyTextList.toArray(historyListValues);
-
-                } else { //no data available - use default
-                    Log.w(TAG, "No data available !");
-                    imageSwitcher.setImageResource(R.drawable.player_default_image);
-                    currentTitleTextView.setText(getResources().getString(R.string.player_no_title));
-                }
-
-            } else {
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "Media player service not running - reseting widgets...");
-
-                playerStopped(); //reset all widgets
-            }
-        }
-
+    public void setCurrentTitleTextView(String titleTextView) {
+        currentTitleTextView.setText(titleTextView);
     }
 
     /**
-     * Async loader for shared prefs
-     *
-     * @author vincent
+     * Set and backup the history list data
+     * @param values the data
      */
-    private class SharedPrefAsyncLoader extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            return PreferenceManager.getDefaultSharedPreferences(PlayerActivity.this).getBoolean(SharedPreferencesConstants.AUTOSTART_RADIO, false);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if ((result != null) && (result))
-                startPlayer(null);
-            else if (BuildConfig.DEBUG)
-                Log.d(TAG, "Autostart disabled");
-        }
-
+    public void setHistoryListValues(List<String> values) {
+        historyList.setAdapter(new ArrayAdapter<>(this, R.layout.player_history_list_item, R.id.player_history_item_text, values));
+        historyListValues = new String[values.size()];
+        values.toArray(historyListValues);
     }
-
 }
