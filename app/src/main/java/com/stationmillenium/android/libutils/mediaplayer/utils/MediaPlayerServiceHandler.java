@@ -84,8 +84,7 @@ public class MediaPlayerServiceHandler extends Handler {
                             Toast.makeText(mediaPlayerServiceRef.get(), R.string.player_error, Toast.LENGTH_SHORT).show();
 
                             //stop the service
-                            mediaPlayerServiceRef.get().getAudioManager().abandonAudioFocus(mediaPlayerServiceRef.get().getMediaPlayerOnAudioFocusChangeHandler());
-                            mediaPlayerServiceRef.get().stopMediaPlayer();
+                            stopMediaPlayer();
                         }
 
                     } else {
@@ -93,8 +92,7 @@ public class MediaPlayerServiceHandler extends Handler {
                         Toast.makeText(mediaPlayerServiceRef.get(), R.string.player_network_unavailable, Toast.LENGTH_SHORT).show();
 
                         //stop the service
-                        mediaPlayerServiceRef.get().getAudioManager().abandonAudioFocus(mediaPlayerServiceRef.get().getMediaPlayerOnAudioFocusChangeHandler());
-                        mediaPlayerServiceRef.get().stopMediaPlayer();
+                        stopMediaPlayer();
                     }
 
                 } else {
@@ -102,8 +100,7 @@ public class MediaPlayerServiceHandler extends Handler {
                     Toast.makeText(mediaPlayerServiceRef.get(), R.string.player_error, Toast.LENGTH_SHORT).show();
 
                     //stop the service
-                    mediaPlayerServiceRef.get().getAudioManager().abandonAudioFocus(mediaPlayerServiceRef.get().getMediaPlayerOnAudioFocusChangeHandler());
-                    mediaPlayerServiceRef.get().stopMediaPlayer();
+                    stopMediaPlayer();
                 }
 
             } catch (Exception npe) {
@@ -112,6 +109,11 @@ public class MediaPlayerServiceHandler extends Handler {
 
         } else
             Log.e(TAG, "Reference to MediaPlayerService is null ! Nothing can be done");
+    }
+
+    private void stopMediaPlayer() {
+        mediaPlayerServiceRef.get().getAudioManager().abandonAudioFocus(mediaPlayerServiceRef.get().getMediaPlayerOnAudioFocusChangeHandler());
+        mediaPlayerServiceRef.get().stopMediaPlayer();
     }
 
     private void setupRemoteControl() {

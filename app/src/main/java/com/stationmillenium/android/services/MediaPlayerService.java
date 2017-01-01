@@ -344,6 +344,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         if (isMediaPlayerPlaying()) {
             mediaPlayer.start();
         }
+        setMediaPlayerVolume(100);
 
         //send state intent
         sendStateIntent(PlayerState.PLAYING);
@@ -364,12 +365,12 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      *
      * @param context the {@link Context} to update notification
      */
-    public void pauseMediaPlayer(Context context) {
+    private void pauseMediaPlayer(Context context) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "Pause media player");
         }
         if (isMediaPlayerPlaying()) {
-            mediaPlayer.pause();
+            setMediaPlayerVolume(0);
         }
 
         //send state intent
