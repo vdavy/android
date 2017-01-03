@@ -7,6 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaMetadata;
 import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
@@ -58,6 +60,13 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                             propagateMetaData(resource, songData);
+                        }
+
+                        @Override
+                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                            if (errorDrawable instanceof BitmapDrawable) {
+                                propagateMetaData(((BitmapDrawable) errorDrawable).getBitmap(), songData);
+                            }
                         }
                     });
         } else {

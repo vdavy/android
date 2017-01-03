@@ -12,6 +12,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -108,6 +110,18 @@ public class WidgetProvider extends AppWidgetProvider {
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                updateWidgetData(resource);
+                            }
+
+                            @Override
+                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                                if (errorDrawable instanceof BitmapDrawable) {
+                                    Bitmap errorBitmap = ((BitmapDrawable) errorDrawable).getBitmap();
+                                    updateWidgetData(errorBitmap);
+                                }
+                            }
+
+                            private void updateWidgetData(Bitmap resource) {
                                 RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
                                 remoteView.setImageViewBitmap(R.id.widget_image, resource);
 

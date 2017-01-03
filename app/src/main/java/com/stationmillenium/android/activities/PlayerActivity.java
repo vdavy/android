@@ -41,8 +41,8 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.PiwikTracker;
+import com.stationmillenium.android.libutils.activities.PlayerActivityUpdateTitleBroadcastReceiver;
 import com.stationmillenium.android.libutils.activities.PlayerState;
-import com.stationmillenium.android.libutils.activities.UpdateTitleBroadcastReceiver;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.libutils.mediaplayer.utils.MediaPlayerCurrentPositionGrabber;
@@ -78,7 +78,7 @@ public class PlayerActivity extends AppCompatActivity {
     private static final String CURRENT_TIME_TIMER_NAME = "CurrentTimeTimer";
 
     //instances vars
-    private UpdateTitleBroadcastReceiver updateTitleBroadcastReceiver;
+    private PlayerActivityUpdateTitleBroadcastReceiver playerActivityUpdateTitleBroadcastReceiver;
     private PlayerState playerState = PlayerState.STOPPED;
     private String[] historyListValues;
     private Bitmap currentTitleImage;
@@ -190,10 +190,10 @@ public class PlayerActivity extends AppCompatActivity {
         }
 
         //record the update title broadcast receiver
-        if (updateTitleBroadcastReceiver == null) {
-            updateTitleBroadcastReceiver = new UpdateTitleBroadcastReceiver(this);
+        if (playerActivityUpdateTitleBroadcastReceiver == null) {
+            playerActivityUpdateTitleBroadcastReceiver = new PlayerActivityUpdateTitleBroadcastReceiver(this);
         }
-        LocalBroadcastManager.getInstance(this).registerReceiver(updateTitleBroadcastReceiver, new IntentFilter(LocalIntents.CURRENT_TITLE_UPDATED.toString()));
+        LocalBroadcastManager.getInstance(this).registerReceiver(playerActivityUpdateTitleBroadcastReceiver, new IntentFilter(LocalIntents.CURRENT_TITLE_UPDATED.toString()));
 
         //restore previous data for list
         if (historyListValues != null) {
@@ -288,7 +288,7 @@ public class PlayerActivity extends AppCompatActivity {
         super.onPause();
 
         //cancel update title broadcast receiver
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(updateTitleBroadcastReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(playerActivityUpdateTitleBroadcastReceiver);
 
         //send intent to service that activity is paused
         if (AppUtils.isMediaPlayerServiceRunning(getApplicationContext())) {
@@ -490,7 +490,7 @@ public class PlayerActivity extends AppCompatActivity {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Open player with data");
             }
-            updateTitleBroadcastReceiver.onReceive(getApplicationContext(), intent);
+            playerActivityUpdateTitleBroadcastReceiver.onReceive(getApplicationContext(), intent);
             playerState = (PlayerState) intent.getSerializableExtra(LocalIntentsData.CURRENT_STATE.toString());
         }
     }
@@ -538,6 +538,11 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     public void setImageSwitcherDrawable(GlideBitmapDrawable drawable) {
+        imageSwitcher.setImageDrawable(drawable);
+        currentTitleImage = drawable.getBitmap();
+    }
+
+    public void setImageSwitcherDrawable(BitmapDrawable drawable) {
         imageSwitcher.setImageDrawable(drawable);
         currentTitleImage = drawable.getBitmap();
     }

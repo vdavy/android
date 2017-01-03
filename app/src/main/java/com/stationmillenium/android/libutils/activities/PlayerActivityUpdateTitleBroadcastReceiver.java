@@ -3,6 +3,8 @@ package com.stationmillenium.android.libutils.activities;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
@@ -21,17 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Receiver for the update title broadcast
+ * Receiver for the update title broadcast in {@link PlayerActivity}
  *
  * @author vincent
  */
-public class UpdateTitleBroadcastReceiver extends BroadcastReceiver {
+public class PlayerActivityUpdateTitleBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = "UpdateTitleBR";
 
     private PlayerActivity playerActivity;
 
-    public UpdateTitleBroadcastReceiver(PlayerActivity playerActivity) {
+    public PlayerActivityUpdateTitleBroadcastReceiver(PlayerActivity playerActivity) {
         this.playerActivity = playerActivity;
     }
 
@@ -61,6 +63,13 @@ public class UpdateTitleBroadcastReceiver extends BroadcastReceiver {
                             @Override
                             public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
                                 playerActivity.setImageSwitcherDrawable((GlideBitmapDrawable) resource);
+                            }
+
+                            @Override
+                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                                if (errorDrawable instanceof BitmapDrawable) {
+                                    playerActivity.setImageSwitcherDrawable((BitmapDrawable) errorDrawable);
+                                }
                             }
                         });
 
