@@ -738,6 +738,8 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     public void setMediaPlayerVolume(int volume) {
         // see : http://stackoverflow.com/questions/5215459/android-mediaplayer-setvolume-function
         float volumeLog = 1 - (float)(Math.log(MEDIA_PLAYER_MAX_VOLUME - volume) / Math.log(MEDIA_PLAYER_MAX_VOLUME));
-        mediaPlayer.setVolume(volumeLog, volumeLog);
+        if (mediaPlayer != null) { //NPE here reported by firebase crash reporter
+            mediaPlayer.setVolume(volumeLog, volumeLog);
+        }
     }
 }
