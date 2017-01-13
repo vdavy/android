@@ -5,22 +5,22 @@ dependencies {
     compile project(':libutils')
     compile project(':replay')
 
-    compile "com.android.support:appcompat-v7:${supportLibVersion}"
-    compile "org.twitter4j:twitter4j-core:${twitterVersion}"
-    compile "com.android.support:support-annotations:${supportLibVersion}"
-    compile "com.google.firebase:firebase-appindexing:${playServicesVersion}"
-    compile "com.google.firebase:firebase-invites:${playServicesVersion}"
-    compile "com.google.firebase:firebase-crash:${playServicesVersion}"
+    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    compile "org.twitter4j:twitter4j-core:${rootProject.ext.twitterVersion}"
+    compile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
+    compile "com.google.firebase:firebase-appindexing:${rootProject.ext.playServicesVersion}"
+    compile "com.google.firebase:firebase-invites:${rootProject.ext.playServicesVersion}"
+    compile "com.google.firebase:firebase-crash:${rootProject.ext.playServicesVersion}"
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.5.0'
 
-    androidTestCompile "com.android.support.test:runner:${supportTestVersion}"
-    androidTestCompile "com.android.support.test:rules:${supportTestVersion}"
-    androidTestCompile "com.android.support.test.espresso:espresso-core:${espressoCoreVersion}"
-    androidTestCompile "com.android.support:support-annotations:${supportLibVersion}"
-    androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:${uiautomatorVersion}"
-    androidTestCompile "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
+    androidTestCompile "com.android.support.test:runner:${rootProject.ext.supportTestVersion}"
+    androidTestCompile "com.android.support.test:rules:${rootProject.ext.supportTestVersion}"
+    androidTestCompile "com.android.support.test.espresso:espresso-core:${rootProject.ext.espressoCoreVersion}"
+    androidTestCompile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
+    androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:${rootProject.ext.uiautomatorVersion}"
+    androidTestCompile "com.google.dexmaker:dexmaker-mockito:${rootProject.ext.dexmakerVersion}"
 }
 
 apply plugin: 'com.google.gms.google-services'

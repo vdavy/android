@@ -2,16 +2,16 @@ apply from: 'android-build.gradle'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "org.piwik.sdk:piwik-sdk:${piwikSdkVersion}"
+    compile "org.piwik.sdk:piwik-sdk:${rootProject.ext.piwikSdkVersion}"
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.5.0'
 
-    androidTestCompile "com.android.support.test:runner:${supportTestVersion}"
-    androidTestCompile "com.android.support.test:rules:${supportTestVersion}"
-    androidTestCompile "com.android.support.test.espresso:espresso-core:${espressoCoreVersion}"
-    androidTestCompile "com.android.support:support-annotations:${supportLibVersion}"
-    androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:${uiautomatorVersion}"
-    androidTestCompile "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
+    androidTestCompile "com.android.support.test:runner:${rootProject.ext.supportTestVersion}"
+    androidTestCompile "com.android.support.test:rules:${rootProject.ext.supportTestVersion}"
+    androidTestCompile "com.android.support.test.espresso:espresso-core:${rootProject.ext.espressoCoreVersion}"
+    androidTestCompile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
+    androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:${rootProject.ext.uiautomatorVersion}"
+    androidTestCompile "com.google.dexmaker:dexmaker-mockito:${rootProject.ext.dexmakerVersion}"
 }
 
