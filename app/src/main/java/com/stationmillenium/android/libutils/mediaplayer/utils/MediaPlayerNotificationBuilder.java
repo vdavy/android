@@ -207,7 +207,7 @@ public class MediaPlayerNotificationBuilder {
                         .setStyle(new Notification.MediaStyle()
                                 .setShowActionsInCompactView(compactViewActions)  // only show play/pause in compact view
                                 .setMediaSession(mediaPlayerServiceRef.get().getMediaSession().getSessionToken()))
-                        .setContentInfo(stateText)
+                        .setSubText(stateText)
                         .setContentIntent(playerPendingIntent);
 
                 //add the chronometer
@@ -219,12 +219,12 @@ public class MediaPlayerNotificationBuilder {
 
                 //don't add play/pause button if buffering
                 if (playerState != PlayerState.BUFFERING) {
-                    notificationBuilder.addAction((pauseAction) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play,
+                    notificationBuilder.addAction(new Notification.Action.Builder((pauseAction) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play,
                             mediaPlayerServiceRef.get().getString((pauseAction) ? R.string.player_pause : R.string.player_play),
-                            pausePlayPendingIntent);
+                            pausePlayPendingIntent).build());
                 }
 
-                notificationBuilder.addAction(R.drawable.ic_media_stop, mediaPlayerServiceRef.get().getString(R.string.player_stop), stopPendingIntent);
+                notificationBuilder.addAction(new Notification.Action.Builder(R.drawable.ic_media_stop, mediaPlayerServiceRef.get().getString(R.string.player_stop), stopPendingIntent).build());
                 return notificationBuilder.build();
 
             } else {
