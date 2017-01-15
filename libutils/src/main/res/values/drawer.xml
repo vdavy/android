@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- navigation drawer text -->
+    <string name="drawer_home">Home</string>
+    <string name="drawer_player">Player</string>
+    <string name="drawer_antenna">Antenne</string>
+    <string name="drawer_replay">Replay</string>
+    <string name="drawer_alarm">Réveil</string>
+    <string name="drawer_song_history">C\'était quoi ?</string>
+    <string name="drawer_settings">Paramètres</string>
+
+</resources>

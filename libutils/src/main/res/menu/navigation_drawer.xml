@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_drawer_home"
+        android:title="@string/drawer_home"
+        android:icon="@drawable/ic_nav_drawer_home"/>
+
+    <group>
+
+        <item
+            android:id="@+id/nav_drawer_player"
+            android:title="@string/drawer_player"
+            android:icon="@drawable/ic_nav_drawer_player"/>
+
+        <item
+            android:id="@+id/nav_drawer_antenna"
+            android:title="@string/drawer_antenna"
+            android:icon="@drawable/ic_nav_drawer_antenna"/>
+
+        <item
+            android:id="@+id/nav_drawer_replay"
+            android:title="@string/drawer_replay"
+            android:icon="@drawable/ic_nav_drawer_replay"/>
+
+        <item
+            android:id="@+id/nav_drawer_alarm"
+            android:title="@string/drawer_replay"
+            android:icon="@drawable/ic_nav_drawer_alarm"/>
+
+        <item
+            android:id="@+id/nav_drawer_song_history"
+            android:title="@string/drawer_song_history"
+            android:icon="@drawable/ic_nav_drawer_history"/>
+
+    </group>
+
+    <item
+        android:id="@+id/nav_drawer_settings"
+        android:title="@string/drawer_settings"
+        android:icon="@drawable/ic_nav_drawer_settings"/>
+
+</menu>
