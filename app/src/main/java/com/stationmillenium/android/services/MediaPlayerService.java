@@ -457,7 +457,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
     /**
      * Propagate playback state in old and fashion way
-     *
+     * See here for playback configuration : http://stackoverflow.com/questions/26999245/handling-media-buttons-in-android-5-0-lollipop
      * @param androidPlaybackState the playback state in android format
      * @param localState the local playback state
      */
@@ -465,7 +465,11 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     private void propagatePlaybackState(int androidPlaybackState, int localState) {
         if ((AppUtils.isAPILevel21Available()) && (mediaSession != null)) {
             int position = getPosition();
-            mediaSession.setPlaybackState(new PlaybackState.Builder().setState(androidPlaybackState, position, 1.0f).build());
+            mediaSession.setPlaybackState(new PlaybackState.Builder()
+                    .setActions(
+                            PlaybackState.ACTION_PLAY | PlaybackState.ACTION_PLAY_PAUSE | PlaybackState.ACTION_PAUSE | PlaybackState.ACTION_STOP)
+                    .setState(androidPlaybackState, position, 1.0f)
+                    .build());
         } else if ((AppUtils.isAPILevel14Available()) && (remoteControlClient != null)) {
             remoteControlClient.setPlaybackState(localState);
         }
