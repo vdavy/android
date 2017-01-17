@@ -12,7 +12,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -37,12 +36,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.datetime.DatePickerFragment;
@@ -83,7 +76,6 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     private TextView introTextView;
     private MenuItem searchMenuItem;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private GoogleApiClient googleApiClient;
 
     //instance vars
     private SimpleCursorAdapter cursorAdapter;
@@ -148,40 +140,6 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         //init the loader
         displayLoadingWidgets();
         getSupportLoaderManager().initLoader(LOADER_INDEX, null, this);
-
-        googleApiClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        googleApiClient.connect();
-        AppIndex.AppIndexApi.start(googleApiClient, getAction()).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(Status status) {
-                if (status.isSuccess()) {
-                    Log.d(TAG, "App Indexing API - START : Song search view recorded successfully.");
-                } else {
-                    Log.e(TAG, "App Indexing API - START : There was an error recording the song search view :"+ status.toString());
-                }
-            }
-        });
-    }
-
-    /**
-     * Get the Action for app indexing
-     * @return the Action
-     */
-    @NonNull
-    private Action getAction() {
-        return new Action.Builder(Action.TYPE_SEARCH)
-                .setObject(new Thing.Builder()
-                        .setName(getString(R.string.songsearch_name))
-                        .setDescription(getString(R.string.songsearch_description))
-                        .setUrl(Uri.parse(getString(R.string.songsearch_url)))
-                        .build())
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
     }
 
     @Override
@@ -535,19 +493,4 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         swipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
     }
 
-    @Override
-    public void onStop() {
-        AppIndex.AppIndexApi.end(googleApiClient, getAction()).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(Status status) {
-                if (status.isSuccess()) {
-                    Log.d(TAG, "App Indexing API - END : Song search view recorded successfully.");
-                } else {
-                    Log.e(TAG, "App Indexing API - END : There was an error recording the song search view :"+ status.toString());
-                }
-            }
-        });
-        googleApiClient.disconnect();
-        super.onStop();
-    }
 }
