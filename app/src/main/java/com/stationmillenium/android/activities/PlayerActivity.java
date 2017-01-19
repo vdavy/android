@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -31,12 +30,6 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.libutils.AppUtils;
@@ -84,7 +77,6 @@ public class PlayerActivity extends AppCompatActivity {
     private Bitmap currentTitleImage;
     private Calendar lastTimeUpdated;
     private Timer currentPlayingTimeTimer;
-    private GoogleApiClient googleApiClient;
 
     //widgets
     private ImageSwitcher imageSwitcher;
@@ -142,39 +134,6 @@ public class PlayerActivity extends AppCompatActivity {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         PiwikTracker.trackScreenView(PLAYER);
-        googleApiClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        googleApiClient.connect();
-        AppIndex.AppIndexApi.start(googleApiClient, getAction()).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(Status status) {
-                if (status.isSuccess()) {
-                    Log.d(TAG, "App Indexing API - START : Player view recorded successfully.");
-                } else {
-                    Log.e(TAG, "App Indexing API - START : There was an error recording the player view :"+ status.toString());
-                }
-            }
-        });
-    }
-
-    /**
-     * Get the Action for app indexing
-     * @return the Action
-     */
-    @NonNull
-    private Action getAction() {
-        return new Action.Builder(Action.TYPE_LISTEN)
-                .setObject(new Thing.Builder()
-                        .setName(getString(R.string.player_name))
-                        .setDescription(getString(R.string.player_description))
-                        .setUrl(Uri.parse(getString(R.string.player_url)))
-                        .build())
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
     }
 
     @Override
@@ -519,22 +478,6 @@ public class PlayerActivity extends AppCompatActivity {
         playerState = (PlayerState) savedInstanceState.getSerializable(PLAYER_STATE_SAVE);
         historyListValues = savedInstanceState.getStringArray(HISTORY_LIST_SAVE);
         currentTitleImage = savedInstanceState.getParcelable(IMAGE_SAVE);
-    }
-
-    @Override
-    public void onStop() {
-        AppIndex.AppIndexApi.end(googleApiClient, getAction()).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(Status status) {
-                if (status.isSuccess()) {
-                    Log.d(TAG, "App Indexing API - END : Player view recorded successfully.");
-                } else {
-                    Log.e(TAG, "App Indexing API - END : There was an error recording the player view :"+ status.toString());
-                }
-            }
-        });
-        googleApiClient.disconnect();
-        super.onStop();
     }
 
     public void setImageSwitcherDrawable(GlideBitmapDrawable drawable) {

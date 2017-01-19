@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- aap shortcuts text -->
+    <string name="player_shortcut_short_label">Player</string>
+    <string name="player_shortcut_long_label">Lancer le player</string>
+    <string name="replay_shortcut_short_label">Replay</string>
+    <string name="replay_shortcut_long_label">Ouvrir le replay</string>
+    <string name="song_history_shortcut_short_label">C\'était quoi ?</string>
+    <string name="song_history_shortcut_long_label">Ouvrir le C\'était quoi ?</string>
+
+</resources>
