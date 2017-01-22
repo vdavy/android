@@ -9,5 +9,10 @@
     <string name="drawer_alarm">Réveil</string>
     <string name="drawer_song_history">C\'était quoi ?</string>
     <string name="drawer_settings">Paramètres</string>
+    
+    <!-- in drawer text --> 
+    <string name="drawer_open">Ouvrir le menu</string>
+    <string name="drawer_close">Fermer le menu</string>
+
 
 </resources>

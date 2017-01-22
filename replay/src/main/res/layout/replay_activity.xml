@@ -12,57 +12,66 @@
             type="com.stationmillenium.android.replay.activities.ReplayActivity"/>
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/replay_coordinator_layout"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/replay_drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/replay_coordinator_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/replay_toolbar"
+            <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                android:theme="@style/ThemeReplay.Toolbar"/>
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/replay_count"
-                style="@style/ThemeReplay.ReplayCount"
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/replay_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimary"
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    android:theme="@style/ThemeReplay.Toolbar"/>
+
+                <TextView
+                    android:id="@+id/replay_count"
+                    style="@style/ThemeReplay.ReplayCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:text="@{@plurals/replay_count(replayData.size, replayData.size)}"
+                    app:layout_scrollFlags="scroll|enterAlways"/>
+
+            </android.support.design.widget.AppBarLayout>
+
+            <fragment
+                android:id="@+id/replay_fragment"
+                android:name="com.stationmillenium.android.replay.activities.ReplayFragment"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/replay_fab"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginStart="5dp"
-                android:text="@{@plurals/replay_count(replayData.size, replayData.size)}"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+                android:layout_marginBottom="@dimen/action_button_margin"
+                android:layout_marginEnd="@dimen/action_button_margin"
+                android:layout_marginRight="@dimen/action_button_margin"
+                android:src="@drawable/ic_replay_search"
+                app:backgroundTint="@color/primary_dark"
+                app:layout_anchor="@id/replay_fragment"
+                app:layout_anchorGravity="bottom|right|end"
+                android:onClick="@{() -> activity.triggerSearch()}"/>
 
-        </android.support.design.widget.AppBarLayout>
+        </android.support.design.widget.CoordinatorLayout>
 
-        <fragment
-            android:id="@+id/replay_fragment"
-            android:name="com.stationmillenium.android.replay.activities.ReplayFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        <include layout="@layout/navigation_drawer" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/replay_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/action_button_margin"
-            android:layout_marginEnd="@dimen/action_button_margin"
-            android:layout_marginRight="@dimen/action_button_margin"
-            android:src="@drawable/ic_replay_search"
-            app:backgroundTint="@color/primary_dark"
-            app:layout_anchor="@id/replay_fragment"
-            app:layout_anchorGravity="bottom|right|end"
-            android:onClick="@{() -> activity.triggerSearch()}"/>
-
-    </android.support.design.widget.CoordinatorLayout>
+    </android.support.v4.widget.DrawerLayout>
 
 </layout>

@@ -4,9 +4,11 @@
     <item
         android:id="@+id/nav_drawer_home"
         android:title="@string/drawer_home"
-        android:icon="@drawable/ic_nav_drawer_home"/>
+        android:icon="@drawable/ic_nav_drawer_home"
+        android:checkable="true"/>
 
-    <group>
+    <group android:id="@+id/main_features"
+        android:checkableBehavior="single">
 
         <item
             android:id="@+id/nav_drawer_player"
@@ -25,7 +27,7 @@
 
         <item
             android:id="@+id/nav_drawer_alarm"
-            android:title="@string/drawer_replay"
+            android:title="@string/drawer_alarm"
             android:icon="@drawable/ic_nav_drawer_alarm"/>
 
         <item
@@ -38,6 +40,7 @@
     <item
         android:id="@+id/nav_drawer_settings"
         android:title="@string/drawer_settings"
-        android:icon="@drawable/ic_nav_drawer_settings"/>
+        android:icon="@drawable/ic_nav_drawer_settings"
+        android:checkable="true"/>
 
 </menu>

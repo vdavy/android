@@ -3,6 +3,7 @@ package com.stationmillenium.android.replay.activities;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
 import com.stationmillenium.android.libutils.PiwikTracker;
+import com.stationmillenium.android.libutils.drawer.DrawerUtils;
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.databinding.ReplayActivityBinding;
 import com.stationmillenium.android.replay.dto.TrackDTO;
@@ -52,6 +54,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     private ReplayActivityBinding replayActivityBinding;
     private ReplayFragment replayFragment;
     private MenuItem searchMenuItem;
+    private DrawerUtils drawerUtils;
 
     private Bundle searchParams;
     private boolean expandActionViewOnCreate;
@@ -80,6 +83,8 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         } else {
             getSupportLoaderManager().initLoader(LOADER_INDEX, null, this).forceLoad();
         }
+
+        drawerUtils = new DrawerUtils(this, replayActivityBinding.replayDrawerLayout, replayActivityBinding.replayToolbar, R.id.nav_drawer_replay);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -265,6 +270,26 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
             setToolbarTitle(bundle);
             getSupportLoaderManager().restartLoader(LOADER_INDEX, bundle, this).forceLoad();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerUtils.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerUtils.onPostCreate();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerUtils.onConfigurationChanged(newConfig);
     }
 
 }

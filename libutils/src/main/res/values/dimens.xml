@@ -17,4 +17,6 @@
     <dimen name="replay_cardview_corner_radius">3dp</dimen>
     <dimen name="replay_cardview_padding">0dp</dimen>
 
+    <dimen name="nav_drawer_header_padding">10sp</dimen>
+
 </resources>
