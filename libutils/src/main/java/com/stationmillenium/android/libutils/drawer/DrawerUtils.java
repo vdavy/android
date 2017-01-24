@@ -1,6 +1,8 @@
 package com.stationmillenium.android.libutils.drawer;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -22,6 +24,7 @@ public class DrawerUtils {
 
     private static final String TAG = "DrawerUtils";
     private ActionBarDrawerToggle drawerToggle;
+    private int defaultMenuItem;
 
     /**
      * Init the drawer toogle
@@ -29,7 +32,8 @@ public class DrawerUtils {
      * @param drawerLayout the drawer layout
      * @param toolbar the toolbar
      */
-    public DrawerUtils(@NonNull Activity activity, @NonNull DrawerLayout drawerLayout, @NonNull Toolbar toolbar, @IdRes int selectedItem) {
+    public DrawerUtils(@NonNull final Activity activity, @NonNull final DrawerLayout drawerLayout, @NonNull Toolbar toolbar, @IdRes final int selectedItem) {
+        defaultMenuItem = selectedItem;
         drawerToggle = new ActionBarDrawerToggle(activity, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(drawerToggle);
         NavigationView navigationView = (NavigationView) drawerLayout.findViewById(R.id.nav_drawer);
@@ -37,10 +41,20 @@ public class DrawerUtils {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Log.d(TAG, "Drawer selected item : " + item);
-                return true;
+                if (item.getItemId() != selectedItem) {
+                    Log.d(TAG, "Drawer selected item : " + item);
+                    Intent intent = new Intent();
+                    if (item.getItemId() == R.id.nav_drawer_home) {
+                        intent.setComponent(new ComponentName(activity, activity.getPackageName() + ".activities.MainActivity"));
+                    }
+                    drawerLayout.closeDrawers();
+                    activity.startActivity(intent);
+                }
+
+                return false;
             }
         });
+
     }
 
     /**
