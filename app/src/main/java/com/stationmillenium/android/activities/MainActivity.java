@@ -26,7 +26,6 @@ import com.stationmillenium.android.activities.fragments.LinksFragment;
 import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity;
 import com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity;
-import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.replay.activities.ReplayActivity;
@@ -171,11 +170,11 @@ public class MainActivity extends AppCompatActivity {
      * @param view the {@link View} originating the event
      */
     public void startPlayer(View view) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Launch player");
+        }
         Intent playerIntent = new Intent(this, PlayerActivity.class);
-        if (!AppUtils.isMediaPlayerServiceRunning(getApplicationContext()))
-            playerIntent.putExtra(LocalIntentsData.ALLOW_AUTOSTART.toString(), true);
+        playerIntent.putExtra(LocalIntentsData.ALLOW_AUTOSTART.toString(), true);
 
         startActivity(playerIntent);
     }

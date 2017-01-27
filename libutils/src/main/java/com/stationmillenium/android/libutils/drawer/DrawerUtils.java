@@ -2,6 +2,7 @@ package com.stationmillenium.android.libutils.drawer;
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.stationmillenium.android.libutils.R;
+import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 
 /**
  * Utils to easily manage drawer
@@ -23,6 +25,13 @@ import com.stationmillenium.android.libutils.R;
 public class DrawerUtils {
 
     private static final String TAG = "DrawerUtils";
+    private static final String ACTIVITY_PREFIX = ".activities";
+    private static final String MAIN_ACTIVITY = ".MainActivity";
+    private static final String PLAYER_ACTIVITY = ".PlayerActivity";
+    private static final String SONG_SEARCH_HISTORY_ACTIVITY = ".songsearchhistory.SongSearchHistoryActivity";
+    private static final String ALARM_PREFERENCES_ACTIVITY = ".preferences.AlarmSharedPreferencesActivity";
+    private static final String PREFERENCES_ACTIVITY = ".preferences.SharedPreferencesActivity";
+
     private ActionBarDrawerToggle drawerToggle;
     private int defaultMenuItem;
 
@@ -43,18 +52,33 @@ public class DrawerUtils {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() != selectedItem) {
                     Log.d(TAG, "Drawer selected item : " + item);
-                    Intent intent = new Intent();
+                    Intent intent = null;
                     if (item.getItemId() == R.id.nav_drawer_home) {
-                        intent.setComponent(new ComponentName(activity, activity.getPackageName() + ".activities.MainActivity"));
+                        intent = initIntent(activity, MAIN_ACTIVITY);
+                    } else if (item.getItemId() == R.id.nav_drawer_player) {
+                        intent = initIntent(activity, PLAYER_ACTIVITY);
+                        intent.putExtra(LocalIntentsData.ALLOW_AUTOSTART.toString(), true);
+                    } else if (item.getItemId() == R.id.nav_drawer_song_history) {
+                        intent = initIntent(activity, SONG_SEARCH_HISTORY_ACTIVITY);
+                    } else if (item.getItemId() == R.id.nav_drawer_alarm) {
+                        intent = initIntent(activity, ALARM_PREFERENCES_ACTIVITY);
+                    } else if (item.getItemId() == R.id.nav_drawer_settings) {
+                        intent = initIntent(activity, PREFERENCES_ACTIVITY);
                     }
-                    drawerLayout.closeDrawers();
                     activity.startActivity(intent);
                 }
 
+                drawerLayout.closeDrawers();
                 return false;
             }
         });
 
+    }
+
+    private Intent initIntent(Context context, String activityClassName) {
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName(context, context.getPackageName() + ACTIVITY_PREFIX + activityClassName));
+        return intent;
     }
 
     /**
