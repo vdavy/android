@@ -7,10 +7,4 @@
         android:title="@string/action_invite"
         android:icon="@android:drawable/ic_menu_share" />
 
-    <item
-        android:id="@+id/action_settings"
-        app:showAsAction="never"
-        android:title="@string/action_settings"
-        android:icon="@android:drawable/ic_menu_edit" />
-
 </menu>

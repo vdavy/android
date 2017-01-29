@@ -38,14 +38,14 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Activity to manage alarm preferences
+ * Fragment to manage alarm preferences
  *
  * @author vincent
  */
 public class AlarmSharedPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
     //static intialization part
-    private static final String TAG = "AlarmPreferenceActivity";
+    private static final String TAG = "AlarmPreferenceFragment";
     private static final String ALARM_DAYS_LIST_STRING_SEPARATOR = "\\|";
 
     //preference fields

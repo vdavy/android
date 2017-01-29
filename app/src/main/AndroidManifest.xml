@@ -74,6 +74,7 @@
             android:label="@string/preferences_activity_title"
             android:parentActivityName=".activities.MainActivity"
             android:exported="false"
+            android:theme="@style/MaterialTheme"
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

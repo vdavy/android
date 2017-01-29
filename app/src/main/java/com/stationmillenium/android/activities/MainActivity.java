@@ -24,7 +24,6 @@ import com.stationmillenium.android.activities.fragments.AntennaGridWebViewFrage
 import com.stationmillenium.android.activities.fragments.HomeFragment;
 import com.stationmillenium.android.activities.fragments.LinksFragment;
 import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity;
-import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity;
 import com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
@@ -91,12 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //classic menu case
-        if (item.getItemId() == R.id.action_settings) {
-            Intent settingsIntent = new Intent(this, SharedPreferencesActivity.class);
-            startActivity(settingsIntent);
-            return true;
-        } else if (item.getItemId() == R.id.action_invite) {
+        if (item.getItemId() == R.id.action_invite) {
             showShareMethodDialog();
             return true;
         } else {

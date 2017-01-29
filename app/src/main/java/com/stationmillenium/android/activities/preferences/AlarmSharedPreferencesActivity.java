@@ -44,9 +44,6 @@ public class AlarmSharedPreferencesActivity extends AppCompatActivity {
 
         alarmPreferencesActivityBinding = DataBindingUtil.setContentView(this, R.layout.alarm_preferences_activity);
         setSupportActionBar(alarmPreferencesActivityBinding.alarmPrefToolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
 
         drawerUtils = new DrawerUtils(this, alarmPreferencesActivityBinding.alarmPrefDrawerLayout, alarmPreferencesActivityBinding.alarmPrefToolbar, R.id.nav_drawer_alarm);
     }
