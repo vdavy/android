@@ -28,6 +28,7 @@ public class DrawerUtils {
     private static final String ACTIVITY_PREFIX = ".activities";
     private static final String MAIN_ACTIVITY = ".MainActivity";
     private static final String PLAYER_ACTIVITY = ".PlayerActivity";
+    private static final String REPLAY_ACTIVITY = ".replay.activities.ReplayActivity";
     private static final String SONG_SEARCH_HISTORY_ACTIVITY = ".songsearchhistory.SongSearchHistoryActivity";
     private static final String ALARM_PREFERENCES_ACTIVITY = ".preferences.AlarmSharedPreferencesActivity";
     private static final String PREFERENCES_ACTIVITY = ".preferences.SharedPreferencesActivity";
@@ -54,16 +55,18 @@ public class DrawerUtils {
                     Log.d(TAG, "Drawer selected item : " + item);
                     Intent intent = null;
                     if (item.getItemId() == R.id.nav_drawer_home) {
-                        intent = initIntent(activity, MAIN_ACTIVITY);
+                        intent = initIntent(activity, ACTIVITY_PREFIX + MAIN_ACTIVITY);
                     } else if (item.getItemId() == R.id.nav_drawer_player) {
-                        intent = initIntent(activity, PLAYER_ACTIVITY);
+                        intent = initIntent(activity, ACTIVITY_PREFIX + PLAYER_ACTIVITY);
                         intent.putExtra(LocalIntentsData.ALLOW_AUTOSTART.toString(), true);
+                    } else if (item.getItemId() == R.id.nav_drawer_replay) {
+                        intent = initIntent(activity, REPLAY_ACTIVITY);
                     } else if (item.getItemId() == R.id.nav_drawer_song_history) {
-                        intent = initIntent(activity, SONG_SEARCH_HISTORY_ACTIVITY);
+                        intent = initIntent(activity, ACTIVITY_PREFIX + SONG_SEARCH_HISTORY_ACTIVITY);
                     } else if (item.getItemId() == R.id.nav_drawer_alarm) {
-                        intent = initIntent(activity, ALARM_PREFERENCES_ACTIVITY);
+                        intent = initIntent(activity, ACTIVITY_PREFIX + ALARM_PREFERENCES_ACTIVITY);
                     } else if (item.getItemId() == R.id.nav_drawer_settings) {
-                        intent = initIntent(activity, PREFERENCES_ACTIVITY);
+                        intent = initIntent(activity, ACTIVITY_PREFIX + PREFERENCES_ACTIVITY);
                     }
                     activity.startActivity(intent);
                 }
@@ -77,7 +80,7 @@ public class DrawerUtils {
 
     private Intent initIntent(Context context, String activityClassName) {
         Intent intent = new Intent();
-        intent.setComponent(new ComponentName(context, context.getPackageName() + ACTIVITY_PREFIX + activityClassName));
+        intent.setComponent(new ComponentName(context, context.getPackageName() + activityClassName));
         return intent;
     }
 

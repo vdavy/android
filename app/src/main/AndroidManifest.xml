@@ -91,6 +91,7 @@
             android:name=".activities.preferences.AlarmSharedPreferencesActivity"
             android:label="@string/preferences_alarm_screen"
             android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/ThemeReplay"
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
