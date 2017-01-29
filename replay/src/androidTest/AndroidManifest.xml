@@ -11,7 +11,7 @@
         <activity
             android:name="com.stationmillenium.android.replay.activities.ReplayActivity"
             android:label=""
-            android:theme="@style/ThemeReplay"
+            android:theme="@style/MaterialTheme"
             tools:ignore="UnusedAttribute" />
     </application>
 </manifest>

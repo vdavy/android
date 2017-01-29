@@ -46,7 +46,7 @@
 
             <TextView
                 android:id="@+id/replay_title"
-                style="@style/ThemeReplay.ReplayText.Title"
+                style="@style/MaterialTheme.ReplayText.Title"
                 android:text="@{replayItem.title}"
                 android:layout_height="wrap_content"
                 android:paddingTop="2dp"
@@ -64,7 +64,7 @@
             <TextView
                 android:id="@+id/replay_description"
                 android:text="@{replayItem.description}"
-                style="@style/ThemeReplay.ReplayText.Description"
+                style="@style/MaterialTheme.ReplayText.Description"
                 app:layout_constraintLeft_toRightOf="@+id/replay_artwork"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintRight_toRightOf="parent"
@@ -78,7 +78,7 @@
                 />
 
             <TextView
-                style="@style/ThemeReplay.ReplayText.Duration"
+                style="@style/MaterialTheme.ReplayText.Duration"
                 android:text="@{replayItem.duration}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
                 android:layout_marginLeft="4dp"/>
 
             <TextView
-                style="@style/ThemeReplay.ReplayText.Date"
+                style="@style/MaterialTheme.ReplayText.Date"
                 android:text="@{replayItem.lastModified}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
                 android:layout_marginLeft="4dp"/>
 
             <TextView
-                style="@style/ThemeReplay.ReplayText.Genre"
+                style="@style/MaterialTheme.ReplayText.Genre"
                 android:visibility="@{!TextUtils.isEmpty(replayItem.genre) ? View.VISIBLE : View.GONE}"
                 android:text="@{@string/replay_genre(replayItem.genre)}"
                 android:layout_width="wrap_content"

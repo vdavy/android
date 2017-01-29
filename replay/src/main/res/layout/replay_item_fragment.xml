@@ -28,14 +28,14 @@
             tools:ignore="ContentDescription"/>
 
         <TextView
-            style="@style/ThemeReplay.ReplayItemText.Title"
+            style="@style/MaterialTheme.ReplayItemText.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{replayItem.title}"
             tools:ignore="ContentDescription"/>
 
         <TextView
-            style="@style/ThemeReplay.ReplayItemText.Description"
+            style="@style/MaterialTheme.ReplayItemText.Description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{replayItem.description}"/>
@@ -47,7 +47,7 @@
             android:layout_marginTop="@dimen/replay_item_text_margin">
 
             <TextView
-                style="@style/ThemeReplay.ReplayText.Duration.Item"
+                style="@style/MaterialTheme.ReplayText.Duration.Item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{replayItem.duration}"/>
@@ -61,7 +61,7 @@
                 android:layout_marginLeft="@dimen/replay_item_textview_left_margin"/>
 
             <TextView
-                style="@style/ThemeReplay.ReplayText.Date.Item"
+                style="@style/MaterialTheme.ReplayText.Date.Item"
                 android:text="@{replayItem.lastModified}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
