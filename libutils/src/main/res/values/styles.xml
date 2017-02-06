@@ -9,9 +9,12 @@
         <item name="android:textColorSecondary">@color/secondary_text</item>
     </style>
 
-    <style name="MaterialTheme.ReplayCount">
+    <style name="MaterialTheme.ToolbarTextView">
         <item name="android:textColor">@color/icons</item>
         <item name="android:textSize">@dimen/replay_count_text_size</item>
+    </style>
+
+    <style name="MaterialTheme.ToolbarTextView.Italic">
         <item name="android:textStyle">italic</item>
     </style>
 

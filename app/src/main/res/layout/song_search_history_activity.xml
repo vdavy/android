@@ -1,55 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/home_background">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- no results textview -->
+    <data>
+        <import type="android.text.Html"/>
+        <variable
+            name="introText"
+            type="String" />
+    </data>
 
-    <TextView
-        android:id="@+id/song_history_no_data_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/song_search_no_data"
-        android:textColor="@android:color/white"
-        android:textSize="15sp"
-        android:visibility="gone" />
-
-    <!-- results layout -->
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/song_history_swipe_refresh_layout"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/song_search_drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/song_search_coordinator_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <!-- intro text view -->
-
-            <TextView
-                android:id="@+id/song_history_search_result_text"
+            <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="2dp"
-                android:textColor="#ff9900cc"
-                android:textSize="14sp"
-                android:visibility="gone" />
+                android:layout_height="wrap_content">
 
-            <!-- listview for search results -->
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/song_search_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimary"
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    android:theme="@style/MaterialTheme.Toolbar"/>
 
-            <ListView
-                android:id="@+id/song_history_list"
+                <TextView
+                    android:id="@+id/replay_count"
+                    style="@style/MaterialTheme.ToolbarTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:text="@{(introText != null) ? Html.fromHtml(introText, 0) : null}"
+                    app:layout_scrollFlags="scroll|enterAlways"/>
+
+            </android.support.design.widget.AppBarLayout>
+
+            <fragment
+                android:id="@+id/song_search_fragment"
+                android:name="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:dividerHeight="5dp"
-                android:listSelector="@drawable/song_history_item_background"
-                android:padding="5dp" />
-        </LinearLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-</RelativeLayout>
+        </android.support.design.widget.CoordinatorLayout>
+
+        <include layout="@layout/navigation_drawer" />
+
+    </android.support.v4.widget.DrawerLayout>
+
+</layout>

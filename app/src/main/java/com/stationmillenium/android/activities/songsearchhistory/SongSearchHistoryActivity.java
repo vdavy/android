@@ -8,47 +8,43 @@ import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.datetime.DatePickerFragment;
 import com.stationmillenium.android.activities.fragments.datetime.TimePickerFragment;
 import com.stationmillenium.android.contentproviders.SongHistoryContract;
-import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.databinding.SongSearchHistoryActivityBinding;
 import com.stationmillenium.android.libutils.PiwikTracker;
+import com.stationmillenium.android.libutils.drawer.DrawerUtils;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryFragment.LoadingState.ERROR;
+import static com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryFragment.LoadingState.LOADED;
+import static com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryFragment.LoadingState.LOADING;
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SONG_SEARCH_HISTORY;
 
 /**
@@ -56,7 +52,7 @@ import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SONG
  *
  * @author vincent
  */
-public class SongSearchHistoryActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, OnItemClickListener, OnRefreshListener, AbsListView.OnScrollListener {
+public class SongSearchHistoryActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     //static parts
     private static final String TAG = "SearchHistoryActivity";
@@ -71,20 +67,17 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     private static final String SEARCHVIEW_TEXT = "searchview_text";
 
     //widgets list
-    private ListView historyListView;
-    private TextView noDataTextView;
-    private TextView introTextView;
     private MenuItem searchMenuItem;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private SongSearchHistoryActivityBinding binding;
+    private DrawerUtils drawerUtils;
+    private SongSearchHistoryFragment fragment;
 
     //instance vars
-    private SimpleCursorAdapter cursorAdapter;
     private String query;
     private Calendar searchTimeCalendar;
     private boolean expandActionViewOnCreate;
     private String searchviewText;
 
-    @SuppressLint("InlinedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,12 +85,10 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
             Log.d(TAG, "Create the activity");
         }
 
-        //init widgets
-        setContentView(R.layout.song_search_history_activity);
-        historyListView = (ListView) findViewById(R.id.song_history_list);
-        noDataTextView = (TextView) findViewById(R.id.song_history_no_data_text);
-        introTextView = (TextView) findViewById(R.id.song_history_search_result_text);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.song_history_swipe_refresh_layout);
+        binding = DataBindingUtil.setContentView(this, R.layout.song_search_history_activity);
+        setSupportActionBar(binding.songSearchToolbar);
+        drawerUtils = new DrawerUtils(this, binding.songSearchDrawerLayout, binding.songSearchToolbar, R.id.nav_drawer_song_history);
+        fragment = (SongSearchHistoryFragment) getSupportFragmentManager().findFragmentById(R.id.song_search_fragment);
 
         //should we re-expand search view ?
         if (savedInstanceState != null) {
@@ -105,40 +96,12 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
             searchviewText = savedInstanceState.getString(SEARCHVIEW_TEXT);
         }
 
-        //set up action bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //set up swipe refresh
-        swipeRefreshLayout.setOnRefreshListener(this);
-        historyListView.setOnScrollListener(this);
-        if (AppUtils.isAPILevel14Available()) {
-            swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                    android.R.color.holo_green_light,
-                    android.R.color.holo_orange_light,
-                    android.R.color.holo_red_light);
-        }
-
-        //cursor adapter
-        cursorAdapter = new SimpleCursorAdapter(this, R.layout.song_search_history_list_item, null,
-                new String[]{
-                        SongHistoryContract.Columns.DATE,
-                        SongHistoryContract.Columns.ARTIST,
-                        SongHistoryContract.Columns.TITLE
-                },
-                new int[]{
-                        R.id.song_history_item_date_text,
-                        R.id.song_history_item_artist_text,
-                        R.id.song_history_item_title_text
-                }, 0);
-        historyListView.setAdapter(cursorAdapter);
-        historyListView.setOnItemClickListener(this);
-
         //enable type-to-search feature
         //see : http://developer.android.com/guide/topics/search/search-dialog.html#InvokingTheSearchDialog
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
         //init the loader
-        displayLoadingWidgets();
+        fragment.setLoadingState(LOADING);
         getSupportLoaderManager().initLoader(LOADER_INDEX, null, this);
     }
 
@@ -150,13 +113,15 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
 
     @Override
     public Loader<Cursor> onCreateLoader(int index, Bundle bundle) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Create the loader - index : " + index + " - bundle : " + bundle);
+        }
 
         Uri uri;
         if ((bundle != null) && (bundle.getBoolean(SEARCH_QUERY_TYPE))) { //test if we need to do a query search
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Load query search cursor");
+            }
 
             //build the URI with the search query
             uri = SongHistoryContract.CONTENT_URI.buildUpon()
@@ -164,8 +129,9 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
                     .build();
 
         } else if ((bundle != null) && (bundle.getBoolean(SEARCH_TIME_TYPE))) { //test if we need to do a time search
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Load time search cursor");
+            }
 
             //build the URI with the search query
             uri = SongHistoryContract.ROOT_URI.buildUpon()
@@ -174,8 +140,9 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
                     .build();
 
         } else { //do a initial cursor load
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Load initial cursor");
+            }
             uri = SongHistoryContract.CONTENT_URI;
         }
 
@@ -192,60 +159,41 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         //display the proper intro text
         String introText;
         String cursorCount = String.valueOf((cursor != null) ? cursor.getCount() : "0");
-        if ((query != null) && (!String.valueOf("").equals(query))) //text query display intro
+        if ((query != null) && (!String.valueOf("").equals(query))) { //text query display intro
             introText = getString(R.string.song_search_intro_text, cursorCount, query);
-        else if (searchTimeCalendar != null) { //time query display intro
+        } else if (searchTimeCalendar != null) { //time query display intro
             SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.song_history_date_format));
             introText = getString(R.string.song_search_time_intro_text, cursorCount, sdf.format(searchTimeCalendar.getTime()));
-        } else
+        } else {
             introText = getString(R.string.song_search_intro_text_no_search, cursorCount);
-        introTextView.setText(Html.fromHtml(introText));
+        }
+        binding.setIntroText(introText);
 
         //display the widgets and cursor data
-        displayLoadedDataWidgets((cursor != null) && (cursor.getCount() > 0));
-        cursorAdapter.swapCursor(cursor);
+        fragment.setLoadingState((cursor != null) && (cursor.getCount() > 0) ? LOADED : ERROR);
+        fragment.getCursorAdapter().swapCursor(cursor);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> arg0) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Reset the loader");
-        cursorAdapter.swapCursor(null);
+        }
+        fragment.getCursorAdapter().swapCursor(null);
     }
 
-    /**
-     * Display the widgets for data loading
-     */
-    private void displayLoadingWidgets() {
-        historyListView.setVisibility(View.INVISIBLE);
-        noDataTextView.setVisibility(View.GONE);
-        introTextView.setVisibility(View.INVISIBLE);
-        setRefreshing(true);
-    }
-
-    /**
-     * Display the widgets for loaded data
-     *
-     * @param dataProperlyLoaded <code>true</code> if the data have been properly loaded (no error), <code>false</code> if data loading error occured
-     */
-    private void displayLoadedDataWidgets(boolean dataProperlyLoaded) {
-        historyListView.setVisibility(View.VISIBLE);
-        introTextView.setVisibility(View.VISIBLE);
-        noDataTextView.setVisibility((dataProperlyLoaded) ? View.GONE : View.VISIBLE);
-        setRefreshing(false);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (BuildConfig.DEBUG)
+    public void displaySongImage(long id) {
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Item selected");
-        Cursor cursor = cursorAdapter.getCursor();
+        }
+        Cursor cursor = fragment.getCursorAdapter().getCursor();
         if (id < cursor.getCount()) { //chec id is correct
             cursor.moveToPosition(Long.valueOf(id).intValue()); //move to correct row
             String imagePath = cursor.getString(cursor.getColumnIndex(SongHistoryContract.Columns.IMAGE_PATH)); //get the image path, if available
             if (imagePath != null) { //if image path found, manage it
-                if (BuildConfig.DEBUG)
+                if (BuildConfig.DEBUG) {
                     Log.d(TAG, "Image found for selected track : " + imagePath);
+                }
 
                 //display image
                 String displayImageActivityTitle = getString(R.string.song_search_image_title,
@@ -257,13 +205,15 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
                 startActivity(displayImageIntent);
 
             } else { //there is no image for this track
-                if (BuildConfig.DEBUG)
+                if (BuildConfig.DEBUG) {
                     Log.d(TAG, "No image found for selected track");
-                Toast.makeText(this, R.string.song_search_no_image, Toast.LENGTH_SHORT).show();
+                }
+                Snackbar.make(binding.songSearchCoordinatorLayout, R.string.song_search_no_image, Snackbar.LENGTH_SHORT).show();
             }
 
-        } else
+        } else {
             Log.w(TAG, "Selected id greater than cursor size - do nothing");
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -315,26 +265,32 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.song_search_menu_search: //launch a search
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "Launch song search requested");
-                return false;
+        if (drawerUtils.onOptionsItemSelected(item)) {
+            return true;
+        } else {
+            switch (item.getItemId()) {
+                case R.id.song_search_menu_search: //launch a search
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "Launch song search requested");
+                    }
+                    return false;
 
-            case R.id.song_search_menu_time_search: //launch the time search
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "Launch time search");
-                query = null;
-                collapseSearchView();
-                launchDatePickerFragment();
-                return true;
+                case R.id.song_search_menu_time_search: //launch the time search
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "Launch time search");
+                    }
+                    query = null;
+                    collapseSearchView();
+                    launchDatePickerFragment();
+                    return true;
 
-            case R.id.song_search_menu_reinit: //reinit the loader to initial search
-                reinitSongSearch();
-                return true;
+                case R.id.song_search_menu_reinit: //reinit the loader to initial search
+                    reinitSongSearch();
+                    return true;
 
-            default:
-                return super.onOptionsItemSelected(item);
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
         }
     }
 
@@ -347,7 +303,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         query = null; //reinit query
         searchTimeCalendar = null; //reinit searched date
         collapseSearchView();
-        displayLoadingWidgets();
+        fragment.setLoadingState(LOADING);
         getSupportLoaderManager().restartLoader(LOADER_INDEX, null, this);
     }
 
@@ -355,21 +311,22 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
      * Collapse the {@link SearchView} if needed
      */
     private void collapseSearchView() {
-        if ((searchMenuItem != null) && (MenuItemCompat.isActionViewExpanded(searchMenuItem))) //collapse the search view if needed
+        if ((searchMenuItem != null) && (MenuItemCompat.isActionViewExpanded(searchMenuItem))) { //collapse the search view if needed
             MenuItemCompat.collapseActionView(searchMenuItem);
+        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "New intent received : " + intent);
-
+        }
         setIntent(intent); //save intent
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) { //if we are facing to search query
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Search intent received");
-
+            }
             //get extra data prepared
             String query = intent.getStringExtra(SearchManager.QUERY);
             Bundle extraDataBundle = new Bundle();
@@ -382,13 +339,13 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
             this.query = query;
 
             //launch the search
-            displayLoadingWidgets();
+            fragment.setLoadingState(LOADING);
             getSupportLoaderManager().restartLoader(LOADER_INDEX, extraDataBundle, this);
 
         } else if (LocalIntents.ON_DATE_PICKED_UP.toString().equals(intent.getAction())) { //date picked up
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Date picked up intent received");
-
+            }
             //save the received data
             searchTimeCalendar = Calendar.getInstance();
             searchTimeCalendar.set(Calendar.YEAR, intent.getIntExtra(LocalIntentsData.SONG_SEARCH_YEAR.toString(), 0));
@@ -398,22 +355,23 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
             launchTimePickerFragment(); //pick the time up
 
         } else if (LocalIntents.ON_TIME_PICKED_UP.toString().equals(intent.getAction())) { //time picked up
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Time picked up intent received");
-
+            }
             //save the received data
             if (searchTimeCalendar != null) {
                 searchTimeCalendar.set(Calendar.HOUR_OF_DAY, intent.getIntExtra(LocalIntentsData.SONG_SEARCH_HOURS.toString(), 0));
                 searchTimeCalendar.set(Calendar.MINUTE, intent.getIntExtra(LocalIntentsData.SONG_SEARCH_MINUTES.toString(), 0));
-                if (BuildConfig.DEBUG)
+                if (BuildConfig.DEBUG) {
                     Log.d(TAG, "Date to search : " + searchTimeCalendar);
-
+                }
                 //launch the time search
                 launchTimeSearch();
             }
 
-        } else //other type of intent are not supported
+        } else { //other type of intent are not supported
             Log.w(TAG, "Intent not supported : " + intent);
+        }
     }
 
     /**
@@ -446,16 +404,18 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
             Bundle extraDataBundle = new Bundle();
             extraDataBundle.putBoolean(SEARCH_TIME_TYPE, true);
             extraDataBundle.putString(SEARCH_TIME, formattedDate);
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Time search params : " + extraDataBundle);
+            }
 
             //launch the search
             query = null;
-            displayLoadingWidgets();
+            fragment.setLoadingState(LOADING);
             getSupportLoaderManager().restartLoader(LOADER_INDEX, extraDataBundle, this);
 
-        } else
+        } else {
             Log.w(TAG, "Date to search is null");
+        }
     }
 
     @Override
@@ -466,31 +426,22 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         super.onSaveInstanceState(outState);
     }
 
-    @Override
     public void onRefresh() {
         Log.d(TAG, "Swipe refresh requested");
-        setRefreshing(true);
+        fragment.setLoadingState(LOADING);
         reinitSongSearch();
     }
 
-    private void setRefreshing(final boolean refreshing) {
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(refreshing);
-            }
-        });
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerUtils.onPostCreate();
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
-
-    @Override
-    public void onScroll(AbsListView listView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        int topRowVerticalPosition = (listView == null || listView.getChildCount() == 0) ? 0 : listView.getChildAt(0).getTop();
-        swipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerUtils.onConfigurationChanged(newConfig);
     }
 
 }
