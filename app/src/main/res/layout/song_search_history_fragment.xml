@@ -19,8 +19,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/home_background">
+        android:layout_height="match_parent">
 
         <!-- no results textview -->
 
@@ -50,6 +49,7 @@
                 android:layout_height="match_parent"
                 android:dividerHeight="5dp"
                 android:listSelector="@drawable/song_history_item_background"
+                android:divider="@android:color/white"
                 android:padding="5dp"
                 app:itemClick="@{(parent, view, position, id) -> activity.displaySongImage(id)}"/>
 
