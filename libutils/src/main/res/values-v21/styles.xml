@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="android:navigationBarColor">@color/primary</item>
         <item name="android:statusBarColor">@color/accent</item>
+        <item name="android:dropDownItemStyle">@style/SuggestAutoCompleteStyle</item>
     </style>
 
 </resources>
