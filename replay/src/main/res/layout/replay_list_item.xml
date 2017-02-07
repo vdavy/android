@@ -26,7 +26,7 @@
             android:id="@+id/replay_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/replay_cardview_shape">
+            android:background="@drawable/list_item_background_shape">
 
             <ImageView
                 android:id="@+id/replay_artwork"
