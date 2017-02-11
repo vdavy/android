@@ -41,7 +41,7 @@
                     android:layout_marginBottom="5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
-                    android:text="@{(introText != null) ? Html.fromHtml(introText, 0) : null}"
+                    android:text="@{(introText != null) ? Html.fromHtml(introText) : null}"
                     app:layout_scrollFlags="scroll|enterAlways"/>
 
             </android.support.design.widget.AppBarLayout>
