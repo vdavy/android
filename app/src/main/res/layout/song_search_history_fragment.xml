@@ -4,14 +4,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import alias="LoadingState" type="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryFragment.LoadingState" />
-        <import type="android.view.View" />
+
+        <import
+            alias="LoadingState"
+            type="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryFragment.LoadingState"/>
+
+        <import type="android.view.View"/>
+
         <variable
             name="loadingState"
-            type="LoadingState" />
+            type="LoadingState"/>
+
         <variable
             name="activity"
-            type="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity" />
+            type="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity"/>
     </data>
 
 
@@ -20,36 +26,36 @@
         android:id="@+id/song_history_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:refreshing="@{loadingState == LoadingState.LOADING}"
-        app:onRefresh="@{activity::onRefresh}">
+        app:onRefresh="@{activity::onRefresh}"
+        app:refreshing="@{loadingState == LoadingState.LOADING}">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <!-- listview for search results -->
-        <ListView
-            android:id="@+id/song_history_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:dividerHeight="0dp"
-            android:divider="@android:color/white"
-            app:itemClick="@{(parent, view, position, id) -> activity.displaySongImage(id)}"/>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
-
-            <TextView
-                android:text="@string/song_search_pull_to_refresh"
+            <!-- listview for search results -->
+            <ListView
+                android:id="@+id/song_history_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:visibility="@{loadingState == LoadingState.ERROR ? View.VISIBLE : View.GONE}" />
+                android:layout_height="match_parent"
+                android:divider="@android:color/white"
+                android:dividerHeight="0dp"
+                app:itemClick="@{(parent, view, position, id) -> activity.displaySongImage(id)}"/>
 
-        </ScrollView>
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/song_search_pull_to_refresh"
+                    android:textSize="20sp"
+                    android:visibility="@{loadingState == LoadingState.ERROR ? View.VISIBLE : View.GONE}"/>
+
+            </ScrollView>
 
         </FrameLayout>
 
