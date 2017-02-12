@@ -7,8 +7,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -29,7 +29,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.libutils.AppUtils;
@@ -74,7 +78,7 @@ public class PlayerActivity extends AppCompatActivity {
     private PlayerActivityUpdateTitleBroadcastReceiver playerActivityUpdateTitleBroadcastReceiver;
     private PlayerState playerState = PlayerState.STOPPED;
     private String[] historyListValues;
-    private Bitmap currentTitleImage;
+    private String currentTitleImageURL;
     private Calendar lastTimeUpdated;
     private Timer currentPlayingTimeTimer;
 
@@ -142,8 +146,8 @@ public class PlayerActivity extends AppCompatActivity {
             Log.d(TAG, "Resume player activity");
         }
         super.onResume();
-        if (currentTitleImage != null) {
-            imageSwitcher.setImageDrawable(new BitmapDrawable(getResources(), currentTitleImage));
+        if (currentTitleImageURL != null) {
+            setImageFromURL(currentTitleImageURL);
         } else {
             imageSwitcher.setImageResource(R.drawable.player_default_image);
         }
@@ -404,7 +408,7 @@ public class PlayerActivity extends AppCompatActivity {
 
         //reinit local vars too
         historyListValues = null;
-        currentTitleImage = null;
+        currentTitleImageURL = null;
     }
 
     /**
@@ -465,7 +469,7 @@ public class PlayerActivity extends AppCompatActivity {
         if (historyListValues != null) {
             outState.putStringArray(HISTORY_LIST_SAVE, historyListValues);
         }
-        outState.putParcelable(IMAGE_SAVE, currentTitleImage);
+        outState.putString(IMAGE_SAVE, currentTitleImageURL);
         super.onSaveInstanceState(outState);
     }
 
@@ -477,17 +481,37 @@ public class PlayerActivity extends AppCompatActivity {
         currentTimeTextView.setText(savedInstanceState.getCharSequence(CURRENT_TIME_SAVE));
         playerState = (PlayerState) savedInstanceState.getSerializable(PLAYER_STATE_SAVE);
         historyListValues = savedInstanceState.getStringArray(HISTORY_LIST_SAVE);
-        currentTitleImage = savedInstanceState.getParcelable(IMAGE_SAVE);
+        currentTitleImageURL = savedInstanceState.getString(IMAGE_SAVE);
     }
 
     public void setImageSwitcherDrawable(GlideBitmapDrawable drawable) {
         imageSwitcher.setImageDrawable(drawable);
-        currentTitleImage = drawable.getBitmap();
     }
 
     public void setImageSwitcherDrawable(BitmapDrawable drawable) {
         imageSwitcher.setImageDrawable(drawable);
-        currentTitleImage = drawable.getBitmap();
+    }
+
+    public void setImageFromURL(String url) {
+        currentTitleImageURL = url;
+        Glide.with(this)
+            .load(url)
+            .placeholder(R.drawable.player_default_image)
+            .error(R.drawable.player_default_image)
+            .centerCrop()
+            .into(new SimpleTarget<GlideDrawable>() {
+                @Override
+                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                    setImageSwitcherDrawable((GlideBitmapDrawable) resource);
+                }
+
+                @Override
+                public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                    if (errorDrawable instanceof BitmapDrawable) {
+                        setImageSwitcherDrawable((BitmapDrawable) errorDrawable);
+                    }
+                }
+            });
     }
 
     public void setImageSwitcherResource(@DrawableRes int res) {
