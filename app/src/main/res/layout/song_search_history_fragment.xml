@@ -45,15 +45,15 @@
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true">
+                android:fillViewport="true"
+                android:visibility="@{loadingState == LoadingState.ERROR ? View.VISIBLE : View.GONE}">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/song_search_pull_to_refresh"
-                    android:textSize="20sp"
-                    android:visibility="@{loadingState == LoadingState.ERROR ? View.VISIBLE : View.GONE}"/>
+                    android:textSize="20sp"/>
 
             </ScrollView>
 
