@@ -67,37 +67,37 @@ public class TestReplayActivity {
     @Test
     public void testFABClick() {
         onView(withId(R.id.replay_search_menu)).check(doesNotExist());
-        onView(withId(R.id.replay_fab)).perform(click());
+        onView(withId(R.id.search_fab)).perform(click());
         onView(withId(R.id.replay_search_menu)).check(matches(isDisplayed()));
-        onView(withId(R.id.replay_fab)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.search_fab)).check(matches(not(isDisplayed())));
         pressBack();
         pressBack();
         onView(withId(R.id.replay_search_menu)).check(doesNotExist());
-        onView(withId(R.id.replay_fab)).check(matches(isDisplayed()));
+        onView(withId(R.id.search_fab)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testSearchViewRotate() throws InterruptedException, RemoteException {
         onView(withId(R.id.replay_search_menu)).check(doesNotExist());
-        onView(withId(R.id.replay_fab)).perform(click());
+        onView(withId(R.id.search_fab)).perform(click());
         onView(withId(R.id.replay_search_menu)).check(matches(isDisplayed()));
-        onView(withId(R.id.replay_fab)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.search_fab)).check(matches(not(isDisplayed())));
 
         UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).setOrientationLeft();
         onView(withId(R.id.replay_search_menu)).check(matches(isDisplayed()));
-        onView(withId(R.id.replay_fab)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.search_fab)).check(matches(not(isDisplayed())));
 
         UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).setOrientationRight();
         onView(withId(R.id.replay_search_menu)).check(matches(isDisplayed()));
-        onView(withId(R.id.replay_fab)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.search_fab)).check(matches(not(isDisplayed())));
 
         UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()).setOrientationNatural();
         onView(withId(R.id.replay_search_menu)).check(matches(isDisplayed()));
-        onView(withId(R.id.replay_fab)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.search_fab)).check(matches(not(isDisplayed())));
 
         pressBack();
         pressBack();
         onView(withId(R.id.replay_search_menu)).check(doesNotExist());
-        onView(withId(R.id.replay_fab)).check(matches(isDisplayed()));
+        onView(withId(R.id.search_fab)).check(matches(isDisplayed()));
     }
 }

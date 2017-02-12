@@ -8,6 +8,9 @@
         <variable
             name="introText"
             type="String" />
+        <variable
+            name="activity"
+            type="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity"/>
     </data>
 
     <android.support.v4.widget.DrawerLayout
@@ -52,6 +55,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/search_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/action_button_margin"
+                android:layout_marginEnd="@dimen/action_button_margin"
+                android:layout_marginRight="@dimen/action_button_margin"
+                android:src="@drawable/ic_replay_search"
+                app:backgroundTint="@color/primary_dark"
+                app:layout_anchor="@id/song_search_fragment"
+                app:layout_anchorGravity="bottom|right|end"
+                android:onClick="@{() -> activity.triggerSearch()}"/>
 
         </android.support.design.widget.CoordinatorLayout>
 

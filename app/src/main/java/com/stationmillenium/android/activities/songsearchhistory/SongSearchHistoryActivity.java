@@ -20,12 +20,14 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
 import com.stationmillenium.android.BuildConfig;
@@ -65,6 +67,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     private static final String TIME_PICKER_FRAGMENT = "TimePickerFragment";
     private static final String IS_SEARCH_VIEW_EXPANDED_BUNDLE = "IsSearchViewExpandedBundle";
     private static final String SEARCHVIEW_TEXT = "searchview_text";
+    private static final String QUERY_TEXT = "query_text";
 
     //widgets list
     private MenuItem searchMenuItem;
@@ -86,6 +89,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         }
 
         binding = DataBindingUtil.setContentView(this, R.layout.song_search_history_activity);
+        binding.setActivity(this);
         setSupportActionBar(binding.songSearchToolbar);
         drawerUtils = new DrawerUtils(this, binding.songSearchDrawerLayout, binding.songSearchToolbar, R.id.nav_drawer_song_history);
         fragment = (SongSearchHistoryFragment) getSupportFragmentManager().findFragmentById(R.id.song_search_fragment);
@@ -94,6 +98,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         if (savedInstanceState != null) {
             expandActionViewOnCreate = savedInstanceState.getBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE);
             searchviewText = savedInstanceState.getString(SEARCHVIEW_TEXT);
+            query = savedInstanceState.getString(QUERY_TEXT);
         }
 
         //enable type-to-search feature
@@ -153,8 +158,9 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     @SuppressLint("SimpleDateFormat")
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Loading is finished - display data...");
+        }
 
         //display the proper intro text
         String introText;
@@ -255,8 +261,24 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
             }
         });
 
+        // see : http://stackoverflow.com/questions/9327826/searchviews-oncloselistener-doesnt-work
+        MenuItemCompat.setOnActionExpandListener(searchMenuItem, new OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                binding.searchFab.setVisibility(View.VISIBLE);
+                return true;  // Return true to collapse action view
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                binding.searchFab.setVisibility(View.GONE);
+                return true;  // Return true to expand action view
+            }
+        });
+
         if (expandActionViewOnCreate) {
             MenuItemCompat.expandActionView(searchMenuItem);
+            binding.searchFab.setVisibility(View.GONE);
             searchView.setQuery(searchviewText, false);
         }
 
@@ -419,6 +441,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         //save the expanded state for screen rotation
         outState.putBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE, ((searchMenuItem != null) && (MenuItemCompat.isActionViewExpanded(searchMenuItem))));
         outState.putString(SEARCHVIEW_TEXT, ((SearchView) MenuItemCompat.getActionView(searchMenuItem)).getQuery().toString());
+        outState.putString(QUERY_TEXT, query);
         super.onSaveInstanceState(outState);
     }
 
@@ -438,6 +461,16 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         drawerUtils.onConfigurationChanged(newConfig);
+    }
+
+    /**
+     * Launch replay search
+     */
+    public void triggerSearch() {
+        Log.d(TAG, "Trigger search");
+        if (searchMenuItem != null) {
+            MenuItemCompat.expandActionView(searchMenuItem);
+        }
     }
 
 }

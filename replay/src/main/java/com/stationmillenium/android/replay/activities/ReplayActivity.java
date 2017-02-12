@@ -11,7 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -37,7 +37,7 @@ import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.REPL
  * Activity for the replay
  * Created by vincent on 01/09/16.
  */
-public class ReplayActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<TrackDTO>>, SwipeRefreshLayout.OnRefreshListener {
+public class ReplayActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<TrackDTO>>, OnRefreshListener {
 
     private static final String TAG = "ReplayActivity";
     private static final int LOADER_INDEX = 0;
@@ -98,7 +98,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         if (expandActionViewOnCreate) {
             MenuItemCompat.expandActionView(searchMenuItem);
-            replayActivityBinding.replayFab.setVisibility(View.GONE);
+            replayActivityBinding.searchFab.setVisibility(View.GONE);
             searchView.setQuery(searchviewText, false);
         }
 
@@ -119,13 +119,13 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                replayActivityBinding.replayFab.setVisibility(View.VISIBLE);
+                replayActivityBinding.searchFab.setVisibility(View.VISIBLE);
                 return true;  // Return true to collapse action view
             }
 
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                replayActivityBinding.replayFab.setVisibility(View.GONE);
+                replayActivityBinding.searchFab.setVisibility(View.GONE);
                 return true;  // Return true to expand action view
             }
         });
