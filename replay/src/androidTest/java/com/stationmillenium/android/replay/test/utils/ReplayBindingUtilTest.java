@@ -23,12 +23,11 @@ import static junit.framework.Assert.assertNotNull;
 @MediumTest
 public class ReplayBindingUtilTest {
 
-    private Context context;
     private TextView textView;
 
     @Before
     public void beforeTest() {
-        context = InstrumentationRegistry.getTargetContext();
+        Context context = InstrumentationRegistry.getTargetContext();
         textView= new TextView(context);
     }
 

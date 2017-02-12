@@ -31,7 +31,6 @@ public class AlarmSharedPreferencesActivity extends AppCompatActivity {
     //static intialization part
     private static final String TAG = "AlarmPreferenceActivity";
 
-    private AlarmPreferencesActivityBinding alarmPreferencesActivityBinding;
     private DrawerUtils drawerUtils;
 
     @Override
@@ -42,7 +41,7 @@ public class AlarmSharedPreferencesActivity extends AppCompatActivity {
             Log.d(TAG, "Load alarm preferences");
         }
 
-        alarmPreferencesActivityBinding = DataBindingUtil.setContentView(this, R.layout.alarm_preferences_activity);
+        AlarmPreferencesActivityBinding alarmPreferencesActivityBinding = DataBindingUtil.setContentView(this, R.layout.alarm_preferences_activity);
         setSupportActionBar(alarmPreferencesActivityBinding.alarmPrefToolbar);
 
         drawerUtils = new DrawerUtils(this, alarmPreferencesActivityBinding.alarmPrefDrawerLayout, alarmPreferencesActivityBinding.alarmPrefToolbar, R.id.nav_drawer_alarm);

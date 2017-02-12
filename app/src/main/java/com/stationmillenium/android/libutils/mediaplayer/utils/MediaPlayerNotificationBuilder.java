@@ -94,6 +94,24 @@ public class MediaPlayerNotificationBuilder {
                             Log.d(TAG, "Playback change state buffering received");
                             setupState(false);
                             break;
+                        case PlaybackState.STATE_CONNECTING:
+                            break;
+                        case PlaybackState.STATE_ERROR:
+                            break;
+                        case PlaybackState.STATE_FAST_FORWARDING:
+                            break;
+                        case PlaybackState.STATE_NONE:
+                            break;
+                        case PlaybackState.STATE_REWINDING:
+                            break;
+                        case PlaybackState.STATE_SKIPPING_TO_NEXT:
+                            break;
+                        case PlaybackState.STATE_SKIPPING_TO_PREVIOUS:
+                            break;
+                        case PlaybackState.STATE_SKIPPING_TO_QUEUE_ITEM:
+                            break;
+                        case PlaybackState.STATE_STOPPED:
+                            break;
                     }
                 }
             };

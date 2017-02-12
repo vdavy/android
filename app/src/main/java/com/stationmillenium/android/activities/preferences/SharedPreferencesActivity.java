@@ -28,7 +28,6 @@ public class SharedPreferencesActivity extends AppCompatActivity {
     //static intialization part
     private static final String TAG = "PreferencesActivity";
 
-    private PreferencesActivityBinding preferencesActivityBinding;
     private DrawerUtils drawerUtils;
 
     @Override
@@ -39,7 +38,7 @@ public class SharedPreferencesActivity extends AppCompatActivity {
             Log.d(TAG, "Load main preferences");
         }
 
-        preferencesActivityBinding = DataBindingUtil.setContentView(this, R.layout.preferences_activity);
+        PreferencesActivityBinding preferencesActivityBinding = DataBindingUtil.setContentView(this, R.layout.preferences_activity);
         setSupportActionBar(preferencesActivityBinding.prefToolbar);
 
         drawerUtils = new DrawerUtils(this, preferencesActivityBinding.prefDrawerLayout, preferencesActivityBinding.prefToolbar, R.id.nav_drawer_settings);

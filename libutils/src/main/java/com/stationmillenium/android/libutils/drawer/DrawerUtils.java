@@ -34,7 +34,6 @@ public class DrawerUtils {
     private static final String PREFERENCES_ACTIVITY = ".preferences.SharedPreferencesActivity";
 
     private ActionBarDrawerToggle drawerToggle;
-    private int defaultMenuItem;
 
     /**
      * Init the drawer toogle
@@ -43,7 +42,6 @@ public class DrawerUtils {
      * @param toolbar the toolbar
      */
     public DrawerUtils(@NonNull final Activity activity, @NonNull final DrawerLayout drawerLayout, @NonNull Toolbar toolbar, @IdRes final int selectedItem) {
-        defaultMenuItem = selectedItem;
         drawerToggle = new ActionBarDrawerToggle(activity, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(drawerToggle);
         NavigationView navigationView = (NavigationView) drawerLayout.findViewById(R.id.nav_drawer);

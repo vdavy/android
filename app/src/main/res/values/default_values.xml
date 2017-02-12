@@ -31,12 +31,4 @@
     <string name="song_history_max_items">30</string>
     <string name="song_history_date_format">dd/MM/yyyy HH:mm</string>
 
-    <!-- app indexing -->
-    <string name="player_url">http://www.station-millenium.com/coverart/player.html</string>
-    <string name="player_name">Player Millenium</string>
-    <string name="player_description">Ecoutez Millenium en live</string>
-    <string name="songsearch_url">http://www.station-millenium.com/radio/cetait-quoi-ce-titre/</string>
-    <string name="songsearch_name">C\'était quoi ce titre ?</string>
-    <string name="songsearch_description">Recherchez tous les titres diffusés sur Millenium</string>
-
 </resources>
