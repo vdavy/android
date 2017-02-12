@@ -25,13 +25,13 @@
         <item name="android:textColorHint">@color/icons</item>
     </style>
 
-    <style name="MaterialTheme.ReplayText">
+    <style name="MaterialTheme.Text">
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
         <item name="android:textColor">@color/secondary_text</item>
     </style>
 
-    <style name="MaterialTheme.ReplayText.Title">
+    <style name="MaterialTheme.Text.Title">
         <item name="android:textColor">@color/icons</item>
         <item name="android:textStyle">bold</item>
         <item name="android:paddingLeft">@dimen/replay_item_textview_padding</item>
@@ -57,33 +57,33 @@
         <item name="android:textColor">@color/primary_dark</item>
     </style>
 
-    <style name="MaterialTheme.ReplayText.Description">
+    <style name="MaterialTheme.Text.Description">
         <item name="android:textColor">@color/primary_dark</item>
         <item name="android:paddingLeft">@dimen/replay_item_textview_padding</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="MaterialTheme.ReplayText.Date">
+    <style name="MaterialTheme.Text.Date">
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="MaterialTheme.ReplayText.Duration">
+    <style name="MaterialTheme.Text.Duration">
         <item name="android:textStyle">italic</item>
         <item name="android:background">@drawable/replay_duration_background</item>
         <item name="android:paddingLeft">@dimen/replay_item_textview_padding</item>
         <item name="android:paddingRight">@dimen/replay_item_textview_padding</item>
     </style>
 
-    <style name="MaterialTheme.ReplayText.Duration.Item">
+    <style name="MaterialTheme.Text.Duration.Item">
         <item name="android:textSize">@dimen/replay_count_text_size</item>
     </style>
 
-    <style name="MaterialTheme.ReplayText.Date.Item">
+    <style name="MaterialTheme.Text.Date.Item">
         <item name="android:textSize">@dimen/replay_count_text_size</item>
         <item name="android:layout_marginLeft">@dimen/replay_item_textview_left_margin</item>
     </style>
 
-    <style name="MaterialTheme.ReplayText.Genre">
+    <style name="MaterialTheme.Text.Genre">
         <item name="android:textColor">@color/icons</item>
         <item name="android:gravity">center_vertical|end</item>
         <item name="android:background">@drawable/replay_genre_background</item>

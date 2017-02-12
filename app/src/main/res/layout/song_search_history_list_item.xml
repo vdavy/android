@@ -1,53 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/list_item_background_shape"
-    android:gravity="left"
-    android:paddingBottom="2dp"
-    android:paddingTop="2dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingTop="5dp"
+              android:paddingBottom="5dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp">
 
-    <ImageView
-        android:id="@+id/song_history_item_icon"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="5dp"
-        android:contentDescription="@string/empty_string"
-        android:src="@drawable/playlist_history_entry_icon" />
+        android:background="@drawable/list_item_background_shape"
+        android:gravity="start"
+        android:padding="8dp">
 
-    <TextView
-        android:id="@+id/song_history_item_date_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/song_history_item_icon"
-        android:paddingLeft="5dp"
-        android:textColor="#3a9ad0"
-        android:textIsSelectable="false"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/song_history_item_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/empty_string"
+            android:src="@drawable/list_item_arrow" />
 
-    <TextView
-        android:id="@+id/song_history_item_artist_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/song_history_item_date_text"
-        android:paddingLeft="5dp"
-        android:textColor="@android:color/white"
-        android:textIsSelectable="false"
-        android:textSize="12sp" />
+        <TextView
+            android:id="@+id/song_history_item_artist_text"
+            style="@style/MaterialTheme.Text.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/song_history_item_icon"
+            android:layout_toEndOf="@id/song_history_item_icon"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:textIsSelectable="false" />
 
-    <TextView
-        android:id="@+id/song_history_item_title_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/song_history_item_date_text"
-        android:layout_below="@id/song_history_item_date_text"
-        android:layout_marginTop="-3dp"
-        android:paddingLeft="5dp"
-        android:textColor="@android:color/white"
-        android:textIsSelectable="false"
-        android:textSize="12sp"
-        android:textStyle="italic" />
+        <TextView
+            android:id="@+id/song_history_item_title_text"
+            style="@style/MaterialTheme.Text.Description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/song_history_item_icon"
+            android:layout_toEndOf="@id/song_history_item_icon"
+            android:layout_below="@id/song_history_item_artist_text"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="2dp"
+            android:textIsSelectable="false" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/song_history_item_date_text"
+            style="@style/MaterialTheme.Text.Date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/song_history_item_icon"
+            android:layout_toEndOf="@id/song_history_item_icon"
+            android:layout_below="@id/song_history_item_title_text"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="2dp"
+            android:textIsSelectable="false" />
+
+    </RelativeLayout>
+
+</LinearLayout>
+

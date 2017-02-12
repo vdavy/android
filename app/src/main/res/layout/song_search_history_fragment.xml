@@ -47,10 +47,8 @@
                 android:id="@+id/song_history_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:dividerHeight="5dp"
-                android:listSelector="@drawable/song_history_item_background"
+                android:dividerHeight="0dp"
                 android:divider="@android:color/white"
-                android:padding="5dp"
                 app:itemClick="@{(parent, view, position, id) -> activity.displaySongImage(id)}"/>
 
         </android.support.v4.widget.SwipeRefreshLayout>

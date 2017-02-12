@@ -58,7 +58,7 @@
 
         <TextView
             android:id="@+id/replay_item_duration"
-            style="@style/MaterialTheme.ReplayText.Duration.Item"
+            style="@style/MaterialTheme.Text.Duration.Item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{replayItem.duration}"
@@ -79,7 +79,7 @@
             android:layout_marginLeft="@dimen/replay_item_textview_left_margin"/>
 
         <TextView
-            style="@style/MaterialTheme.ReplayText.Date.Item"
+            style="@style/MaterialTheme.Text.Date.Item"
             android:text="@{replayItem.lastModified}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
