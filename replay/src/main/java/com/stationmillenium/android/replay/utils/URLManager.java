@@ -19,23 +19,18 @@ public class URLManager {
     }
 
     @NonNull
-    public static String getPlaylistsURL(@NonNull Context context) {
-        return context.getString(R.string.soundcloud_playlists_URL, context.getString(R.string.soundcloud_user_id), context.getString(R.string.soudncloud_client_id));
-    }
-
-    @NonNull
     public static String getGenreTracksURL(@NonNull Context context, String genre) {
-        return context.getString(R.string.soundcloud_genre_tracklist_URL, context.getString(R.string.soundcloud_user_id), context.getString(R.string.soudncloud_client_id), genre);
+        return context.getString(R.string.soundcloud_genre_tracklist_URL, context.getString(R.string.soudncloud_client_id), genre);
     }
 
     @NonNull
     public static String getSearchTracksURL(@NonNull Context context, String search) {
-        return context.getString(R.string.soundcloud_search_tracklist_URL, context.getString(R.string.soundcloud_user_id), context.getString(R.string.soudncloud_client_id), search);
+        return context.getString(R.string.soundcloud_search_tracklist_URL, context.getString(R.string.soudncloud_client_id), search);
     }
 
     @NonNull
     public static String getTagTracksURL(@NonNull Context context, String tag) {
-        return context.getString(R.string.soundcloud_tag_tracklist_URL, context.getString(R.string.soundcloud_user_id), context.getString(R.string.soudncloud_client_id), tag);
+        return context.getString(R.string.soundcloud_tag_tracklist_URL, context.getString(R.string.soudncloud_client_id), tag);
     }
 
     @NonNull
