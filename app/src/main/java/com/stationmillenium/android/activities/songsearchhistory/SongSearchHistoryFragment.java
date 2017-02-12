@@ -49,7 +49,6 @@ public class SongSearchHistoryFragment extends Fragment {
         //init widgets
         binding = DataBindingUtil.inflate(inflater, R.layout.song_search_history_fragment, container, false);
         binding.setActivity((SongSearchHistoryActivity) getActivity());
-        binding.setFragment(this);
         binding.songHistorySwipeRefreshLayout.setColorSchemeResources(color.primary, color.accent);
 
         //cursor adapter

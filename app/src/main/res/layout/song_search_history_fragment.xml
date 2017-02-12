@@ -5,54 +5,54 @@
 
     <data>
         <import alias="LoadingState" type="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryFragment.LoadingState" />
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
         <variable
             name="loadingState"
             type="LoadingState" />
         <variable
             name="activity"
             type="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity" />
-        <variable
-            name="fragment"
-            type="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryFragment" />
     </data>
 
-    <RelativeLayout
+
+    <!-- results layout -->
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/song_history_swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:refreshing="@{loadingState == LoadingState.LOADING}"
+        app:onRefresh="@{activity::onRefresh}">
 
-        <!-- no results textview -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/song_history_no_data_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/song_search_no_data"
-            android:textColor="@android:color/white"
-            android:textSize="15sp"
-            android:visibility="@{(loadingState == LoadingState.ERROR) ? View.VISIBLE : View.GONE}"/>
-
-        <!-- results layout -->
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/song_history_swipe_refresh_layout"
+        <!-- listview for search results -->
+        <ListView
+            android:id="@+id/song_history_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:refreshing="@{loadingState == LoadingState.LOADING}"
-            app:onRefresh="@{activity::onRefresh}">
+            android:dividerHeight="0dp"
+            android:divider="@android:color/white"
+            app:itemClick="@{(parent, view, position, id) -> activity.displaySongImage(id)}"/>
 
-            <!-- listview for search results -->
-            <ListView
-                android:id="@+id/song_history_list"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <TextView
+                android:text="@string/song_search_pull_to_refresh"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:dividerHeight="0dp"
-                android:divider="@android:color/white"
-                app:itemClick="@{(parent, view, position, id) -> activity.displaySongImage(id)}"/>
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:visibility="@{loadingState == LoadingState.ERROR ? View.VISIBLE : View.GONE}" />
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </ScrollView>
 
-    </RelativeLayout>
+        </FrameLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </layout>

@@ -17,11 +17,4 @@
         android:title="@string/song_search_history_menu_time_search"
         android:icon="@drawable/ic_action_go_to_today" />
 
-    <!-- Reinit menu item -->
-    <item
-        android:id="@+id/song_search_menu_reinit"
-        millenium:showAsAction="ifRoom"
-        android:title="@string/song_search_history_menu_reinit"
-        android:icon="@drawable/ic_action_refresh" />
-
 </menu>

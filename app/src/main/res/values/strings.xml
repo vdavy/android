@@ -191,17 +191,16 @@
     <!-- song search history -->
     <string name="song_search_history">C\'était quoi ?</string>
     <string name="song_search_history_image">C\'était quoi ?</string>
-    <string name="song_search_no_data">Aucune donnée disponible</string>
     <string name="song_search_no_image">Aucune image disponible pour ce titre</string>
     <string name="song_search_intro_text">&lt;b&gt;%1$s&lt;/b&gt; résultats trouvés pour &lt;i&gt;%2$s&lt;/i&gt;</string>
     <string name="song_search_intro_text_no_search">&lt;b&gt;%1$s&lt;/b&gt; résultats</string>
     <string name="song_search_image_title">%1$s - %2$s</string>
     <string name="song_search_time_intro_text">&lt;b&gt;%1$s&lt;/b&gt; résultats trouvés pour le &lt;i&gt;%2$s&lt;/i&gt;</string>
+    <string name="song_search_pull_to_refresh">Tirer vers le bas pour rafraîchir</string>
 
     <!-- song search history search interface -->
     <string name="song_search_history_search_hint">Recherche artistes/titres</string>
     <string name="song_search_history_menu_search">Recherche</string>
-    <string name="song_search_history_menu_reinit">Réinitialiser&#8230;</string>
     <string name="song_search_history_menu_time_search">Recherche par date</string>
     <string name="song_search_history_menu_time_search_select_date">Sélectionner une date</string>
     <string name="song_search_history_menu_time_search_select_time">Sélectionner une heure</string>

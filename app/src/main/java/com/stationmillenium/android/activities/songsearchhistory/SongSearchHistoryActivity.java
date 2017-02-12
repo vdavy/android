@@ -170,7 +170,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         binding.setIntroText(introText);
 
         //display the widgets and cursor data
-        fragment.setLoadingState((cursor != null) && (cursor.getCount() > 0) ? LOADED : ERROR);
+        fragment.setLoadingState((cursor != null && cursor.getCount() > 0) ? LOADED: ERROR);
         fragment.getCursorAdapter().swapCursor(cursor);
     }
 
@@ -282,10 +282,6 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
                     query = null;
                     collapseSearchView();
                     launchDatePickerFragment();
-                    return true;
-
-                case R.id.song_search_menu_reinit: //reinit the loader to initial search
-                    reinitSongSearch();
                     return true;
 
                 default:
