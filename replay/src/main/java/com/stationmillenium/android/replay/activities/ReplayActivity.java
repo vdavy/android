@@ -66,9 +66,6 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         replayActivityBinding = DataBindingUtil.setContentView(this, R.layout.replay_activity);
         replayActivityBinding.setActivity(this);
         setSupportActionBar(replayActivityBinding.replayToolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
 
         if (savedInstanceState != null) {
             setToolbarTitle(savedInstanceState.getBundle(SEARCH_PARAMS));
