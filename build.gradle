@@ -13,7 +13,7 @@ buildscript {
 ext {
     // libs version
     supportLibVersion = '25.1.1'
-    jacksonVersion = '2.8.5'
+    jacksonVersion = '2.8.6'
     piwikSdkVersion = '1.0.2'
     playServicesVersion = '10.0.1'
     twitterVersion = "4.0.6"
@@ -24,6 +24,10 @@ ext {
     espressoCoreVersion = "2.2.2"
     uiautomatorVersion = "2.1.2"
     dexmakerVersion = "1.2"
+
+    // core test libs version
+    mockitoVersion= "2.7.5"
+    junitVersion = "4.12"
 }
 
 allprojects {

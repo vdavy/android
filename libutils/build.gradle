@@ -7,7 +7,7 @@ dependencies {
     compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
 
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.5.0'
+    testCompile "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"
 
     androidTestCompile "com.android.support.test:runner:${rootProject.ext.supportTestVersion}"
     androidTestCompile "com.android.support.test:rules:${rootProject.ext.supportTestVersion}"
