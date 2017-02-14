@@ -120,6 +120,7 @@
             android:name=".activities.songsearchhistory.SongSearchHistoryImageDisplayActivity"
             android:label="@string/song_search_history_image"
             android:parentActivityName=".activities.songsearchhistory.SongSearchHistoryActivity"
+            android:theme="@style/MaterialTheme"
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

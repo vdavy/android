@@ -40,25 +40,27 @@ public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = DataBindingUtil.setContentView(this, R.layout.image_display_layout);
+        setSupportActionBar(binding.songImageToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState != null) {
             imageURL = savedInstanceState.getString(IMAGE_URL_BUNDLE);
             activityTitle = savedInstanceState.getString(ACTIVITY_TITLE_BUNDLE);
         }
-
-        //set layout
-        binding = DataBindingUtil.setContentView(this, R.layout.image_display_layout);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Resuming song search image display activity");
+        }
 
         //set title
-        if (activityTitle == null) //if title is null, try to get it from intent
+        if (activityTitle == null) { //if title is null, try to get it from intent
             activityTitle = getIntent().getStringExtra(LocalIntentsData.IMAGE_TITLE.toString());
+        }
         setTitle(activityTitle);
 
         //image URL part
