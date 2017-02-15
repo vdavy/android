@@ -82,6 +82,14 @@
             </intent-filter>
         </activity>
 
+        <!-- antenna grid activity -->
+        <activity
+            android:name=".activities.AntennaGridActivity"
+            android:label="@string/antenna_grid_activity_title"
+            android:theme="@style/MaterialTheme"
+            tools:ignore="UnusedAttribute">
+        </activity>
+
         <!-- alarm preferences activity -->
         <activity
             android:name=".activities.preferences.AlarmSharedPreferencesActivity"

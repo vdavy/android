@@ -27,6 +27,7 @@ public class DrawerUtils {
     private static final String TAG = "DrawerUtils";
     private static final String ACTIVITY_PREFIX = ".activities";
     private static final String MAIN_ACTIVITY = ".MainActivity";
+    private static final String ANTENNA_GRID_ACTIVITY = ".AntennaGridActivity";
     private static final String PLAYER_ACTIVITY = ".PlayerActivity";
     private static final String REPLAY_ACTIVITY = ".replay.activities.ReplayActivity";
     private static final String SONG_SEARCH_HISTORY_ACTIVITY = ".songsearchhistory.SongSearchHistoryActivity";
@@ -57,6 +58,8 @@ public class DrawerUtils {
                     } else if (item.getItemId() == R.id.nav_drawer_player) {
                         intent = initIntent(activity, ACTIVITY_PREFIX + PLAYER_ACTIVITY);
                         intent.putExtra(LocalIntentsData.ALLOW_AUTOSTART.toString(), true);
+                    } else if (item.getItemId() == R.id.nav_drawer_antenna) {
+                        intent = initIntent(activity, ACTIVITY_PREFIX + ANTENNA_GRID_ACTIVITY);
                     } else if (item.getItemId() == R.id.nav_drawer_replay) {
                         intent = initIntent(activity, REPLAY_ACTIVITY);
                     } else if (item.getItemId() == R.id.nav_drawer_song_history) {

@@ -445,6 +445,9 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * Called from data binding
+     */
     public void onRefresh() {
         Log.d(TAG, "Swipe refresh requested");
         fragment.setLoadingState(LOADING);
