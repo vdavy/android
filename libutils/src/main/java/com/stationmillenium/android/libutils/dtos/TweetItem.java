@@ -40,4 +40,8 @@ public class TweetItem implements Serializable {
         return tweetText;
     }
 
+    public String getTweetText() {
+        return tweetText;
+    }
+
 }

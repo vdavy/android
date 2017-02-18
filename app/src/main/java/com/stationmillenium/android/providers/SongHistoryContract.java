@@ -1,4 +1,4 @@
-package com.stationmillenium.android.contentproviders;
+package com.stationmillenium.android.providers;
 
 import android.app.SearchManager;
 import android.content.ContentResolver;

@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.stationmillenium.android.contentproviders;
+package com.stationmillenium.android.providers;
 
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
@@ -21,7 +21,7 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.R.string;
 import com.stationmillenium.android.libutils.AppUtils;
-import com.stationmillenium.android.libutils.dto.CurrentTitleDTO.Song;
+import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song;
 import com.stationmillenium.android.libutils.exceptions.XMLParserException;
 import com.stationmillenium.android.libutils.network.NetworkUtils;
 import com.stationmillenium.android.libutils.xml.XMLSongHistoryParser;
@@ -32,11 +32,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.stationmillenium.android.contentproviders.SongHistoryContract.ALL_SONGS_SEARCH;
-import static com.stationmillenium.android.contentproviders.SongHistoryContract.DATE_SEARCH_INDEX;
-import static com.stationmillenium.android.contentproviders.SongHistoryContract.FULL_TEXT_SEARCH_INDEX;
-import static com.stationmillenium.android.contentproviders.SongHistoryContract.SUGGEST_SEARCH;
-import static com.stationmillenium.android.contentproviders.SongHistoryContract.SUGGEST_SEARCH_NO_SUGGEST;
+import static com.stationmillenium.android.providers.SongHistoryContract.ALL_SONGS_SEARCH;
+import static com.stationmillenium.android.providers.SongHistoryContract.DATE_SEARCH_INDEX;
+import static com.stationmillenium.android.providers.SongHistoryContract.FULL_TEXT_SEARCH_INDEX;
+import static com.stationmillenium.android.providers.SongHistoryContract.SUGGEST_SEARCH;
+import static com.stationmillenium.android.providers.SongHistoryContract.SUGGEST_SEARCH_NO_SUGGEST;
 
 /**
  * Content provider for songs history search

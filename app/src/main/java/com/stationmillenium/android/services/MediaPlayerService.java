@@ -38,7 +38,7 @@ import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.activities.PlayerState;
-import com.stationmillenium.android.libutils.dto.CurrentTitleDTO;
+import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.libutils.mediaplayer.receivers.AudioBecommingNoisyBroadcastReceiver;

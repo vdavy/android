@@ -25,11 +25,11 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.activities.MainActivity;
+import com.stationmillenium.android.activities.HomeActivity;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.activities.PlayerState;
-import com.stationmillenium.android.libutils.dto.CurrentTitleDTO;
+import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.services.MediaPlayerService;
@@ -70,7 +70,7 @@ public class WidgetProvider extends AppWidgetProvider {
         remoteViews.setOnClickPendingIntent(R.id.widget_stop_button, stopPendingIntent);
 
         //set global pending intent
-        setMainWidgetPartsPendingIntent(context, remoteViews, MainActivity.class);
+        setMainWidgetPartsPendingIntent(context, remoteViews, HomeActivity.class);
 
         appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
     }
@@ -215,7 +215,7 @@ public class WidgetProvider extends AppWidgetProvider {
                 remoteViews.setOnClickPendingIntent(R.id.widget_play_button, playPendingIntent);
 
                 //set global pending intent
-                setMainWidgetPartsPendingIntent(context, remoteViews, MainActivity.class);
+                setMainWidgetPartsPendingIntent(context, remoteViews, HomeActivity.class);
 
                 //clear widget
                 remoteViews.setImageViewResource(R.id.widget_image, R.drawable.player_default_image);

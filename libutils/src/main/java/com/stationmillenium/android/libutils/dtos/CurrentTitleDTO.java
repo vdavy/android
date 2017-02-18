@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.stationmillenium.android.libutils.dto;
+package com.stationmillenium.android.libutils.dtos;
 
 import java.io.Serializable;
 import java.util.ArrayList;

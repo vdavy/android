@@ -26,7 +26,7 @@ public class DrawerUtils {
 
     private static final String TAG = "DrawerUtils";
     private static final String ACTIVITY_PREFIX = ".activities";
-    private static final String MAIN_ACTIVITY = ".MainActivity";
+    private static final String MAIN_ACTIVITY = ".HomeActivity";
     private static final String ANTENNA_GRID_ACTIVITY = ".AntennaGridActivity";
     private static final String PLAYER_ACTIVITY = ".PlayerActivity";
     private static final String REPLAY_ACTIVITY = ".replay.activities.ReplayActivity";

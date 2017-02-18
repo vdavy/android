@@ -6,9 +6,9 @@ package com.stationmillenium.android.libutils.xml;
 import android.util.Log;
 
 import com.stationmillenium.android.BuildConfig;
-import com.stationmillenium.android.libutils.dto.CurrentTitleDTO;
-import com.stationmillenium.android.libutils.dto.CurrentTitleDTO.Song;
-import com.stationmillenium.android.libutils.dto.CurrentTitleDTO.Song.ImageMetadata;
+import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
+import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song;
+import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song.ImageMetadata;
 import com.stationmillenium.android.libutils.exceptions.XMLParserException;
 import com.stationmillenium.android.libutils.xml.abstracts.AbstractXMLParser;
 

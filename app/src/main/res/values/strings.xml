@@ -6,7 +6,6 @@
     <string name="player_activity_title">Player Live Millenium</string>
     <string name="preferences_activity_title">Paramètres</string>
     <string name="antenna_grid_activity_title">La grille des programmes</string>
-    <string name="links_activity_title">Les liens Millenium</string>
 
     <!-- app invite texts -->
     <string name="app_invite_title">Partager l\'appli Station Millenium</string>
@@ -56,30 +55,30 @@
     <string name="preferences_player_wifi_only">Uniquement en Wifi</string>
     <string name="preferences_player_autostart">Démarrer la lecture automatiquement</string>
     <string name="preferences_player_autostart_summary">Démarrer la lecture de la radio automatiquement lors de l\'affichage du player</string>
-    <string name="preferences_links">Liens Millenium</string>
-    <string name="preferences_links_tweets_number">Nombre de dernières news</string>
-    <string name="preferences_links_tweets_number_summary">Nombre de dernières news à afficher</string>
+    <string name="preferences_links">Tweets Millenium</string>
+    <string name="preferences_links_tweets_number">Nombre de derniers tweets</string>
+    <string name="preferences_links_tweets_number_summary">Nombre de derniers tweets à afficher</string>
     <string-array name="preferences_links_tweets_number_values">
-        <item name="1">1 news</item>
-        <item name="2">2 news</item>
-        <item name="3">3 news</item>
-        <item name="4">4 news</item>
-        <item name="5">5 news</item>
-        <item name="6">6 news</item>
-        <item name="7">7 news</item>
-        <item name="8">8 news</item>
-        <item name="9">9 news</item>
-        <item name="10">10 news</item>
-        <item name="11">11 news</item>
-        <item name="12">12 news</item>
-        <item name="13">13 news</item>
-        <item name="14">14 news</item>
-        <item name="15">15 news</item>
-        <item name="16">16 news</item>
-        <item name="17">17 news</item>
-        <item name="18">18 news</item>
-        <item name="19">19 news</item>
-        <item name="20">20 news</item>
+        <item name="1">1 tweet</item>
+        <item name="2">2 tweets</item>
+        <item name="3">3 tweets</item>
+        <item name="4">4 tweets</item>
+        <item name="5">5 tweets</item>
+        <item name="6">6 tweets</item>
+        <item name="7">7 tweets</item>
+        <item name="8">8 tweets</item>
+        <item name="9">9 tweets</item>
+        <item name="10">10 tweets</item>
+        <item name="11">11 tweets</item>
+        <item name="12">12 tweets</item>
+        <item name="13">13 tweets</item>
+        <item name="14">14 tweets</item>
+        <item name="15">15 tweets</item>
+        <item name="16">16 tweets</item>
+        <item name="17">17 tweets</item>
+        <item name="18">18 tweets</item>
+        <item name="19">19 tweets</item>
+        <item name="20">20 tweets</item>
     </string-array>
     <string-array name="preferences_links_tweets_number_values_internal">
         <item name="1">1</item>
@@ -174,7 +173,7 @@
     </string-array>
 
     <!-- links -->
-    <string name="links_latest_news"><u><b>Dernières news</b></u></string>
+    <string name="links_latest_tweets"><b>Les derniers tweets Millenium</b></string>
 
     <!-- other resources -->
     <string name="empty_string" />

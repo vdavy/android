@@ -9,7 +9,7 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.libutils.AppUtils;
-import com.stationmillenium.android.libutils.dto.CurrentTitleDTO;
+import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 
 import java.util.ArrayList;

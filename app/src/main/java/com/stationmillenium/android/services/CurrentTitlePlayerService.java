@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.libutils.AppUtils;
-import com.stationmillenium.android.libutils.dto.CurrentTitleDTO;
+import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.exceptions.XMLParserException;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;

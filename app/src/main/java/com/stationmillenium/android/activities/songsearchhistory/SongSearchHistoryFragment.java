@@ -17,8 +17,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.contentproviders.SongHistoryContract;
 import com.stationmillenium.android.databinding.SongSearchHistoryFragmentBinding;
+import com.stationmillenium.android.providers.SongHistoryContract;
 
 import static com.stationmillenium.android.libutils.R.color;
 

@@ -26,7 +26,6 @@ public class PiwikTracker {
         PLAYER("/player"),
         ANTENNA_GRID("/main/antenna-grid"),
         HOME("/main"),
-        LINKS("/main/links"),
         REPLAY("/replay"),
         REPLAY_ITEM("/replay/item"),
         ALARM("/alarm-preferences"),

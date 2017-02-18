@@ -1,30 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/home_item_background_shape"
-    android:gravity="left"
-    android:paddingLeft="3dp">
+<layout>
 
-    <ImageView
-        android:id="@+id/tweets_item_icon"
-        android:layout_width="wrap_content"
+    <data>
+
+        <variable
+            name="tweet"
+            type="com.stationmillenium.android.libutils.dtos.TweetItem" />
+        <variable
+            name="activity"
+            type="com.stationmillenium.android.activities.HomeActivity" />
+    </data>
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="5dp"
-        android:contentDescription="@string/empty_string"
-        android:src="@drawable/playlist_history_entry_icon" />
+        android:layout_margin="5dp"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="3dp"
+        android:onClick="@{() -> activity.openTweet(tweet)}">
 
-    <TextView
-        android:id="@+id/tweets_item_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/tweets_item_icon"
-        android:paddingLeft="5dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#ffffffff"
-        android:textSize="12sp"
-        android:textStyle="italic" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/list_item_background_shape"
+            android:gravity="left"
+            android:paddingLeft="3dp">
 
-</RelativeLayout>
+            <ImageView
+                android:id="@+id/tweets_item_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:contentDescription="@string/empty_string"
+                android:src="@drawable/list_item_arrow" />
+
+            <TextView
+                android:id="@+id/tweets_item_text"
+                style="@style/MaterialTheme.ReplayItemText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/tweets_item_icon"
+                android:paddingLeft="5dp"
+                android:text="@{tweet.tweetText}"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</layout>

@@ -40,7 +40,7 @@
     <!-- auto restart preferences -->
     <PreferenceCategory android:title="@string/preferences_links">
         <ListPreference
-            android:defaultValue="6"
+            android:defaultValue="10"
             android:entries="@array/preferences_links_tweets_number_values"
             android:entryValues="@array/preferences_links_tweets_number_values_internal"
             android:icon="@drawable/ic_tweets_number"

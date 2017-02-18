@@ -1,34 +1,38 @@
 package com.stationmillenium.android.activities;
 
 import android.annotation.TargetApi;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.activities.fragments.AntennaGridWebViewFragement;
 import com.stationmillenium.android.activities.fragments.HomeFragment;
-import com.stationmillenium.android.activities.fragments.LinksFragment;
-import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity;
-import com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity;
+import com.stationmillenium.android.databinding.HomeActivityBinding;
 import com.stationmillenium.android.libutils.PiwikTracker;
-import com.stationmillenium.android.libutils.intents.LocalIntentsData;
-import com.stationmillenium.android.replay.activities.ReplayActivity;
+import com.stationmillenium.android.libutils.drawer.DrawerUtils;
+import com.stationmillenium.android.libutils.dtos.TweetItem;
+import com.stationmillenium.android.providers.TweetsListLoader;
 
+import java.util.List;
+
+import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.HOME;
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SHARE_APP_INVITE;
 
 /**
@@ -36,12 +40,16 @@ import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SHAR
  *
  * @author vincent
  */
-public class MainActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<TweetItem>> {
 
     private static final String TAG = "MainActivity";
+    private static final int LOADER_INDEX = 0;
     private static final int APP_INVITE_INTENT = 10;
     private static final int SOCIAL_NETWORKS_INDEX = 0;
     private static final int EMAIL_SMS_INDEX = 1;
+
+    private DrawerUtils drawerUtils;
+    private HomeFragment fragment;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -70,16 +78,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        HomeActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.home_activity);
+        setSupportActionBar(binding.mainToolbar);
+        fragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.home_fragment);
 
-        //add home fragment 
-        if (savedInstanceState == null) { //if no saved instance - otherwise fragment will be automatically added
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.content_frame, new HomeFragment())
-                    .commit();
-        }
-
+        drawerUtils = new DrawerUtils(this, binding.mainDrawerLayout, binding.mainToolbar, R.id.nav_drawer_home);
+        getSupportLoaderManager().initLoader(LOADER_INDEX, null, this).forceLoad();;
     }
 
     @Override
@@ -90,7 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_invite) {
+        if (drawerUtils.onOptionsItemSelected(item)) {
+            return true;
+        } else if (item.getItemId() == R.id.action_invite) {
             showShareMethodDialog();
             return true;
         } else {
@@ -158,95 +164,90 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerUtils.onPostCreate();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerUtils.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public Loader<List<TweetItem>> onCreateLoader(int id, Bundle args) {
+        fragment.setRefreshing(true);
+        return new TweetsListLoader(this, getString(R.string.tweeter_consumer_key), getString(R.string.tweeter_consumer_secret), getString(R.string.tweeter_user_name));
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<TweetItem>> loader, List<TweetItem> data) {
+        fragment.setReplayList(data);
+        fragment.setRefreshing(false);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<TweetItem>> loader) {
+        fragment.setReplayList(null);
+        fragment.setRefreshing(false);
+    }
+
     /**
-     * Start the {@link PlayerActivity}
-     *
-     * @param view the {@link View} originating the event
+     * Open social network native app if available or browser instead
+     * Called by data binding
+     * @param internalURL the internal native app URL
+     * @param webURL the web browser URL
      */
-    public void startPlayer(View view) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Launch player");
+    public void openSocialNetwork(String internalURL, String webURL) {
+        try {
+            //launch app
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(internalURL));
+            startActivity(intent);
+
+        } catch (ActivityNotFoundException e) {
+            Log.w(TAG, "Native app not found", e);
+
+            //lauch web browser instead
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webURL));
+            startActivity(browserIntent);
         }
-        Intent playerIntent = new Intent(this, PlayerActivity.class);
-        playerIntent.putExtra(LocalIntentsData.ALLOW_AUTOSTART.toString(), true);
+    }
 
-        startActivity(playerIntent);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PiwikTracker.trackScreenView(HOME);
     }
 
     /**
-     * Start the {@link ReplayActivity}
-     *
-     * @param view the {@link View} originating the event
+     * Open tweet URL - called from databinding
+     * @param item the clicked tweet
      */
-    public void startReplay(View view) {
+    public void openTweet(TweetItem item) {
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Launch replay");
+            Log.d(TAG, "List item clicked - open URL");
         }
-        Intent replayIntent = new Intent(this, ReplayActivity.class);
-        startActivity(replayIntent);
+        String url = item.getTweetURL();
+        if (url != null) {
+            if ((!url.startsWith("http://")) && (!url.startsWith("https://"))) {
+                url = "http://" + url;
+            }
+
+            //open url
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "URL to open : " + url);
+            }
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        } else if (BuildConfig.DEBUG) {
+            Log.d(TAG, "No URL on this tweet");
+        }
     }
 
-    /**
-     * Display the {@link AntennaGridWebViewFragement}
-     *
-     * @param view the {@link View} originating the event
-     */
-    public void displayAntennaGridFragment(View view) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Display the antenna grid fragment");
-        displayFragment(new AntennaGridWebViewFragement());
+    public void onRefresh() {
+        Log.d(TAG, "Data refresh requested");
+        getSupportLoaderManager().restartLoader(LOADER_INDEX, null, this).forceLoad();
     }
-
-    /**
-     * Display the {@link LinksFragment}
-     *
-     * @param view the {@link View} originating the event
-     */
-    public void displayLinksFragment(View view) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Display the links fragment");
-        displayFragment(new LinksFragment());
-    }
-
-    /**
-     * Display a {@link Fragment} with effects and back stack
-     *
-     * @param fragmentToDisplay the {@link Fragment} to display
-     */
-    private void displayFragment(Fragment fragmentToDisplay) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.change_fragment_fadein,
-                        R.anim.change_fragment_fadeout,
-                        R.anim.change_fragment_fadein,
-                        R.anim.change_fragment_fadeout)
-                .replace(R.id.content_frame, fragmentToDisplay)
-                .addToBackStack(null)
-                .commit();
-    }
-
-    /**
-     * Start the {@link AlarmSharedPreferencesActivity}
-     *
-     * @param view the originating view
-     */
-    public void startAlarmPreferencesActivity(View view) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Display the alarm shared preferences activity");
-        Intent settingsIntent = new Intent(this, AlarmSharedPreferencesActivity.class);
-        startActivity(settingsIntent);
-    }
-
-    /**
-     * Start the {@link SongSearchHistoryActivity}
-     *
-     * @param view the originating view
-     */
-    public void startSongHistorySearchActivity(View view) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Display the song history search activity");
-        Intent settingsIntent = new Intent(this, SongSearchHistoryActivity.class);
-        startActivity(settingsIntent);
-    }
-
 }

@@ -34,12 +34,12 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.datetime.DatePickerFragment;
 import com.stationmillenium.android.activities.fragments.datetime.TimePickerFragment;
-import com.stationmillenium.android.contentproviders.SongHistoryContract;
 import com.stationmillenium.android.databinding.SongSearchHistoryActivityBinding;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.drawer.DrawerUtils;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
+import com.stationmillenium.android.providers.SongHistoryContract;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

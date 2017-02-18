@@ -14,8 +14,8 @@ import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
 
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.contentproviders.SongHistoryContentProvider;
-import com.stationmillenium.android.contentproviders.SongHistoryContract;
+import com.stationmillenium.android.providers.SongHistoryContentProvider;
+import com.stationmillenium.android.providers.SongHistoryContract;
 
 /**
  * Test the {@link SongHistoryContentProvider}
