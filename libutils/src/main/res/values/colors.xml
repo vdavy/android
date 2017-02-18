@@ -17,4 +17,7 @@
 
     <color name="nav_drawer_menu">@color/material_blue_grey_600</color>
 
+    <color name="facebook">#3b5998</color>
+    <color name="twitter">#33CCFF</color>
+
 </resources>
