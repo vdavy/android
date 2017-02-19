@@ -221,7 +221,7 @@
         <!-- song history content provider -->
         <provider
             android:name=".providers.SongHistoryContentProvider"
-            android:authorities="com.stationmillenium.android.providers.SongHistoryContentProvider"
+            android:authorities="com.stationmillenium.android.contentproviders.SongHistoryContentProvider"
             android:exported="false" />
 
         <!-- auto restart player service -->
