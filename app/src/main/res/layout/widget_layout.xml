@@ -5,13 +5,13 @@
                 android:layout_marginLeft="@dimen/widget_margin"
                 android:layout_marginRight="@dimen/widget_margin"
                 android:background="@drawable/widget_border"
-                android:gravity="left|top">
+                android:gravity="start|top">
 
     <LinearLayout
         android:id="@+id/widget_image_layout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@drawable/widget_image_border"
+        android:background="@android:color/transparent"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingLeft="5dp"
@@ -23,12 +23,14 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/empty_string"
             android:src="@drawable/player_default_image"/>
+
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toRightOf="@id/widget_image_layout"
+        android:layout_toEndOf="@id/widget_image_layout"
         android:gravity="top">
 
         <LinearLayout
@@ -36,8 +38,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:background="@drawable/widget_buttons_border"
-            android:gravity="right|center_vertical"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:gravity="end|center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="2dp"
             android:paddingRight="2dp">
@@ -47,14 +50,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/player_play"
-                android:src="@drawable/ic_player_play"/>
+                android:src="@drawable/play"/>
 
             <ImageButton
                 android:id="@+id/widget_pause_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/player_pause"
-                android:src="@drawable/ic_player_pause"
+                android:src="@drawable/pause"
                 android:visibility="gone"/>
 
             <ImageButton
@@ -62,8 +65,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/player_stop"
-                android:src="@drawable/ic_player_stop"
+                android:src="@drawable/stop"
                 android:visibility="gone"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -71,25 +75,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toLeftOf="@id/widget_buttons_layout"
+            android:layout_toStartOf="@id/widget_buttons_layout"
             android:gravity="top"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
+                style="@style/MaterialTheme.Text.Title"
+                android:layout_marginTop="5dp"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
-                android:shadowColor="#ff000000"
-                android:shadowDx="4"
-                android:shadowDy="4"
-                android:shadowRadius="1.5"
                 android:text="@string/player_widget_title"
-                android:textColor="#ffffffff"
-                android:textSize="12sp"
-                android:typeface="sans"/>
-
+                android:textSize="12sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -101,16 +100,16 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_gravity="left"
+                    android:layout_gravity="start"
                     android:layout_weight="0.4"
-                    android:gravity="bottom|left">
+                    android:gravity="bottom|start">
 
                     <TextView
                         android:id="@+id/widget_artist_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
-                        android:gravity="left"
+                        android:gravity="start"
                         android:maxLines="1"
                         android:textColor="#ffffffff"
                         android:textSize="13sp"
@@ -120,21 +119,24 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_gravity="left"
+                    android:layout_gravity="start"
                     android:layout_weight="0.6"
-                    android:gravity="top|left">
+                    android:gravity="top|start">
 
                     <TextView
                         android:id="@+id/widget_title_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="left"
+                        android:gravity="start"
                         android:textColor="#ffffffff"
                         android:textSize="12sp"
                         android:textStyle="italic"/>
                 </LinearLayout>
+
             </LinearLayout>
+
         </LinearLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>
