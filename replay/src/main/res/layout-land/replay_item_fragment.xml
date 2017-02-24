@@ -32,7 +32,7 @@
 
         <TextView
             android:id="@+id/replay_item_title"
-            style="@style/MaterialTheme.ReplayItemText.Title"
+            style="@style/MaterialTheme.ItemText.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{replayItem.title}"
@@ -45,7 +45,7 @@
 
         <TextView
             android:id="@+id/replay_item_description"
-            style="@style/MaterialTheme.ReplayItemText.Description"
+            style="@style/MaterialTheme.ItemText.Description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{replayItem.description}"

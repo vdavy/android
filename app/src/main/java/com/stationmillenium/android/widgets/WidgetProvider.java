@@ -46,8 +46,9 @@ public class WidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Widget updating...");
+        }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
@@ -77,14 +78,16 @@ public class WidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(@NonNull final Context context, @NonNull Intent intent) {
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
             Log.d(TAG, "Widget receiving intent : " + intent);
+        }
         super.onReceive(context, intent);
         if (LocalIntents.CURRENT_TITLE_UPDATED.toString().equals(intent.getAction())) {
 
             if (AppUtils.isMediaPlayerServiceRunning(context)) { //check if media player service is running to apply data
-                if (BuildConfig.DEBUG)
+                if (BuildConfig.DEBUG) {
                     Log.d(TAG, "Media player service running - applying received data...");
+                }
 
                 CurrentTitleDTO songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());
 
@@ -134,20 +137,21 @@ public class WidgetProvider extends AppWidgetProvider {
                 }
 
             } else {
-                if (BuildConfig.DEBUG)
+                if (BuildConfig.DEBUG) {
                     Log.d(TAG, "Media player service not running - reseting widgets...");
-
+                }
                 updateWidgetsStates(context, PlayerState.STOPPED); //reset the widget
             }
 
         } else if (PlayerState.PLAYING.getAssociatedIntent().toString().equals(intent.getAction())) {
             updateWidgetsStates(context, PlayerState.PLAYING);
-        } else if (PlayerState.PAUSED.getAssociatedIntent().toString().equals(intent.getAction()))
+        } else if (PlayerState.PAUSED.getAssociatedIntent().toString().equals(intent.getAction())) {
             updateWidgetsStates(context, PlayerState.PAUSED);
-        else if (PlayerState.STOPPED.getAssociatedIntent().toString().equals(intent.getAction()))
+        } else if (PlayerState.STOPPED.getAssociatedIntent().toString().equals(intent.getAction())) {
             updateWidgetsStates(context, PlayerState.STOPPED);
-        else if (PlayerState.BUFFERING.getAssociatedIntent().toString().equals(intent.getAction()))
+        } else if (PlayerState.BUFFERING.getAssociatedIntent().toString().equals(intent.getAction())) {
             updateWidgetsStates(context, PlayerState.BUFFERING);
+        }
     }
 
     /**
@@ -219,7 +223,7 @@ public class WidgetProvider extends AppWidgetProvider {
 
                 //clear widget
                 remoteViews.setImageViewResource(R.id.widget_image, R.drawable.player_default_image);
-                remoteViews.setTextViewText(R.id.widget_artist_text, "");
+                remoteViews.setTextViewText(R.id.widget_artist_text, context.getResources().getString(R.string.player_widget_title));
                 remoteViews.setTextViewText(R.id.widget_title_text, "");
                 break;
         }
@@ -258,10 +262,11 @@ public class WidgetProvider extends AppWidgetProvider {
         //update the current widget
         AppWidgetManager awm = AppWidgetManager.getInstance(context);
         ComponentName componentName = new ComponentName(context, WidgetProvider.class);
-        if (AppUtils.isAPILevel11Available())
+        if (AppUtils.isAPILevel11Available()) {
             awm.partiallyUpdateAppWidget(awm.getAppWidgetIds(componentName), remoteViews);
-        else
+        } else {
             awm.updateAppWidget(awm.getAppWidgetIds(componentName), remoteViews);
+        }
     }
 
 }

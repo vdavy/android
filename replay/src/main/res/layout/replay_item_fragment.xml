@@ -28,14 +28,14 @@
             tools:ignore="ContentDescription"/>
 
         <TextView
-            style="@style/MaterialTheme.ReplayItemText.Title"
+            style="@style/MaterialTheme.ItemText.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{replayItem.title}"
             tools:ignore="ContentDescription"/>
 
         <TextView
-            style="@style/MaterialTheme.ReplayItemText.Description"
+            style="@style/MaterialTheme.ItemText.Description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{replayItem.description}"/>
