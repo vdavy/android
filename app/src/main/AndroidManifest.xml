@@ -45,6 +45,7 @@
             android:label="@string/player_activity_title"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.HomeActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
