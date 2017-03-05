@@ -60,8 +60,9 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
                     .penaltyLog()
                     .penaltyDialog();
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 tpBuilder.penaltyFlashScreen();
+            }
 
             StrictMode.setThreadPolicy(tpBuilder.build());
 

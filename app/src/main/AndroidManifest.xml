@@ -44,13 +44,8 @@
             android:name=".activities.PlayerActivity"
             android:label="@string/player_activity_title"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.HomeActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            android:theme="@style/MaterialTheme"
             tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.stationmillenium.android.activities.HomeActivity" />
-
             <intent-filter>
                 <action android:name="com.stationmillenium.android.intents.ON_PLAYER_PLAY" />
                 <action android:name="com.stationmillenium.android.intents.ON_PLAYER_PAUSE" />

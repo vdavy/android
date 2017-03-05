@@ -6,14 +6,10 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.stationmillenium.android.BuildConfig;
-import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Receiver for the update title broadcast in {@link PlayerActivity}
@@ -46,29 +42,12 @@ public class PlayerActivityUpdateTitleBroadcastReceiver extends BroadcastReceive
             }
 
             if (songData != null) { //if data found
-                //update the image
-                playerActivity.setImageFromURL(songData.getCurrentSong().getImageURL());
-
-                //update current title
-                if ((songData.getCurrentSong().getArtist() != null) && (songData.getCurrentSong().getTitle() != null)) {
-                    String titleText = playerActivity.getResources().getString(R.string.player_current_title, songData.getCurrentSong().getArtist(), songData.getCurrentSong().getTitle());
-                    playerActivity.setCurrentTitleTextView(titleText);
-                } else {
-                    playerActivity.setCurrentTitleTextView(playerActivity.getResources().getString(R.string.player_no_title));
-                }
-
-                //update the history view
-                List<String> historyTextList = new ArrayList<>();
-                for (CurrentTitleDTO.Song historySong : songData.getHistory()) {
-                    String historyText = playerActivity.getResources().getString(R.string.player_current_title, historySong.getArtist(), historySong.getTitle());
-                    historyTextList.add(historyText);
-                }
-                playerActivity.setHistoryListValues(historyTextList);
+                //update the data
+                playerActivity.setSongData(songData);
 
             } else { //no data available - use default
                 Log.w(TAG, "No data available !");
-                playerActivity.setImageSwitcherResource(R.drawable.player_default_image);
-                playerActivity.setCurrentTitleTextView(playerActivity.getResources().getString(R.string.player_no_title));
+                playerActivity.setSongData(null);
             }
 
         } else {
@@ -76,7 +55,7 @@ public class PlayerActivityUpdateTitleBroadcastReceiver extends BroadcastReceive
                 Log.d(TAG, "Media player service not running - reseting widgets...");
             }
 
-            playerActivity.playerStopped(); //reset all widgets
+            playerActivity.forceStopState();
         }
     }
 
