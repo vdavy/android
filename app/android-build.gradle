@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.stationmillenium.android"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 25
         versionCode 126
         versionName "3.0.0-beta1"
