@@ -117,7 +117,9 @@ public class PlayerFragment extends Fragment {
         outState.putString(CURRENT_TIME_SAVE_MINUTES, binding.getPlayingMinutes());
         outState.putString(CURRENT_TIME_SAVE_SECONDS, binding.getPlayingSeconds());
         outState.putSerializable(PLAYER_STATE_SAVE, binding.getPlayerState());
-        outState.putStringArrayList(HISTORY_LIST_SAVE, new ArrayList<>(binding.getHistoryArray()));
+        if (binding.getHistoryArray() != null) {
+            outState.putStringArrayList(HISTORY_LIST_SAVE, new ArrayList<>(binding.getHistoryArray()));
+        }
         super.onSaveInstanceState(outState);
     }
 }
