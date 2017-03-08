@@ -56,6 +56,7 @@ public class PlayerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.inflate(inflater, R.layout.player_fragment, container, false);
         binding.setActivity((PlayerActivity) getActivity());
+        binding.setPlayerState(PlayerState.STOPPED);
 
         //image switcher
         binding.playerImageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
