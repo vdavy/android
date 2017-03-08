@@ -23,6 +23,7 @@ import com.stationmillenium.android.databinding.PlayerFragmentBinding;
 import com.stationmillenium.android.libutils.activities.PlayerState;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -108,5 +109,15 @@ public class PlayerFragment extends Fragment {
 
     public void setHistoryList(List<String> historyList) {
         binding.setHistoryArray(historyList);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(SONG_DATA_SAVE, binding.getSongData());
+        outState.putString(CURRENT_TIME_SAVE_MINUTES, binding.getPlayingMinutes());
+        outState.putString(CURRENT_TIME_SAVE_SECONDS, binding.getPlayingSeconds());
+        outState.putSerializable(PLAYER_STATE_SAVE, binding.getPlayerState());
+        outState.putStringArrayList(HISTORY_LIST_SAVE, new ArrayList<>(binding.getHistoryArray()));
+        super.onSaveInstanceState(outState);
     }
 }
