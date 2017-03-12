@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity.AlarmSharedPreferencesConstants;
-import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.preferences.ListPreferenceMultiSelect;
 import com.stationmillenium.android.libutils.preferences.SeekBarDialogPreference;
 import com.stationmillenium.android.libutils.preferences.TimePreference;
@@ -65,17 +64,9 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
         super.onCreate(savedInstanceState);
         activity = (AlarmSharedPreferencesActivity) getActivity();    
 
-        if (AppUtils.isAPILevel11Available()) {
-            addPreferencesFromResource(R.xml.alarm_preferences);
-            initializePreferenceFields(true); //load fields
-            initAlarmDaysList(); //init alarm days field
-
-        } else {
-            addPreferencesFromResource(R.xml.alarm_preferences_api_level_10);
-            initializePreferenceFields(false); //load fields
-            initAlarmDaysListAsString(); //init alarm days string field
-        }
-
+        addPreferencesFromResource(R.xml.alarm_preferences);
+        initializePreferenceFields(true); //load fields
+        initAlarmDaysList(); //init alarm days field
 
         //init fields
         initAlarmTime();

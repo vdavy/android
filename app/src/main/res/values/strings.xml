@@ -35,7 +35,6 @@
     <string name="player_stop">Stop</string>
     <string name="player_notification_time">%1$s:%2$s</string>
     <string name="player_notification_time_default">--:--</string>
-    <string name="player_loading">Chargement en cours&#8230;</string>
 
     <!-- playing notification -->
     <string name="notification_ticker_text">Player Live Millenium&#8230;</string>

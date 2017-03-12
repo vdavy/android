@@ -470,7 +470,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                             PlaybackState.ACTION_PLAY | PlaybackState.ACTION_PLAY_PAUSE | PlaybackState.ACTION_PAUSE | PlaybackState.ACTION_STOP)
                     .setState(androidPlaybackState, position, 1.0f)
                     .build());
-        } else if ((AppUtils.isAPILevel14Available()) && (remoteControlClient != null)) {
+        } else if (remoteControlClient != null) {
             remoteControlClient.setPlaybackState(localState);
         }
     }
@@ -533,7 +533,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             Log.d(TAG, "Free handlers");
         }
         if (audioManager != null) {
-            if ((AppUtils.isAPILevel14Available() && (remoteControlClient != null))) {
+            if (remoteControlClient != null) {
                 audioManager.unregisterRemoteControlClient(remoteControlClient);
             }
 

@@ -73,7 +73,7 @@ public class MediaPlayerServiceHandler extends Handler {
                             setupRemoteControl();
 
                             //wifi lock
-                            mediaPlayerServiceRef.get().setWifiLock(((WifiManager) mediaPlayerServiceRef.get().getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "StationMilleniumPlayerWifiLock"));
+                            mediaPlayerServiceRef.get().setWifiLock(((WifiManager) mediaPlayerServiceRef.get().getApplicationContext().getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "StationMilleniumPlayerWifiLock"));
 
                             //start in foreground
                             Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().createNotification(true);
@@ -117,7 +117,7 @@ public class MediaPlayerServiceHandler extends Handler {
     }
 
     private void setupRemoteControl() {
-        if ((AppUtils.isAPILevel14Available()) && (!AppUtils.isAPILevel21Available())) {
+        if (!AppUtils.isAPILevel21Available()) {
             //init the remote control client
             Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
             mediaButtonIntent.setComponent(mediaPlayerServiceRef.get().getPcbbrComponentName());

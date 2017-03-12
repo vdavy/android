@@ -22,7 +22,6 @@ import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.AntennaGridWebViewFragement;
 import com.stationmillenium.android.databinding.AntennaGridActivityBinding;
-import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.drawer.DrawerUtils;
 
@@ -123,7 +122,7 @@ public class AntennaGridActivity extends AppCompatActivity {
             fragment.getWebView().loadUrl(getString(R.string.antenna_grid_page_url));
             PiwikTracker.trackScreenView(ANTENNA_GRID);
 
-        } else if ((AppUtils.isAPILevel11Available()) && (fragment.getWebView() != null)) {
+        } else if (fragment.getWebView() != null) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Resume webview");
             }
@@ -139,7 +138,7 @@ public class AntennaGridActivity extends AppCompatActivity {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "Pausing webview");
         }
-        if ((AppUtils.isAPILevel11Available()) && (fragment.getWebView() != null)) {
+        if (fragment.getWebView() != null) {
             fragment.getWebView().onPause();
         }
         super.onPause();

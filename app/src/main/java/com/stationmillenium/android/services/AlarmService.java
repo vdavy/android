@@ -24,10 +24,8 @@ import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -229,18 +227,7 @@ public class AlarmService extends IntentService {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private int[] getRepeatDays(SharedPreferences preferences) {
-        Set<String> repeatDaysSet = null;
-
-        //get the day values as properly way
-        if (AppUtils.isAPILevel11Available()) {
-            repeatDaysSet = preferences.getStringSet(AlarmSharedPreferencesConstants.ALARM_DAYS, null);
-        } else {
-            String repeatDaysString = preferences.getString(AlarmSharedPreferencesConstants.ALARM_DAYS_STRING, null);
-            if ((repeatDaysString != null) && (!repeatDaysString.equals(""))) {
-                String[] alarmDaysArray = repeatDaysString.split(ALARM_DAYS_LIST_STRING_SEPARATOR);
-                repeatDaysSet = new HashSet<>(Arrays.asList(alarmDaysArray));
-            }
-        }
+        Set<String> repeatDaysSet =  preferences.getStringSet(AlarmSharedPreferencesConstants.ALARM_DAYS, null);
 
         //process set to convert to array
         if ((repeatDaysSet != null) && (!repeatDaysSet.isEmpty())) {

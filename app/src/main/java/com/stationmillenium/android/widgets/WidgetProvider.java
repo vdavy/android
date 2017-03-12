@@ -262,11 +262,7 @@ public class WidgetProvider extends AppWidgetProvider {
         //update the current widget
         AppWidgetManager awm = AppWidgetManager.getInstance(context);
         ComponentName componentName = new ComponentName(context, WidgetProvider.class);
-        if (AppUtils.isAPILevel11Available()) {
-            awm.partiallyUpdateAppWidget(awm.getAppWidgetIds(componentName), remoteViews);
-        } else {
-            awm.updateAppWidget(awm.getAppWidgetIds(componentName), remoteViews);
-        }
+        awm.partiallyUpdateAppWidget(awm.getAppWidgetIds(componentName), remoteViews);
     }
 
 }

@@ -26,35 +26,6 @@ public class AppUtils {
     private static final String TAG_NETWORK_AVAILABLE = "AppUtils#isNetworkAvail";
     private static final String TAG_WIFI_ONLY_NOT_ACTIVATED = "AppUtils#isWifiOnly";
 
-
-    /**
-     * Return if the API level >= 14
-     *
-     * @return <code>true</code> if API level >= 14, <code>false</code> if not
-     */
-    public static boolean isAPILevel14Available() {
-        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH);
-    }
-
-    /**
-     * Return if the API level >= 21
-     *
-     * @return <code>true</code> if API level >= 21, <code>false</code> if not
-     */
-    //not available yet
-    /* public static boolean isAPILevel21Available() {
-        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
-    } */
-
-    /**
-     * Return if the API level >= 11
-     *
-     * @return <code>true</code> if API level >= 11, <code>false</code> if not
-     */
-    public static boolean isAPILevel11Available() {
-        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB);
-    }
-
     /**
      * Return if the API level >= 21
      *

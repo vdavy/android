@@ -101,7 +101,7 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
             }
 
             //set metadata for remote control
-            if ((AppUtils.isAPILevel14Available()) && (mediaPlayerServiceRef.get().getRemoteControlClient() != null)) {
+            if (mediaPlayerServiceRef.get().getRemoteControlClient() != null) {
                 RemoteControlClient.MetadataEditor metadataEditor = mediaPlayerServiceRef.get().getRemoteControlClient().editMetadata(false);
                 metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, song.getCurrentSong().getArtist());
                 metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, song.getCurrentSong().getArtist());
