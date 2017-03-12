@@ -3,212 +3,199 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.stationmillenium.android.libutils.activities.PlayerState" alias="PlayerState" />
-        <import type="android.view.View" alias="View" />
+
+        <import
+            alias="PlayerState"
+            type="com.stationmillenium.android.libutils.activities.PlayerState" />
+
+        <import
+            alias="View"
+            type="android.view.View" />
+
         <variable
             name="historyArray"
             type="java.util.List&lt;String&gt;" />
+
         <variable
             name="playerState"
             type="PlayerState" />
+
         <variable
             name="playingSeconds"
             type="String" />
+
         <variable
             name="playingMinutes"
             type="String" />
+
         <variable
             name="activity"
             type="com.stationmillenium.android.activities.PlayerActivity" />
+
         <variable
             name="songData"
             type="com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song" />
     </data>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="top"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <ImageSwitcher
+            android:id="@+id/player_image_switcher"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/player_image_border"
+            android:inAnimation="@android:anim/fade_in"
+            android:outAnimation="@android:anim/fade_out"
+            app:imageURL="@{songData.imageURL}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageSwitcher
-                android:id="@+id/player_image_switcher"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/player_image_border"
-                android:gravity="center"
-                android:inAnimation="@android:anim/fade_in"
-                android:outAnimation="@android:anim/fade_out"
-                app:imageURL="@{songData.imageURL}"/>
+        <TextView
+            android:id="@+id/player_current_title_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/player_currently_playing"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/player_image_switcher" />
 
-            <TextView
-                android:id="@+id/player_current_title_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/player_image_switcher"
-                android:gravity="center"
-                android:paddingTop="10dp"
-                android:shadowColor="#ff000000"
-                android:shadowDx="4"
-                android:shadowDy="4"
-                android:shadowRadius="1.5"
-                android:text="@string/player_currently_playing"
-                android:textColor="#ffffffff"
-                android:textSize="18sp"
-                android:typeface="sans" />
+        <TextView
+            android:id="@+id/current_title_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            app:artist="@{songData.artist}"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/player_current_title_text"
+            app:title="@{songData.title}" />
 
-            <TextView
-                android:id="@+id/current_title_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/player_current_title_text"
-                android:gravity="center"
-                android:paddingTop="5dp"
-                android:textColor="#ff1887df"
-                android:textSize="@dimen/player_last_5_titles_text_size"
-                android:textStyle="italic"
-                app:artist="@{songData.artist}"
-                app:title="@{songData.title}" />
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/player_last_5_songs_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="left"
+            android:text="@string/player_last_played_titles"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/current_title_text" />
+
+        <ListView
+            android:id="@+id/player_history_list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="@dimen/player_list_divider_height"
+            android:listSelector="@android:color/transparent"
+            app:historyList="@{historyArray}"
+            app:layout_constraintBottom_toTopOf="@+id/player_progress_bar"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/player_last_5_songs_header" />
+
+        <ProgressBar
+            android:id="@+id/player_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:indeterminate="true"
+            android:visibility="@{playerState == PlayerState.BUFFERING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/player_buttons_layout"
+            app:layout_constraintHorizontal_bias="0.50"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/player_current_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text='@{(playingMinutes != null &amp;&amp; playingSeconds != null &amp;&amp; playingMinutes.length() > 0 &amp;&amp; playingSeconds.length() > 0) ? @string/player_notification_time(playingMinutes, playingSeconds) : @string/player_notification_time_default}'
+            android:visibility="@{playerState == PlayerState.PLAYING || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/player_buttons_layout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/player_buttons_layout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/player_last_5_titles_margin_top"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
 
-            <TextView
-                android:layout_width="match_parent"
+            <ImageButton
+                android:id="@+id/play_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:gravity="left"
-                android:paddingLeft="10dp"
-                android:shadowColor="#ff000000"
-                android:shadowDx="4"
-                android:shadowDy="4"
-                android:shadowRadius="1.5"
-                android:text="@string/player_last_played_titles"
-                android:textColor="#ff4CF5A0"
-                android:textSize="@dimen/player_last_5_titles_text_size" />
+                android:layout_margin="16dp"
+                android:contentDescription="@string/player_play"
+                android:onClick="@{() -> activity.startPlayer()}"
+                android:src="@drawable/play"
+                android:visibility="@{playerState == PlayerState.STOPPED || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}" />
 
-            <ListView
-                android:id="@+id/player_history_list"
-                android:layout_width="match_parent"
+            <ImageButton
+                android:id="@+id/pause_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:listSelector="@android:color/transparent"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="@dimen/player_list_divider_height"
-                app:historyList="@{historyArray}"/>
+                android:layout_margin="16dp"
+                android:contentDescription="@string/player_pause"
+                android:onClick="@{() -> activity.pausePlayer()}"
+                android:src="@drawable/pause"
+                android:visibility="@{playerState == PlayerState.PLAYING ? View.VISIBLE : View.GONE}" />
+
+            <ImageButton
+                android:id="@+id/stop_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:contentDescription="@string/player_stop"
+                android:onClick="@{() -> activity.stopPlayer()}"
+                android:src="@drawable/stop"
+                android:visibility="@{playerState == PlayerState.PLAYING || playerState == PlayerState.BUFFERING || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}" />
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="#00000000" />
+    </android.support.constraint.ConstraintLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="@android:drawable/screen_background_dark_transparent"
-                android:gravity="center">
-
-                <RelativeLayout
-                    android:id="@+id/player_button_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:gravity="right"
-                    android:paddingRight="5dp">
-
-                    <ImageButton
-                        android:id="@+id/play_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:onClick="@{() -> activity.startPlayer()}"
-                        android:src="@drawable/ic_player_play"
-                        android:visibility="@{playerState == PlayerState.STOPPED || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}"/>
-
-                    <ImageButton
-                        android:id="@+id/pause_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:layout_toRightOf="@id/play_button"
-                        android:contentDescription="@string/player_pause"
-                        android:onClick="@{() -> activity.pausePlayer()}"
-                        android:src="@drawable/ic_player_pause"
-                        android:clickable="@{playerState == PlayerState.PLAYING}"
-                        android:visibility="@{playerState == PlayerState.BUFFERING || playerState == PlayerState.PLAYING ? View.VISIBLE : View.GONE}"/>
-
-                    <ImageButton
-                        android:id="@+id/stop_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/pause_button"
-                        android:contentDescription="@string/player_stop"
-                        android:onClick="@{() -> activity.stopPlayer()}"
-                        android:src="@drawable/ic_player_stop"
-                        android:visibility="@{playerState == PlayerState.PLAYING || playerState == PlayerState.BUFFERING || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/player_button_layout"
-                    android:gravity="left"
-                    android:paddingLeft="5dp">
-
-                    <ProgressBar
-                        android:id="@+id/player_progress_bar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:indeterminate="true"
-                        android:visibility="@{playerState == PlayerState.BUFFERING ? View.VISIBLE : View.GONE}" />
-
-                    <TextView
-                        android:id="@+id/player_loading"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="2dp"
-                        android:layout_toRightOf="@id/player_progress_bar"
-                        android:gravity="center"
-                        android:text="@string/player_loading"
-                        android:textColor="#ff1887df"
-                        android:textSize="13sp"
-                        android:visibility="@{playerState == PlayerState.BUFFERING ? View.VISIBLE : View.GONE}" />
-
-                    <TextView
-                        android:id="@+id/player_current_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/player_progress_bar"
-                        android:gravity="center"
-                        android:textColor="#ff1887df"
-                        android:textSize="30sp"
-                        android:typeface="monospace"
-                        android:text='@{(playingMinutes != null &amp;&amp; playingSeconds != null) ? @string/player_notification_time(playingMinutes, playingSeconds) : ""}'
-                        android:visibility="@{playerState == PlayerState.PLAYING ? View.VISIBLE : View.GONE}"/>
-                </RelativeLayout>
-            </RelativeLayout>
-        </RelativeLayout>
-
-    </LinearLayout>
 
 </layout>

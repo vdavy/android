@@ -34,6 +34,7 @@
     <string name="player_pause">Pause</string>
     <string name="player_stop">Stop</string>
     <string name="player_notification_time">%1$s:%2$s</string>
+    <string name="player_notification_time_default">--:--</string>
     <string name="player_loading">Chargement en cours&#8230;</string>
 
     <!-- playing notification -->
