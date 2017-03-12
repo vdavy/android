@@ -15,7 +15,7 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind:${rootProject.ext.jacksonVersion}"
     compile "com.github.bumptech.glide:glide:${rootProject.ext.glideVersion}"
     compile 'jp.wasabeef:glide-transformations:2.0.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     testCompile "junit:junit:${rootProject.ext.junitVersion}"
     testCompile "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"
