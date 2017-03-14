@@ -94,6 +94,7 @@
             android:layout_marginTop="14dp"
             android:gravity="center"
             android:textSize="18sp"
+            android:maxLines="2"
             app:artist="@{songData.artist}"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -103,8 +104,8 @@
 
         <TextView
             android:id="@+id/player_last_5_songs_header"
-            style="@style/MaterialTheme.ItemText"
-            android:layout_width="0dp"
+            style="@style/MaterialTheme.Text.Duration"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginLeft="16dp"
@@ -112,27 +113,29 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:gravity="left"
+            android:textSize="16sp"
             android:text="@string/player_last_played_titles"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/current_title_text"/>
+            app:layout_constraintTop_toBottomOf="@+id/current_title_text"
+            app:layout_constraintHorizontal_bias="0.0"/>
 
         <ListView
             android:id="@+id/player_history_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:divider="@android:color/white"
             android:dividerHeight="0dp"
             app:historyList="@{historyArray}"
-            app:layout_constraintBottom_toTopOf="@+id/player_progress_bar"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/player_last_5_songs_header"/>
+            app:layout_constraintTop_toBottomOf="@+id/player_last_5_songs_header"
+            android:visibility="@{playerState != PlayerState.BUFFERING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/player_buttons_layout"/>
 
         <ProgressBar
             android:id="@+id/player_progress_bar"
@@ -148,20 +151,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
-        <TextView
-            android:id="@+id/player_current_time"
-            style="@style/MaterialTheme.Text.Time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:text='@{(playingMinutes != null &amp;&amp; playingSeconds != null &amp;&amp; playingMinutes.length() > 0 &amp;&amp; playingSeconds.length() > 0) ? @string/player_notification_time(playingMinutes, playingSeconds) : @string/player_notification_time_default}'
-            android:visibility="@{playerState == PlayerState.PLAYING || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toTopOf="@+id/player_buttons_layout"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
-
         <LinearLayout
             android:id="@+id/player_buttons_layout"
             android:layout_width="0dp"
@@ -174,9 +163,9 @@
 
             <ImageButton
                 android:id="@+id/play_button"
+                style="@style/PlayerButtonsMargin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
                 android:contentDescription="@string/player_play"
                 android:onClick="@{() -> activity.startPlayer()}"
                 android:src="@drawable/play"
@@ -184,9 +173,9 @@
 
             <ImageButton
                 android:id="@+id/pause_button"
+                style="@style/PlayerButtonsMargin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
                 android:contentDescription="@string/player_pause"
                 android:onClick="@{() -> activity.pausePlayer()}"
                 android:src="@drawable/pause"
@@ -194,18 +183,24 @@
 
             <ImageButton
                 android:id="@+id/stop_button"
+                style="@style/PlayerButtonsMargin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
                 android:contentDescription="@string/player_stop"
                 android:onClick="@{() -> activity.stopPlayer()}"
                 android:src="@drawable/stop"
                 android:visibility="@{playerState == PlayerState.PLAYING || playerState == PlayerState.BUFFERING || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}"/>
 
+            <TextView
+                android:id="@+id/player_current_time"
+                style="@style/MaterialTheme.Text.Genre.PlayerButtonsMargin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{(playingMinutes != null &amp;&amp; playingSeconds != null &amp;&amp; playingMinutes.length() > 0 &amp;&amp; playingSeconds.length() > 0) ? @string/player_notification_time(playingMinutes, playingSeconds) : @string/player_notification_time_default}'
+                android:visibility="@{playerState == PlayerState.PLAYING || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}" />
+
         </LinearLayout>
 
-
     </android.support.constraint.ConstraintLayout>
-
 
 </layout>

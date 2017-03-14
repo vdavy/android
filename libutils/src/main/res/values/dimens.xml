@@ -22,5 +22,8 @@
     <dimen name="player_time_size">20sp</dimen>
     <dimen name="player_time_padding_width">5dp</dimen>
     <dimen name="player_time_padding_height">2dp</dimen>
+    <dimen name="player_buttons_width_margin">16dp</dimen>
+    <dimen name="player_buttons_height_margin">8dp</dimen>
+    <dimen name="player_time_text_size">20sp</dimen>
 
 </resources>

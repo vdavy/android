@@ -42,7 +42,7 @@
                 android:layout_toRightOf="@id/song_history_item_icon"
                 android:paddingLeft="5dp"
                 android:paddingStart="5dp"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_centerVertical="true"/>
 
         </RelativeLayout>
