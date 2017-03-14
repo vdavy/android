@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <import
             alias="PlayerState"
-            type="com.stationmillenium.android.libutils.activities.PlayerState" />
+            type="com.stationmillenium.android.libutils.activities.PlayerState"/>
 
         <import
             alias="View"
-            type="android.view.View" />
+            type="android.view.View"/>
 
         <variable
             name="historyArray"
-            type="java.util.List&lt;String&gt;" />
+            type="java.util.List&lt;String&gt;"/>
 
         <variable
             name="playerState"
-            type="PlayerState" />
+            type="PlayerState"/>
 
         <variable
             name="playingSeconds"
-            type="String" />
+            type="String"/>
 
         <variable
             name="playingMinutes"
-            type="String" />
+            type="String"/>
 
         <variable
             name="activity"
-            type="com.stationmillenium.android.activities.PlayerActivity" />
+            type="com.stationmillenium.android.activities.PlayerActivity"/>
 
         <variable
             name="songData"
-            type="com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song" />
+            type="com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -57,7 +57,7 @@
             app:imageURL="@{songData.imageURL}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/player_current_title_text"
@@ -69,18 +69,18 @@
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:gravity="center"
             android:paddingBottom="3dp"
             android:paddingEnd="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingStart="10dp"
-            android:gravity="center"
             android:text="@string/player_currently_playing"
             android:textSize="18sp"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/player_image_switcher" />
+            app:layout_constraintTop_toBottomOf="@+id/player_image_switcher"/>
 
         <TextView
             android:id="@+id/current_title_text"
@@ -99,7 +99,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/player_current_title_text"
-            app:title="@{songData.title}" />
+            app:title="@{songData.title}"/>
 
         <TextView
             android:id="@+id/player_last_5_songs_header"
@@ -115,7 +115,7 @@
             android:text="@string/player_last_played_titles"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/current_title_text" />
+            app:layout_constraintTop_toBottomOf="@+id/current_title_text"/>
 
         <ListView
             android:id="@+id/player_history_list"
@@ -125,15 +125,14 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="@dimen/player_list_divider_height"
-            android:listSelector="@android:color/transparent"
+            android:divider="@android:color/white"
+            android:dividerHeight="0dp"
             app:historyList="@{historyArray}"
             app:layout_constraintBottom_toTopOf="@+id/player_progress_bar"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/player_last_5_songs_header" />
+            app:layout_constraintTop_toBottomOf="@+id/player_last_5_songs_header"/>
 
         <ProgressBar
             android:id="@+id/player_progress_bar"
@@ -147,7 +146,7 @@
             app:layout_constraintBottom_toTopOf="@+id/player_buttons_layout"
             app:layout_constraintHorizontal_bias="0.50"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"/>
 
         <TextView
             android:id="@+id/player_current_time"
@@ -161,7 +160,7 @@
             android:visibility="@{playerState == PlayerState.PLAYING || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@+id/player_buttons_layout"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"/>
 
         <LinearLayout
             android:id="@+id/player_buttons_layout"
@@ -181,7 +180,7 @@
                 android:contentDescription="@string/player_play"
                 android:onClick="@{() -> activity.startPlayer()}"
                 android:src="@drawable/play"
-                android:visibility="@{playerState == PlayerState.STOPPED || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{playerState == PlayerState.STOPPED || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}"/>
 
             <ImageButton
                 android:id="@+id/pause_button"
@@ -191,7 +190,7 @@
                 android:contentDescription="@string/player_pause"
                 android:onClick="@{() -> activity.pausePlayer()}"
                 android:src="@drawable/pause"
-                android:visibility="@{playerState == PlayerState.PLAYING ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{playerState == PlayerState.PLAYING ? View.VISIBLE : View.GONE}"/>
 
             <ImageButton
                 android:id="@+id/stop_button"
@@ -201,7 +200,7 @@
                 android:contentDescription="@string/player_stop"
                 android:onClick="@{() -> activity.stopPlayer()}"
                 android:src="@drawable/stop"
-                android:visibility="@{playerState == PlayerState.PLAYING || playerState == PlayerState.BUFFERING || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{playerState == PlayerState.PLAYING || playerState == PlayerState.BUFFERING || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}"/>
 
         </LinearLayout>
 

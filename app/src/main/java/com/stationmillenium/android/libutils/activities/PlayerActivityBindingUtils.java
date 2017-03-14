@@ -14,7 +14,6 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.stationmillenium.android.R;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,8 +22,6 @@ import java.util.List;
  */
 
 public class PlayerActivityBindingUtils {
-
-    private static final List<String> EMPTY_STRING_LIST = Arrays.asList("", "", "", "", "");
 
     @BindingAdapter("imageURL")
     public static void setImageFromURL(final ImageSwitcher imageSwitcher, String url) {
@@ -50,7 +47,7 @@ public class PlayerActivityBindingUtils {
 
     @BindingAdapter("historyList")
     public static void setHistoryListValues(ListView historyList, List<String> values) {
-        historyList.setAdapter(new ArrayAdapter<>(historyList.getContext(), R.layout.player_history_list_item, R.id.player_history_item_text, (values != null) ? values : EMPTY_STRING_LIST));
+        historyList.setAdapter((values != null) ? new ArrayAdapter<>(historyList.getContext(), R.layout.player_history_list_item, R.id.player_history_item_text, values) : null);
     }
 
     @BindingAdapter({"artist", "title"})
