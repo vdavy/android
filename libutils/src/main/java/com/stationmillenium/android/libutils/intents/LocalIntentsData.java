@@ -21,6 +21,6 @@ public enum LocalIntentsData {
     SONG_SEARCH_MONTH,
     SONG_SEARCH_YEAR,
     SONG_SEARCH_HOURS,
-    SONG_SEARCH_MINUTES;
+    SONG_SEARCH_MINUTES
 
 }

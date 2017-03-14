@@ -83,7 +83,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
         fragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.home_fragment);
 
         drawerUtils = new DrawerUtils(this, binding.mainDrawerLayout, binding.mainToolbar, R.id.nav_drawer_home);
-        getSupportLoaderManager().initLoader(LOADER_INDEX, null, this).forceLoad();;
+        getSupportLoaderManager().initLoader(LOADER_INDEX, null, this).forceLoad();
     }
 
     @Override

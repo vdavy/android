@@ -30,7 +30,7 @@ public enum LocalIntents {
 
     private String intentValue;
 
-    private LocalIntents(String intentValue) {
+    LocalIntents(String intentValue) {
         this.intentValue = "com.stationmillenium.android.intents." + intentValue;
     }
 
