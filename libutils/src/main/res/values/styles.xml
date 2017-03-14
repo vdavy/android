@@ -112,4 +112,12 @@
         <item name="android:textColor">@color/secondary_text</item>
     </style>
 
+    <style name="MaterialTheme.Text.Time" parent="MaterialTheme.Text.Genre">
+        <item name="android:textSize">@dimen/player_time_size</item>
+        <item name="android:paddingLeft">@dimen/player_time_padding_width</item>
+        <item name="android:paddingRight">@dimen/player_time_padding_width</item>
+        <item name="android:paddingTop">@dimen/player_time_padding_height</item>
+        <item name="android:paddingBottom">@dimen/player_time_padding_height</item>
+    </style>
+
 </resources>

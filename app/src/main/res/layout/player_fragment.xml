@@ -61,15 +61,22 @@
 
         <TextView
             android:id="@+id/player_current_title_text"
-            android:layout_width="0dp"
+            style="@style/MaterialTheme.Text.Title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:paddingBottom="3dp"
+            android:paddingEnd="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingStart="10dp"
             android:gravity="center"
             android:text="@string/player_currently_playing"
+            android:textSize="18sp"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -77,6 +84,7 @@
 
         <TextView
             android:id="@+id/current_title_text"
+            style="@style/MaterialTheme.Text.Description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -85,6 +93,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="14dp"
             android:gravity="center"
+            android:textSize="18sp"
             app:artist="@{songData.artist}"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -94,6 +103,7 @@
 
         <TextView
             android:id="@+id/player_last_5_songs_header"
+            style="@style/MaterialTheme.ItemText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -141,6 +151,7 @@
 
         <TextView
             android:id="@+id/player_current_time"
+            style="@style/MaterialTheme.Text.Time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"

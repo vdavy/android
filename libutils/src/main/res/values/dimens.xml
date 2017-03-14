@@ -19,4 +19,8 @@
 
     <dimen name="nav_drawer_header_padding">10sp</dimen>
 
+    <dimen name="player_time_size">20sp</dimen>
+    <dimen name="player_time_padding_width">5dp</dimen>
+    <dimen name="player_time_padding_height">2dp</dimen>
+
 </resources>
