@@ -131,8 +131,8 @@
         <item name="android:textSize">@dimen/player_time_text_size</item>
         <item name="android:layout_marginTop">@dimen/player_buttons_height_margin</item>
         <item name="android:layout_marginBottom">@dimen/player_buttons_height_margin</item>
-        <item name="android:layout_marginLeft">@dimen/player_buttons_width_margin</item>
-        <item name="android:layout_marginRight">@dimen/player_buttons_width_margin</item>
+        <item name="android:layout_marginLeft">@dimen/player_time_width_margin</item>
+        <item name="android:layout_marginRight">@dimen/player_time_width_margin</item>
     </style>
 
 </resources>

@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/list_item_background_shape"
             android:gravity="start"
-            android:padding="8dp"
+            android:padding="4dp"
             tools:ignore="UselessParent">
 
             <ImageView
@@ -31,7 +31,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:contentDescription="@string/empty_string"
-                android:src="@drawable/list_item_arrow"/>
+                android:src="@drawable/list_item_arrow_small"/>
 
             <TextView
                 android:id="@+id/player_history_item_text"
@@ -40,9 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/song_history_item_icon"
                 android:layout_toRightOf="@id/song_history_item_icon"
-                android:paddingLeft="5dp"
-                android:paddingStart="5dp"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:layout_centerVertical="true"/>
 
         </RelativeLayout>

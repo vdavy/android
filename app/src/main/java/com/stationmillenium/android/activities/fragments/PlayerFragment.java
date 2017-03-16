@@ -41,11 +41,10 @@ public class PlayerFragment extends Fragment {
     private static final String PLAYER_STATE_SAVE = "PLAYER_STATE_SAVE";
     private static final String HISTORY_LIST_SAVE = "HISTORY_LIST_SAVE";
 
-
-
     //widgets
     private PlayerFragmentBinding binding;
 
+    private List<String> currentTitleList = null;
 
     @SuppressLint("NewApi")
     @Override
@@ -57,6 +56,7 @@ public class PlayerFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.player_fragment, container, false);
         binding.setActivity((PlayerActivity) getActivity());
         binding.setPlayerState(PlayerState.STOPPED);
+        binding.setTimeTextView(binding.playerCurrentTime);
 
         //image switcher
         binding.playerImageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
@@ -109,7 +109,19 @@ public class PlayerFragment extends Fragment {
     }
 
     public void setHistoryList(List<String> historyList) {
-        binding.setHistoryArray(historyList);
+        if (currentTitleList == null) {
+            binding.setHistoryArray(historyList);
+            currentTitleList = historyList;
+        } else {
+            for (int i = 0; i < currentTitleList.size(); i++) {
+                if (!currentTitleList.get(i).equals(historyList.get(i))) {
+                    binding.setHistoryArray(historyList);
+                    currentTitleList = historyList;
+                    break;
+                }
+            }
+        }
+
     }
 
     @Override
