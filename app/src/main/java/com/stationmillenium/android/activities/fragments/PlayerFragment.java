@@ -121,7 +121,6 @@ public class PlayerFragment extends Fragment {
                 }
             }
         }
-
     }
 
     @Override
