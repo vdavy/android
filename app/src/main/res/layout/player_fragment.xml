@@ -38,7 +38,7 @@
 
         <variable
             name="timeTextView"
-            type="android.widget.TextView" />
+            type="android.widget.TextView"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -49,10 +49,9 @@
             android:id="@+id/player_image_switcher"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_centerHorizontal="true"
             android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/player_image_border"
@@ -69,8 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:gravity="center"
@@ -81,7 +80,7 @@
             android:paddingStart="10dp"
             android:text="@string/player_currently_playing"
             android:textSize="18sp"
-            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintHorizontal_bias="0.503"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/player_image_switcher"/>
@@ -97,10 +96,9 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="14dp"
             android:gravity="center"
-            android:textSize="18sp"
             android:maxLines="2"
+            android:textSize="18sp"
             app:artist="@{songData.artist}"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/player_current_title_text"
@@ -117,12 +115,12 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:gravity="left"
-            android:textSize="16sp"
             android:text="@string/player_last_played_titles"
+            android:textSize="16sp"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/current_title_text"
-            app:layout_constraintHorizontal_bias="0.0"/>
+            app:layout_constraintTop_toBottomOf="@+id/current_title_text"/>
 
         <ListView
             android:id="@+id/player_history_list"
@@ -133,13 +131,12 @@
             android:layout_marginTop="8dp"
             android:divider="@android:color/white"
             android:dividerHeight="0dp"
+            android:visibility="@{playerState != PlayerState.BUFFERING ? View.VISIBLE : View.GONE}"
             app:historyList="@{historyArray}"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toTopOf="@+id/player_buttons_layout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/player_last_5_songs_header"
-            android:visibility="@{playerState != PlayerState.BUFFERING ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toTopOf="@+id/player_buttons_layout"/>
+            app:layout_constraintTop_toBottomOf="@+id/player_last_5_songs_header"/>
 
         <ProgressBar
             android:id="@+id/player_progress_bar"
@@ -151,7 +148,6 @@
             android:indeterminate="true"
             android:visibility="@{playerState == PlayerState.BUFFERING ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@+id/player_buttons_layout"
-            app:layout_constraintHorizontal_bias="0.50"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
@@ -201,7 +197,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text='@{(playingMinutes != null &amp;&amp; playingSeconds != null &amp;&amp; playingMinutes.length() > 0 &amp;&amp; playingSeconds.length() > 0) ? @string/player_notification_time(playingMinutes, playingSeconds) : timeTextView.text}'
-                android:visibility="@{playerState == PlayerState.PLAYING || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{playerState == PlayerState.PLAYING || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}"/>
 
         </LinearLayout>
 

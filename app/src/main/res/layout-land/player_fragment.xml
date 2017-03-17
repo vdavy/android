@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import
+            alias="PlayerState"
+            type="com.stationmillenium.android.libutils.activities.PlayerState"/>
+
+        <import
+            alias="View"
+            type="android.view.View"/>
+
+        <variable
+            name="historyArray"
+            type="java.util.List&lt;String&gt;"/>
+
+        <variable
+            name="playerState"
+            type="PlayerState"/>
+
+        <variable
+            name="playingSeconds"
+            type="String"/>
+
+        <variable
+            name="playingMinutes"
+            type="String"/>
+
+        <variable
+            name="activity"
+            type="com.stationmillenium.android.activities.PlayerActivity"/>
+
+        <variable
+            name="songData"
+            type="com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song"/>
+
+        <variable
+            name="timeTextView"
+            type="android.widget.TextView"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/current_title_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/player_buttons_layout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/listview_layout"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageSwitcher
+                android:id="@+id/player_image_switcher"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/player_image_border"
+                android:inAnimation="@android:anim/fade_in"
+                android:outAnimation="@android:anim/fade_out"
+                app:imageURL="@{songData.imageURL}"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/player_current_title_text"
+                style="@style/MaterialTheme.Text.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:paddingBottom="3dp"
+                android:paddingEnd="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:text="@string/player_currently_playing"
+                android:textSize="18sp"
+                app:layout_constraintHorizontal_bias="0.513"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/player_image_switcher"/>
+
+            <TextView
+                android:id="@+id/current_title_text"
+                style="@style/MaterialTheme.Text.Description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:maxLines="2"
+                android:textSize="18sp"
+                app:artist="@{songData.artist}"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/player_current_title_text"
+                app:title="@{songData.title}"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/listview_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/player_buttons_layout"
+            app:layout_constraintLeft_toRightOf="@id/current_title_layout"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/player_last_5_songs_header"
+                style="@style/MaterialTheme.Text.Duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="left"
+                android:text="@string/player_last_played_titles"
+                android:textSize="16sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <ListView
+                android:id="@+id/player_history_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:divider="@android:color/white"
+                android:dividerHeight="0dp"
+                android:visibility="@{playerState != PlayerState.BUFFERING ? View.VISIBLE : View.GONE}"
+                app:historyList="@{historyArray}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/player_last_5_songs_header"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <ProgressBar
+            android:id="@+id/player_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:indeterminate="true"
+            android:visibility="@{playerState == PlayerState.BUFFERING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <LinearLayout
+            android:id="@+id/player_buttons_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <ImageButton
+                android:id="@+id/play_button"
+                style="@style/PlayerButtonsMargin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/player_play"
+                android:onClick="@{() -> activity.startPlayer()}"
+                android:src="@drawable/play"
+                android:visibility="@{playerState == PlayerState.STOPPED || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}"/>
+
+            <ImageButton
+                android:id="@+id/pause_button"
+                style="@style/PlayerButtonsMargin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/player_pause"
+                android:onClick="@{() -> activity.pausePlayer()}"
+                android:src="@drawable/pause"
+                android:visibility="@{playerState == PlayerState.PLAYING ? View.VISIBLE : View.GONE}"/>
+
+            <ImageButton
+                android:id="@+id/stop_button"
+                style="@style/PlayerButtonsMargin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/player_stop"
+                android:onClick="@{() -> activity.stopPlayer()}"
+                android:src="@drawable/stop"
+                android:visibility="@{playerState == PlayerState.PLAYING || playerState == PlayerState.BUFFERING || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}"/>
+
+            <TextView
+                android:id="@+id/player_current_time"
+                style="@style/MaterialTheme.Text.Genre.PlayerButtonsMargin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{(playingMinutes != null &amp;&amp; playingSeconds != null &amp;&amp; playingMinutes.length() > 0 &amp;&amp; playingSeconds.length() > 0) ? @string/player_notification_time(playingMinutes, playingSeconds) : timeTextView.text}'
+                android:visibility="@{playerState == PlayerState.PLAYING || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}"/>
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>
