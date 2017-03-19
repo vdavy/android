@@ -85,6 +85,7 @@ public class PlayerFragment extends Fragment {
     private void reinitOnStop() {
         binding.setHistoryArray(null);
         binding.setSongData(null);
+        currentTitleList = null;
     }
 
     public PlayerState getPlayerState() {
