@@ -41,7 +41,7 @@ public class PlayerActivityUpdateTitleBroadcastReceiver extends BroadcastReceive
                 songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());
             }
 
-            if (songData != null) { //if data found
+            if (songData != null && songData.getCurrentSong() != null && songData.getHistory() != null) { //if data found
                 //update the data
                 playerActivity.setSongData(songData);
 
