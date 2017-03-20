@@ -248,7 +248,7 @@ public class MediaPlayerNotificationBuilder {
             } else {
                 //create notification
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mediaPlayerServiceRef.get())
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_notif_icon)
                         .setLargeIcon(Bitmap.createBitmap(titleArt)) //avoid recycled image
                         .setTicker(mediaPlayerServiceRef.get().getString(R.string.notification_ticker_text))
                         .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
@@ -270,16 +270,17 @@ public class MediaPlayerNotificationBuilder {
                 //don't add play/pause button if buffering
                 if (playerState != PlayerState.BUFFERING) {
                     //add proper action (pause or play)
-                    notificationBuilder.addAction((pauseAction) ? R.drawable.ic_player_pause : R.drawable.ic_player_play,
+                    notificationBuilder.addAction((pauseAction) ? R.drawable.pause : R.drawable.play,
                             mediaPlayerServiceRef.get().getString((pauseAction) ? R.string.player_pause : R.string.player_play),
                             pausePlayPendingIntent);
                 }
 
-                notificationBuilder.addAction(R.drawable.ic_player_stop, mediaPlayerServiceRef.get().getString(R.string.player_stop), stopPendingIntent);
+                notificationBuilder.addAction(R.drawable.stop, mediaPlayerServiceRef.get().getString(R.string.player_stop), stopPendingIntent);
                 return notificationBuilder.build();
             }
 
-        } else
+        } else {
             return null;
+        }
     }
 }

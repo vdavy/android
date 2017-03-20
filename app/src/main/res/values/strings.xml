@@ -36,7 +36,7 @@
     <string name="player_notification_time">%1$s:%2$s</string>
 
     <!-- playing notification -->
-    <string name="notification_ticker_text">Player Live Millenium&#8230;</string>
+    <string name="notification_ticker_text">Player Live Millenium</string>
     <string name="player_current_title_notification">Actuellement : %1$s - %2$s</string>
     <string name="player_current_title_unavailable_notification">Actuellement : Station Millenium</string>
     <string name="player_notification_play">Lecture</string>
