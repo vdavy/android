@@ -34,6 +34,8 @@ import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.services.MediaPlayerService;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 /**
  * Class to manage the widget
  *
@@ -110,6 +112,7 @@ public class WidgetProvider extends AppWidgetProvider {
                         .placeholder(R.drawable.player_default_image)
                         .error(R.drawable.player_default_image)
                         .centerCrop()
+                        .transform(new RoundedCornersTransformation(context, context.getResources().getDimensionPixelSize(R.dimen.widget_rounded_image), 0))
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
