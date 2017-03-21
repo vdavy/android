@@ -9,11 +9,11 @@ import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
@@ -57,6 +57,7 @@ public class PlayerActivity extends AppCompatActivity {
 
     private DrawerUtils drawerUtils;
     private PlayerFragment playerFragment;
+    private PlayerActivityBinding preferencesActivityBinding;
 
     private Timer currentPlayingTimeTimer;
     private Calendar lastTimeUpdated;
@@ -66,7 +67,7 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //init view
         super.onCreate(savedInstanceState);
-        PlayerActivityBinding preferencesActivityBinding = DataBindingUtil.setContentView(this, R.layout.player_activity);
+        preferencesActivityBinding = DataBindingUtil.setContentView(this, R.layout.player_activity);
         setSupportActionBar(preferencesActivityBinding.playerToolbar);
 
         drawerUtils = new DrawerUtils(this, preferencesActivityBinding.playerDrawerLayout, preferencesActivityBinding.playerToolbar, R.id.nav_drawer_player);
@@ -239,7 +240,7 @@ public class PlayerActivity extends AppCompatActivity {
 
                 } else {
                     Log.w(TAG, "Wifi requested for streaming radio, but not connected");
-                    Toast.makeText(this, R.string.player_no_wifi, Toast.LENGTH_SHORT).show();
+                    Snackbar.make(preferencesActivityBinding.playerCoordinatorLayout, R.string.player_no_wifi, Snackbar.LENGTH_SHORT).show();
                 }
 
             } else if (BuildConfig.DEBUG) {
