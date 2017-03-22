@@ -96,7 +96,9 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         if (expandActionViewOnCreate) {
             MenuItemCompat.expandActionView(searchMenuItem);
             replayActivityBinding.searchFab.setVisibility(View.GONE);
-            searchView.setQuery(searchviewText, false);
+            if (searchviewText != null) {
+                searchView.setQuery(searchviewText, false);
+            }
         }
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -236,7 +238,9 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
             outState.putBundle(SEARCH_PARAMS, searchParams);
         }
         outState.putBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE, ((searchMenuItem != null) && (MenuItemCompat.isActionViewExpanded(searchMenuItem))));
-        outState.putString(SEARCHVIEW_TEXT, ((SearchView) MenuItemCompat.getActionView(searchMenuItem)).getQuery().toString());
+        if (searchMenuItem != null) {
+            outState.putString(SEARCHVIEW_TEXT, ((SearchView) MenuItemCompat.getActionView(searchMenuItem)).getQuery().toString());
+        }
         super.onSaveInstanceState(outState);
     }
 
