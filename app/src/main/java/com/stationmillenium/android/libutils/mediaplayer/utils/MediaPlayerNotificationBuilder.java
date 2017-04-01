@@ -152,9 +152,9 @@ public class MediaPlayerNotificationBuilder {
 
             //song image part
             synchronized (mediaPlayerServiceRef.get().getCurrentSongImageLock()) {
-                titleArt = (mediaPlayerServiceRef.get().getCurrentSongImage() == null)
+                titleArt = Bitmap.createBitmap((mediaPlayerServiceRef.get().getCurrentSongImage() == null)
                         ? BitmapFactory.decodeResource(mediaPlayerServiceRef.get().getResources(), R.drawable.player_default_image)
-                        : mediaPlayerServiceRef.get().getCurrentSongImage();
+                        : mediaPlayerServiceRef.get().getCurrentSongImage());
             }
 
             playerState = mediaPlayerServiceRef.get().getPlayerState();
