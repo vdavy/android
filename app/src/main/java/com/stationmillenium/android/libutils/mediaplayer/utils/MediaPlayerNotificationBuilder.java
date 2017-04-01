@@ -152,9 +152,10 @@ public class MediaPlayerNotificationBuilder {
 
             //song image part
             synchronized (mediaPlayerServiceRef.get().getCurrentSongImageLock()) {
-                titleArt = Bitmap.createBitmap((mediaPlayerServiceRef.get().getCurrentSongImage() == null)
+                Bitmap localImage = ((mediaPlayerServiceRef.get().getCurrentSongImage() == null)
                         ? BitmapFactory.decodeResource(mediaPlayerServiceRef.get().getResources(), R.drawable.player_default_image)
                         : mediaPlayerServiceRef.get().getCurrentSongImage());
+                titleArt = localImage.copy(localImage.getConfig(), false);
             }
 
             playerState = mediaPlayerServiceRef.get().getPlayerState();
@@ -218,7 +219,7 @@ public class MediaPlayerNotificationBuilder {
                 //create notification
                 Notification.Builder notificationBuilder = new Notification.Builder(mediaPlayerServiceRef.get())
                         .setSmallIcon(R.drawable.ic_notif_icon)
-                        .setLargeIcon(Bitmap.createBitmap(titleArt)) //avoid recycled image
+                        .setLargeIcon(titleArt.copy(titleArt.getConfig(), false)) //avoid recycled image
                         .setTicker(mediaPlayerServiceRef.get().getString(R.string.notification_ticker_text))
                         .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
                         .setContentText(currentTitle)
@@ -249,13 +250,13 @@ public class MediaPlayerNotificationBuilder {
                 //create notification
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mediaPlayerServiceRef.get())
                         .setSmallIcon(R.drawable.ic_notif_icon)
-                        .setLargeIcon(Bitmap.createBitmap(titleArt)) //avoid recycled image
+                        .setLargeIcon(titleArt.copy(titleArt.getConfig(), false)) //avoid recycled image
                         .setTicker(mediaPlayerServiceRef.get().getString(R.string.notification_ticker_text))
                         .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
                         .setContentText(currentTitle)
                         .setVisibility(Notification.VISIBILITY_PUBLIC)
                         .setStyle(new NotificationCompat.BigPictureStyle()
-                                .bigPicture(Bitmap.createBitmap(titleArt)) //avoid recycled image
+                                .bigPicture(titleArt.copy(titleArt.getConfig(), false)) //avoid recycled image
                                 .setSummaryText(currentTitle))
                         .setContentInfo(stateText)
                         .setContentIntent(playerPendingIntent);

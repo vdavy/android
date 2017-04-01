@@ -92,7 +92,7 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
                     MediaMetadata.Builder builder = new MediaMetadata.Builder();
                     builder.putString(MediaMetadata.METADATA_KEY_ARTIST, mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getArtist());
                     builder.putString(MediaMetadata.METADATA_KEY_TITLE, mediaPlayerServiceRef.get().getCurrentSong().getCurrentSong().getTitle());
-                    builder.putBitmap(MediaMetadata.METADATA_KEY_ART, Bitmap.createBitmap(songArtBitmap));
+                    builder.putBitmap(MediaMetadata.METADATA_KEY_ART, songArtBitmap.copy(songArtBitmap.getConfig(), false));
                     mediaPlayerServiceRef.get().getMediaSession().setMetadata(builder.build());
                 } else {
                     Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().createNotification(mediaPlayerServiceRef.get().getPlayerState() == PlayerState.PLAYING);
@@ -106,7 +106,7 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
                 metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, song.getCurrentSong().getArtist());
                 metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, song.getCurrentSong().getArtist());
                 metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, song.getCurrentSong().getTitle());
-                metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, Bitmap.createBitmap(songArtBitmap));
+                metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, songArtBitmap.copy(songArtBitmap.getConfig(), false));
                 metadataEditor.apply();
             }
         }
