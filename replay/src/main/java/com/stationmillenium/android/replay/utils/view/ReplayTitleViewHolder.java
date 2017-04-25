@@ -11,11 +11,11 @@ import com.stationmillenium.android.replay.dto.TrackDTO;
  * Binding and view holder for replay item in list
  * Created by vincent on 23/10/16.
  */
-public class ReplayViewHolder extends ViewHolder {
+public class ReplayTitleViewHolder extends ViewHolder {
 
     private ReplayListItemBinding binding;
 
-    public ReplayViewHolder(View itemView, ReplayActivity replayActivity) {
+    public ReplayTitleViewHolder(View itemView, ReplayActivity replayActivity) {
         super(itemView);
         binding = ReplayListItemBinding.bind(itemView);
         binding.setActivity(replayActivity);

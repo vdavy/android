@@ -4,9 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
         <variable
-            name="replayData"
-            type="java.util.List"/>
+            name="itemCount"
+            type="java.lang.Integer"/>
+        <variable
+            name="tabIndex"
+            type="java.lang.Integer"/>
         <variable
             name="activity"
             type="com.stationmillenium.android.replay.activities.ReplayActivity"/>
@@ -40,20 +44,25 @@
                     style="@style/MaterialTheme.ToolbarTextView.Italic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
-                    android:text="@{@plurals/replay_count(replayData.size, replayData.size)}"
+                    android:text="@{(tabIndex == 0) ? @plurals/replay_count(itemCount, itemCount) : @plurals/playlist_count(itemCount, itemCount)}"
+                    app:layout_scrollFlags="scroll|enterAlways"/>
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/replay_tabs"
+                    style="@style/MaterialTheme.Tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     app:layout_scrollFlags="scroll|enterAlways"/>
 
             </android.support.design.widget.AppBarLayout>
 
-            <fragment
-                android:id="@+id/replay_fragment"
-                android:name="com.stationmillenium.android.replay.activities.ReplayFragment"
+            <android.support.v4.view.ViewPager
+                android:id="@+id/replay_viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/search_fab"
@@ -64,9 +73,10 @@
                 android:layout_marginRight="@dimen/action_button_margin"
                 android:src="@drawable/ic_replay_search"
                 app:backgroundTint="@color/primary_dark"
-                app:layout_anchor="@id/replay_fragment"
+                app:layout_anchor="@id/replay_viewpager"
                 app:layout_anchorGravity="bottom|right|end"
-                android:onClick="@{() -> activity.triggerSearch()}"/>
+                android:onClick="@{() -> activity.triggerSearch()}"
+                android:visibility="@{tabIndex == 0 ? View.VISIBLE : View.GONE}"/>
 
         </android.support.design.widget.CoordinatorLayout>
 

@@ -5,7 +5,7 @@ import android.support.test.filters.MediumTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.stationmillenium.android.replay.dto.TrackDTO;
-import com.stationmillenium.android.replay.utils.SoundcloudRestLoader;
+import com.stationmillenium.android.replay.utils.SoundcloudTrackRestLoader;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,18 +18,18 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * Test {@link SoundcloudRestLoader}
+ * Test {@link SoundcloudTrackRestLoader}
  * Created by vincent on 28/08/16.
  */
 @RunWith(AndroidJUnit4.class)
 @MediumTest
 public class SoundcloudQueryTest {
 
-    private SoundcloudRestLoader restClient;
+    private SoundcloudTrackRestLoader restClient;
 
     @Before
     public void beforeTest() {
-        restClient = new SoundcloudRestLoader(InstrumentationRegistry.getTargetContext());
+        restClient = new SoundcloudTrackRestLoader(InstrumentationRegistry.getTargetContext());
     }
 
     @Test

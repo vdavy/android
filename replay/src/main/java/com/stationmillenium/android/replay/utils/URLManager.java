@@ -42,4 +42,9 @@ public class URLManager {
     public static String getStreamURLFromTrack(@NonNull Context context, @NonNull TrackDTO replay) {
         return Uri.parse(replay.getStreamURL()).buildUpon().appendQueryParameter(context.getString(R.string.client_id_param), context.getString(R.string.soudncloud_client_id)).build().toString();
     }
+
+    @NonNull
+    public static String getPlaylistsURL(@NonNull Context context) {
+        return context.getString(R.string.soundcloud_playlists_URL, context.getString(R.string.soundcloud_user_id), context.getString(R.string.soudncloud_client_id));
+    }
 }

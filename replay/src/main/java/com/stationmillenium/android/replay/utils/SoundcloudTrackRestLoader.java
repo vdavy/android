@@ -10,6 +10,7 @@ import com.stationmillenium.android.replay.dto.TrackDTO;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.Serializable;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.List;
@@ -17,10 +18,10 @@ import java.util.List;
 import static java.util.Collections.EMPTY_LIST;
 
 /**
- * Class to query Soundcloud info
+ * Class to query Soundcloud track info
  * Created by vincent on 28/08/16.
  */
-public class SoundcloudRestLoader extends AsyncTaskLoader<List<TrackDTO>> {
+public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Serializable>> {
 
     public enum QueryType {
         SEARCH,
@@ -28,7 +29,7 @@ public class SoundcloudRestLoader extends AsyncTaskLoader<List<TrackDTO>> {
         TAG
     }
 
-    private static final String TAG = "SoundcloudRestLoader";
+    private static final String TAG = "SCTrackRestLoader";
     private int limit;
     private String query;
     private QueryType queryType;
@@ -37,7 +38,7 @@ public class SoundcloudRestLoader extends AsyncTaskLoader<List<TrackDTO>> {
      * Simple search (no query / no query / no limit)
      * @param context context
      */
-    public SoundcloudRestLoader(@NonNull Context context) {
+    public SoundcloudTrackRestLoader(@NonNull Context context) {
         super(context);
     }
 
@@ -46,7 +47,7 @@ public class SoundcloudRestLoader extends AsyncTaskLoader<List<TrackDTO>> {
      * @param context context
      * @param limit max replay count to search
      */
-    public SoundcloudRestLoader(@NonNull Context context, int limit) {
+    public SoundcloudTrackRestLoader(@NonNull Context context, int limit) {
         this(context);
         this.limit = limit;
         Log.d(TAG, "Init REST loader with limit param : " + limit);
@@ -58,7 +59,7 @@ public class SoundcloudRestLoader extends AsyncTaskLoader<List<TrackDTO>> {
      * @param query the search query
      * @param queryType the type of query
      */
-    public SoundcloudRestLoader(@NonNull Context context, @NonNull QueryType queryType, @NonNull String query) {
+    public SoundcloudTrackRestLoader(@NonNull Context context, @NonNull QueryType queryType, @NonNull String query) {
         this(context);
         // clean up wrong chars : http://glaforge.appspot.com/article/how-to-remove-accents-from-a-string
         this.query = Normalizer.normalize(query, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
@@ -73,7 +74,7 @@ public class SoundcloudRestLoader extends AsyncTaskLoader<List<TrackDTO>> {
      * @param queryType the type of query
      * @param limit max replay count to search
      */
-    public SoundcloudRestLoader(@NonNull Context context, @NonNull QueryType queryType, @NonNull String query, int limit) {
+    public SoundcloudTrackRestLoader(@NonNull Context context, @NonNull QueryType queryType, @NonNull String query, int limit) {
         this(context, queryType, query);
         this.limit= limit;
         Log.d(TAG, "Search limit is : " + this.limit);

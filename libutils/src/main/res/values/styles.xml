@@ -135,4 +135,11 @@
         <item name="android:layout_marginRight">@dimen/player_time_width_margin</item>
     </style>
 
+    <style name="MaterialTheme.Tabs">
+        <item name="tabTextColor">@color/primary_light</item>
+        <item name="tabSelectedTextColor">@color/icons</item>
+        <item name="tabMode">fixed</item>
+        <item name="tabIndicatorColor">@color/accent</item>
+    </style>
+
 </resources>

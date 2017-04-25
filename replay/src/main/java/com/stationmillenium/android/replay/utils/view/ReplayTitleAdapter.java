@@ -16,25 +16,25 @@ import java.util.List;
  * Replay adapter for recycle view
  * Created by vincent on 23/10/16.
  */
-public class ReplayAdapter extends Adapter<ReplayViewHolder> {
+public class ReplayTitleAdapter extends Adapter<ReplayTitleViewHolder> {
 
     private static final String TAG = "ReplayAdapter";
     private ReplayActivity replayActivity;
     private List<TrackDTO> trackDTOs;
 
-    public ReplayAdapter(ReplayActivity replayActivity) {
+    public ReplayTitleAdapter(ReplayActivity replayActivity) {
         this.replayActivity = replayActivity;
     }
 
     @Override
-    public ReplayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ReplayTitleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.v(TAG, "Create view...");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.replay_list_item, parent, false);
-        return new ReplayViewHolder(view, replayActivity);
+        return new ReplayTitleViewHolder(view, replayActivity);
     }
 
     @Override
-    public void onBindViewHolder(ReplayViewHolder holder, int position) {
+    public void onBindViewHolder(ReplayTitleViewHolder holder, int position) {
         Log.v(TAG, "Bind view...");
         TrackDTO trackDTO = trackDTOs.get(position);
         holder.bindReplay(trackDTO);

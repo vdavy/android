@@ -5,6 +5,7 @@
     <string name="soundcloud_user_id">148534611</string>
 
     <string name="soundcloud_tracklist_URL">https://api.soundcloud.com/users/%1$s/tracks?client_id=%2$s</string>
+    <string name="soundcloud_playlists_URL">https://api.soundcloud.com/users/%1$s/playlists?client_id=%2$s</string>
     <string name="soundcloud_stream_URL">https://api.soundcloud.com/tracks/%1$s/stream?client_id=%2$s</string>
     <string name="soundcloud_genre_tracklist_URL">https://api.soundcloud.com/tracks?client_id=%1$s&amp;genres=%2$s</string>
     <string name="soundcloud_search_tracklist_URL">https://api.soundcloud.com/tracks?client_id=%1$s&amp;q=%2$s</string>

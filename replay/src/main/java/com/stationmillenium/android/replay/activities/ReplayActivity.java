@@ -8,10 +8,12 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.LoaderManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -25,10 +27,13 @@ import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.drawer.DrawerUtils;
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.databinding.ReplayActivityBinding;
+import com.stationmillenium.android.replay.dto.PlaylistDTO;
 import com.stationmillenium.android.replay.dto.TrackDTO;
-import com.stationmillenium.android.replay.utils.SoundcloudRestLoader;
-import com.stationmillenium.android.replay.utils.SoundcloudRestLoader.QueryType;
+import com.stationmillenium.android.replay.utils.SoundcloudPlaylistRestLoader;
+import com.stationmillenium.android.replay.utils.SoundcloudTrackRestLoader;
+import com.stationmillenium.android.replay.utils.SoundcloudTrackRestLoader.QueryType;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.REPLAY;
@@ -37,10 +42,11 @@ import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.REPL
  * Activity for the replay
  * Created by vincent on 01/09/16.
  */
-public class ReplayActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<TrackDTO>>, OnRefreshListener {
+public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks<List<? extends Serializable>> {
 
     private static final String TAG = "ReplayActivity";
-    private static final int LOADER_INDEX = 0;
+    public static final int TRACK_LOADER_INDEX = 0;
+    public static final int PLAYLIST_LOADER_INDEX = 1;
     private static final String LIMIT = "limit";
     private static final String SEARCH_TYPE = "search_type";
     private static final String SEARCH_QUERY = "search_query";
@@ -52,7 +58,8 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     public static final String REPLAY_TAG = "ReplayTag";
 
     private ReplayActivityBinding replayActivityBinding;
-    private ReplayFragment replayFragment;
+    private ReplayTitleFragment replayTitleFragment;
+    private ReplayPlaylistFragment replayPlaylistFragment;
     private MenuItem searchMenuItem;
     private DrawerUtils drawerUtils;
 
@@ -65,6 +72,52 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         super.onCreate(savedInstanceState);
         replayActivityBinding = DataBindingUtil.setContentView(this, R.layout.replay_activity);
         replayActivityBinding.setActivity(this);
+        replayActivityBinding.setItemCount(0);
+        replayActivityBinding.replayViewpager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                return (position == 0) ? new ReplayTitleFragment() : new ReplayPlaylistFragment();
+            }
+
+            @Override
+            public int getCount() {
+                return getResources().getStringArray(R.array.replay_tabs_title).length;
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return getResources().getStringArray(R.array.replay_tabs_title)[position];
+            }
+        });
+        replayActivityBinding.replayViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            private String titleTabTitle;
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                replayActivityBinding.setTabIndex(position);
+                replayActivityBinding.setItemCount(position == 0 ? replayTitleFragment.getItemCount() : replayPlaylistFragment.getItemCount());
+                if (position == 0) {
+                    replayActivityBinding.setItemCount(replayTitleFragment.getItemCount());
+                    getSupportActionBar().setTitle(titleTabTitle);
+                } else {
+                    replayActivityBinding.setItemCount(replayPlaylistFragment.getItemCount());
+                    titleTabTitle = getSupportActionBar().getTitle().toString();
+                    setToolbarTitle(null);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        replayActivityBinding.replayTabs.setupWithViewPager(replayActivityBinding.replayViewpager);
         setSupportActionBar(replayActivityBinding.replayToolbar);
 
         if (savedInstanceState != null) {
@@ -73,15 +126,26 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
             searchviewText = savedInstanceState.getString(SEARCHVIEW_TEXT);
         }
 
-        replayFragment = (ReplayFragment) getSupportFragmentManager().findFragmentById(R.id.replay_fragment);
+        drawerUtils = new DrawerUtils(this, replayActivityBinding.replayDrawerLayout, replayActivityBinding.replayToolbar, R.id.nav_drawer_replay);
+    }
+
+    /**
+     * With tabs, fragment are loaded asynchronously and trigger data load, when they are loaded
+     */
+    public void requestTracksDataLoad() {
         if (getIntent().getStringExtra(REPLAY_TAG) != null) {
             Log.v(TAG, "Direct tag search");
             searchGenre(getIntent().getStringExtra(REPLAY_TAG));
         } else {
-            getSupportLoaderManager().initLoader(LOADER_INDEX, null, this).forceLoad();
+            getSupportLoaderManager().initLoader(TRACK_LOADER_INDEX, null, this).forceLoad();
         }
+    }
 
-        drawerUtils = new DrawerUtils(this, replayActivityBinding.replayDrawerLayout, replayActivityBinding.replayToolbar, R.id.nav_drawer_replay);
+    /**
+     * With tabs, fragment are loaded asynchronously and trigger data load, when they are loaded
+     */
+    public void requestPlaylistDataLoad() {
+        getSupportLoaderManager().initLoader(PLAYLIST_LOADER_INDEX, null, this).forceLoad();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,41 +203,57 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     @Override
-    public Loader<List<TrackDTO>> onCreateLoader(int id, Bundle args) {
-        replayFragment.setRefreshing(true);
-        if (args != null) {
-            if (args.containsKey(SEARCH_TYPE)) {
-                return (args.containsKey(LIMIT))
-                        ? new SoundcloudRestLoader(this, (QueryType) args.getSerializable(SEARCH_TYPE), args.getString(SEARCH_QUERY), args.getInt(LIMIT))
-                        : new SoundcloudRestLoader(this, (QueryType) args.getSerializable(SEARCH_TYPE), args.getString(SEARCH_QUERY));
-            } else if (args.containsKey(LIMIT)) {
-                return new SoundcloudRestLoader(this, args.getInt(LIMIT));
+    public Loader<List<? extends Serializable>> onCreateLoader(int id, Bundle args) {
+        if (id == TRACK_LOADER_INDEX) {
+            replayTitleFragment.setRefreshing(true);
+            if (args != null) {
+                if (args.containsKey(SEARCH_TYPE)) {
+                    return (args.containsKey(LIMIT))
+                            ? new SoundcloudTrackRestLoader(this, (QueryType) args.getSerializable(SEARCH_TYPE), args.getString(SEARCH_QUERY), args.getInt(LIMIT))
+                            : new SoundcloudTrackRestLoader(this, (QueryType) args.getSerializable(SEARCH_TYPE), args.getString(SEARCH_QUERY));
+                } else if (args.containsKey(LIMIT)) {
+                    return new SoundcloudTrackRestLoader(this, args.getInt(LIMIT));
+                }
             }
+            return new SoundcloudTrackRestLoader(this);
+        } else {
+            replayPlaylistFragment.setRefreshing(true);
+            return (args != null && args.containsKey(LIMIT)) ? new SoundcloudPlaylistRestLoader(this, args.getInt(LIMIT)) : new SoundcloudPlaylistRestLoader(this);
         }
-        return new SoundcloudRestLoader(this);
     }
 
     @Override
-    public void onLoadFinished(Loader<List<TrackDTO>> loader, List<TrackDTO> data) {
-        Log.d(TAG, "Loading is finished - display data...");
-        replayFragment.setReplayList(data);
-        replayFragment.setRefreshing(false);
-        replayActivityBinding.setReplayData(data);
+    public void onLoadFinished(Loader<List<? extends Serializable>> loader, List<? extends Serializable> data) {
+        if (loader instanceof SoundcloudTrackRestLoader) {
+            Log.d(TAG, "Track loading is finished - display data...");
+            replayTitleFragment.setReplayTitleList((List<TrackDTO>) data);
+            replayTitleFragment.setRefreshing(false);
+            replayActivityBinding.setItemCount(data.size());
+        } else {
+            Log.d(TAG, "Playlist loading is finished - display data...");
+            replayPlaylistFragment.setReplayPlaylistList((List<PlaylistDTO>) data);
+            replayPlaylistFragment.setRefreshing(false);
+            replayActivityBinding.setItemCount(data.size());
+        }
     }
 
     @Override
-    public void onLoaderReset(Loader<List<TrackDTO>> loader) {
+    public void onLoaderReset(Loader<List<? extends Serializable>> loader) {
         Log.d(TAG, "Reset the loader");
-        replayFragment.setReplayList(null);
-        replayFragment.setRefreshing(false);
-        replayActivityBinding.setReplayData(null);
+        replayTitleFragment.setReplayTitleList(null);
+        replayTitleFragment.setRefreshing(false);
+        replayActivityBinding.setItemCount(0);
     }
 
-    @Override
-    public void onRefresh() {
-        Log.d(TAG, "Data refresh requested");
+    public void onTrackRefresh() {
+        Log.d(TAG, "Track data refresh requested");
         setToolbarTitle(null); // we reinit the search params to default
-        getSupportLoaderManager().restartLoader(LOADER_INDEX, null, this).forceLoad();
+        getSupportLoaderManager().restartLoader(TRACK_LOADER_INDEX, null, this).forceLoad();
+    }
+
+    public void onPlaylistRefresh() {
+        Log.d(TAG, "Playlist data refresh requested");
+        getSupportLoaderManager().restartLoader(PLAYLIST_LOADER_INDEX, null, this).forceLoad();
     }
 
     /**
@@ -186,29 +266,30 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         bundle.putSerializable(SEARCH_TYPE, QueryType.GENRE);
         bundle.putString(SEARCH_QUERY, genre);
         setToolbarTitle(bundle);
-        getSupportLoaderManager().restartLoader(LOADER_INDEX, bundle, this).forceLoad();
+        getSupportLoaderManager().restartLoader(TRACK_LOADER_INDEX, bundle, this).forceLoad();
     }
 
     /**
      * End scrolling happened
      * Trigger extra data load
+     * @param loaderIndex the loader index to use, to select data type
      * @param replayCount the current replay count
      */
-    public void triggerExtraDataLoad(int replayCount) {
+    public void triggerExtraDataLoad(int loaderIndex, int replayCount) {
         if (replayCount > 0) {
             if (replayCount <= TOTAL_MAX_REPLAY) {
                 Log.d(TAG, "Load extra data");
                 Bundle bundle = new Bundle();
                 bundle.putInt(LIMIT, replayCount + EXTRA_REPLAY_COUNT);
-                if (searchParams != null) {
+                if (loaderIndex == TRACK_LOADER_INDEX && searchParams != null) {
                     Log.v(TAG, "Add search params for extra data load");
                     bundle.putAll(searchParams);
                 }
-                Snackbar.make(replayActivityBinding.replayCoordinatorLayout, R.string.replay_load_more, Snackbar.LENGTH_SHORT).show();
-                getSupportLoaderManager().restartLoader(LOADER_INDEX, bundle, this).forceLoad();
+                Snackbar.make(replayActivityBinding.replayCoordinatorLayout, (loaderIndex == TRACK_LOADER_INDEX) ? R.string.replay_load_more : R.string.playlist_load_more, Snackbar.LENGTH_SHORT).show();
+                getSupportLoaderManager().restartLoader(loaderIndex, bundle, this).forceLoad();
             } else {
                 Log.v(TAG, "All extra data already loaded");
-                Snackbar.make(replayActivityBinding.replayCoordinatorLayout, R.string.replay_load_more_max_reached, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(replayActivityBinding.replayCoordinatorLayout, (loaderIndex == TRACK_LOADER_INDEX) ? R.string.replay_load_more_max_reached : R.string.playlist_load_more_max_reached, Snackbar.LENGTH_SHORT).show();
             }
         } else {
             Log.v(TAG, "Empty replay list - extra load disabled");
@@ -269,7 +350,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
             bundle.putSerializable(SEARCH_TYPE, QueryType.SEARCH);
             bundle.putString(SEARCH_QUERY, query);
             setToolbarTitle(bundle);
-            getSupportLoaderManager().restartLoader(LOADER_INDEX, bundle, this).forceLoad();
+            getSupportLoaderManager().restartLoader(TRACK_LOADER_INDEX, bundle, this).forceLoad();
         }
     }
 
@@ -291,6 +372,22 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         drawerUtils.onConfigurationChanged(newConfig);
+    }
+
+    public void setReplayTitleFragment(ReplayTitleFragment replayTitleFragment) {
+        this.replayTitleFragment = replayTitleFragment;
+    }
+
+    public void setReplayPlaylistFragment(ReplayPlaylistFragment replayPlaylistFragment) {
+        this.replayPlaylistFragment = replayPlaylistFragment;
+    }
+
+    /**
+     * Open playlist track list from playlist list
+     * @param playlistDTO the playlist to open
+     */
+    public void openPlaylist(PlaylistDTO playlistDTO) {
+        Log.v(TAG, "Playlist open required");
     }
 
 }

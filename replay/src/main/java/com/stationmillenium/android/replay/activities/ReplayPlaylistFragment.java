@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.databinding.ReplayFragmentBinding;
-import com.stationmillenium.android.replay.dto.TrackDTO;
-import com.stationmillenium.android.replay.utils.view.ReplayAdapter;
+import com.stationmillenium.android.replay.dto.PlaylistDTO;
+import com.stationmillenium.android.replay.utils.view.ReplayPlaylistAdapter;
 
 import java.util.List;
 
@@ -23,18 +23,23 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
  * Replay fragment
  * Created by vincent on 01/09/16.
  */
-public class ReplayFragment extends Fragment {
+public class ReplayPlaylistFragment extends Fragment {
 
     private ReplayFragmentBinding binding;
-    private ReplayAdapter replayAdapter;
+    private ReplayPlaylistAdapter replayPlaylistAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        replayAdapter = new ReplayAdapter((ReplayActivity) getActivity());
+        replayPlaylistAdapter = new ReplayPlaylistAdapter((ReplayActivity) getActivity());
         binding = DataBindingUtil.inflate(inflater, R.layout.replay_fragment, container, false);
-        binding.replayRecyclerview.setAdapter(replayAdapter);
+        binding.replayRecyclerview.setAdapter(replayPlaylistAdapter);
         binding.replaySrl.setColorSchemeResources(R.color.primary, R.color.accent);
-        binding.replaySrl.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) getActivity());
+        binding.replaySrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                ((ReplayActivity) getActivity()).onPlaylistRefresh();
+            }
+        });
         binding.replayRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -45,12 +50,14 @@ public class ReplayFragment extends Fragment {
                         && linearLayoutManager.findFirstVisibleItemPosition() > 0
                         && linearLayoutManager.findFirstCompletelyVisibleItemPosition() > 0
                         // last item is fully displayed
-                        && linearLayoutManager.findLastVisibleItemPosition() == (replayAdapter.getItemCount() - 1)
-                        && linearLayoutManager.findLastCompletelyVisibleItemPosition() == (replayAdapter.getItemCount() - 1)) {
-                    ((ReplayActivity) getActivity()).triggerExtraDataLoad(replayAdapter.getItemCount());
+                        && linearLayoutManager.findLastVisibleItemPosition() == (replayPlaylistAdapter.getItemCount() - 1)
+                        && linearLayoutManager.findLastCompletelyVisibleItemPosition() == (replayPlaylistAdapter.getItemCount() - 1)) {
+                    ((ReplayActivity) getActivity()).triggerExtraDataLoad(ReplayActivity.PLAYLIST_LOADER_INDEX, replayPlaylistAdapter.getItemCount());
                 }
             }
         });
+        ((ReplayActivity) getActivity()).setReplayPlaylistFragment(this);
+        ((ReplayActivity) getActivity()).requestPlaylistDataLoad();
         return binding.getRoot();
     }
 
@@ -58,9 +65,9 @@ public class ReplayFragment extends Fragment {
      * Set the data list for display
      * @param replayList the replay items
      */
-    public void setReplayList(List<TrackDTO> replayList) {
-        replayAdapter.setTrackDTOs(replayList);
-        replayAdapter.notifyDataSetChanged();
+    public void setReplayPlaylistList(List<PlaylistDTO> replayList) {
+        replayPlaylistAdapter.setPlaylistDTOs(replayList);
+        replayPlaylistAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -68,7 +75,13 @@ public class ReplayFragment extends Fragment {
      * @param refreshing {@code true} for yes, {@code false} if not
      */
     public void setRefreshing(boolean refreshing) {
-        binding.replaySrl.setRefreshing(refreshing);
+        if (binding != null) {
+            binding.replaySrl.setRefreshing(refreshing);
+        }
+    }
+
+    public int getItemCount() {
+        return replayPlaylistAdapter.getItemCount();
     }
 
 }
