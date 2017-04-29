@@ -222,6 +222,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderManager.L
         Log.d(TAG, "Trigger search");
         if (searchMenuItem != null) {
             MenuItemCompat.expandActionView(searchMenuItem);
+            replayActivityBinding.replayAppbarLayout.setExpanded(true);
         }
     }
 
