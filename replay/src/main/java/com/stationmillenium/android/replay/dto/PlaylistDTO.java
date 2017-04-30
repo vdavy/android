@@ -15,6 +15,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PlaylistDTO implements Serializable {
 
+    private int id;
     private String title;
     private String description;
     @JsonProperty("artwork_url")
@@ -25,6 +26,14 @@ public class PlaylistDTO implements Serializable {
     @JsonProperty("track_count")
     private int trackCount;
     private List<TrackDTO> tracks;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;

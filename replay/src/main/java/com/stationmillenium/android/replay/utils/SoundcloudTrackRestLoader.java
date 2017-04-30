@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
+import com.stationmillenium.android.replay.dto.PlaylistDTO;
 import com.stationmillenium.android.replay.dto.TrackDTO;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -33,6 +34,7 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
     private int limit;
     private String query;
     private QueryType queryType;
+    private PlaylistDTO playlistDTO;
 
     /**
      * Simple search (no query / no query / no limit)
@@ -51,6 +53,26 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
         this(context);
         this.limit = limit;
         Log.d(TAG, "Init REST loader with limit param : " + limit);
+    }
+
+    /**
+     * Simple search for playlist - no query make
+     * @param context context
+     * @param playlistDTO the playlist to extract titles
+     */
+    public SoundcloudTrackRestLoader(@NonNull Context context, @NonNull PlaylistDTO playlistDTO) {
+        super(context);
+        this.playlistDTO = playlistDTO;
+    }
+
+    /**
+     * Simple search for playlist - query make for extra load
+     * @param context context
+     * @param playlistDTO the playlist to extract titles
+     */
+    public SoundcloudTrackRestLoader(@NonNull Context context, @NonNull PlaylistDTO playlistDTO, int limit) {
+        this(context, playlistDTO);
+        this.limit = limit;
     }
 
     /**
@@ -86,6 +108,11 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
      */
     @Override
     public List<TrackDTO> loadInBackground() {
+        if (playlistDTO != null) {
+            Log.d(TAG, "Read tracks form playlist : " + playlistDTO.getTracks().size());
+            return playlistDTO.getTracks();
+        }
+
         try {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
