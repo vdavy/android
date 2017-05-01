@@ -47,4 +47,9 @@ public class URLManager {
     public static String getPlaylistsURL(@NonNull Context context) {
         return context.getString(R.string.soundcloud_playlists_URL, context.getString(R.string.soundcloud_user_id), context.getString(R.string.soudncloud_client_id));
     }
+
+    @NonNull
+    public static String getPlaylistTracksURL(@NonNull Context context, int playlistId) {
+        return context.getString(R.string.soundcloud_playlist_tracks_URL, String.valueOf(playlistId), context.getString(R.string.soudncloud_client_id));
+    }
 }

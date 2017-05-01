@@ -4,6 +4,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.MediumTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.stationmillenium.android.replay.dto.PlaylistDTO;
 import com.stationmillenium.android.replay.dto.TrackDTO;
 import com.stationmillenium.android.replay.utils.SoundcloudTrackRestLoader;
 
@@ -95,5 +96,15 @@ public class SoundcloudTrackRestLoaderTest {
         }
     }
 
+    @Test
+    public void testPlaylistTracksLoad() {
+        PlaylistDTO playlistDTO = new PlaylistDTO();
+        playlistDTO.setId(318163137);
+        List<TrackDTO> trackDTOs = new SoundcloudTrackRestLoader(InstrumentationRegistry.getTargetContext(), playlistDTO, 5).loadInBackground();
+        assertItemList(trackDTOs, 5);
+        playlistDTO.setTracks(trackDTOs);
+        trackDTOs = new SoundcloudTrackRestLoader(InstrumentationRegistry.getTargetContext(), playlistDTO).loadInBackground();
+        assertItemList(trackDTOs, 5);
+    }
 
 }

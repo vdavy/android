@@ -75,4 +75,12 @@ public class URLManagerTest {
         assertEquals("https://api.soundcloud.com/users/148534611/tracks?client_id=8a934c041fbb1f823f9eea645799f03f", url);
     }
 
+    @Test
+    public void testPlaylistTrackURL() {
+        String playlistTrackURL = URLManager.getPlaylistTracksURL(context, 318165180);
+        String playlistTrackURLWithLimit = URLManager.addLimitClause(context, playlistTrackURL, 2);
+        assertNotNull(playlistTrackURLWithLimit);
+        assertEquals("https://api.soundcloud.com/playlists/318165180/tracks?client_id=8a934c041fbb1f823f9eea645799f03f&limit=2", playlistTrackURLWithLimit);
+
+    }
 }

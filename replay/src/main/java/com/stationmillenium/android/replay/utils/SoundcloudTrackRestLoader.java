@@ -66,9 +66,10 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
     }
 
     /**
-     * Simple search for playlist - query make for extra load
+     * Simple search for playlist with limit - query make for extra load
      * @param context context
      * @param playlistDTO the playlist to extract titles
+     * @param limit the limit of tracks to load
      */
     public SoundcloudTrackRestLoader(@NonNull Context context, @NonNull PlaylistDTO playlistDTO, int limit) {
         this(context, playlistDTO);
@@ -108,7 +109,7 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
      */
     @Override
     public List<TrackDTO> loadInBackground() {
-        if (playlistDTO != null) {
+        if (playlistDTO != null && limit == 0) {
             Log.d(TAG, "Read tracks form playlist : " + playlistDTO.getTracks().size());
             return playlistDTO.getTracks();
         }
@@ -139,7 +140,9 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
      */
     private String getGoodURL() {
         String url = null;
-        if (queryType != null) {
+        if (playlistDTO != null) {
+            url = URLManager.getPlaylistTracksURL(getContext(), playlistDTO.getId());
+        } else if (queryType != null) {
             switch (queryType) {
                 case GENRE:
                     url = URLManager.getGenreTracksURL(getContext(), query);
