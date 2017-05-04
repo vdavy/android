@@ -58,7 +58,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
     public static final String REPLAY_TAG = "ReplayTag";
     public static final String PLAYLIST_BUNDLE = "PlaylistBundle";
 
-    private ReplayActivityBinding replayActivityBinding;
+    private ReplayActivityBinding binding;
     private ReplayTitleFragment replayTitleFragment;
     private ReplayPlaylistFragment replayPlaylistFragment;
     private MenuItem searchMenuItem;
@@ -72,10 +72,10 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        replayActivityBinding = DataBindingUtil.setContentView(this, R.layout.replay_activity);
-        replayActivityBinding.setActivity(this);
-        replayActivityBinding.setItemCount(0);
-        replayActivityBinding.replayViewpager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+        binding = DataBindingUtil.setContentView(this, R.layout.replay_activity);
+        binding.setActivity(this);
+        binding.setItemCount(0);
+        binding.replayViewpager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 return (position == 0) ? new ReplayTitleFragment() : new ReplayPlaylistFragment();
@@ -91,7 +91,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
                 return getResources().getStringArray(R.array.replay_tabs_title)[position];
             }
         });
-        replayActivityBinding.replayViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        binding.replayViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -100,13 +100,13 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
 
             @Override
             public void onPageSelected(int position) {
-                replayActivityBinding.setTabIndex(position);
-                replayActivityBinding.setItemCount(position == 0 ? replayTitleFragment.getItemCount() : replayPlaylistFragment.getItemCount());
+                binding.setTabIndex(position);
+                binding.setItemCount(position == 0 ? replayTitleFragment.getItemCount() : replayPlaylistFragment.getItemCount());
                 if (position == 0) {
-                    replayActivityBinding.setItemCount(replayTitleFragment.getItemCount());
+                    binding.setItemCount(replayTitleFragment.getItemCount());
                     getSupportActionBar().setTitle(titleTabTitle);
                 } else {
-                    replayActivityBinding.setItemCount(replayPlaylistFragment.getItemCount());
+                    binding.setItemCount(replayPlaylistFragment.getItemCount());
                     titleTabTitle = getSupportActionBar().getTitle().toString();
                     setToolbarTitle(null);
                 }
@@ -118,8 +118,8 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
             }
 
         });
-        replayActivityBinding.replayTabs.setupWithViewPager(replayActivityBinding.replayViewpager);
-        setSupportActionBar(replayActivityBinding.replayToolbar);
+        binding.replayTabs.setupWithViewPager(binding.replayViewpager);
+        setSupportActionBar(binding.replayToolbar);
 
         if (savedInstanceState != null) {
             setToolbarTitle(savedInstanceState.getBundle(SEARCH_PARAMS));
@@ -130,7 +130,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
             searchviewText = savedInstanceState.getString(SEARCHVIEW_TEXT);
         }
 
-        drawerUtils = new DrawerUtils(this, replayActivityBinding.replayDrawerLayout, replayActivityBinding.replayToolbar, R.id.nav_drawer_replay);
+        drawerUtils = new DrawerUtils(this, binding.replayDrawerLayout, binding.replayToolbar, R.id.nav_drawer_replay);
     }
 
     /**
@@ -163,7 +163,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         if (expandActionViewOnCreate) {
             MenuItemCompat.expandActionView(searchMenuItem);
-            replayActivityBinding.searchFab.setVisibility(View.GONE);
+            binding.searchFab.setVisibility(View.GONE);
             if (searchviewText != null) {
                 searchView.setQuery(searchviewText, false);
             }
@@ -186,13 +186,13 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                replayActivityBinding.searchFab.setVisibility(View.VISIBLE);
+                binding.searchFab.setVisibility(View.VISIBLE);
                 return true;  // Return true to collapse action view
             }
 
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                replayActivityBinding.searchFab.setVisibility(View.GONE);
+                binding.searchFab.setVisibility(View.GONE);
                 return true;  // Return true to expand action view
             }
         });
@@ -212,7 +212,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
             replayTitleFragment.setRefreshing(true);
             if (args != null) {
                 if (args.containsKey(PLAYLIST_BUNDLE)) {
-                    replayActivityBinding.replayViewpager.setCurrentItem(0);
+                    binding.replayViewpager.setCurrentItem(0);
                     return (args.containsKey(LIMIT))
                             ? new SoundcloudTrackRestLoader(this, (PlaylistDTO) args.get(PLAYLIST_BUNDLE), args.getInt(LIMIT))
                             : new SoundcloudTrackRestLoader(this, (PlaylistDTO) args.get(PLAYLIST_BUNDLE));
@@ -237,12 +237,12 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
             Log.d(TAG, "Track loading is finished - display data...");
             replayTitleFragment.setReplayTitleList((List<TrackDTO>) data);
             replayTitleFragment.setRefreshing(false);
-            replayActivityBinding.setItemCount(data.size());
+            binding.setItemCount(data.size());
         } else {
             Log.d(TAG, "Playlist loading is finished - display data...");
             replayPlaylistFragment.setReplayPlaylistList((List<PlaylistDTO>) data);
             replayPlaylistFragment.setRefreshing(false);
-            replayActivityBinding.setItemCount(data.size());
+            binding.setItemCount(data.size());
         }
     }
 
@@ -251,7 +251,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         Log.d(TAG, "Reset the loader");
         replayTitleFragment.setReplayTitleList(null);
         replayTitleFragment.setRefreshing(false);
-        replayActivityBinding.setItemCount(0);
+        binding.setItemCount(0);
     }
 
     public void onTrackRefresh() {
@@ -288,7 +288,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         if (replayCount > 0) {
             if (searchParams != null && searchParams.containsKey(PLAYLIST_BUNDLE) && replayCount >= ((PlaylistDTO) searchParams.get(PLAYLIST_BUNDLE)).getTrackCount()) {
                 Log.v(TAG, "All extra data already loaded");
-                Snackbar.make(replayActivityBinding.replayCoordinatorLayout, R.string.playlist_load_playlist_more_max_reached, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(binding.replayCoordinatorLayout, R.string.playlist_load_playlist_more_max_reached, Snackbar.LENGTH_SHORT).show();
             } else if (replayCount <= TOTAL_MAX_REPLAY) {
                 Log.d(TAG, "Load extra data");
                 Bundle bundle = new Bundle();
@@ -297,11 +297,11 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
                     Log.v(TAG, "Add search params for extra data load");
                     bundle.putAll(searchParams);
                 }
-                Snackbar.make(replayActivityBinding.replayCoordinatorLayout, (loaderIndex == TRACK_LOADER_INDEX) ? R.string.replay_load_more : R.string.playlist_load_more, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(binding.replayCoordinatorLayout, (loaderIndex == TRACK_LOADER_INDEX) ? R.string.replay_load_more : R.string.playlist_load_more, Snackbar.LENGTH_SHORT).show();
                 getSupportLoaderManager().restartLoader(loaderIndex, bundle, this).forceLoad();
             } else {
                 Log.v(TAG, "All extra data already loaded");
-                Snackbar.make(replayActivityBinding.replayCoordinatorLayout, (loaderIndex == TRACK_LOADER_INDEX) ? R.string.replay_load_more_max_reached : R.string.playlist_load_more_max_reached, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(binding.replayCoordinatorLayout, (loaderIndex == TRACK_LOADER_INDEX) ? R.string.replay_load_more_max_reached : R.string.playlist_load_more_max_reached, Snackbar.LENGTH_SHORT).show();
             }
         } else {
             Log.v(TAG, "Empty replay list - extra load disabled");
@@ -315,7 +315,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         Log.d(TAG, "Trigger search");
         if (searchMenuItem != null) {
             MenuItemCompat.expandActionView(searchMenuItem);
-            replayActivityBinding.replayAppbarLayout.setExpanded(true);
+            binding.replayAppbarLayout.setExpanded(true);
         }
     }
 
@@ -411,4 +411,12 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         getSupportLoaderManager().restartLoader(TRACK_LOADER_INDEX, bundle, this).forceLoad();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (binding.replayViewpager.getCurrentItem() == 1) {
+            binding.replayViewpager.setCurrentItem(0);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
