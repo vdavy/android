@@ -5,10 +5,9 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.piwik.sdk.Piwik;
-import org.piwik.sdk.TrackHelper;
 import org.piwik.sdk.Tracker;
-
-import java.net.MalformedURLException;
+import org.piwik.sdk.TrackerConfig;
+import org.piwik.sdk.extra.TrackHelper;
 
 /**
  * Utils to help with piwik tracker
@@ -17,6 +16,9 @@ import java.net.MalformedURLException;
 public class PiwikTracker {
 
     private static final String TAG = "PiwikTracker";
+
+    private static final String APP_TRACKER = "App tracker";
+    private static final String STREAM_TRACKER = "Stream tracker";
 
     private static Tracker piwikAppTracker;
     private static Tracker piwikStreamTracker;
@@ -51,16 +53,8 @@ public class PiwikTracker {
      * @param context the context to get resources
      */
     public static void initPiwikTrackers(@NonNull Context context) {
-        try {
-            piwikAppTracker = Piwik.getInstance(context).newTracker(context.getString(R.string.piwik_url), context.getResources().getInteger(R.integer.piwik_app_site_id));
-        } catch (MalformedURLException e) {
-            Log.w(TAG, "Error while piwik app tracker init", e);
-        }
-        try {
-            piwikStreamTracker = Piwik.getInstance(context).newTracker(context.getString(R.string.piwik_url), context.getResources().getInteger(R.integer.piwik_stream_site_id));
-        } catch (MalformedURLException e) {
-            Log.w(TAG, "Error while piwik stream tracker init", e);
-        }
+        piwikAppTracker = Piwik.getInstance(context).newTracker(new TrackerConfig(context.getString(R.string.piwik_url), context.getResources().getInteger(R.integer.piwik_app_site_id), APP_TRACKER));
+        piwikStreamTracker = Piwik.getInstance(context).newTracker(new TrackerConfig(context.getString(R.string.piwik_url), context.getResources().getInteger(R.integer.piwik_stream_site_id), STREAM_TRACKER));
         piwikGoalId = context.getResources().getInteger(R.integer.piwik_goal_id);
     }
 
