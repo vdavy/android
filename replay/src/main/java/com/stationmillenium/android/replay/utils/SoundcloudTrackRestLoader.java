@@ -111,6 +111,7 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
     public List<TrackDTO> loadInBackground() {
         if (playlistDTO != null && limit == 0) {
             Log.d(TAG, "Read tracks form playlist : " + playlistDTO.getTracks().size());
+            TrackListDateSorter.sortTrackListByDescDate(playlistDTO.getTracks());
             return playlistDTO.getTracks();
         }
 
