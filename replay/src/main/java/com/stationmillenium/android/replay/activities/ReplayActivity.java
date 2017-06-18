@@ -55,6 +55,8 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
     private static final String SEARCHVIEW_TEXT = "searchview_text";
     private static final int EXTRA_REPLAY_COUNT = 30;
     private static final int TOTAL_MAX_REPLAY = 200;
+    private static final int PLAYLIST_TAB_INDEX = 0;
+    private static final int TITLES_TAB_INDEX = 1;
     public static final String REPLAY_TAG = "ReplayTag";
     public static final String PLAYLIST_BUNDLE = "PlaylistBundle";
 
@@ -78,7 +80,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         binding.replayViewpager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                return (position == 0) ? new ReplayTitleFragment() : new ReplayPlaylistFragment();
+                return (position == PLAYLIST_TAB_INDEX) ? new ReplayPlaylistFragment() : new ReplayTitleFragment();
             }
 
             @Override
@@ -101,12 +103,12 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
             @Override
             public void onPageSelected(int position) {
                 binding.setTabIndex(position);
-                binding.setItemCount(position == 0 ? replayTitleFragment.getItemCount() : replayPlaylistFragment.getItemCount());
-                if (position == 0) {
-                    binding.setItemCount(replayTitleFragment.getItemCount());
+                binding.setItemCount(position == TITLES_TAB_INDEX ? replayTitleFragment.getItemCount() : replayPlaylistFragment.getItemCount());
+                if (position == PLAYLIST_TAB_INDEX) {
+                    binding.setItemCount(replayPlaylistFragment.getItemCount());
                     getSupportActionBar().setTitle(titleTabTitle);
                 } else {
-                    binding.setItemCount(replayPlaylistFragment.getItemCount());
+                    binding.setItemCount(replayTitleFragment.getItemCount());
                     titleTabTitle = getSupportActionBar().getTitle().toString();
                     setToolbarTitle(null);
                 }
@@ -212,7 +214,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
             replayTitleFragment.setRefreshing(true);
             if (args != null) {
                 if (args.containsKey(PLAYLIST_BUNDLE)) {
-                    binding.replayViewpager.setCurrentItem(0);
+                    binding.replayViewpager.setCurrentItem(TITLES_TAB_INDEX);
                     return (args.containsKey(LIMIT))
                             ? new SoundcloudTrackRestLoader(this, (PlaylistDTO) args.get(PLAYLIST_BUNDLE), args.getInt(LIMIT))
                             : new SoundcloudTrackRestLoader(this, (PlaylistDTO) args.get(PLAYLIST_BUNDLE));
@@ -237,12 +239,16 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
             Log.d(TAG, "Track loading is finished - display data...");
             replayTitleFragment.setReplayTitleList((List<TrackDTO>) data);
             replayTitleFragment.setRefreshing(false);
-            binding.setItemCount(data.size());
+            if (binding.replayViewpager.getCurrentItem() == TITLES_TAB_INDEX) {
+                binding.setItemCount(data.size());
+            }
         } else {
             Log.d(TAG, "Playlist loading is finished - display data...");
             replayPlaylistFragment.setReplayPlaylistList((List<PlaylistDTO>) data);
             replayPlaylistFragment.setRefreshing(false);
-            binding.setItemCount(data.size());
+            if (binding.replayViewpager.getCurrentItem() == PLAYLIST_TAB_INDEX) {
+                binding.setItemCount(data.size());
+            }
         }
     }
 
@@ -274,6 +280,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         Bundle bundle = new Bundle();
         bundle.putSerializable(SEARCH_TYPE, QueryType.GENRE);
         bundle.putString(SEARCH_QUERY, genre);
+        binding.replayViewpager.setCurrentItem(TITLES_TAB_INDEX);
         setToolbarTitle(bundle);
         getSupportLoaderManager().restartLoader(TRACK_LOADER_INDEX, bundle, this).forceLoad();
     }
@@ -413,8 +420,8 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
 
     @Override
     public void onBackPressed() {
-        if (binding.replayViewpager.getCurrentItem() == 1) {
-            binding.replayViewpager.setCurrentItem(0);
+        if (binding.replayViewpager.getCurrentItem() == TITLES_TAB_INDEX) {
+            binding.replayViewpager.setCurrentItem(PLAYLIST_TAB_INDEX);
         } else {
             super.onBackPressed();
         }

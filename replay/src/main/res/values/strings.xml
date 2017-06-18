@@ -42,8 +42,8 @@
     <string name="replay_item_toolbar_title">Replay : %s</string>
 
     <string-array name="replay_tabs_title">
-        <item>Titres</item>
         <item>Playlists</item>
+        <item>Titres</item>
     </string-array>
 
 </resources>
