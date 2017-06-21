@@ -13,8 +13,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.cast.framework.CastButtonFactory;
+import com.google.android.gms.cast.framework.CastContext;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.PlayerFragment;
@@ -75,6 +78,9 @@ public class PlayerActivity extends AppCompatActivity {
 
         //set the volume stream will be controlled but pressing buttons
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        // Cast init : https://developers.google.com/cast/docs/android_sender_integrate#initialize_the_cast_context
+        CastContext castContext = CastContext.getSharedInstance(this);
     }
 
     @Override
@@ -359,6 +365,17 @@ public class PlayerActivity extends AppCompatActivity {
             playerFragment.setSongData(null);
             playerFragment.setHistoryList(null);
         }
+    }
+
+    // https://developers.google.com/cast/docs/android_sender_integrate#add_a_cast_button
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.cast_menu, menu);
+        CastButtonFactory.setUpMediaRouteButton(getApplicationContext(),
+                menu,
+                R.id.cast_menu);
+        return true;
     }
 
 }
