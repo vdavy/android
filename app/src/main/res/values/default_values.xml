@@ -31,4 +31,7 @@
     <string name="song_history_max_items">30</string>
     <string name="song_history_date_format">dd/MM/yyyy HH:mm</string>
 
+    <!-- cast -->
+    <string name="app_id">FA0D6C80</string>
+
 </resources>
