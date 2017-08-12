@@ -142,4 +142,14 @@
         <item name="tabIndicatorColor">@color/accent</item>
     </style>
 
+    <style name="CastMaterialTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/icons</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/accent</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:dropDownItemStyle">@style/SuggestAutoCompleteStyle</item>
+        <item name="android:textColorSecondary">@color/icons</item>
+        <item name="android:textColorHint">@color/icons</item>
+    </style>
+
 </resources>
