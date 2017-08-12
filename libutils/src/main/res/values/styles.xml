@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="MaterialTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="MaterialTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:textColorPrimary">@color/icons</item>
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/accent</item>
