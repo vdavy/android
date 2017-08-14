@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.stationmillenium.android"
-          android:installLocation="auto">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.stationmillenium.android"
+    android:installLocation="auto">
 
     <!-- permissions to access network and check network state -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,15 +13,18 @@
 
     <application
         android:name=".app.StationMilleniumApp"
+        android:allowBackup="true"
         android:backupAgent=".libutils.backup.AppBackupAgent"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:allowBackup="true"
         tools:ignore="AllowBackup">
 
-        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
-        <meta-data android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+        <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
             android:value="com.stationmillenium.android.cast.CastOptionsProvider" />
 
         <!-- meta data for backup service -->
@@ -32,14 +35,15 @@
         <!-- main activity -->
         <activity
             android:name=".activities.HomeActivity"
-            android:theme="@style/MaterialTheme"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/MaterialTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.app.shortcuts"
-                       android:resource="@xml/shortcuts" />
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <!-- player activity -->
@@ -59,19 +63,22 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
-                      android:host="www.station-millenium.com"
-                      android:pathPrefix="/coverart/player.html" />
+
+                <data
+                    android:host="www.station-millenium.com"
+                    android:pathPrefix="/coverart/player.html"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
 
         <!-- preferences activity -->
         <activity
             android:name=".activities.preferences.SharedPreferencesActivity"
-            android:label="@string/preferences_activity_title"
             android:exported="false"
+            android:label="@string/preferences_activity_title"
             android:theme="@style/MaterialTheme"
             tools:ignore="UnusedAttribute">
             <intent-filter>
@@ -86,16 +93,14 @@
             android:name=".activities.AntennaGridActivity"
             android:label="@string/antenna_grid_activity_title"
             android:theme="@style/MaterialTheme"
-            tools:ignore="UnusedAttribute">
-        </activity>
+            tools:ignore="UnusedAttribute"></activity>
 
         <!-- alarm preferences activity -->
         <activity
             android:name=".activities.preferences.AlarmSharedPreferencesActivity"
             android:label="@string/preferences_alarm_screen"
             android:theme="@style/MaterialTheme"
-            tools:ignore="UnusedAttribute">
-        </activity>
+            tools:ignore="UnusedAttribute"></activity>
 
         <!-- song history search activity -->
         <activity
@@ -114,11 +119,14 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
-                      android:host="www.station-millenium.com"
-                      android:path="/radio/cetait-quoi-ce-titre/" />
+
+                <data
+                    android:host="www.station-millenium.com"
+                    android:path="/radio/cetait-quoi-ce-titre/"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
 
@@ -158,7 +166,22 @@
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.stationmillenium.android.replay.activities.ReplayItemActivity" />
+                android:value="com.stationmillenium.android.replay.activities.ReplayActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.CastExpandedControlsActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:parentActivityName=".activities.PlayerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MaterialTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.stationmillenium.android.activities.PlayerActivity" />
         </activity>
 
         <!-- player service -->
@@ -229,7 +252,7 @@
             android:exported="false" />
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:value="@integer/google_play_services_version" />
 
     </application>
 

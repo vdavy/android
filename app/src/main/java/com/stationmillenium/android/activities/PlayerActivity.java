@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,9 @@ import android.view.MenuItem;
 
 import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastState;
+import com.google.android.gms.cast.framework.CastStateListener;
+import com.google.android.gms.cast.framework.IntroductoryOverlay;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.PlayerFragment;
@@ -66,6 +70,17 @@ public class PlayerActivity extends AppCompatActivity {
     private Calendar lastTimeUpdated;
     private PlayerActivityUpdateTitleBroadcastReceiver playerActivityUpdateTitleBroadcastReceiver;
 
+    private MenuItem castMenu;
+    private CastStateListener castStateListener = new CastStateListener() {
+        @Override
+        public void onCastStateChanged(int newState) {
+            if (newState != CastState.NO_DEVICES_AVAILABLE) {
+                showIntroductoryOverlay();
+            }
+        }
+    };
+    private CastContext castContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //init view
@@ -80,7 +95,7 @@ public class PlayerActivity extends AppCompatActivity {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         // Cast init : https://developers.google.com/cast/docs/android_sender_integrate#initialize_the_cast_context
-        CastContext castContext = CastContext.getSharedInstance(this);
+        castContext = CastContext.getSharedInstance(this);
     }
 
     @Override
@@ -104,6 +119,9 @@ public class PlayerActivity extends AppCompatActivity {
 
         //save the pause time
         lastTimeUpdated = Calendar.getInstance();
+
+        // cast part
+        castContext.removeCastStateListener(castStateListener);
     }
 
     @Override
@@ -154,7 +172,10 @@ public class PlayerActivity extends AppCompatActivity {
             askForRefresh(); //check if need some fresh data
         }
 
-        //adapt player states
+        // cast part
+        castContext.addCastStateListener(castStateListener);
+
+        // adapt player states
         managePlayerStates();
         PiwikTracker.trackScreenView(PLAYER);
     }
@@ -372,10 +393,25 @@ public class PlayerActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.cast_menu, menu);
-        CastButtonFactory.setUpMediaRouteButton(getApplicationContext(),
+        castMenu = CastButtonFactory.setUpMediaRouteButton(getApplicationContext(),
                 menu,
                 R.id.cast_menu);
         return true;
     }
 
+    private void showIntroductoryOverlay() {
+        if ((castMenu != null) && castMenu.isVisible()) {
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    new IntroductoryOverlay.Builder(
+                            PlayerActivity.this, castMenu)
+                            .setTitleText(R.string.introducing_cast)
+                            .setSingleTime()
+                            .build()
+                            .show();
+                }
+            });
+        }
+    }
 }
