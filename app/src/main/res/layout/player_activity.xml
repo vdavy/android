@@ -26,13 +26,28 @@
 
             </android.support.design.widget.AppBarLayout>
 
-            <!-- The main content view -->
-            <fragment
-                android:id="@+id/player_fragment"
-                android:name="com.stationmillenium.android.activities.fragments.PlayerFragment"
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <fragment
+                    android:id="@+id/castMiniController"
+                    class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <!-- The main content view -->
+                <fragment
+                    android:id="@+id/player_fragment"
+                    android:name="com.stationmillenium.android.activities.fragments.PlayerFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toTopOf="@id/castMiniController"/>
+
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.design.widget.CoordinatorLayout>
 
