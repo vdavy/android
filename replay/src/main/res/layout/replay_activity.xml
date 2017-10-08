@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
-                    android:text="@{(tabIndex == 1) ? @plurals/replay_count(itemCount, itemCount) : @plurals/playlist_count(itemCount, itemCount)}"
+                    android:text="@{(safeUnbox(tabIndex) == 1) ? @plurals/replay_count(itemCount, itemCount) : @plurals/playlist_count(itemCount, itemCount)}"
                     app:layout_scrollFlags="scroll|enterAlways"/>
 
                 <android.support.design.widget.TabLayout
@@ -77,7 +77,7 @@
                 app:layout_anchor="@id/replay_viewpager"
                 app:layout_anchorGravity="bottom|right|end"
                 android:onClick="@{() -> activity.triggerSearch()}"
-                android:visibility="@{tabIndex == 1 ? View.VISIBLE : View.GONE}"/>
+                android:visibility="@{safeUnbox(tabIndex) == 1 ? View.VISIBLE : View.GONE}"/>
 
         </android.support.design.widget.CoordinatorLayout>
 

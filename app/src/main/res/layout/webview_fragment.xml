@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:onRefresh="@{fragment::onRefresh}"
-        app:refreshing="@{progress != 100}">
+        app:refreshing="@{safeUnbox(progress) != 100}">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,8 +31,8 @@
                 android:layout_height="wrap_content"
                 android:indeterminate="false"
                 android:max="100"
-                android:progress="@{progress}"
-                android:visibility="@{(progress == 100) ? View.GONE : View.VISIBLE}"/>
+                android:progress="@{safeUnbox(progress)}"
+                android:visibility="@{(safeUnbox(progress) == 100) ? View.GONE : View.VISIBLE}"/>
 
             <WebView
                 android:id="@+id/webview"

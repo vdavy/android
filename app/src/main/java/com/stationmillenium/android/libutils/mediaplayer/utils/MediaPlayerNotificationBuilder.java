@@ -2,6 +2,7 @@ package com.stationmillenium.android.libutils.mediaplayer.utils;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -35,6 +36,7 @@ public class MediaPlayerNotificationBuilder {
     private static final String TAG = "MPNotificationBuilder";
     private static final int[] COMPACT_VIEW_DOUBLE_ACTIONS = {0, 1};
     private static final int[] COMPACT_VIEW_SINGLE_ACTIONS = {0};
+    private static final String NOTIFICATION_CHANNEL_ID = "channelId";
 
     private static WeakReference<MediaPlayerService> mediaPlayerServiceRef;
 
@@ -217,7 +219,7 @@ public class MediaPlayerNotificationBuilder {
                         : COMPACT_VIEW_SINGLE_ACTIONS;
 
                 //create notification
-                Notification.Builder notificationBuilder = new Notification.Builder(mediaPlayerServiceRef.get())
+                Notification.Builder notificationBuilder = getNotificationBuilder()
                         .setSmallIcon(R.drawable.ic_notif_icon)
                         .setLargeIcon(titleArt.copy(titleArt.getConfig(), false)) //avoid recycled image
                         .setTicker(mediaPlayerServiceRef.get().getString(R.string.notification_ticker_text))
@@ -282,6 +284,21 @@ public class MediaPlayerNotificationBuilder {
 
         } else {
             return null;
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private Notification.Builder getNotificationBuilder() {
+        if (AppUtils.isAPILevel26Available()) {
+            NotificationManager notificationManager = (NotificationManager) mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null) {
+                NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, mediaPlayerServiceRef.get().getString(R.string.app_name), NotificationManager.IMPORTANCE_LOW);
+                notificationManager.createNotificationChannel(channel);
+            }
+            Notification.Builder builder = new Notification.Builder(mediaPlayerServiceRef.get(), NOTIFICATION_CHANNEL_ID);
+            return builder;
+        } else {
+            return  new Notification.Builder(mediaPlayerServiceRef.get());
         }
     }
 }
