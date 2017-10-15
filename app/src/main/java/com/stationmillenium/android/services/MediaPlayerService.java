@@ -320,7 +320,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                         autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.PREVIOUS_POSITION, previousPosition);
                         autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.CURRENT_POSITION, getPosition());
                         autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.PLAYER_STATE, playerState);
-                        startService(autoRestartPlayerIntent);
+                        AutoRestartPlayerService.enqueueWork(MediaPlayerService.this, autoRestartPlayerIntent);
                         previousPosition = getPosition();
                     }
                 }
