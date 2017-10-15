@@ -611,7 +611,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         //send tracking info
         Intent statsTrackerServiceIntent = new Intent(this, StatsTrackerService.class);
-        startService(statsTrackerServiceIntent);
+        StatsTrackerService.enqueueWork(this, statsTrackerServiceIntent);
     }
 
     @Override

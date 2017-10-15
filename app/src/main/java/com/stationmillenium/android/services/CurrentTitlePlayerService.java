@@ -39,9 +39,6 @@ public class CurrentTitlePlayerService extends JobIntentService {
         enqueueWork(context, CurrentTitlePlayerService.class, JOB_ID, work);
     }
 
-    /* (non-Javadoc)
-     * @see android.app.IntentService#onHandleIntent(android.content.Intent)
-     */
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
         if (AppUtils.isMediaPlayerServiceRunning(getApplicationContext())) { //is the media player service running,

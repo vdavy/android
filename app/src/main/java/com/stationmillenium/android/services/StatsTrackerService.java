@@ -3,8 +3,10 @@
  */
 package com.stationmillenium.android.services;
 
-import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 
 import com.stationmillenium.android.libutils.PiwikTracker;
 
@@ -13,23 +15,23 @@ import com.stationmillenium.android.libutils.PiwikTracker;
  *
  * @author vincent
  */
-public class StatsTrackerService extends IntentService {
-
-    private static final String TAG = "StatsTrackerService";
-    //private static final int
+public class StatsTrackerService extends JobIntentService {
 
     /**
-     * Create a new {@link StatsTrackerService}
+     * Unique job ID for this service.
      */
-    public StatsTrackerService() {
-        super(TAG);
+    private static final int JOB_ID = 1002;
+
+    /**
+     * Convenience method for enqueuing work in to this service.
+     */
+    public static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, StatsTrackerService.class, JOB_ID, work);
     }
 
-    /* (non-Javadoc)
-     * @see android.app.IntentService#onHandleIntent(android.content.Intent)
-     */
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(@NonNull Intent intent) {
         PiwikTracker.trackStream();
     }
+
 }
