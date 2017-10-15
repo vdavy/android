@@ -41,7 +41,7 @@ public class AlarmService extends JobIntentService {
     /**
      * Unique job ID for this service.
      */
-    static final int JOB_ID = 1000;
+    private static final int JOB_ID = 1000;
 
     private static final String TAG = "AlarmService";
 

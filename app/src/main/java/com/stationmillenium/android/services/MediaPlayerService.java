@@ -290,7 +290,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             @Override
             public void run() {
                 Intent currentTitleServiceIntent = new Intent(MediaPlayerService.this, CurrentTitlePlayerService.class);
-                startService(currentTitleServiceIntent);
+                CurrentTitlePlayerService.enqueueWork(MediaPlayerService.this, currentTitleServiceIntent);
             }
 
         }, UPDATE_TITLE_START_TIME, UPDATE_TITLE_PERIOD_TIME);
