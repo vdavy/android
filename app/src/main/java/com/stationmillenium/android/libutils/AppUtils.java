@@ -45,6 +45,15 @@ public class AppUtils {
     }
 
     /**
+     * Return if the API level >= 26
+     *
+     * @return <code>true</code> if API level >= 19, <code>false</code> if not
+     */
+    public static boolean isAPILevel19Available() {
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT);
+    }
+
+    /**
      * Get is the network is available according to wifi only preference
      *
      * @param context the curent {@link Context}
