@@ -106,11 +106,11 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
                 binding.setItemCount(position == TITLES_TAB_INDEX ? replayTitleFragment.getItemCount() : replayPlaylistFragment.getItemCount());
                 if (position == PLAYLIST_TAB_INDEX) {
                     binding.setItemCount(replayPlaylistFragment.getItemCount());
-                    getSupportActionBar().setTitle(titleTabTitle);
-                } else {
-                    binding.setItemCount(replayTitleFragment.getItemCount());
                     titleTabTitle = getSupportActionBar().getTitle().toString();
                     setToolbarTitle(null);
+                } else {
+                    binding.setItemCount(replayTitleFragment.getItemCount());
+                    getSupportActionBar().setTitle(titleTabTitle);
                 }
             }
 
