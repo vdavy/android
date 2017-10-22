@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stationmillenium.android.replay.R;
-import com.stationmillenium.android.replay.databinding.ReplayFragmentBinding;
+import com.stationmillenium.android.replay.databinding.ReplayPlaylistFragmentBinding;
 import com.stationmillenium.android.replay.dto.PlaylistDTO;
 import com.stationmillenium.android.replay.utils.view.ReplayPlaylistAdapter;
 
@@ -25,13 +25,13 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
  */
 public class ReplayPlaylistFragment extends Fragment {
 
-    private ReplayFragmentBinding binding;
+    private ReplayPlaylistFragmentBinding binding;
     private ReplayPlaylistAdapter replayPlaylistAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         replayPlaylistAdapter = new ReplayPlaylistAdapter((ReplayActivity) getActivity());
-        binding = DataBindingUtil.inflate(inflater, R.layout.replay_fragment, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.replay_playlist_fragment, container, false);
         binding.replayRecyclerview.setAdapter(replayPlaylistAdapter);
         binding.replaySrl.setColorSchemeResources(R.color.primary, R.color.accent);
         binding.replaySrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

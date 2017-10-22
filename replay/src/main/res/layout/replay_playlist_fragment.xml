@@ -13,11 +13,10 @@
             android:id="@+id/replay_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            app:layoutManager="GridLayoutManager"
-            app:spanCount="2"
             android:paddingLeft="5dp"
-            android:paddingRight="3dp"/>
+            android:paddingRight="3dp"
+            android:scrollbars="vertical"
+            app:layoutManager="LinearLayoutManager" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

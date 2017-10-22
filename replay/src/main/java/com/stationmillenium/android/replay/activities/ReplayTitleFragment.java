@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stationmillenium.android.replay.R;
-import com.stationmillenium.android.replay.databinding.ReplayFragmentBinding;
+import com.stationmillenium.android.replay.databinding.ReplayTitleFragmentBinding;
 import com.stationmillenium.android.replay.dto.TrackDTO;
 import com.stationmillenium.android.replay.utils.view.ReplayTitleAdapter;
 
@@ -25,13 +25,13 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
  */
 public class ReplayTitleFragment extends Fragment {
 
-    private ReplayFragmentBinding binding;
+    private ReplayTitleFragmentBinding binding;
     private ReplayTitleAdapter replayTitleAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         replayTitleAdapter = new ReplayTitleAdapter((ReplayActivity) getActivity());
-        binding = DataBindingUtil.inflate(inflater, R.layout.replay_fragment, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.replay_title_fragment, container, false);
         binding.replayRecyclerview.setAdapter(replayTitleAdapter);
         binding.replaySrl.setColorSchemeResources(R.color.primary, R.color.accent);
         binding.replaySrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -68,6 +68,7 @@ public class ReplayTitleFragment extends Fragment {
     public void setReplayTitleList(List<TrackDTO> replayList) {
         replayTitleAdapter.setTrackDTOs(replayList);
         replayTitleAdapter.notifyDataSetChanged();
+        binding.setReplayCount(getItemCount());
     }
 
     /**
