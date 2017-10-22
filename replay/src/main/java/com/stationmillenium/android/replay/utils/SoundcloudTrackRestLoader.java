@@ -16,6 +16,8 @@ import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.List;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import static com.stationmillenium.android.libutils.SharedPreferencesConstants.REPLAY_DISPLAY_TITLES;
 import static java.util.Collections.EMPTY_LIST;
 
 /**
@@ -116,16 +118,21 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
         }
 
         try {
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            if (!isLoadInBackgroundCanceled()) {
-                String url = getGoodURL();
-                Log.v(TAG, "Query tracks list at URL " + url);
-                TrackDTO[] trackDTOs = restTemplate.getForObject(url, TrackDTO[].class);
-                Log.d(TAG, "Got tracks list : " + trackDTOs.length);
-                return Arrays.asList(trackDTOs);
+            String url = getGoodURL();
+            if (url != null) {
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                if (!isLoadInBackgroundCanceled()) {
+                    Log.v(TAG, "Query tracks list at URL " + url);
+                    TrackDTO[] trackDTOs = restTemplate.getForObject(url, TrackDTO[].class);
+                    Log.d(TAG, "Got tracks list : " + trackDTOs.length);
+                    return Arrays.asList(trackDTOs);
+                } else {
+                    Log.d(TAG, "Load in background cancelled");
+                    return EMPTY_LIST;
+                }
             } else {
-                Log.d(TAG, "Load in background cancelled");
+                Log.d(TAG, "Null URL - returning empty list");
                 return EMPTY_LIST;
             }
 
@@ -158,7 +165,7 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
                     break;
             }
         } else {
-            url = URLManager.getTracksURL(getContext());
+            url = (isDisplayAllTitles()) ? URLManager.getTracksURL(getContext()) : null;
         }
         return processLimitClause(url);
     }
@@ -171,4 +178,11 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
         return (limit > 0 ) ? URLManager.addLimitClause(getContext(), url, limit) : url;
     }
 
+    /**
+     * Check parameter for displaying all titles in replay
+     * @return true or false, default false
+     */
+    private boolean isDisplayAllTitles() {
+        return getDefaultSharedPreferences(getContext()).getBoolean(REPLAY_DISPLAY_TITLES, false);
+    }
 }

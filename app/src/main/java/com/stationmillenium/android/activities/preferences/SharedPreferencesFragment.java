@@ -18,7 +18,7 @@ import android.util.Log;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
+import com.stationmillenium.android.libutils.SharedPreferencesConstants;
 
 /**
  * Fragment to manage application preferences
