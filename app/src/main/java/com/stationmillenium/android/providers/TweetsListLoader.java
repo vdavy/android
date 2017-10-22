@@ -7,7 +7,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import com.stationmillenium.android.BuildConfig;
-import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity;
+import com.stationmillenium.android.libutils.SharedPreferencesConstants;
 import com.stationmillenium.android.libutils.dtos.TweetItem;
 
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class TweetsListLoader extends AsyncTaskLoader<List<TweetItem>> {
 
             //max tweets to load
             String maxTweetsString = PreferenceManager.getDefaultSharedPreferences(getContext())
-                    .getString(SharedPreferencesActivity.SharedPreferencesConstants.TWEETS_DISPLAY_NUMBER, MAX_TWEETS_DEFAULT);
+                    .getString(SharedPreferencesConstants.TWEETS_DISPLAY_NUMBER, MAX_TWEETS_DEFAULT);
             int maxTweets = Integer.parseInt(maxTweetsString);
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Max tweets to load : " + maxTweets);

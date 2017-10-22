@@ -37,8 +37,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-import static com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants.AUTOSTART_RADIO;
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.PLAYER;
+import static com.stationmillenium.android.libutils.SharedPreferencesConstants.AUTOSTART_RADIO;
 import static com.stationmillenium.android.libutils.activities.PlayerState.STOPPED;
 
 /**

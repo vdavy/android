@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.stationmillenium.android.BuildConfig;
-import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
 import com.stationmillenium.android.services.MediaPlayerService;
 
 /**
