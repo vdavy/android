@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
@@ -19,6 +18,7 @@ import com.stationmillenium.android.libutils.exceptions.XMLParserException;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.libutils.network.NetworkUtils;
+import com.stationmillenium.android.libutils.toasts.DisplayToastsUtil;
 import com.stationmillenium.android.libutils.xml.XMLCurrentTitleParser;
 
 import java.io.InputStream;
@@ -32,6 +32,15 @@ public class CurrentTitlePlayerService extends JobIntentService {
 
     private static final String TAG = "CurrentTitleService";
     private static final int JOB_ID = 1001;
+
+    private DisplayToastsUtil displayToast;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        displayToast = new DisplayToastsUtil(getApplicationContext());
+    }
+
     /**
      * Convenience method for enqueuing work in to this service.
      */
@@ -92,7 +101,7 @@ public class CurrentTitlePlayerService extends JobIntentService {
                 if (BuildConfig.DEBUG) {
                     Log.d(TAG, "Network is unavailable - stopping service...");
                 }
-                Toast.makeText(this, R.string.player_network_unavailable, Toast.LENGTH_SHORT).show();
+                displayToast.displayToast(R.string.player_network_unavailable);
             }
 
         } else { //media player service is not running, no need to update title

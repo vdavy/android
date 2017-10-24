@@ -10,13 +10,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.JobIntentService;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
@@ -24,6 +22,7 @@ import com.stationmillenium.android.activities.preferences.AlarmSharedPreference
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
+import com.stationmillenium.android.libutils.toasts.DisplayToastsUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,12 +44,12 @@ public class AlarmService extends JobIntentService {
 
     private static final String TAG = "AlarmService";
 
-    private Handler handler;
+    private DisplayToastsUtil displayToast;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        handler = new Handler(); //create handler to display toasts
+        displayToast = new DisplayToastsUtil(getApplicationContext());
     }
 
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
@@ -123,15 +122,15 @@ public class AlarmService extends JobIntentService {
                 playIntent.putExtra(LocalIntentsData.RESUME_PLAYER_ACTIVITY.toString(), false);
                 playIntent.putExtra(LocalIntentsData.GET_VOLUME_FROM_PREFERENCES.toString(), true);
                 startService(playIntent);
-                displayToast(getString(R.string.alarm_triggered));
+                displayToast.displayToast(getString(R.string.alarm_triggered));
 
             } else {
                 Log.w(TAG, "Wifi requested but not connected for alarm");
-                displayToast(getString(R.string.player_no_wifi));
+                displayToast.displayToast(getString(R.string.player_no_wifi));
             }
 
         } else {
-            displayToast(getString(R.string.alarm_already_triggered));
+            displayToast.displayToast(getString(R.string.alarm_already_triggered));
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Alarm not triggered, media player already running");
             }
@@ -220,7 +219,7 @@ public class AlarmService extends JobIntentService {
                     Log.d(TAG, "Alarm time not set - can't program alarm");
                 }
 
-                displayToast(getString(R.string.alarm_no_time_set));
+                displayToast.displayToast(getString(R.string.alarm_no_time_set));
                 preferences.edit() //disable the alarm
                         .putBoolean(AlarmSharedPreferencesConstants.ALARM_ENABLED, false)
                         .apply();
@@ -352,7 +351,7 @@ public class AlarmService extends JobIntentService {
         }
 
         //show toast
-        displayToast(toastText);
+        displayToast.displayToast(toastText);
     }
 
     /**
@@ -379,18 +378,6 @@ public class AlarmService extends JobIntentService {
         return dayIndex;
     }
 
-    /**
-     * Display a toast using the handler
-     *
-     * @param toastText the text
-     */
-    private void displayToast(final String toastText) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+
 
 }
