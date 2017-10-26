@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+<shortcuts xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- player shortcut -->
     <shortcut
@@ -7,7 +8,8 @@
         android:icon="@drawable/shortcut_player"
         android:shortcutId="player"
         android:shortcutLongLabel="@string/player_shortcut_long_label"
-        android:shortcutShortLabel="@string/player_shortcut_short_label">
+        android:shortcutShortLabel="@string/player_shortcut_short_label"
+        tools:targetApi="n_mr1">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="com.stationmillenium.android.activities.PlayerActivity"
@@ -20,7 +22,8 @@
         android:icon="@drawable/shortcut_replay"
         android:shortcutId="replay"
         android:shortcutLongLabel="@string/replay_shortcut_long_label"
-        android:shortcutShortLabel="@string/replay_shortcut_short_label">
+        android:shortcutShortLabel="@string/replay_shortcut_short_label"
+        tools:targetApi="n_mr1">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="com.stationmillenium.android.replay.activities.ReplayActivity"
@@ -33,7 +36,8 @@
         android:icon="@drawable/shortcut_history"
         android:shortcutId="songHistory"
         android:shortcutLongLabel="@string/song_history_shortcut_long_label"
-        android:shortcutShortLabel="@string/song_history_shortcut_short_label">
+        android:shortcutShortLabel="@string/song_history_shortcut_short_label"
+        tools:targetApi="n_mr1">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity"

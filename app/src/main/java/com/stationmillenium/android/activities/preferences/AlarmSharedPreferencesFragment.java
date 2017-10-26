@@ -16,7 +16,6 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -81,20 +80,17 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
      * Init the alarm enabled field
      */
     private void initAlarmEnabled() {
-        alarmEnabled.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                long alarmTime = PreferenceManager.getDefaultSharedPreferences(getActivity()).getLong(AlarmSharedPreferencesConstants.ALARM_TIME, 0);
-                if (alarmTime != 0) { //alarm time is set
-                    activity.sendUpdateAlarmTimeIntent(); //send intent to update alarm
-                    return true;
-                } else { //alarm time is not set
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Alarm time not set - can't program alarm");
-                    }
-                    Toast.makeText(getActivity(), R.string.alarm_no_time_set, Toast.LENGTH_SHORT).show();
-                    return false;
+        alarmEnabled.setOnPreferenceChangeListener((preference, newValue) -> {
+            long alarmTime = PreferenceManager.getDefaultSharedPreferences(getActivity()).getLong(AlarmSharedPreferencesConstants.ALARM_TIME, 0);
+            if (alarmTime != 0) { //alarm time is set
+                activity.sendUpdateAlarmTimeIntent(); //send intent to update alarm
+                return true;
+            } else { //alarm time is not set
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "Alarm time not set - can't program alarm");
                 }
+                Toast.makeText(getActivity(), R.string.alarm_no_time_set, Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
     }
@@ -104,12 +100,9 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void initAlarmTime() {
-        alarmTime.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                activity.sendUpdateAlarmTimeIntent(); //send intent to update alarm
-                return true;
-            }
+        alarmTime.setOnPreferenceChangeListener((preference, newValue) -> {
+            activity.sendUpdateAlarmTimeIntent(); //send intent to update alarm
+            return true;
         });
     }
 
@@ -156,15 +149,11 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
         alarmVolumeSeekBar.setProgressTextSuffix(" " + getString(R.string.preferences_alarm_volume_progress_text_suffix, alarmVolumeSeekBar.getMaxProgress()));
 
         //set the on change handler for summary update
-        alarmVolumeSeekBar.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "Alarm volume field value change");
-                updateAlarmVolumeSummary((Integer) newValue);
-                return true;
-            }
+        alarmVolumeSeekBar.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, "Alarm volume field value change");
+            updateAlarmVolumeSummary((Integer) newValue);
+            return true;
         });
     }
 
@@ -192,16 +181,12 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
         manageAlarmDaysSummary(alarmDaysList, selectedDays);
 
         //add update summary listener
-        alarmDaysList.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "Update the alarm days list summary");
-                manageAlarmDaysSummary(preference, (Set<String>) newValue);
-                activity.sendUpdateAlarmTimeIntent(); //update alarm
-                return true;
-            }
+        alarmDaysList.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, "Update the alarm days list summary");
+            manageAlarmDaysSummary(preference, (Set<String>) newValue);
+            activity.sendUpdateAlarmTimeIntent(); //update alarm
+            return true;
         });
     }
 
@@ -221,16 +206,13 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
         manageAlarmDaysSummary(alarmDaysListString, selectedDays);
 
         //add update summary listener
-        alarmDaysListString.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "Update the alarm days list summary");
-                Set<String> selectedDays = convertAlarmDaysStringToSet((String) newValue);
-                manageAlarmDaysSummary(preference, selectedDays);
-                activity.sendUpdateAlarmTimeIntent(); //update alarm
-                return true;
-            }
+        alarmDaysListString.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, "Update the alarm days list summary");
+            Set<String> selectedDays1 = convertAlarmDaysStringToSet((String) newValue);
+            manageAlarmDaysSummary(preference, selectedDays1);
+            activity.sendUpdateAlarmTimeIntent(); //update alarm
+            return true;
         });
     }
 
@@ -287,16 +269,16 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
             //manage summary
             if (!selectedDaysList.isEmpty()) { //if some data - set up summary
                 try {
-                    String summary = "";
+                    StringBuilder summary = new StringBuilder();
                     int i = 1;
                     for (String day : selectedDaysList) {
-                        summary += dayNames[Integer.parseInt(day)];
+                        summary.append(dayNames[Integer.parseInt(day)]);
                         if (i < selectedDaysList.size()) {
-                            summary += getString(R.string.preferences_alarm_activation_days_separator) + " ";
+                            summary.append(getString(R.string.preferences_alarm_activation_days_separator)).append(" ");
                             i++;
                         }
                     }
-                    alarmDaysList.setSummary(summary);
+                    alarmDaysList.setSummary(summary.toString());
                 } catch (NumberFormatException e) {
                     Log.w(TAG, "Format exception", e);
                     alarmDaysList.setSummary("");
