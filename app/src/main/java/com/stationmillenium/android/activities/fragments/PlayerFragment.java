@@ -106,7 +106,10 @@ public class PlayerFragment extends Fragment {
     }
 
     public void setHistoryList(List<String> historyList) {
-        if (currentTitleList == null) {
+        if (historyList == null) {
+            binding.setHistoryArray(null);
+            currentTitleList = null;
+        } else if (currentTitleList == null) {
             binding.setHistoryArray(historyList);
             currentTitleList = historyList;
         } else {
