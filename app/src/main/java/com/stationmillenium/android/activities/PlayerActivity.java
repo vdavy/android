@@ -79,12 +79,9 @@ public class PlayerActivity extends AppCompatActivity {
     private PlayerActivityUpdateTitleBroadcastReceiver playerActivityUpdateTitleBroadcastReceiver;
 
     private MenuItem castMenu;
-    private CastStateListener castStateListener = new CastStateListener() {
-        @Override
-        public void onCastStateChanged(int newState) {
-            if (newState != CastState.NO_DEVICES_AVAILABLE) {
-                showIntroductoryOverlay();
-            }
+    private CastStateListener castStateListener = newState -> {
+        if (newState != CastState.NO_DEVICES_AVAILABLE) {
+            showIntroductoryOverlay();
         }
     };
     private CastContext castContext;
@@ -509,17 +506,12 @@ public class PlayerActivity extends AppCompatActivity {
 
     private void showIntroductoryOverlay() {
         if ((castMenu != null) && castMenu.isVisible()) {
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    new IntroductoryOverlay.Builder(
-                            PlayerActivity.this, castMenu)
-                            .setTitleText(R.string.introducing_cast)
-                            .setSingleTime()
-                            .build()
-                            .show();
-                }
-            });
+            new Handler().post(() -> new IntroductoryOverlay.Builder(
+                    PlayerActivity.this, castMenu)
+                    .setTitleText(R.string.introducing_cast)
+                    .setSingleTime()
+                    .build()
+                    .show());
         }
     }
 }
