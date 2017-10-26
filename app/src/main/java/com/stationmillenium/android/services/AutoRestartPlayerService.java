@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 import android.util.Log;
@@ -71,21 +70,18 @@ public class AutoRestartPlayerService extends JobIntentService {
     private void setupHandler() {
         HandlerThread handlerThread = new HandlerThread(TAG);
         handlerThread.start();
-        handler = new Handler(handlerThread.getLooper(), new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                if (!AppUtils.isMediaPlayerServiceRunning(AutoRestartPlayerService.this)) {
-                    Log.d(TAG, "Media player service is stopped - restart it");
-                    Intent mediaPlayerIntent = new Intent(getBaseContext(), MediaPlayerService.class);
-                    startService(mediaPlayerIntent);
-                } else if (msg.what < MAX_TRIES) {
-                    Log.d(TAG, "Media player service is not yet stopped - wait...");
-                    handler.sendEmptyMessageDelayed(msg.what + 1, POST_DELAY);
-                } else {
-                    Log.w(TAG, "Can't restart media player service - exiting...");
-                }
-                return true;
+        handler = new Handler(handlerThread.getLooper(), msg -> {
+            if (!AppUtils.isMediaPlayerServiceRunning(AutoRestartPlayerService.this)) {
+                Log.d(TAG, "Media player service is stopped - restart it");
+                Intent mediaPlayerIntent = new Intent(getBaseContext(), MediaPlayerService.class);
+                startService(mediaPlayerIntent);
+            } else if (msg.what < MAX_TRIES) {
+                Log.d(TAG, "Media player service is not yet stopped - wait...");
+                handler.sendEmptyMessageDelayed(msg.what + 1, POST_DELAY);
+            } else {
+                Log.w(TAG, "Can't restart media player service - exiting...");
             }
+            return true;
         });
         handler.sendEmptyMessageDelayed(0, POST_DELAY);
     }

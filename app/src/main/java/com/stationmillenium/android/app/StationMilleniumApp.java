@@ -1,9 +1,7 @@
 package com.stationmillenium.android.app;
 
 import android.app.Application;
-import android.util.Log;
 
-import com.stationmillenium.android.R;
 import com.stationmillenium.android.libutils.PiwikTracker;
 
 /**
