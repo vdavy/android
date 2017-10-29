@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.stationmillenium.android.BuildConfig;
-import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
 import com.stationmillenium.android.services.MediaPlayerService;
 
 /**
@@ -42,6 +41,15 @@ public class AppUtils {
      */
     public static boolean isAPILevel26Available() {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O);
+    }
+
+    /**
+     * Return if the API level >= 26
+     *
+     * @return <code>true</code> if API level >= 19, <code>false</code> if not
+     */
+    public static boolean isAPILevel19Available() {
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT);
     }
 
     /**

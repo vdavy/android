@@ -11,14 +11,13 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants;
+import com.stationmillenium.android.libutils.SharedPreferencesConstants;
 
 /**
  * Fragment to manage application preferences
@@ -69,20 +68,17 @@ public class SharedPreferencesFragment extends PreferenceFragment implements Sha
         }
 
         //set up listener for updates
-        newsNumber.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Update news number summary");
-                }
-                if (newValue != null) {
-                    CharSequence summary = newsNumber.getEntries()[newsNumber.findIndexOfValue(newValue.toString())];
-                    preference.setSummary(summary);
-                } else {
-                    preference.setSummary("");
-                }
-                return true;
+        newsNumber.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Update news number summary");
             }
+            if (newValue != null) {
+                CharSequence summary = newsNumber.getEntries()[newsNumber.findIndexOfValue(newValue.toString())];
+                preference.setSummary(summary);
+            } else {
+                preference.setSummary("");
+            }
+            return true;
         });
     }
 
@@ -97,21 +93,18 @@ public class SharedPreferencesFragment extends PreferenceFragment implements Sha
             autorestartDelay.setSummary(getString(R.string.preferences_autorestart_player_timeout_summary, autorestartDelay.getEntry()));
         }
 
-        autorestartDelay.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Update auto restart delay summary");
-                }
-                if (newValue != null) {
-                    CharSequence summary = autorestartDelay.getEntries()[autorestartDelay.findIndexOfValue(newValue.toString())];
-                    preference.setSummary(getString(R.string.preferences_autorestart_player_timeout_summary, summary));
-                } else {
-                    preference.setSummary("");
-                }
-
-                return true;
+        autorestartDelay.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Update auto restart delay summary");
             }
+            if (newValue != null) {
+                CharSequence summary = autorestartDelay.getEntries()[autorestartDelay.findIndexOfValue(newValue.toString())];
+                preference.setSummary(getString(R.string.preferences_autorestart_player_timeout_summary, summary));
+            } else {
+                preference.setSummary("");
+            }
+
+            return true;
         });
     }
 

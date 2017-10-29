@@ -3,7 +3,6 @@ package com.stationmillenium.android.activities;
 import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
@@ -108,19 +107,16 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
      * Select the share method
      */
     private void showShareMethodDialog() {
-        new AlertDialog.Builder(this).setTitle(R.string.app_invite_send_by).setItems(R.array.send_by_mode, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case SOCIAL_NETWORKS_INDEX:
-                        Log.d(TAG, "Share through social networks");
-                        shareAppThroughSocialNetworks();
-                        break;
-                    case EMAIL_SMS_INDEX:
-                        Log.d(TAG, "Share through Email & SMS");
-                        sendAppInvitationIntent();
-                        break;
-                }
+        new AlertDialog.Builder(this).setTitle(R.string.app_invite_send_by).setItems(R.array.send_by_mode, (dialog, which) -> {
+            switch (which) {
+                case SOCIAL_NETWORKS_INDEX:
+                    Log.d(TAG, "Share through social networks");
+                    shareAppThroughSocialNetworks();
+                    break;
+                case EMAIL_SMS_INDEX:
+                    Log.d(TAG, "Share through Email & SMS");
+                    sendAppInvitationIntent();
+                    break;
             }
         }).show();
     }

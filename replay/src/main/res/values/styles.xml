@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MaterialTheme.ItemText.Prompt">
+        <item name="android:layout_marginTop">@dimen/zero_dp_dimen</item>
+        <item name="android:paddingLeft">@dimen/zero_dp_dimen</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>

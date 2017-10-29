@@ -46,4 +46,6 @@
         <item>Titres</item>
     </string-array>
 
+    <string name="replay_prompt">Sélectionner une playlist ou\nfaire une recherche</string>
+
 </resources>

@@ -35,8 +35,8 @@ import android.widget.Toast;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.PlayerActivity;
-import com.stationmillenium.android.activities.preferences.SharedPreferencesActivity;
 import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.SharedPreferencesConstants;
 import com.stationmillenium.android.libutils.activities.PlayerState;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
@@ -290,7 +290,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             @Override
             public void run() {
                 Intent currentTitleServiceIntent = new Intent(MediaPlayerService.this, CurrentTitlePlayerService.class);
-                startService(currentTitleServiceIntent);
+                CurrentTitlePlayerService.enqueueWork(MediaPlayerService.this, currentTitleServiceIntent);
             }
 
         }, UPDATE_TITLE_START_TIME, UPDATE_TITLE_PERIOD_TIME);
@@ -300,13 +300,13 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      * Setup the timer for the auto restart player service
      */
     private void setupAutoRestartPlayerTimer() {
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SharedPreferencesActivity.SharedPreferencesConstants.PLAYER_AUTORESTART, false)) {
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SharedPreferencesConstants.PLAYER_AUTORESTART, false)) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Register auto restart player timer");
             }
 
             int defaultDelay = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this)
-                    .getString(SharedPreferencesActivity.SharedPreferencesConstants.PLAYER_AUTORESTART_DELAY, AUTO_RESTART_PLAYER_DEFAULT_DELAY))
+                    .getString(SharedPreferencesConstants.PLAYER_AUTORESTART_DELAY, AUTO_RESTART_PLAYER_DEFAULT_DELAY))
                     * 1000; //in ms
             autoRestartPlayerTimer = new Timer(AUTO_RESTART_PLAYER_TIMER_NAME);
             autoRestartPlayerTimer.schedule(new TimerTask() {
@@ -320,7 +320,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                         autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.PREVIOUS_POSITION, previousPosition);
                         autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.CURRENT_POSITION, getPosition());
                         autoRestartPlayerIntent.putExtra(AutoRestartPlayerService.PLAYER_STATE, playerState);
-                        startService(autoRestartPlayerIntent);
+                        AutoRestartPlayerService.enqueueWork(MediaPlayerService.this, autoRestartPlayerIntent);
                         previousPosition = getPosition();
                     }
                 }
@@ -611,7 +611,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         //send tracking info
         Intent statsTrackerServiceIntent = new Intent(this, StatsTrackerService.class);
-        startService(statsTrackerServiceIntent);
+        StatsTrackerService.enqueueWork(this, statsTrackerServiceIntent);
     }
 
     @Override

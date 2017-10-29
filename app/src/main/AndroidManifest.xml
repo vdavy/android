@@ -187,10 +187,12 @@
         <!-- player service -->
         <service
             android:name=".services.CurrentTitlePlayerService"
-            android:exported="false" />
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".services.StatsTrackerService"
-            android:exported="false" />
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".services.MediaPlayerService"
             android:exported="false">
@@ -231,7 +233,8 @@
         <!-- alarm service -->
         <service
             android:name=".services.AlarmService"
-            android:exported="false" />
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <!-- alarm service boot completed initialization broadcast receiver -->
         <receiver android:name=".services.AlarmBootCompletedBroadcastReceiver">
@@ -249,7 +252,8 @@
         <!-- auto restart player service -->
         <service
             android:name=".services.AutoRestartPlayerService"
-            android:exported="false" />
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

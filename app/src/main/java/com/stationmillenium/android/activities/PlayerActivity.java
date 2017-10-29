@@ -44,8 +44,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
-import static com.stationmillenium.android.activities.preferences.SharedPreferencesActivity.SharedPreferencesConstants.AUTOSTART_RADIO;
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.PLAYER;
+import static com.stationmillenium.android.libutils.SharedPreferencesConstants.AUTOSTART_RADIO;
 import static com.stationmillenium.android.libutils.activities.PlayerState.STOPPED;
 
 /**
@@ -300,13 +300,8 @@ public class PlayerActivity extends AppCompatActivity {
 
                 //update in ui thread
                 final int finalPlayingTimeSecond = playingTimeSecond;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        playerFragment.setPlayingTime((minutesPlaying < 10) ? "0" + minutesPlaying : String.valueOf(minutesPlaying),
-                                (finalPlayingTimeSecond < 10) ? "0" + finalPlayingTimeSecond : String.valueOf(finalPlayingTimeSecond));
-                    }
-                });
+                runOnUiThread(() -> playerFragment.setPlayingTime((minutesPlaying < 10) ? "0" + minutesPlaying : String.valueOf(minutesPlaying),
+                        (finalPlayingTimeSecond < 10) ? "0" + finalPlayingTimeSecond : String.valueOf(finalPlayingTimeSecond)));
             }
 
         }, CURRENT_TIME_TIMER_START, CURRENT_TIME_TIMER_UPDATE);

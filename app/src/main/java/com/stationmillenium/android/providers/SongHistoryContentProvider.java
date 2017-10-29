@@ -194,12 +194,7 @@ public class SongHistoryContentProvider extends ContentProvider {
             if (BuildConfig.DEBUG)
                 Log.d(TAG, "Network not available");
             Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getContext(), R.string.player_network_unavailable, Toast.LENGTH_SHORT).show();
-                }
-            });
+            handler.post(() -> Toast.makeText(getContext(), string.player_network_unavailable, Toast.LENGTH_SHORT).show());
             return null;
         }
     }

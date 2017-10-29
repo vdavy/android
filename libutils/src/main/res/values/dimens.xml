@@ -29,4 +29,6 @@
 
     <dimen name="widget_rounded_image">3dp</dimen>
 
+    <dimen name="zero_dp_dimen">0dp</dimen>
+
 </resources>

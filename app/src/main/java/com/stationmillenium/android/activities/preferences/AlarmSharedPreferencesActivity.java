@@ -75,7 +75,7 @@ public class AlarmSharedPreferencesActivity extends AppCompatActivity {
         }
         Intent alarmIntent = new Intent(this, AlarmService.class);
         alarmIntent.setAction(LocalIntents.SET_ALARM_TIME.toString());
-        startService(alarmIntent);
+        AlarmService.enqueueWork(this, alarmIntent);
     }
 
 

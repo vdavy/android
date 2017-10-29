@@ -32,7 +32,7 @@ public class AlarmBootCompletedBroadcastReceiver extends BroadcastReceiver {
             //launch alarm service
             Intent alarmIntent = new Intent(context, AlarmService.class);
             alarmIntent.setAction(LocalIntents.SET_ALARM_TIME.toString());
-            context.startService(alarmIntent);
+            AlarmService.enqueueWork(context, alarmIntent);
         }
     }
 

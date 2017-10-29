@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
-import android.widget.ViewSwitcher;
 
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
@@ -59,16 +58,13 @@ public class PlayerFragment extends Fragment {
         binding.setTimeTextView(binding.playerCurrentTime);
 
         //image switcher
-        binding.playerImageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
-             @Override
-             public View makeView() {
-                 ImageView imageView = new ImageView(getActivity());
-                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                 imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-                 imageView.setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.transparent));
-                 return imageView;
-             }
-         });
+        binding.playerImageSwitcher.setFactory(() -> {
+            ImageView imageView = new ImageView(getActivity());
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            imageView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            imageView.setBackgroundColor(ContextCompat.getColor(getActivity(), android.R.color.transparent));
+            return imageView;
+        });
 
         //restore value
         if (savedInstanceState != null) {
@@ -110,7 +106,10 @@ public class PlayerFragment extends Fragment {
     }
 
     public void setHistoryList(List<String> historyList) {
-        if (currentTitleList == null) {
+        if (historyList == null) {
+            binding.setHistoryArray(null);
+            currentTitleList = null;
+        } else if (currentTitleList == null) {
             binding.setHistoryArray(historyList);
             currentTitleList = historyList;
         } else {
