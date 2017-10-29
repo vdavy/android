@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -17,11 +18,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.CastState;
 import com.google.android.gms.cast.framework.CastStateListener;
 import com.google.android.gms.cast.framework.IntroductoryOverlay;
+import com.google.android.gms.cast.framework.SessionManagerListener;
+import com.google.android.gms.cast.framework.media.RemoteMediaClient;
+import com.google.android.gms.common.images.WebImage;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.PlayerFragment;
@@ -57,6 +64,7 @@ public class PlayerActivity extends AppCompatActivity {
 
     //static intialization part
     private static final String TAG = "PlayerActivity";
+    private static final String TAG_CHROMECAST = "Chromecast";
     private static final int CURRENT_TIME_TIMER_START = 0;
     private static final int CURRENT_TIME_TIMER_UPDATE = 1000;
     private static final String CURRENT_TIME_TIMER_NAME = "CurrentTimeTimer";
@@ -71,15 +79,115 @@ public class PlayerActivity extends AppCompatActivity {
     private PlayerActivityUpdateTitleBroadcastReceiver playerActivityUpdateTitleBroadcastReceiver;
 
     private MenuItem castMenu;
-    private CastStateListener castStateListener = new CastStateListener() {
-        @Override
-        public void onCastStateChanged(int newState) {
-            if (newState != CastState.NO_DEVICES_AVAILABLE) {
-                showIntroductoryOverlay();
-            }
+    private CastStateListener castStateListener = newState -> {
+        if (newState != CastState.NO_DEVICES_AVAILABLE) {
+            showIntroductoryOverlay();
         }
     };
     private CastContext castContext;
+    private RemoteMediaClient remoteMediaClient;
+    private SessionManagerListener<CastSession> sessionManagerListener = new SessionManagerListener<CastSession>() {
+        @Override
+        public void onSessionStarting(CastSession castSession) {
+            Log.v(TAG, "onSessionStarting");
+        }
+
+        @Override
+        public void onSessionStarted(CastSession castSession, String s) {
+            Log.v(TAG_CHROMECAST, "onSessionStarted");
+            MediaMetadata mediaMetadata = new MediaMetadata();
+            mediaMetadata.putString(MediaMetadata.KEY_ARTIST, "Station");
+            mediaMetadata.putString(MediaMetadata.KEY_TITLE, "Millenium");
+            mediaMetadata.addImage(new WebImage(Uri.parse("https://www.station-millenium.com/favicon.png")));
+            MediaInfo mediaInfo = new MediaInfo.Builder(PlayerActivity.this.getString(R.string.player_stream_url))
+                .setStreamType(MediaInfo.STREAM_TYPE_LIVE)
+                .setContentType("audio/mp3")
+                .setMetadata(mediaMetadata)
+                .build();
+            remoteMediaClient = castSession.getRemoteMediaClient();
+            remoteMediaClient.addListener(rmcListener);
+            remoteMediaClient.load(mediaInfo);
+        }
+
+        @Override
+        public void onSessionStartFailed(CastSession castSession, int i) {
+            Log.v(TAG_CHROMECAST, "onSessionStartFailed");
+        }
+
+        @Override
+        public void onSessionEnding(CastSession castSession) {
+            Log.v(TAG_CHROMECAST, "onSessionEnding");
+            castSession.getRemoteMediaClient().removeListener(rmcListener);
+        }
+
+        @Override
+        public void onSessionEnded(CastSession castSession, int i) {
+            Log.v(TAG_CHROMECAST, "onSessionEnded");
+        }
+
+        @Override
+        public void onSessionResuming(CastSession castSession, String s) {
+            Log.v(TAG_CHROMECAST, "onSessionResuming");
+        }
+
+        @Override
+        public void onSessionResumed(CastSession castSession, boolean b) {
+            Log.v(TAG_CHROMECAST, "onSessionResumed");
+        }
+
+        @Override
+        public void onSessionResumeFailed(CastSession castSession, int i) {
+            Log.v(TAG_CHROMECAST, "onSessionResumeFailed");
+        }
+
+        @Override
+        public void onSessionSuspended(CastSession castSession, int i) {
+            Log.v(TAG_CHROMECAST, "onSessionSuspended");
+        }
+    };
+    private RemoteMediaClient.Listener rmcListener = new RemoteMediaClient.Listener() {
+        @Override
+        public void onStatusUpdated() {
+            Log.v(TAG_CHROMECAST, "onStatusUpdated");
+            if (remoteMediaClient != null && remoteMediaClient.isBuffering()) {
+                Log.d(TAG_CHROMECAST, "buffering");
+            }
+            if (remoteMediaClient != null && remoteMediaClient.isPlaying()) {
+                Log.d(TAG_CHROMECAST, "playing");
+            }
+            if (remoteMediaClient != null && remoteMediaClient.isPaused()) {
+                Log.d(TAG_CHROMECAST, "paused");
+            }
+            if (remoteMediaClient != null && !remoteMediaClient.isPaused() && !remoteMediaClient.isPlaying()) {
+                Log.d(TAG_CHROMECAST, "nada");
+            }
+        }
+
+        @Override
+        public void onMetadataUpdated() {
+            Log.v(TAG_CHROMECAST, "onMetadataUpdated");
+        }
+
+        @Override
+        public void onQueueStatusUpdated() {
+            Log.v(TAG_CHROMECAST, "onQueueStatusUpdated");
+        }
+
+        @Override
+        public void onPreloadStatusUpdated() {
+            Log.v(TAG_CHROMECAST, "onPreloadStatusUpdated");
+        }
+
+        @Override
+        public void onSendingRemoteMediaRequest() {
+            Log.v(TAG_CHROMECAST, "onSendingRemoteMediaRequest");
+        }
+
+        @Override
+        public void onAdBreakStatusUpdated() {
+            Log.v(TAG_CHROMECAST, "onAdBreakStatusUpdated");
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +230,7 @@ public class PlayerActivity extends AppCompatActivity {
 
         // cast part
         castContext.removeCastStateListener(castStateListener);
+        castContext.getSessionManager().removeSessionManagerListener(sessionManagerListener, CastSession.class);
     }
 
     @Override
@@ -174,6 +283,7 @@ public class PlayerActivity extends AppCompatActivity {
 
         // cast part
         castContext.addCastStateListener(castStateListener);
+        castContext.getSessionManager().addSessionManagerListener(sessionManagerListener, CastSession.class);
 
         // adapt player states
         managePlayerStates();
@@ -396,17 +506,12 @@ public class PlayerActivity extends AppCompatActivity {
 
     private void showIntroductoryOverlay() {
         if ((castMenu != null) && castMenu.isVisible()) {
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    new IntroductoryOverlay.Builder(
-                            PlayerActivity.this, castMenu)
-                            .setTitleText(R.string.introducing_cast)
-                            .setSingleTime()
-                            .build()
-                            .show();
-                }
-            });
+            new Handler().post(() -> new IntroductoryOverlay.Builder(
+                    PlayerActivity.this, castMenu)
+                    .setTitleText(R.string.introducing_cast)
+                    .setSingleTime()
+                    .build()
+                    .show());
         }
     }
 }
