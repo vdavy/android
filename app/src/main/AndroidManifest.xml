@@ -93,14 +93,14 @@
             android:name=".activities.AntennaGridActivity"
             android:label="@string/antenna_grid_activity_title"
             android:theme="@style/MaterialTheme"
-            tools:ignore="UnusedAttribute"></activity>
+            tools:ignore="UnusedAttribute" />
 
         <!-- alarm preferences activity -->
         <activity
             android:name=".activities.preferences.AlarmSharedPreferencesActivity"
             android:label="@string/preferences_alarm_screen"
             android:theme="@style/MaterialTheme"
-            tools:ignore="UnusedAttribute"></activity>
+            tools:ignore="UnusedAttribute" />
 
         <!-- song history search activity -->
         <activity
