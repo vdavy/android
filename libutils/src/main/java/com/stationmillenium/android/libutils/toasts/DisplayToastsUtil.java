@@ -2,6 +2,7 @@ package com.stationmillenium.android.libutils.toasts;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
@@ -17,7 +18,7 @@ public class DisplayToastsUtil {
 
     public DisplayToastsUtil(@NonNull Context context) {
         this.context = context;
-        handler = new Handler(); //create handler to display toasts
+        handler = new Handler(Looper.getMainLooper()); //create handler to display toasts
     }
 
     /**
