@@ -8,8 +8,6 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'com.google.gms:google-services:3.1.2'
         classpath 'com.google.firebase:firebase-plugins:1.1.5'
-        // for uploading mapping file : https://firebase.google.com/docs/crash/android#known_issue
-        // classpath 'com.google.firebase:firebase-plugins:1.1.0-alpha1'
     }
 }
 
