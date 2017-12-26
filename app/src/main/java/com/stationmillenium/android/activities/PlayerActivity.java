@@ -95,7 +95,7 @@ public class PlayerActivity extends AppCompatActivity {
         @Override
         public void onSessionStarted(CastSession castSession, String s) {
             Log.v(TAG_CHROMECAST, "onSessionStarted");
-            MediaMetadata mediaMetadata = new MediaMetadata();
+            MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
             mediaMetadata.putString(MediaMetadata.KEY_ARTIST, "Station");
             mediaMetadata.putString(MediaMetadata.KEY_TITLE, "Millenium");
             mediaMetadata.addImage(new WebImage(Uri.parse("https://www.station-millenium.com/favicon.png")));
