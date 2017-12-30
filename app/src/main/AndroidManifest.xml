@@ -51,7 +51,7 @@
             android:name=".activities.PlayerActivity"
             android:label="@string/player_activity_title"
             android:launchMode="singleTop"
-            android:theme="@style/MaterialTheme"
+            android:theme="@style/MaterialTheme.Cast"
             tools:ignore="UnusedAttribute">
             <intent-filter>
                 <action android:name="com.stationmillenium.android.intents.ON_PLAYER_PLAY" />

@@ -6,6 +6,7 @@ dependencies {
     api "com.jakewharton.timber:timber:4.6.0"
     api "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     api "com.android.support:design:${rootProject.ext.supportLibVersion}"
+    api "com.google.android.gms:play-services-cast-framework:${rootProject.ext.playServicesVersion}"
 
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"

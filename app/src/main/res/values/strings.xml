@@ -35,6 +35,7 @@
     <string name="player_stop">Stop</string>
     <string name="player_notification_time">%1$s:%2$s</string>
     <string name="player_cast">Caster</string>
+    <string name="player_casting">Lecture de la radio sur le Chromcast</string>
 
     <!-- playing notification -->
     <string name="notification_ticker_text">Player Live Millenium</string>

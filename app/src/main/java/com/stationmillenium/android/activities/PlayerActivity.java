@@ -117,7 +117,9 @@ public class PlayerActivity extends AppCompatActivity {
         @Override
         public void onSessionEnding(CastSession castSession) {
             Log.v(TAG_CHROMECAST, "onSessionEnding");
-            castSession.getRemoteMediaClient().removeListener(rmcListener);
+            if (castSession != null && castSession.getRemoteMediaClient() != null && rmcListener != null) {
+                castSession.getRemoteMediaClient().removeListener(rmcListener);
+            }
         }
 
         @Override
@@ -145,6 +147,23 @@ public class PlayerActivity extends AppCompatActivity {
             Log.v(TAG_CHROMECAST, "onSessionSuspended");
         }
     };
+
+    private void startCast(CastSession castSession) {
+        MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
+        mediaMetadata.putString(MediaMetadata.KEY_ARTIST, "Station");
+        mediaMetadata.putString(MediaMetadata.KEY_TITLE, "Millenium");
+        mediaMetadata.addImage(new WebImage(Uri.parse("https://www.station-millenium.com/favicon.png")));
+        MediaInfo mediaInfo = new MediaInfo.Builder(PlayerActivity.this.getString(R.string.player_stream_url))
+            .setStreamType(MediaInfo.STREAM_TYPE_LIVE)
+            .setContentType("audio/mp3")
+            .setMetadata(mediaMetadata)
+            .build();
+        remoteMediaClient = castSession.getRemoteMediaClient();
+        remoteMediaClient.addListener(rmcListener);
+        remoteMediaClient.load(mediaInfo);
+        Snackbar.make(preferencesActivityBinding.playerCoordinatorLayout, R.string.player_casting, Snackbar.LENGTH_SHORT).show();
+    }
+
     private RemoteMediaClient.Listener rmcListener = new RemoteMediaClient.Listener() {
         @Override
         public void onStatusUpdated() {
@@ -365,7 +384,12 @@ public class PlayerActivity extends AppCompatActivity {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "Play player button clicked");
         }
-        if (playerFragment.getPlayerState() == STOPPED) {
+        if (castContext.getCastState() == CastState.CONNECTED) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "Play on Chromecast");
+                startCast(castContext.getSessionManager().getCurrentCastSession());
+            }
+        } else if (playerFragment.getPlayerState() == STOPPED) {
             if (!AppUtils.isMediaPlayerServiceRunning(this)) {
                 if (!AppUtils.isWifiOnlyAndWifiNotConnected(this)) {
                     //start player service
