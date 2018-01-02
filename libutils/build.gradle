@@ -5,6 +5,7 @@ dependencies {
     api "org.piwik.sdk:piwik-sdk:${rootProject.ext.piwikSdkVersion}"
     api "com.jakewharton.timber:timber:4.6.0"
     api "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    api "com.android.support:mediarouter-v7:${rootProject.ext.supportLibVersion}"
     api "com.android.support:design:${rootProject.ext.supportLibVersion}"
     api "com.google.android.gms:play-services-cast-framework:${rootProject.ext.playServicesVersion}"
 
