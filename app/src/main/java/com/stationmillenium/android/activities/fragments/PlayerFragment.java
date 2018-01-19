@@ -114,7 +114,8 @@ public class PlayerFragment extends Fragment {
             currentTitleList = historyList;
         } else {
             for (int i = 0; i < currentTitleList.size(); i++) {
-                if (!currentTitleList.get(i).equals(historyList.get(i))) {
+                if (currentTitleList.get(i) != null && historyList.get(i) != null
+                        && !currentTitleList.get(i).equals(historyList.get(i))) {
                     binding.setHistoryArray(historyList);
                     currentTitleList = historyList;
                     break;
