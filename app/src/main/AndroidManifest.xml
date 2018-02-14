@@ -58,7 +58,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
+                <data android:scheme="https"
                       android:host="www.station-millenium.com"
                       android:pathPrefix="/coverart/player.html" />
             </intent-filter>
