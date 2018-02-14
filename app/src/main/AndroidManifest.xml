@@ -66,6 +66,9 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                      android:host="www.station-millenium.com"
+                      android:pathPrefix="/coverart/player.html" />
 
                 <data
                     android:host="www.station-millenium.com"
