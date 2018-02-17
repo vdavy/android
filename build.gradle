@@ -20,7 +20,7 @@ ext {
     piwikSdkVersion = '3.0.0'
     playServicesVersion = '11.8.0'
     twitterVersion = "4.0.6"
-    glideVersion = "3.8.0"
+    glideVersion = "4.6.1"
 
     // test libs version
     supportTestVersion = "1.0.1"

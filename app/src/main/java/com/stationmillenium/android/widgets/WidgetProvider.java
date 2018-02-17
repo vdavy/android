@@ -16,12 +16,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.HomeActivity;
 import com.stationmillenium.android.activities.PlayerActivity;
@@ -96,20 +98,21 @@ public class WidgetProvider extends AppWidgetProvider {
 
                     //update image
                     Glide.with(context)
-                        .load(songData.getCurrentSong().getImageURL())
                         .asBitmap()
-                        .placeholder(R.drawable.player_default_image)
-                        .error(R.drawable.player_default_image)
-                        .centerCrop()
-                        .transform(new RoundedCornersTransformation(context, context.getResources().getDimensionPixelSize(R.dimen.widget_rounded_image), 0))
+                        .load(songData.getCurrentSong().getImageURL())
+                        .apply(new RequestOptions()
+                            .placeholder(R.drawable.player_default_image)
+                            .error(R.drawable.player_default_image)
+                            .centerCrop()
+                            .transform(new RoundedCornersTransformation(context.getResources().getDimensionPixelSize(R.dimen.widget_rounded_image), 0)))
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
-                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                                 updateWidgetData(resource);
                             }
 
                             @Override
-                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
                                 if (errorDrawable instanceof BitmapDrawable) {
                                     Bitmap errorBitmap = ((BitmapDrawable) errorDrawable).getBitmap();
                                     updateWidgetData(errorBitmap);

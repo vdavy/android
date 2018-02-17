@@ -14,7 +14,7 @@ dependencies {
     api "com.fasterxml.jackson.core:jackson-annotations:${rootProject.ext.jacksonVersion}"
     api "com.fasterxml.jackson.core:jackson-databind:${rootProject.ext.jacksonVersion}"
     api "com.github.bumptech.glide:glide:${rootProject.ext.glideVersion}"
-    api 'jp.wasabeef:glide-transformations:2.0.2'
+    api 'jp.wasabeef:glide-transformations:3.1.1'
     api 'com.android.support.constraint:constraint-layout:1.0.2'
 
     testCompile "junit:junit:${rootProject.ext.junitVersion}"

@@ -13,10 +13,13 @@ import android.media.MediaMetadata;
 import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.activities.PlayerState;
@@ -48,19 +51,21 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
         final CurrentTitleDTO songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());
         if (songData != null) {
             Glide.with(context)
-                    .load(songData.getCurrentSong().getImageURL())
                     .asBitmap()
-                    .placeholder(R.drawable.player_default_image)
-                    .error(R.drawable.player_default_image)
-                    .centerCrop()
+                    .load(songData.getCurrentSong().getImageURL())
+                    .apply(new RequestOptions()
+                        .placeholder(R.drawable.player_default_image)
+                        .error(R.drawable.player_default_image)
+                        .centerCrop()
+                    )
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                             propagateMetaData(resource, songData);
                         }
 
                         @Override
-                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
                             if (errorDrawable instanceof BitmapDrawable) {
                                 propagateMetaData(((BitmapDrawable) errorDrawable).getBitmap(), songData);
                             }

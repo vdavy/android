@@ -3,15 +3,17 @@ package com.stationmillenium.android.libutils.activities;
 import android.databinding.BindingAdapter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.widget.ArrayAdapter;
 import android.widget.ImageSwitcher;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.stationmillenium.android.R;
 
 import java.util.List;
@@ -27,17 +29,19 @@ public class PlayerActivityBindingUtils {
     public static void setImageFromURL(final ImageSwitcher imageSwitcher, String url) {
         Glide.with(imageSwitcher.getContext())
             .load(url)
-            .placeholder(R.drawable.player_default_image)
-            .error(R.drawable.player_default_image)
-            .centerCrop()
-            .into(new SimpleTarget<GlideDrawable>() {
+            .apply(new RequestOptions()
+                    .placeholder(R.drawable.player_default_image)
+                    .error(R.drawable.player_default_image)
+                    .centerCrop())
+            .into(new SimpleTarget<Drawable>() {
+
                 @Override
-                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                     imageSwitcher.setImageDrawable(resource);
                 }
 
                 @Override
-                public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                public void onLoadFailed(@Nullable Drawable errorDrawable) {
                     if (errorDrawable instanceof BitmapDrawable) {
                         imageSwitcher.setImageDrawable(errorDrawable);
                     }
