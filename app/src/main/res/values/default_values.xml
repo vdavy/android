@@ -11,7 +11,7 @@
     <string name="player_image_url_root">https://www.station-millenium.com/coverart</string>
 
     <!-- antenna grid -->
-    <string name="antenna_grid_page_url">http://www.station-millenium.com/radio/la-grille-des-programmes/</string>
+    <string name="antenna_grid_page_url">https://www.station-millenium.com/radio/la-grille-des-programmes/</string>
 
     <!-- links -->
     <string name="tweeter_user_name">millenium22</string>
@@ -19,7 +19,7 @@
     <string name="facebook_web_url">https://www.facebook.com/stationmillenium</string>
     <string name="twitter_internal_url">twitter://user?screen_name=millenium22</string>
     <string name="twitter_web_url">https://www.twitter.com/millenium22</string>
-    <string name="web_site_url">http://www.station-millenium.com</string>
+    <string name="web_site_url">https://www.station-millenium.com</string>
     <string name="google_play_url">https://play.google.com/store/apps/details?id=com.stationmillenium.android</string>
 
     <!-- song history values -->
