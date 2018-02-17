@@ -8,14 +8,26 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
-import com.stationmillenium.android.BuildConfig;
+import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.MediaMetadata;
+import com.google.android.gms.cast.framework.CastButtonFactory;
+import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastSession;
+import com.google.android.gms.cast.framework.CastState;
+import com.google.android.gms.cast.framework.CastStateListener;
+import com.google.android.gms.cast.framework.IntroductoryOverlay;
+import com.google.android.gms.cast.framework.SessionManagerListener;
+import com.google.android.gms.cast.framework.media.RemoteMediaClient;
+import com.google.android.gms.common.images.WebImage;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.PlayerFragment;
 import com.stationmillenium.android.databinding.PlayerActivityBinding;
@@ -51,8 +63,6 @@ import static com.stationmillenium.android.libutils.activities.PlayerState.STOPP
 public class PlayerActivity extends AppCompatActivity {
 
     //static intialization part
-    private static final String TAG = "PlayerActivity";
-    private static final String TAG_CHROMECAST = "Chromecast";
     private static final int CURRENT_TIME_TIMER_START = 0;
     private static final int CURRENT_TIME_TIMER_UPDATE = 1000;
     private static final String CURRENT_TIME_TIMER_NAME = "CurrentTimeTimer";
@@ -77,12 +87,12 @@ public class PlayerActivity extends AppCompatActivity {
     private SessionManagerListener<CastSession> sessionManagerListener = new SessionManagerListener<CastSession>() {
         @Override
         public void onSessionStarting(CastSession castSession) {
-            Log.v(TAG, "onSessionStarting");
+            Timber.v("onSessionStarting");
         }
 
         @Override
         public void onSessionStarted(CastSession castSession, String s) {
-            Log.v(TAG_CHROMECAST, "onSessionStarted");
+            Timber.v("onSessionStarted");
             MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
             mediaMetadata.putString(MediaMetadata.KEY_ARTIST, "Station");
             mediaMetadata.putString(MediaMetadata.KEY_TITLE, "Millenium");
@@ -99,12 +109,12 @@ public class PlayerActivity extends AppCompatActivity {
 
         @Override
         public void onSessionStartFailed(CastSession castSession, int i) {
-            Log.v(TAG_CHROMECAST, "onSessionStartFailed");
+            Timber.v("onSessionStartFailed");
         }
 
         @Override
         public void onSessionEnding(CastSession castSession) {
-            Log.v(TAG_CHROMECAST, "onSessionEnding");
+            Timber.v("onSessionEnding");
             if (castSession != null && castSession.getRemoteMediaClient() != null && rmcListener != null) {
                 castSession.getRemoteMediaClient().removeListener(rmcListener);
             }
@@ -112,27 +122,27 @@ public class PlayerActivity extends AppCompatActivity {
 
         @Override
         public void onSessionEnded(CastSession castSession, int i) {
-            Log.v(TAG_CHROMECAST, "onSessionEnded");
+            Timber.v("onSessionEnded");
         }
 
         @Override
         public void onSessionResuming(CastSession castSession, String s) {
-            Log.v(TAG_CHROMECAST, "onSessionResuming");
+            Timber.v("onSessionResuming");
         }
 
         @Override
         public void onSessionResumed(CastSession castSession, boolean b) {
-            Log.v(TAG_CHROMECAST, "onSessionResumed");
+            Timber.v("onSessionResumed");
         }
 
         @Override
         public void onSessionResumeFailed(CastSession castSession, int i) {
-            Log.v(TAG_CHROMECAST, "onSessionResumeFailed");
+            Timber.v("onSessionResumeFailed");
         }
 
         @Override
         public void onSessionSuspended(CastSession castSession, int i) {
-            Log.v(TAG_CHROMECAST, "onSessionSuspended");
+            Timber.v("onSessionSuspended");
         }
     };
 
@@ -155,44 +165,44 @@ public class PlayerActivity extends AppCompatActivity {
     private RemoteMediaClient.Listener rmcListener = new RemoteMediaClient.Listener() {
         @Override
         public void onStatusUpdated() {
-            Log.v(TAG_CHROMECAST, "onStatusUpdated");
+            Timber.v("onStatusUpdated");
             if (remoteMediaClient != null && remoteMediaClient.isBuffering()) {
-                Log.d(TAG_CHROMECAST, "buffering");
+                Timber.d("buffering");
             }
             if (remoteMediaClient != null && remoteMediaClient.isPlaying()) {
-                Log.d(TAG_CHROMECAST, "playing");
+                Timber.d("playing");
             }
             if (remoteMediaClient != null && remoteMediaClient.isPaused()) {
-                Log.d(TAG_CHROMECAST, "paused");
+                Timber.d("paused");
             }
             if (remoteMediaClient != null && !remoteMediaClient.isPaused() && !remoteMediaClient.isPlaying()) {
-                Log.d(TAG_CHROMECAST, "nada");
+                Timber.d("nada");
             }
         }
 
         @Override
         public void onMetadataUpdated() {
-            Log.v(TAG_CHROMECAST, "onMetadataUpdated");
+            Timber.v("onMetadataUpdated");
         }
 
         @Override
         public void onQueueStatusUpdated() {
-            Log.v(TAG_CHROMECAST, "onQueueStatusUpdated");
+            Timber.v("onQueueStatusUpdated");
         }
 
         @Override
         public void onPreloadStatusUpdated() {
-            Log.v(TAG_CHROMECAST, "onPreloadStatusUpdated");
+            Timber.v("onPreloadStatusUpdated");
         }
 
         @Override
         public void onSendingRemoteMediaRequest() {
-            Log.v(TAG_CHROMECAST, "onSendingRemoteMediaRequest");
+            Timber.v("onSendingRemoteMediaRequest");
         }
 
         @Override
         public void onAdBreakStatusUpdated() {
-            Log.v(TAG_CHROMECAST, "onAdBreakStatusUpdated");
+            Timber.v("onAdBreakStatusUpdated");
         }
     };
 
@@ -257,7 +267,7 @@ public class PlayerActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-        Timber.tag(TAG).d("Resume player activity");
+        Timber.d("Resume player activity");
         super.onResume();
 
         //record the update title broadcast receiver
@@ -352,12 +362,9 @@ public class PlayerActivity extends AppCompatActivity {
         //start player service
         Timber.d("Play player button clicked");
         if (castContext.getCastState() == CastState.CONNECTED) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Play on Chromecast");
-                startCast(castContext.getSessionManager().getCurrentCastSession());
-            }
+            Timber.d("Play on Chromecast");
+            startCast(castContext.getSessionManager().getCurrentCastSession());
         } else if (playerFragment.getPlayerState() == STOPPED) {
-        if (playerFragment.getPlayerState() == STOPPED) {
             if (!AppUtils.isMediaPlayerServiceRunning(this)) {
                 if (!AppUtils.isWifiOnlyAndWifiNotConnected(this)) {
                     //start player service
