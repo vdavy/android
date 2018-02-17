@@ -8,16 +8,16 @@ import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.databinding.AlarmPreferencesActivityBinding;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.drawer.DrawerUtils;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.services.AlarmService;
+
+import timber.log.Timber;
 
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.ALARM;
 
@@ -28,18 +28,13 @@ import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.ALAR
  */
 public class AlarmSharedPreferencesActivity extends AppCompatActivity {
 
-    //static intialization part
-    private static final String TAG = "AlarmPreferenceActivity";
-
     private DrawerUtils drawerUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //init view
         super.onCreate(savedInstanceState);
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Load alarm preferences");
-        }
+        Timber.d("Load alarm preferences");
 
         AlarmPreferencesActivityBinding alarmPreferencesActivityBinding = DataBindingUtil.setContentView(this, R.layout.alarm_preferences_activity);
         setSupportActionBar(alarmPreferencesActivityBinding.alarmPrefToolbar);
@@ -70,9 +65,8 @@ public class AlarmSharedPreferencesActivity extends AppCompatActivity {
      * Send intent to updaye alarm time
      */
     public void sendUpdateAlarmTimeIntent() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Send intent to update alarm time");
-        }
+        Timber.d("Send intent to update alarm time");
+
         Intent alarmIntent = new Intent(this, AlarmService.class);
         alarmIntent.setAction(LocalIntents.SET_ALARM_TIME.toString());
         AlarmService.enqueueWork(this, alarmIntent);
@@ -82,10 +76,7 @@ public class AlarmSharedPreferencesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (drawerUtils.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return drawerUtils.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @Override

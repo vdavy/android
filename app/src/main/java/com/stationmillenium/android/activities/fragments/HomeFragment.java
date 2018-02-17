@@ -7,6 +7,7 @@ import android.annotation.TargetApi;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +34,7 @@ public class HomeFragment extends Fragment {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         tweetAdapter = new TweetAdapter((HomeActivity) getActivity());
         binding = DataBindingUtil.inflate(inflater, R.layout.home_fragment, container, false);
         binding.setActivity((HomeActivity) getActivity());

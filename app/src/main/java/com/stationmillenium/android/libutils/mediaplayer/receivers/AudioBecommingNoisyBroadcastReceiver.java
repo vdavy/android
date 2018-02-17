@@ -3,12 +3,12 @@ package com.stationmillenium.android.libutils.mediaplayer.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.services.MediaPlayerService;
 
 import java.lang.ref.WeakReference;
+
+import timber.log.Timber;
 
 /**
  * Class to receive intent about audio becomming noisy
@@ -17,15 +17,13 @@ import java.lang.ref.WeakReference;
  */
 public class AudioBecommingNoisyBroadcastReceiver extends BroadcastReceiver {
 
-    private static final String TAG = "AudioBecommingNoisyBR";
-
     private WeakReference<MediaPlayerService> mediaPlayerServiceRef;
     private boolean registered;
 
     /**
      * Create a new {@link com.stationmillenium.android.libutils.mediaplayer.receivers.AudioBecommingNoisyBroadcastReceiver}
      *
-     * @param mediaPlayerService
+     * @param mediaPlayerService the media player service
      */
     public AudioBecommingNoisyBroadcastReceiver(MediaPlayerService mediaPlayerService) {
         mediaPlayerServiceRef = new WeakReference<>(mediaPlayerService);
@@ -33,8 +31,7 @@ public class AudioBecommingNoisyBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Received intent that audio becomes noisy");
+        Timber.d("Received intent that audio becomes noisy");
         if (mediaPlayerServiceRef.get() != null) {
             mediaPlayerServiceRef.get().stopMediaPlayer();
         }

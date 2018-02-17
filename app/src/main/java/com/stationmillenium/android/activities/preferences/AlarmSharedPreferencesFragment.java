@@ -13,18 +13,14 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity.AlarmSharedPreferencesConstants;
-import com.stationmillenium.android.libutils.preferences.ListPreferenceMultiSelect;
 import com.stationmillenium.android.libutils.preferences.SeekBarDialogPreference;
 import com.stationmillenium.android.libutils.preferences.TimePreference;
 
@@ -35,6 +31,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import timber.log.Timber;
+
 /**
  * Fragment to manage alarm preferences
  *
@@ -43,14 +41,12 @@ import java.util.Set;
 public class AlarmSharedPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
     //static intialization part
-    private static final String TAG = "AlarmPreferenceFragment";
     private static final String ALARM_DAYS_LIST_STRING_SEPARATOR = "\\|";
 
     //preference fields
     private CheckBoxPreference alarmEnabled;
     private TimePreference alarmTime;
     private MultiSelectListPreference alarmDaysList;
-    private ListPreference alarmDaysListString;
     private SeekBarDialogPreference alarmVolumeSeekBar;
 
     private AlarmSharedPreferencesActivity activity;
@@ -64,7 +60,7 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
         activity = (AlarmSharedPreferencesActivity) getActivity();    
 
         addPreferencesFromResource(R.xml.alarm_preferences);
-        initializePreferenceFields(true); //load fields
+        initializePreferenceFields(); //load fields
         initAlarmDaysList(); //init alarm days field
 
         //init fields
@@ -86,9 +82,7 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
                 activity.sendUpdateAlarmTimeIntent(); //send intent to update alarm
                 return true;
             } else { //alarm time is not set
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Alarm time not set - can't program alarm");
-                }
+                Timber.d("Alarm time not set - can't program alarm");
                 Toast.makeText(getActivity(), R.string.alarm_no_time_set, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -109,29 +103,22 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
     /**
      * Initialize preference fields
      *
-     * @param isAPILevel11Available if the API level 11 is available
      */
     @SuppressWarnings("deprecation")
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void initializePreferenceFields(boolean isAPILevel11Available) {
+    private void initializePreferenceFields() {
         alarmEnabled = (CheckBoxPreference) findPreference(AlarmSharedPreferencesConstants.ALARM_ENABLED);
         alarmTime = (TimePreference) findPreference(AlarmSharedPreferencesConstants.ALARM_TIME);
         alarmVolumeSeekBar = (SeekBarDialogPreference) findPreference(AlarmSharedPreferencesConstants.ALARM_VOLUME);
-        if (isAPILevel11Available) {
-            alarmDaysList = (MultiSelectListPreference) findPreference(AlarmSharedPreferencesConstants.ALARM_DAYS);
-        } else {
-            alarmDaysListString = (ListPreferenceMultiSelect) findPreference(AlarmSharedPreferencesConstants.ALARM_DAYS_STRING);
-        }
+        alarmDaysList = (MultiSelectListPreference) findPreference(AlarmSharedPreferencesConstants.ALARM_DAYS);
     }
 
     /**
      * Init the alarm volume field
      */
     private void initAlarmVolume() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Init the alarm volume field");
-        }
-        
+        Timber.d("Init the alarm volume field");
+
         //set min and current value
         AudioManager audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
         alarmVolumeSeekBar.setMaxProgress(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
@@ -150,8 +137,7 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
 
         //set the on change handler for summary update
         alarmVolumeSeekBar.setOnPreferenceChangeListener((preference, newValue) -> {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Alarm volume field value change");
+            Timber.d("Alarm volume field value change");
             updateAlarmVolumeSummary((Integer) newValue);
             return true;
         });
@@ -172,8 +158,7 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void initAlarmDaysList() {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Init the alarm days list summary");
+        Timber.d("Init the alarm days list summary");
         //get values
         Set<String> selectedDays = alarmDaysList.getValues();
 
@@ -182,35 +167,8 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
 
         //add update summary listener
         alarmDaysList.setOnPreferenceChangeListener((preference, newValue) -> {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Update the alarm days list summary");
+            Timber.d("Update the alarm days list summary");
             manageAlarmDaysSummary(preference, (Set<String>) newValue);
-            activity.sendUpdateAlarmTimeIntent(); //update alarm
-            return true;
-        });
-    }
-
-    /**
-     * Initilize the alarm days list, in string format (for api level 10 only)
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void initAlarmDaysListAsString() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Init the alarm days list summary");
-        }
-        //get values
-        String alarmDaysString = alarmDaysListString.getValue();
-        Set<String> selectedDays = convertAlarmDaysStringToSet(alarmDaysString);
-
-        //manage init summary
-        manageAlarmDaysSummary(alarmDaysListString, selectedDays);
-
-        //add update summary listener
-        alarmDaysListString.setOnPreferenceChangeListener((preference, newValue) -> {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Update the alarm days list summary");
-            Set<String> selectedDays1 = convertAlarmDaysStringToSet((String) newValue);
-            manageAlarmDaysSummary(preference, selectedDays1);
             activity.sendUpdateAlarmTimeIntent(); //update alarm
             return true;
         });
@@ -231,14 +189,10 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
         return selectedDays;
     }
 
-
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (AlarmSharedPreferencesConstants.ALARM_ENABLED.equals(key)) { //if the changed preference is the alarm enabled
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Alarm enabled shared preference changed");
-            }
+            Timber.d("Alarm enabled shared preference changed");
             boolean alarmEnabledValue = sharedPreferences.getBoolean(AlarmSharedPreferencesConstants.ALARM_ENABLED, false); //get new value
             alarmEnabled.setChecked(alarmEnabledValue); //set checked
             new BackupManager(getActivity()).dataChanged();
@@ -248,9 +202,7 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Unregister OnSharedPreferenceChangeListener");
-        }
+        Timber.d("Unregister OnSharedPreferenceChangeListener");
         PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
     }
 
@@ -280,7 +232,7 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
                     }
                     alarmDaysList.setSummary(summary.toString());
                 } catch (NumberFormatException e) {
-                    Log.w(TAG, "Format exception", e);
+                    Timber.w(e, "Format exception");
                     alarmDaysList.setSummary("");
                 }
 

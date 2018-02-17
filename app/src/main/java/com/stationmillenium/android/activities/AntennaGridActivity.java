@@ -11,19 +11,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.AntennaGridWebViewFragement;
 import com.stationmillenium.android.databinding.AntennaGridActivityBinding;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.drawer.DrawerUtils;
+
+import timber.log.Timber;
 
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.ANTENNA_GRID;
 
@@ -33,9 +33,6 @@ import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.ANTE
  * @author vincent
  */
 public class AntennaGridActivity extends AppCompatActivity {
-
-    //static intialization part
-    private static final String TAG = "AntennaGridActivity";
 
     private boolean resetWebview;
 
@@ -48,9 +45,7 @@ public class AntennaGridActivity extends AppCompatActivity {
         //init view
         super.onCreate(savedInstanceState);
         resetWebview = (savedInstanceState == null);
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Load main preferences");
-        }
+        Timber.d("Load main preferences");
 
         binding = DataBindingUtil.setContentView(this, R.layout.antenna_grid_activity);
         setSupportActionBar(binding.antennaGridToolbar);
@@ -61,10 +56,7 @@ public class AntennaGridActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (drawerUtils.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return drawerUtils.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -83,15 +75,11 @@ public class AntennaGridActivity extends AppCompatActivity {
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onResume() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Resuming webview");
-        }
+        Timber.d("Resuming webview");
         super.onResume();
 
         if (resetWebview) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Init new webview");
-            }
+            Timber.d("Init new webview");
 
             //setup web view
             WebSettings webSettings = fragment.getWebView().getSettings();
@@ -103,9 +91,7 @@ public class AntennaGridActivity extends AppCompatActivity {
             //set the progress bar
             fragment.getWebView().setWebChromeClient(new WebChromeClient() {
                 public void onProgressChanged(WebView view, int progress) {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Page load progress : " + progress);
-                    }
+                    Timber.d("Page load progress : %s", progress);
                     fragment.setProgress(progress);
                 }
             });
@@ -113,7 +99,7 @@ public class AntennaGridActivity extends AppCompatActivity {
             //set up error messages display
             fragment.getWebView().setWebViewClient(new WebViewClient() {
                 public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                    Log.e(TAG, "Error while loading webview : #" + errorCode + " : " + description);
+                    Timber.e("Error while loading webview : #" + errorCode + " : " + description);
                     Snackbar.make(binding.antennaGridCoordinatorLayout, getString(R.string.webview_error, description), Snackbar.LENGTH_SHORT).show();
                 }
             });
@@ -123,9 +109,7 @@ public class AntennaGridActivity extends AppCompatActivity {
             PiwikTracker.trackScreenView(ANTENNA_GRID);
 
         } else if (fragment.getWebView() != null) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Resume webview");
-            }
+            Timber.d("Resume webview");
             fragment.getWebView().onResume();
         }
     }
@@ -135,9 +119,7 @@ public class AntennaGridActivity extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onPause() {
         //reset activity title
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Pausing webview");
-        }
+        Timber.d("Pausing webview");
         if (fragment.getWebView() != null) {
             fragment.getWebView().onPause();
         }

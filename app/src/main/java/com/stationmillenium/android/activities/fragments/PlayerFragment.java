@@ -6,16 +6,15 @@ package com.stationmillenium.android.activities.fragments;
 import android.annotation.SuppressLint;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.databinding.PlayerFragmentBinding;
@@ -25,6 +24,8 @@ import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Activity to display the player
  *
@@ -33,7 +34,6 @@ import java.util.List;
 public class PlayerFragment extends Fragment {
 
     //static part
-    private static final String TAG = "PlayerFragment";
     private static final String SONG_DATA_SAVE = "SONG_DATA_SAVE";
     private static final String CURRENT_TIME_SAVE_MINUTES = "CURRENT_TIME_SAVE_MINUTES";
     private static final String CURRENT_TIME_SAVE_SECONDS = "CURRENT_TIME_SAVE_SECONDS";
@@ -47,10 +47,9 @@ public class PlayerFragment extends Fragment {
 
     @SuppressLint("NewApi")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Create the activity");
-        }
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Timber.d("Create the activity");
+
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.inflate(inflater, R.layout.player_fragment, container, false);
         binding.setActivity((PlayerActivity) getActivity());
@@ -89,7 +88,7 @@ public class PlayerFragment extends Fragment {
     }
 
     public void setPlayerState(PlayerState playerState) {
-        Log.v(TAG, "Set player state : " + playerState);
+        Timber.v("Set player state : %s", playerState);
         binding.setPlayerState(playerState);
         if (playerState == PlayerState.STOPPED) {
             reinitOnStop();
@@ -125,7 +124,7 @@ public class PlayerFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putSerializable(SONG_DATA_SAVE, binding.getSongData());
         outState.putString(CURRENT_TIME_SAVE_MINUTES, binding.getPlayingMinutes());
         outState.putString(CURRENT_TIME_SAVE_SECONDS, binding.getPlayingSeconds());

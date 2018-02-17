@@ -4,15 +4,14 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.Log;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.libutils.SharedPreferencesConstants;
 import com.stationmillenium.android.libutils.dtos.TweetItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -25,7 +24,6 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 public class TweetsListLoader extends AsyncTaskLoader<List<TweetItem>> {
 
-    private static final String TAG = "TweetsLoader";
     private static final String MAX_TWEETS_DEFAULT = "10";
 
     private String consumerKey;
@@ -41,9 +39,7 @@ public class TweetsListLoader extends AsyncTaskLoader<List<TweetItem>> {
 
     @Override
     public List<TweetItem> loadInBackground() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Load tweets...");
-        }
+        Timber.d("Load tweets...");
 
         //build tweeter auth conf
         ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -59,9 +55,7 @@ public class TweetsListLoader extends AsyncTaskLoader<List<TweetItem>> {
             String maxTweetsString = PreferenceManager.getDefaultSharedPreferences(getContext())
                     .getString(SharedPreferencesConstants.TWEETS_DISPLAY_NUMBER, MAX_TWEETS_DEFAULT);
             int maxTweets = Integer.parseInt(maxTweetsString);
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Max tweets to load : " + maxTweets);
-            }
+            Timber.d("Max tweets to load : %s", maxTweets);
 
             List<TweetItem> tweetItemList = new ArrayList<>();
             for (twitter4j.Status status : tweetsList) { //process each tweet
@@ -78,13 +72,11 @@ public class TweetsListLoader extends AsyncTaskLoader<List<TweetItem>> {
                 }
             }
 
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Gathered tweets list : " + tweetItemList);
-            }
+            Timber.d("Gathered tweets list : %s", tweetItemList);
             return tweetItemList;
 
         } catch (Exception e) { //if any error occurs
-            Log.e(TAG, "Error while getting latest tweets", e);
+            Timber.e(e, "Error while getting latest tweets");
             return null;
         }
     }

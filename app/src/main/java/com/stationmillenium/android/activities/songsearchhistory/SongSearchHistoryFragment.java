@@ -8,6 +8,7 @@ import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
@@ -43,7 +44,7 @@ public class SongSearchHistoryFragment extends Fragment {
 
     @SuppressLint("InlinedApi")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //init widgets

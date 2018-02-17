@@ -13,12 +13,10 @@ import android.media.MediaMetadata;
 import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
 import android.os.Build;
-import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.activities.PlayerState;
@@ -28,14 +26,14 @@ import com.stationmillenium.android.services.MediaPlayerService;
 
 import java.lang.ref.WeakReference;
 
+import timber.log.Timber;
+
 /**
  * Class to update the current playing title through intent
  *
  * @author vincent
  */
 public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
-
-    private static final String TAG = "UpdateCurrentTitleBR";
 
     private WeakReference<MediaPlayerService> mediaPlayerServiceRef;
     private boolean registered;
@@ -46,8 +44,7 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Update the current playing title");
+        Timber.d("Update the current playing title");
         final CurrentTitleDTO songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());
         if (songData != null) {
             Glide.with(context)
@@ -70,7 +67,7 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
                         }
                     });
         } else {
-            Log.w(TAG, "Current title DTO was null !");
+            Timber.w("Current title DTO was null !");
         }
     }
 
@@ -96,6 +93,7 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
                     mediaPlayerServiceRef.get().getMediaSession().setMetadata(builder.build());
                 } else {
                     Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().createNotification(mediaPlayerServiceRef.get().getPlayerState() == PlayerState.PLAYING);
+                    assert mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE) != null;
                     ((NotificationManager) mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE)).notify(MediaPlayerService.NOTIFICATION_ID, notification);
                 }
             }

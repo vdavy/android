@@ -16,11 +16,10 @@ import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
-import com.stationmillenium.android.BuildConfig;
+import timber.log.Timber;
 
 public class TouchImageView extends AppCompatImageView {
 
@@ -110,10 +109,6 @@ public class TouchImageView extends AppCompatImageView {
             invalidate();
             return true; // indicate event was handled
         });
-    }
-
-    public void setMaxZoom(float x) {
-        maxScale = x;
     }
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
@@ -208,8 +203,7 @@ public class TouchImageView extends AppCompatImageView {
             int bmWidth = drawable.getIntrinsicWidth();
             int bmHeight = drawable.getIntrinsicHeight();
 
-            if (BuildConfig.DEBUG)
-                Log.d("bmSize", "bmWidth: " + bmWidth + " bmHeight : " + bmHeight);
+            Timber.d("bmWidth: " + bmWidth + " bmHeight : " + bmHeight);
 
             float scaleX = (float) viewWidth / (float) bmWidth;
             float scaleY = (float) viewHeight / (float) bmHeight;

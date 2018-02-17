@@ -2,12 +2,13 @@ package com.stationmillenium.android.libutils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import org.piwik.sdk.Piwik;
 import org.piwik.sdk.Tracker;
 import org.piwik.sdk.TrackerConfig;
 import org.piwik.sdk.extra.TrackHelper;
+
+import timber.log.Timber;
 
 /**
  * Utils to help with piwik tracker
@@ -62,13 +63,13 @@ public class PiwikTracker {
      * Track stream goal
      */
     public static void trackStream() {
-        Log.d(TAG, "PIWIK / Track stream");
+        Timber.d("PIWIK / Track stream");
         if (!BuildConfig.DEBUG) {
             if (piwikStreamTracker != null) {
                 TrackHelper.track().goal(piwikGoalId).with(piwikStreamTracker);
             }
         } else {
-            Log.v(TAG, "Debug mode - not sending stream tracking info");
+            Timber.v("Debug mode - not sending stream tracking info");
         }
     }
 
@@ -77,15 +78,14 @@ public class PiwikTracker {
      * @param page the page to track
      */
     public static void trackScreenView(@NonNull PiwikPages page) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "PIWIK / Track page : " + page);
-        }
+        Timber.d("PIWIK / Track page : %s", page);
+
         if (!BuildConfig.DEBUG) {
             if (piwikAppTracker != null) {
                 TrackHelper.track().screen(page.getPath()).with(piwikAppTracker);
             }
         } else {
-            Log.v(TAG, "Debug mode - not sending page tracking info");
+            Timber.v("Debug mode - not sending page tracking info");
         }
     }
 
@@ -95,15 +95,13 @@ public class PiwikTracker {
      * @param title the page title
      */
     public static void trackScreenViewWithTitle(@NonNull PiwikPages page, @NonNull String title) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "PIWIK / Track page : " + page + " - with title : " + title);
-        }
+        Timber.d("PIWIK / Track page : " + page + " - with title : " + title);
         if (!BuildConfig.DEBUG) {
             if (piwikAppTracker != null) {
                 TrackHelper.track().screen(page.getPath()).title(title).with(piwikAppTracker);
             }
         } else {
-            Log.v(TAG, "Debug mode - not sending page tracking info");
+            Timber.v("Debug mode - not sending page tracking info");
         }
     }
 }

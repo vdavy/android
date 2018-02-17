@@ -1,11 +1,10 @@
 package com.stationmillenium.android.libutils.mediaplayer.utils;
 
 import android.media.MediaPlayer;
-import android.util.Log;
-
-import com.stationmillenium.android.BuildConfig;
 
 import java.lang.ref.WeakReference;
+
+import timber.log.Timber;
 
 /**
  * Class to get the current position of the media player, wrapper through a weak reference
@@ -15,8 +14,6 @@ import java.lang.ref.WeakReference;
  */
 public class MediaPlayerCurrentPositionGrabber {
 
-    private static final String TAG = "CurrentMPTimeGrabber";
-
     private static WeakReference<MediaPlayer> mediaPlayerRef;
 
     /**
@@ -25,8 +22,7 @@ public class MediaPlayerCurrentPositionGrabber {
      * @param mediaPlayer the {@link android.media.MediaPlayer} to make ref
      */
     public static void setMediaPlayerReference(MediaPlayer mediaPlayer) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Set the media player reference");
+        Timber.d("Set the media player reference");
         mediaPlayerRef = new WeakReference<>(mediaPlayer);
     }
 
@@ -41,7 +37,7 @@ public class MediaPlayerCurrentPositionGrabber {
             try {
                 return mediaPlayerRef.get().getCurrentPosition();
             } catch (IllegalStateException e) {
-                Log.w(TAG, "Error while getting media player current position", e);
+                Timber.w(e, "Error while getting media player current position");
                 return 0;
             }
         } else

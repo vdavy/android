@@ -3,7 +3,6 @@ package com.stationmillenium.android.replay.utils;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.Log;
 
 import com.stationmillenium.android.replay.dto.PlaylistDTO;
 
@@ -13,6 +12,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static java.util.Collections.EMPTY_LIST;
 
@@ -41,7 +42,7 @@ public class SoundcloudPlaylistRestLoader extends AsyncTaskLoader<List<? extends
     public SoundcloudPlaylistRestLoader(@NonNull Context context, int limit) {
         this(context);
         this.limit = limit;
-        Log.d(TAG, "Init REST loader with limit param : " + limit);
+        Timber.d("Init REST loader with limit param : %s", limit);
     }
 
     /**
@@ -55,17 +56,17 @@ public class SoundcloudPlaylistRestLoader extends AsyncTaskLoader<List<? extends
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
             if (!isLoadInBackgroundCanceled()) {
                 String url = processLimitClause(URLManager.getPlaylistsURL(getContext()));
-                Log.v(TAG, "Query tracks list at URL " + url);
+                Timber.v("Query tracks list at URL %s", url);
                 PlaylistDTO[] playlistDTOs = restTemplate.getForObject(url, PlaylistDTO[].class);
-                Log.d(TAG, "Got playlist list : " + playlistDTOs.length);
+                Timber.d("Got playlist list : %s", playlistDTOs.length);
                 return Arrays.asList(playlistDTOs);
             } else {
-                Log.d(TAG, "Load in background cancelled");
+                Timber.d("Load in background cancelled");
                 return EMPTY_LIST;
             }
 
         } catch (Exception e) {
-            Log.w(TAG, "Error with tracks list", e);
+            Timber.w(e, "Error with tracks list");
             return EMPTY_LIST;
         }
     }

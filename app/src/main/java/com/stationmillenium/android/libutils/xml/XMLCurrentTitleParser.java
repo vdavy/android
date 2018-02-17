@@ -3,9 +3,6 @@
  */
 package com.stationmillenium.android.libutils.xml;
 
-import android.util.Log;
-
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song.ImageMetadata;
@@ -18,6 +15,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import timber.log.Timber;
+
 /**
  * Parser for the XML about current title
  *
@@ -25,8 +24,6 @@ import java.io.InputStream;
  *         http://developer.android.com/training/basics/network-ops/xml.html for more details
  */
 public class XMLCurrentTitleParser extends AbstractXMLParser<CurrentTitleDTO> {
-
-    private static final String TAG = "XMLCurrentTitleParser";
 
     /**
      * Create a new {@link XMLCurrentTitleParser}
@@ -62,10 +59,10 @@ public class XMLCurrentTitleParser extends AbstractXMLParser<CurrentTitleDTO> {
             }
 
         } catch (XmlPullParserException e) { //process errors
-            Log.w(TAG, "XML parsing exception", e);
+            Timber.w(e, "XML parsing exception");
             throw new XMLParserException("XML parsing exception", e);
         } catch (IOException e) {
-            Log.w(TAG, "XML IO exception", e);
+            Timber.w(e, "XML IO exception");
             throw new XMLParserException("XML parsing exception", e);
         } finally { //close the input stream
             closeInputStream();
@@ -82,8 +79,7 @@ public class XMLCurrentTitleParser extends AbstractXMLParser<CurrentTitleDTO> {
      * @throws IOException            if any IO error occurs
      */
     private void parseCurrentSong(CurrentTitleDTO dtoToFillIn) throws XmlPullParserException, IOException {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Pase the current song part");
+        Timber.d("Parse the current song part");
         String availableValue = parser.getAttributeValue(null, "available");
         parser.require(XmlPullParser.START_TAG, null, "currentSong"); //
         while (parser.next() != XmlPullParser.END_TAG) { //process until the end
@@ -128,15 +124,13 @@ public class XMLCurrentTitleParser extends AbstractXMLParser<CurrentTitleDTO> {
      * @throws IOException            if any IO error occurs
      */
     private void parseLast5Songs(CurrentTitleDTO dtoToFillIn) throws XmlPullParserException, IOException {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Parse the last 5 songs");
+        Timber.d("Parse the last 5 songs");
         parser.require(XmlPullParser.START_TAG, null, "last5Songs"); //root tag
         while (parser.next() != XmlPullParser.END_TAG) { //process until the end
             if (parser.getEventType() != XmlPullParser.START_TAG) { //if not the start tag, continue
                 continue;
             }
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Last 5 songs list found");
+            Timber.d("Last 5 songs list found");
 
             Song song = new Song();
             parser.require(XmlPullParser.START_TAG, null, "song"); //song tag
@@ -144,8 +138,7 @@ public class XMLCurrentTitleParser extends AbstractXMLParser<CurrentTitleDTO> {
                 if (parser.getEventType() != XmlPullParser.START_TAG) { //if not the start tag, continue
                     continue;
                 }
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "Song tag found");
+                Timber.d("Song tag found");
 
                 //process the tag
                 String name = parser.getName();
@@ -158,8 +151,7 @@ public class XMLCurrentTitleParser extends AbstractXMLParser<CurrentTitleDTO> {
             }
 
             //add to history list
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Song to add to history list : " + song);
+            Timber.d("Song to add to history list : %s", song);
             dtoToFillIn.getHistory().add(song);
         }
     }

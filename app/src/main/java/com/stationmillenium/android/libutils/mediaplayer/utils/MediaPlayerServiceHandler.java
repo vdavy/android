@@ -15,16 +15,16 @@ import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.services.MediaPlayerService;
 
 import java.lang.ref.WeakReference;
+
+import timber.log.Timber;
 
 import static android.media.AudioManager.STREAM_MUSIC;
 import static com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity.AlarmSharedPreferencesConstants.ALARM_VOLUME;
@@ -35,8 +35,6 @@ import static com.stationmillenium.android.activities.preferences.AlarmSharedPre
  * @author vincent
  */
 public class MediaPlayerServiceHandler extends Handler {
-
-    private static final String TAG = "MPServiceHandler";
 
     //rerefences to service
     //see : http://stackoverflow.com/questions/12084382/what-is-handlerleak
@@ -50,17 +48,14 @@ public class MediaPlayerServiceHandler extends Handler {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     public void handleMessage(Message msg) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Start the MediaPlayerService");
+        Timber.d("Start the MediaPlayerService");
         if (mediaPlayerServiceRef.get() != null) {
             try {
                 mediaPlayerServiceRef.get().setAudioManager((AudioManager) mediaPlayerServiceRef.get().getSystemService(Context.AUDIO_SERVICE));
                 int result = mediaPlayerServiceRef.get().getAudioManager().requestAudioFocus(mediaPlayerServiceRef.get().getMediaPlayerOnAudioFocusChangeHandler(), STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
                 if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Audio focus request granted - start the stream");
-                    }
+                    Timber.d("Audio focus request granted - start the stream");
                     if (AppUtils.isNetworkAvailable(mediaPlayerServiceRef.get().getApplicationContext())) { //check if network is up
                         try {
                             //init player
@@ -80,7 +75,7 @@ public class MediaPlayerServiceHandler extends Handler {
                             mediaPlayerServiceRef.get().startForeground(MediaPlayerService.NOTIFICATION_ID, notification);
 
                         } catch (Exception e) {
-                            Log.w(TAG, "Error while trying to init media player", e);
+                            Timber.w(e, "Error while trying to init media player");
                             Toast.makeText(mediaPlayerServiceRef.get(), R.string.player_error, Toast.LENGTH_SHORT).show();
 
                             //stop the service
@@ -88,7 +83,7 @@ public class MediaPlayerServiceHandler extends Handler {
                         }
 
                     } else {
-                        Log.w(TAG, "No Internet connection - can't play stream");
+                        Timber.w("No Internet connection - can't play stream");
                         Toast.makeText(mediaPlayerServiceRef.get(), R.string.player_network_unavailable, Toast.LENGTH_SHORT).show();
 
                         //stop the service
@@ -96,7 +91,7 @@ public class MediaPlayerServiceHandler extends Handler {
                     }
 
                 } else {
-                    Log.w(TAG, "Audio focus request failed - can't play stream");
+                    Timber.w("Audio focus request failed - can't play stream");
                     Toast.makeText(mediaPlayerServiceRef.get(), R.string.player_error, Toast.LENGTH_SHORT).show();
 
                     //stop the service
@@ -104,11 +99,12 @@ public class MediaPlayerServiceHandler extends Handler {
                 }
 
             } catch (Exception npe) {
-                Log.e(TAG, "Exception in MediaPlayerService init", npe);
+                Timber.e(npe, "Exception in MediaPlayerService init");
             }
 
-        } else
-            Log.e(TAG, "Reference to MediaPlayerService is null ! Nothing can be done");
+        } else {
+            Timber.e("Reference to MediaPlayerService is null ! Nothing can be done");
+        }
     }
 
     private void stopMediaPlayer() {
@@ -140,9 +136,7 @@ public class MediaPlayerServiceHandler extends Handler {
         LocalBroadcastManager.getInstance(mediaPlayerServiceRef.get()).registerReceiver(mediaPlayerServiceRef.get().getUctbr(), new IntentFilter(LocalIntents.CURRENT_TITLE_UPDATED.toString()));
         mediaPlayerServiceRef.get().getUctbr().setRegistered(true);
         if (msg.arg2 == 1) { //use volume manager from shared preferences
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Use volume from shared preferences");
-            }
+            Timber.d("Use volume from shared preferences");
             int volumeValue = PreferenceManager.getDefaultSharedPreferences(mediaPlayerServiceRef.get()).getInt(ALARM_VOLUME, mediaPlayerServiceRef.get().getAudioManager().getStreamVolume(STREAM_MUSIC));
             mediaPlayerServiceRef.get().getAudioManager().setStreamVolume(STREAM_MUSIC, volumeValue, 0);
         }
