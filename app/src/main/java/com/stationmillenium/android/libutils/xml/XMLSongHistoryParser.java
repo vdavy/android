@@ -4,9 +4,7 @@
 package com.stationmillenium.android.libutils.xml;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song.ImageMetadata;
 import com.stationmillenium.android.libutils.exceptions.XMLParserException;
@@ -22,6 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Parser for the XML about song history
@@ -68,10 +68,10 @@ public class XMLSongHistoryParser extends AbstractXMLParser<List<Song>> {
             }
 
         } catch (XmlPullParserException e) { //process errors
-            Log.w(TAG, "XML parsing exception", e);
+            Timber.w(e, "XML parsing exception");
             throw new XMLParserException("XML parsing exception", e);
         } catch (IOException e) {
-            Log.w(TAG, "XML IO exception", e);
+            Timber.w(e, "XML IO exception");
             throw new XMLParserException("XML parsing exception", e);
         } finally { //close the input stream
             closeInputStream();
@@ -88,8 +88,7 @@ public class XMLSongHistoryParser extends AbstractXMLParser<List<Song>> {
      * @throws IOException            in any IO error occurs
      */
     private Song parseCurrentSong() throws XmlPullParserException, IOException {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Pase the current song part");
+        Timber.d("Parse the current song part");
         parser.require(XmlPullParser.START_TAG, null, "historySong"); //check tag
         Song returnSong = new Song();
         while (parser.next() != XmlPullParser.END_TAG) { //process until the end
@@ -133,15 +132,14 @@ public class XMLSongHistoryParser extends AbstractXMLParser<List<Song>> {
     private void readPlayedDateTag(Song song) throws IOException, XmlPullParserException {
         String dateString = readTagText("playedDate");
         if ((dateString != null) && (!dateString.equals(""))) {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Date value : " + dateString);
+            Timber.d("Date value : %s", dateString);
 
             try { //parse the date
                 SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
                 Date date = sdf.parse(dateString);
                 song.setPlayedDate(date);
             } catch (ParseException e) { //if any parsing error
-                Log.w(TAG, "Can't parse the date : " + dateString);
+                Timber.w("Can't parse the date : %s", dateString);
                 song.setPlayedDate(null);
             }
         }

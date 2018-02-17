@@ -29,10 +29,8 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.libutils.AppUtils;
@@ -52,6 +50,8 @@ import com.stationmillenium.android.libutils.mediaplayer.utils.MediaPlayerServic
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import timber.log.Timber;
 
 /**
  * Service to play audio stream
@@ -142,19 +142,19 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             mediaSession.setCallback(new MediaSession.Callback() {
                 @Override
                 public void onPlay() {
-                    Log.d(TAG, "Media session callback play");
+                    Timber.d("Media session callback play");
                     playMediaPlayer(getApplicationContext());
                 }
 
                 @Override
                 public void onPause() {
-                    Log.d(TAG, "Media session callback pause");
+                    Timber.d("Media session callback pause");
                     pauseMediaPlayer(getApplicationContext());
                 }
 
                 @Override
                 public void onStop() {
-                    Log.d(TAG, "Media session callback stop");
+                    Timber.d("Media session callback stop");
                     stopMediaPlayer();
                 }
             });
@@ -194,23 +194,17 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                     stopMediaPlayer();
                 }
             } else if (LocalIntents.PLAYER_OPEN.toString().equals(intent.getAction())) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Open the player with data");
-                }
+                Timber.d("Open the player with data");
                 playerActivityResumed = true; //player resumed at same time
                 Intent playerIntent = createPlayerActivityIntent();
                 startActivity(playerIntent);
 
             } else if (LocalIntents.PLAYER_ACTIVITY_PAUSE.toString().equals(intent.getAction())) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Player activity paused - don't send intents");
-                }
+                Timber.d("Player activity paused - don't send intents");
                 playerActivityResumed = false;
 
             } else if (LocalIntents.PLAYER_ACTIVITY_RESUME.toString().equals(intent.getAction())) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Player activity resumed - send intents");
-                }
+                Timber.d("Player activity resumed - send intents");
                 playerActivityResumed = true;
 
             } else {
@@ -261,9 +255,8 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Player is ready - let's start");
-        } mp.start();
+        Timber.d("Player is ready - let's start");
+        mp.start();
 
         //send state intent
         sendStateIntent(PlayerState.PLAYING);
@@ -281,9 +274,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      * Setup the {@link CurrentTitlePlayerService} timer
      */
     private void setupCurrentTitlePlayerServiceTimer() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Register current title service timer");
-        }
+        Timber.d("Register current title service timer");
         updateCurrentTitleTimer = new Timer(UPDATE_CURRENT_TITLE_TIMER_NAME);
         updateCurrentTitleTimer.schedule(new TimerTask() {
 
@@ -301,9 +292,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      */
     private void setupAutoRestartPlayerTimer() {
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SharedPreferencesConstants.PLAYER_AUTORESTART, false)) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Register auto restart player timer");
-            }
+            Timber.d("Register auto restart player timer");
 
             int defaultDelay = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this)
                     .getString(SharedPreferencesConstants.PLAYER_AUTORESTART_DELAY, AUTO_RESTART_PLAYER_DEFAULT_DELAY))
@@ -327,8 +316,8 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
             }, defaultDelay, defaultDelay);
 
-        } else if (BuildConfig.DEBUG) {
-            Log.d(TAG, "No need to register auto restart player timer");
+        } else {
+            Timber.d("No need to register auto restart player timer");
         }
     }
 
@@ -338,9 +327,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      * @param context the {@link Context} to update notification
      */
     public void playMediaPlayer(Context context) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Play media player");
-        }
+        Timber.d("Play media player");
         if (isMediaPlayerPlaying()) {
             mediaPlayer.start();
         }
@@ -352,7 +339,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         //update notification
         if (!AppUtils.isAPILevel21Available()) {
             Notification notification = mediaPlayerNotificationBuilder.createNotification(true);
-            ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
+            if ((context.getSystemService(Context.NOTIFICATION_SERVICE)) != null) {
+                ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
+            }
         }
 
         //start timers
@@ -366,9 +355,8 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      * @param context the {@link Context} to update notification
      */
     private void pauseMediaPlayer(Context context) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Pause media player");
-        }
+        Timber.d("Pause media player");
+
         if (isMediaPlayerPlaying()) {
             setMediaPlayerVolume(0);
         }
@@ -379,6 +367,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         //update notification
         if (!AppUtils.isAPILevel21Available()) {
             Notification notification = mediaPlayerNotificationBuilder.createNotification(false);
+            assert context.getSystemService(Context.NOTIFICATION_SERVICE) != null;
             ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
         }
 
@@ -391,14 +380,13 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      * Stop the player and stop service
      */
     public void stopMediaPlayer() {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Stop the media player");
+        Timber.d("Stop the media player");
         try {
             if (isMediaPlayerPlaying()) {
                 mediaPlayer.stop();
             }
         } catch (IllegalStateException e) {
-            Log.w(TAG, "Error while stopping media player", e);
+            Timber.w(e, "Error while stopping media player");
         }
 
         //send state intent
@@ -409,9 +397,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         cancelAutoRestartPlayerServiceTimer();
 
         //stop service
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Stop service");
-        }
+        Timber.d("Stop service");
         stopForeground(true);
         stopSelf();
     }
@@ -477,15 +463,15 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        Log.e(TAG, "Media player error occured");
+        Timber.e("Media player error occured");
         switch (what) {
             case MediaPlayer.MEDIA_ERROR_UNKNOWN:
-                Log.e(TAG, "Unknown media player error - stopping media player");
+                Timber.e("Unknown media player error - stopping media player");
                 stopMediaPlayer();
                 break;
 
             case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
-                Log.w(TAG, "Media player server died error - restarting");
+                Timber.w("Media player server died error - restarting");
                 if (mediaPlayer != null) {
                     mediaPlayer.release();
                 }
@@ -494,7 +480,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                 try { //reinit media player
                     initMediaPlayer();
                 } catch (IOException e) {
-                    Log.w(TAG, "Error while trying to init media player", e);
+                    Timber.w(e, "Error while trying to init media player");
                     Toast.makeText(MediaPlayerService.this, R.string.player_error, Toast.LENGTH_SHORT).show();
 
                     //stop the service
@@ -515,9 +501,8 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onDestroy() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Destroying service");
-        }
+        Timber.d("Destroying service");
+
         //release media player
         if (mediaPlayer != null) {
             mediaPlayer.release();
@@ -529,9 +514,8 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         cancelAutoRestartPlayerServiceTimer();
 
         //free resources
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Free handlers");
-        }
+        Timber.d("Free handlers");
+
         if (audioManager != null) {
             if (remoteControlClient != null) {
                 audioManager.unregisterRemoteControlClient(remoteControlClient);
@@ -565,9 +549,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      * Cancel {@link CurrentTitlePlayerService} timer
      */
     private void cancelCurrentTitleTimerServiceTimer() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Cancel current title timer");
-        }
+        Timber.d("Cancel current title timer");
         if (updateCurrentTitleTimer != null) {
             updateCurrentTitleTimer.cancel();
         }
@@ -577,9 +559,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      * Cancel {@link com.stationmillenium.android.services.AutoRestartPlayerService} timer
      */
     private void cancelAutoRestartPlayerServiceTimer() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Cancel auto restart player service timer");
-        }
+        Timber.d("Cancel auto restart player service timer");
         if (autoRestartPlayerTimer != null) {
             autoRestartPlayerTimer.cancel();
         }
@@ -591,9 +571,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      * @throws IOException if any error occurs
      */
     public void initMediaPlayer() throws IOException {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Init media player");
-        }
+        Timber.d("Init media player");
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setDataSource(getResources().getString(R.string.player_stream_url));
@@ -617,25 +595,23 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     @Override
     public boolean onInfo(MediaPlayer mp, int what, int extra) {
         if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Media player start buffering...");
-            }
+            Timber.d("Media player start buffering...");
             sendStateIntent(PlayerState.BUFFERING);
             cancelAutoRestartPlayerServiceTimer();
             //update notification
             if (!AppUtils.isAPILevel21Available()) {
                 Notification notification = mediaPlayerNotificationBuilder.createNotification(false);
+                assert getSystemService(Context.NOTIFICATION_SERVICE) != null;
                 ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
             }
             return true;
         } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Media player end buffering...");
-            }
+            Timber.d("Media player end buffering...");
             sendStateIntent(PlayerState.PLAYING);
             setupAutoRestartPlayerTimer();
             if (!AppUtils.isAPILevel21Available()) {
                 Notification notification = mediaPlayerNotificationBuilder.createNotification(true);
+                assert getSystemService(Context.NOTIFICATION_SERVICE) != null;
                 ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(NOTIFICATION_ID, notification);
             }
             return true;
@@ -653,7 +629,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         try {
             return (mediaPlayer != null) && (mediaPlayer.isPlaying());
         } catch (IllegalStateException e) {
-            Log.w(TAG, "Error in isPlaying", e);
+            Timber.w(e, "Error in isPlaying");
             return false;
         }
     }
@@ -730,7 +706,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         try {
             return (mediaPlayer != null) ? mediaPlayer.getCurrentPosition() : 0;
         } catch (IllegalStateException e) {
-            Log.w(TAG, "Error in getCurrentPosition", e);
+            Timber.w(e, "Error in getCurrentPosition");
             return 0;
         }
     }

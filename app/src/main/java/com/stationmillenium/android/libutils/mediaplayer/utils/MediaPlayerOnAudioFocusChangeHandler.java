@@ -1,12 +1,12 @@
 package com.stationmillenium.android.libutils.mediaplayer.utils;
 
 import android.media.AudioManager;
-import android.util.Log;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.services.MediaPlayerService;
 
 import java.lang.ref.WeakReference;
+
+import timber.log.Timber;
 
 /**
  * Handler when audio focus change
@@ -30,37 +30,28 @@ public class MediaPlayerOnAudioFocusChangeHandler implements AudioManager.OnAudi
     @Override
     public void onAudioFocusChange(int focusChange) {
         if (mediaPlayerServiceRef.get() != null) {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Audio focus changed - process it...");
+            Timber.d("Audio focus changed - process it...");
             switch (focusChange) {
                 case AudioManager.AUDIOFOCUS_GAIN:
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Audio focus gain - start playing");
-                    }
+                    Timber.d("Audio focus gain - start playing");
                     mediaPlayerServiceRef.get().playMediaPlayer(mediaPlayerServiceRef.get());
                     mediaPlayerServiceRef.get().setMediaPlayerVolume(100);
                     break;
 
                 case AudioManager.AUDIOFOCUS_LOSS:
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Audio focus loss - stop playing");
-                    }
+                    Timber.d("Audio focus loss - stop playing");
                     mediaPlayerServiceRef.get().stopMediaPlayer();
                     break;
 
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Audio focus loss transient - pause playing");
-                    }
+                    Timber.d("Audio focus loss transient - pause playing");
                     if (mediaPlayerServiceRef.get().isMediaPlayerPlaying()) {
                         mediaPlayerServiceRef.get().setMediaPlayerVolume(0)  ;
                     }
                     break;
 
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Audio focus loss transient with duck - duck volume");
-                    }
+                    Timber.d("Audio focus loss transient with duck - duck volume");
                     if (mediaPlayerServiceRef.get().isMediaPlayerPlaying()) {
                         mediaPlayerServiceRef.get().setMediaPlayerVolume(20)  ;
                     }

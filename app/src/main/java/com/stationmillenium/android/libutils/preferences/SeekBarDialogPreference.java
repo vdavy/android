@@ -69,12 +69,12 @@ public class SeekBarDialogPreference extends DialogPreference {
     protected void onBindDialogView(@NonNull View view) {
         super.onBindDialogView(view);
 
-        TextView dialogMessageText = (TextView) view.findViewById(R.id.text_dialog_message);
+        TextView dialogMessageText = view.findViewById(R.id.text_dialog_message);
         dialogMessageText.setText(getDialogMessage());
 
-        mProgressText = (TextView) view.findViewById(R.id.text_progress);
+        mProgressText = view.findViewById(R.id.text_progress);
 
-        mSeekBar = (SeekBar) view.findViewById(R.id.seek_bar);
+        mSeekBar = view.findViewById(R.id.seek_bar);
         mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {

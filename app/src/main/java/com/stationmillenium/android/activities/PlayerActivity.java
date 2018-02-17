@@ -8,27 +8,13 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.android.gms.cast.MediaInfo;
-import com.google.android.gms.cast.MediaMetadata;
-import com.google.android.gms.cast.framework.CastButtonFactory;
-import com.google.android.gms.cast.framework.CastContext;
-import com.google.android.gms.cast.framework.CastSession;
-import com.google.android.gms.cast.framework.CastState;
-import com.google.android.gms.cast.framework.CastStateListener;
-import com.google.android.gms.cast.framework.IntroductoryOverlay;
-import com.google.android.gms.cast.framework.SessionManagerListener;
-import com.google.android.gms.cast.framework.media.RemoteMediaClient;
-import com.google.android.gms.common.images.WebImage;
 import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.PlayerFragment;
@@ -49,6 +35,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import timber.log.Timber;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.PLAYER;
@@ -227,9 +215,7 @@ public class PlayerActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Pausing player activity");
-        }
+        Timber.d("Pausing player activity");
         super.onPause();
 
         //cancel update title broadcast receiver
@@ -254,10 +240,7 @@ public class PlayerActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (drawerUtils.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return drawerUtils.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -274,9 +257,7 @@ public class PlayerActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Resume player activity");
-        }
+        Timber.tag(TAG).d("Resume player activity");
         super.onResume();
 
         //record the update title broadcast receiver
@@ -339,37 +320,25 @@ public class PlayerActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Player state intent received : " + intent);
-        }
+        Timber.d("Player state intent received : %s", intent);
         if (PlayerState.PAUSED.getAssociatedIntent().toString().equals(intent.getAction())) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Pause player");
-            }
+            Timber.d("Pause player");
             playerFragment.setPlayerState(PlayerState.PAUSED);
 
         } else if (PlayerState.PLAYING.getAssociatedIntent().toString().equals(intent.getAction())) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Playing player");
-            }
+            Timber.d("Playing player");
             playerFragment.setPlayerState(PlayerState.PLAYING);
 
         } else if (PlayerState.STOPPED.getAssociatedIntent().toString().equals(intent.getAction())) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Stop player");
-            }
+            Timber.d("Stop player");
             playerFragment.setPlayerState(PlayerState.STOPPED);
 
         } else if (PlayerState.BUFFERING.getAssociatedIntent().toString().equals(intent.getAction())) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Buffering player");
-            }
+            Timber.d("Buffering player");
             playerFragment.setPlayerState(PlayerState.BUFFERING);
 
         } else if (LocalIntents.ON_PLAYER_OPEN.toString().equals(intent.getAction())) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Open player with data");
-            }
+            Timber.d("Open player with data");
             playerActivityUpdateTitleBroadcastReceiver.onReceive(this, intent);
             playerFragment.setPlayerState((PlayerState) intent.getSerializableExtra(LocalIntentsData.CURRENT_STATE.toString()));
         }
@@ -381,36 +350,31 @@ public class PlayerActivity extends AppCompatActivity {
      */
     public void startPlayer() {
         //start player service
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Play player button clicked");
-        }
+        Timber.d("Play player button clicked");
         if (castContext.getCastState() == CastState.CONNECTED) {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "Play on Chromecast");
                 startCast(castContext.getSessionManager().getCurrentCastSession());
             }
         } else if (playerFragment.getPlayerState() == STOPPED) {
+        if (playerFragment.getPlayerState() == STOPPED) {
             if (!AppUtils.isMediaPlayerServiceRunning(this)) {
                 if (!AppUtils.isWifiOnlyAndWifiNotConnected(this)) {
                     //start player service
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Start media player service");
-                    }
+                    Timber.d("Start media player service");
                     Intent mediaPlayerIntent = new Intent(this, MediaPlayerService.class);
                     startService(mediaPlayerIntent);
 
                 } else {
-                    Log.w(TAG, "Wifi requested for streaming radio, but not connected");
+                    Timber.w("Wifi requested for streaming radio, but not connected");
                     Snackbar.make(preferencesActivityBinding.playerCoordinatorLayout, R.string.player_no_wifi, Snackbar.LENGTH_SHORT).show();
                 }
 
-            } else if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Media player service already started");
+            } else {
+                Timber.d("Media player service already started");
             }
         } else {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Play the player");
-            }
+            Timber.d("Play the player");
             Intent playPlayerIntent = new Intent(this, MediaPlayerService.class);
             playPlayerIntent.setAction(LocalIntents.PLAYER_PLAY.toString());
             startService(playPlayerIntent);
@@ -457,9 +421,7 @@ public class PlayerActivity extends AppCompatActivity {
      *
      */
     public void stopPlayer() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Stop player button clicked");
-        }
+        Timber.d("Stop player button clicked");
         Intent stopPlayerIntent = new Intent(LocalIntents.PLAYER_STOP.toString());
         stopPlayerIntent.setClass(this, MediaPlayerService.class);
         startService(stopPlayerIntent);
@@ -470,9 +432,7 @@ public class PlayerActivity extends AppCompatActivity {
      *
      */
     public void pausePlayer() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Pause player button clicked");
-        }
+        Timber.d("Pause player button clicked");
         Intent pausePlayerIntent = new Intent(LocalIntents.PLAYER_PAUSE.toString());
         pausePlayerIntent.setClass(this, MediaPlayerService.class);
         startService(pausePlayerIntent);
@@ -486,9 +446,7 @@ public class PlayerActivity extends AppCompatActivity {
         Calendar newDate = Calendar.getInstance();
         newDate.add(Calendar.SECOND, -REFRESH_TIMEOUT);
         if ((lastTimeUpdated == null) || (newDate.after(lastTimeUpdated))) { //it's time for a refresh
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Data refresh requested...");
-            }
+            Timber.d("Data refresh requested...");
             Intent mediaPlayerIntent = new Intent(this, MediaPlayerService.class);
             mediaPlayerIntent.setAction(LocalIntents.PLAYER_OPEN.toString());
             startService(mediaPlayerIntent);

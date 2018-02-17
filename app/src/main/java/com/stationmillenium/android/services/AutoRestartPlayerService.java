@@ -6,11 +6,12 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
-import android.util.Log;
 
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.activities.PlayerState;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
+
+import timber.log.Timber;
 
 /**
  * Service to auto restart player in case of network break
@@ -43,7 +44,7 @@ public class AutoRestartPlayerService extends JobIntentService {
 
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
-        Log.d(TAG, "Check if we need to auto restart player");
+        Timber.d("Check if we need to auto restart player");
         int previousPosition = intent.getIntExtra(PREVIOUS_POSITION, 0);
         int currentPosition = intent.getIntExtra(CURRENT_POSITION, 0);
         PlayerState state = (PlayerState) intent.getSerializableExtra(PLAYER_STATE);
@@ -52,15 +53,15 @@ public class AutoRestartPlayerService extends JobIntentService {
             if ((previousPosition > 0) && (currentPosition > 0)) {
                 int delta = currentPosition - previousPosition;
                 if ((delta >= 0) && (delta < DELTA_MIN)) {
-                    Log.i(TAG, "Player is stuck - restart needed");
+                    Timber.i("Player is stuck - restart needed");
                     sendStopIntentToMediaPlayer();
                     setupHandler();
                 }
             } else {
-                Log.i(TAG, "Invalid intent extras");
+                Timber.i("Invalid intent extras");
             }
         } else {
-            Log.d(TAG, "Player not playing");
+            Timber.d("Player not playing");
         }
     }
 
@@ -72,14 +73,14 @@ public class AutoRestartPlayerService extends JobIntentService {
         handlerThread.start();
         handler = new Handler(handlerThread.getLooper(), msg -> {
             if (!AppUtils.isMediaPlayerServiceRunning(AutoRestartPlayerService.this)) {
-                Log.d(TAG, "Media player service is stopped - restart it");
+                Timber.d("Media player service is stopped - restart it");
                 Intent mediaPlayerIntent = new Intent(getBaseContext(), MediaPlayerService.class);
                 startService(mediaPlayerIntent);
             } else if (msg.what < MAX_TRIES) {
-                Log.d(TAG, "Media player service is not yet stopped - wait...");
+                Timber.d("Media player service is not yet stopped - wait...");
                 handler.sendEmptyMessageDelayed(msg.what + 1, POST_DELAY);
             } else {
-                Log.w(TAG, "Can't restart media player service - exiting...");
+                Timber.w("Can't restart media player service - exiting...");
             }
             return true;
         });

@@ -10,10 +10,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.services.MediaPlayerService;
+
+import timber.log.Timber;
 
 /**
  * Android version utils
@@ -21,9 +21,6 @@ import com.stationmillenium.android.services.MediaPlayerService;
  * @author vincent
  */
 public class AppUtils {
-
-    private static final String TAG_NETWORK_AVAILABLE = "AppUtils#isNetworkAvail";
-    private static final String TAG_WIFI_ONLY_NOT_ACTIVATED = "AppUtils#isWifiOnly";
 
     /**
      * Return if the API level >= 21
@@ -61,6 +58,7 @@ public class AppUtils {
     public static boolean isNetworkAvailable(Context context) {
         //get params
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connMgr != null;
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null) {
             boolean wifiOnly = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SharedPreferencesConstants.WIFI_ONLY, false);
@@ -69,20 +67,18 @@ public class AppUtils {
             boolean networkConnected;
 
             //check state
-            if (BuildConfig.DEBUG)
-                Log.d(TAG_NETWORK_AVAILABLE, "Wifi only : " + wifiOnly + " - Network up : " + networkUp + " - Wifi type : " + wifiType);
-            if (wifiOnly)
+            Timber.d("Wifi only : " + wifiOnly + " - Network up : " + networkUp + " - Wifi type : " + wifiType);
+            if (wifiOnly) {
                 networkConnected = networkUp && wifiType;
-            else
+            } else {
                 networkConnected = networkUp;
-            if (BuildConfig.DEBUG)
-                Log.d(TAG_NETWORK_AVAILABLE, "Network connected : " + networkConnected);
+            }
+            Timber.d("Network connected : %s", networkConnected);
 
             return networkConnected;
 
         } else {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG_NETWORK_AVAILABLE, "No network available");
+            Timber.d("No network available");
             return false;
         }
     }
@@ -96,13 +92,13 @@ public class AppUtils {
     public static boolean isWifiOnlyAndWifiNotConnected(Context context) {
         //get params
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connMgr != null;
         NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         boolean wifiOnly = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(SharedPreferencesConstants.WIFI_ONLY, false);
         boolean networkUp = networkInfo.isConnected();
 
         //check state
-        if (BuildConfig.DEBUG)
-            Log.d(TAG_WIFI_ONLY_NOT_ACTIVATED, "Wifi only : " + wifiOnly + " - Network up : " + networkUp);
+        Timber.d("Wifi only : " + wifiOnly + " - Network up : " + networkUp);
         return (wifiOnly && !networkUp);
     }
 
@@ -114,6 +110,7 @@ public class AppUtils {
      */
     public static boolean isMediaPlayerServiceRunning(Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        assert manager != null;
         for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (MediaPlayerService.class.getName().equals(service.service.getClassName())) {
                 return true;

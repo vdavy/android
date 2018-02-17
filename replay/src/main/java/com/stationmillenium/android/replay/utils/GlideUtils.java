@@ -1,15 +1,19 @@
 package com.stationmillenium.android.replay.utils;
 
 import android.databinding.BindingAdapter;
-import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.dto.PlaylistDTO;
@@ -17,7 +21,6 @@ import com.stationmillenium.android.replay.dto.TrackDTO;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.ColorFilterTransformation;
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
@@ -50,10 +53,10 @@ public class GlideUtils {
         // set round image : http://stackoverflow.com/questions/25278821/how-do-rounded-image-with-glide-library
         Glide.with(replayArtwork.getContext())
                 .load(imageURL)
-                .asBitmap()
-                .placeholder(R.drawable.default_replay)
-                .centerCrop()
-                .transform(new CropCircleTransformation(replayArtwork.getContext()))
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.default_replay)
+                        .centerCrop()
+                        .apply(RequestOptions.circleCropTransform()))
                 .into(replayArtwork);
     }
 
@@ -66,24 +69,26 @@ public class GlideUtils {
     public static void setReplaySoundImageAsBackground(final ImageView imageView, TrackDTO replay) {
         Glide.with(imageView.getContext())
                 .load(replay.getWaveformURL())
-                .asBitmap()
-                .centerCrop()
-                .transform(
-                        new ColorFilterTransformation(imageView.getContext(), ResourcesCompat.getColor(imageView.getContext().getResources(), R.color.accent, null)),
-                        new BlurTransformation(imageView.getContext(), 10),
-                        new RoundedCornersTransformation(imageView.getContext(), imageView.getResources().getDimensionPixelSize(R.dimen.replay_item_tag_space), 0))
-                .listener(new RequestListener<String, Bitmap>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        imageView.setVisibility(View.VISIBLE);
-                        return false;
-                    }
-                })
+                .apply(new RequestOptions()
+                        .centerCrop()
+                        .transform(new MultiTransformation<>(
+                                new ColorFilterTransformation(ResourcesCompat.getColor(imageView.getContext().getResources(), R.color.accent, null)),
+                                new BlurTransformation(10),
+                                new RoundedCornersTransformation(imageView.getResources().getDimensionPixelSize(R.dimen.replay_item_tag_space), 0))))
+//                .listener(new RequestListener<Drawable>() {
+//                    @Override
+//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                        Timber.e(e);
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                        imageView.setVisibility(View.VISIBLE);
+//                        return false;
+//                    }
+//
+//                })
                 .into(imageView);
     }
 
@@ -92,15 +97,15 @@ public class GlideUtils {
     public static void setSearchedSongImageDisplay(final ImageView imageView, String imageURL, final ProgressBar progressBar) {
         Glide.with(imageView.getContext())
                 .load(imageURL)
-                .fitCenter()
-                .listener(new RequestListener<String, GlideDrawable>() {
+                .apply(new RequestOptions().fitCenter())
+                .listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         progressBar.setVisibility(View.GONE);
                         return false;
                     }

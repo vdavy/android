@@ -5,17 +5,18 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.widget.DatePicker;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 
 import java.util.Calendar;
+
+import timber.log.Timber;
 
 /**
  * Implementation of {@link DialogFragment} to display a {@link DatePickerDialog}
@@ -25,12 +26,11 @@ import java.util.Calendar;
  */
 public class DatePickerFragment extends DialogFragment implements OnDateSetListener {
 
-    private static final String TAG = "DatePickerFragment";
-
     //flag due to twice calls of callback : http://stackoverflow.com/questions/12436073/datepicker-ondatechangedlistener-called-twice
     private boolean alreadySet;
     private boolean isFragmentPaused; //to not send intent on screen rotation
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker
@@ -48,8 +48,7 @@ public class DatePickerFragment extends DialogFragment implements OnDateSetListe
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         if ((!alreadySet) && (!isFragmentPaused)) {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Selected date : " + year + "-" + monthOfYear + "-" + dayOfMonth);
+            Timber.d("Selected date : " + year + "-" + monthOfYear + "-" + dayOfMonth);
 
             //send intent to transfer chosen date
             Intent dateIntent = new Intent(getActivity(), SongSearchHistoryActivity.class);
@@ -61,8 +60,9 @@ public class DatePickerFragment extends DialogFragment implements OnDateSetListe
 
             //flag we have send data
             alreadySet = true;
-        } else
-            Log.w(TAG, "Date already set or fragment paused");
+        } else {
+            Timber.w("Date already set or fragment paused");
+        }
     }
 
     @Override

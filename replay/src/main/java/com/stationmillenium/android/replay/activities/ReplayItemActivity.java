@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
@@ -26,6 +25,8 @@ import com.stationmillenium.android.replay.utils.URLManager;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import timber.log.Timber;
 
 /**
  * Activity to play a replay
@@ -65,7 +66,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         extractReplayData();
         if (savedInstanceState != null && savedInstanceState.containsKey(REPLAY_POSITION)) {
             replayPosition = savedInstanceState.getInt(REPLAY_POSITION);
-            Log.d(TAG, "Restore media player position to : " + replayPosition);
+            Timber.d("Restore media player position to : %s", replayPosition);
         }
     }
 
@@ -88,7 +89,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
             mediaPlayer.prepareAsync();
             mediaPlayerStopped = false;
         } catch (IOException e) {
-            Log.e(TAG, "Can't read replay : " + URLManager.getStreamURLFromTrack(getBaseContext(), replay), e);
+            Timber.e(e, "Can't read replay : %s", URLManager.getStreamURLFromTrack(getBaseContext(), replay));
             Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_unavailable, Snackbar.LENGTH_SHORT).show();
         }
     }
@@ -97,7 +98,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         Intent intent = getIntent();
         replay = (TrackDTO) intent.getSerializableExtra(REPLAY_ITEM);
         if (replay != null) {
-            Log.v(TAG, "Display replay item : " + replay);
+            Timber.v("Display replay item : %s", replay);
             replayItemFragment.setReplay(replay);
             getSupportActionBar().setTitle(getString(R.string.replay_item_toolbar_title, replay.getTitle()));
         } else {
@@ -111,7 +112,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
      * @param tag the tag to search for
      */
     public void searchTag(String tag) {
-        Log.d(TAG, "Search tag : " + tag);
+        Timber.d("Search tag : %s", tag);
         Intent searchTagIntent = new Intent(this, ReplayActivity.class);
         searchTagIntent.putExtra(ReplayActivity.REPLAY_TAG, tag);
         startActivity(searchTagIntent);
@@ -200,7 +201,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
 
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
-        Log.d(TAG, "Media player ready");
+        Timber.d("Media player ready");
         // Media player ready - let's play sound
         mediaPlayer.start();
         launchPlayedPercentimer();
@@ -215,7 +216,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
-        Log.v(TAG, "Buffer update : " + percent);
+        Timber.v("Buffer update : %s", percent);
         bufferPercentage = percent;
     }
 
@@ -237,11 +238,11 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         // handle case with buffering
         switch (what) {
             case MediaPlayer.MEDIA_INFO_BUFFERING_START:
-                Log.v(TAG, "Media player buffering...");
+                Timber.v("Media player buffering...");
                 replayItemFragment.setProgressBarVisible(true);
                 return true;
             case MediaPlayer.MEDIA_INFO_BUFFERING_END:
-                Log.v(TAG, "Media player end buffering");
+                Timber.v("Media player end buffering");
                 replayItemFragment.setProgressBarVisible(false);
                 return true;
         }
@@ -259,9 +260,9 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
                 float playedPercent;
                 if (duration > 0) {
                     playedPercent = getCurrentPosition() / duration;
-                    Log.v(TAG, "Played percent : " + playedPercent);
+                    Timber.v("Played percent : %s", playedPercent);
                 } else {
-                    Log.d(TAG, "Duration is 0 second");
+                    Timber.d("Duration is 0 second");
                     playedPercent = 0;
                 }
                 //update in ui thread
@@ -280,7 +281,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        Log.d(TAG, "Replay done - stop timer");
+        Timber.d("Replay done - stop timer");
         cancelTimer();
         replayItemFragment.setPercentPlayed(10000);
     }

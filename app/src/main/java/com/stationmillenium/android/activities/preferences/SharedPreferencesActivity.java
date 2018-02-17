@@ -7,14 +7,14 @@ import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.databinding.PreferencesActivityBinding;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.drawer.DrawerUtils;
+
+import timber.log.Timber;
 
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.PREFERENCES;
 
@@ -25,18 +25,13 @@ import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.PREF
  */
 public class SharedPreferencesActivity extends AppCompatActivity {
 
-    //static intialization part
-    private static final String TAG = "PreferencesActivity";
-
     private DrawerUtils drawerUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //init view
         super.onCreate(savedInstanceState);
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Load main preferences");
-        }
+        Timber.d("Load main preferences");
 
         PreferencesActivityBinding preferencesActivityBinding = DataBindingUtil.setContentView(this, R.layout.preferences_activity);
         setSupportActionBar(preferencesActivityBinding.prefToolbar);
@@ -46,10 +41,7 @@ public class SharedPreferencesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (drawerUtils.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return drawerUtils.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @Override

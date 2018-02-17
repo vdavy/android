@@ -1,7 +1,6 @@
 package com.stationmillenium.android.replay.utils.view;
 
 import android.support.v7.widget.RecyclerView.Adapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +11,14 @@ import com.stationmillenium.android.replay.dto.TrackDTO;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Replay adapter for recycle view
  * Created by vincent on 23/10/16.
  */
 public class ReplayTitleAdapter extends Adapter<ReplayTitleViewHolder> {
 
-    private static final String TAG = "ReplayAdapter";
     private ReplayActivity replayActivity;
     private List<TrackDTO> trackDTOs;
 
@@ -28,14 +28,14 @@ public class ReplayTitleAdapter extends Adapter<ReplayTitleViewHolder> {
 
     @Override
     public ReplayTitleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.v(TAG, "Create view...");
+        Timber.v("Create view...");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.replay_list_item, parent, false);
         return new ReplayTitleViewHolder(view, replayActivity);
     }
 
     @Override
     public void onBindViewHolder(ReplayTitleViewHolder holder, int position) {
-        Log.v(TAG, "Bind view...");
+        Timber.v("Bind view...");
         TrackDTO trackDTO = trackDTOs.get(position);
         holder.bindReplay(trackDTO);
     }

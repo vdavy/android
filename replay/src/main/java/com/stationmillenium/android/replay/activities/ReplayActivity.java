@@ -12,11 +12,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,6 +33,8 @@ import com.stationmillenium.android.replay.utils.SoundcloudTrackRestLoader.Query
 
 import java.io.Serializable;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.REPLAY;
 
@@ -141,7 +141,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
      */
     public void requestTracksDataLoad() {
         if (getIntent().getStringExtra(REPLAY_TAG) != null) {
-            Log.v(TAG, "Direct tag search");
+            Timber.v("Direct tag search");
             searchGenre(getIntent().getStringExtra(REPLAY_TAG));
         } else {
             getSupportLoaderManager().initLoader(TRACK_LOADER_INDEX, null, this).forceLoad();
@@ -161,11 +161,11 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         searchMenuItem = menu.findItem(R.id.replay_search_menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
+        final SearchView searchView = (SearchView) searchMenuItem.getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         if (expandActionViewOnCreate) {
-            MenuItemCompat.expandActionView(searchMenuItem);
+            searchMenuItem.expandActionView();
             binding.searchFab.setVisibility(View.GONE);
             if (searchviewText != null) {
                 searchView.setQuery(searchviewText, false);
@@ -175,7 +175,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                MenuItemCompat.collapseActionView(searchMenuItem);
+                searchMenuItem.collapseActionView();
                 return false;
             }
 
@@ -186,7 +186,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         });
 
         // see : http://stackoverflow.com/questions/9327826/searchviews-oncloselistener-doesnt-work
-        MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
+        searchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 binding.searchFab.setVisibility(View.VISIBLE);
@@ -237,14 +237,14 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
     @Override
     public void onLoadFinished(Loader<List<? extends Serializable>> loader, List<? extends Serializable> data) {
         if (loader instanceof SoundcloudTrackRestLoader) {
-            Log.d(TAG, "Track loading is finished - display data...");
+            Timber.d("Track loading is finished - display data...");
             replayTitleFragment.setReplayTitleList((List<TrackDTO>) data);
             replayTitleFragment.setRefreshing(false);
             if (binding.replayViewpager.getCurrentItem() == TITLES_TAB_INDEX) {
                 binding.setItemCount(data.size());
             }
         } else {
-            Log.d(TAG, "Playlist loading is finished - display data...");
+            Timber.d("Playlist loading is finished - display data...");
             replayPlaylistFragment.setReplayPlaylistList((List<PlaylistDTO>) data);
             replayPlaylistFragment.setRefreshing(false);
             if (binding.replayViewpager.getCurrentItem() == PLAYLIST_TAB_INDEX) {
@@ -255,20 +255,20 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
 
     @Override
     public void onLoaderReset(Loader<List<? extends Serializable>> loader) {
-        Log.d(TAG, "Reset the loader");
+        Timber.d("Reset the loader");
         replayTitleFragment.setReplayTitleList(null);
         replayTitleFragment.setRefreshing(false);
         binding.setItemCount(0);
     }
 
     public void onTrackRefresh() {
-        Log.d(TAG, "Track data refresh requested");
+        Timber.d("Track data refresh requested");
         setToolbarTitle(null); // we reinit the search params to default
         getSupportLoaderManager().restartLoader(TRACK_LOADER_INDEX, null, this).forceLoad();
     }
 
     public void onPlaylistRefresh() {
-        Log.d(TAG, "Playlist data refresh requested");
+        Timber.d("Playlist data refresh requested");
         getSupportLoaderManager().restartLoader(PLAYLIST_LOADER_INDEX, null, this).forceLoad();
     }
 
@@ -277,7 +277,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
      * @param genre the genre to search for
      */
     public void searchGenre(String genre) {
-        Log.d(TAG, "Search genre : " + genre);
+        Timber.d("Search genre : %s", genre);
         Bundle bundle = new Bundle();
         bundle.putSerializable(SEARCH_TYPE, QueryType.GENRE);
         bundle.putString(SEARCH_QUERY, genre);
@@ -295,24 +295,24 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
     public void triggerExtraDataLoad(int loaderIndex, int replayCount) {
         if (replayCount > 0) {
             if (searchParams != null && searchParams.containsKey(PLAYLIST_BUNDLE) && replayCount >= ((PlaylistDTO) searchParams.get(PLAYLIST_BUNDLE)).getTrackCount()) {
-                Log.v(TAG, "All extra data already loaded");
+                Timber.v("All extra data already loaded");
                 Snackbar.make(binding.replayCoordinatorLayout, R.string.playlist_load_playlist_more_max_reached, Snackbar.LENGTH_SHORT).show();
             } else if (replayCount <= TOTAL_MAX_REPLAY) {
-                Log.d(TAG, "Load extra data");
+                Timber.d("Load extra data");
                 Bundle bundle = new Bundle();
                 bundle.putInt(LIMIT, replayCount + EXTRA_REPLAY_COUNT);
                 if (loaderIndex == TRACK_LOADER_INDEX && searchParams != null) {
-                    Log.v(TAG, "Add search params for extra data load");
+                    Timber.v("Add search params for extra data load");
                     bundle.putAll(searchParams);
                 }
                 Snackbar.make(binding.replayCoordinatorLayout, (loaderIndex == TRACK_LOADER_INDEX) ? R.string.replay_load_more : R.string.playlist_load_more, Snackbar.LENGTH_SHORT).show();
                 getSupportLoaderManager().restartLoader(loaderIndex, bundle, this).forceLoad();
             } else {
-                Log.v(TAG, "All extra data already loaded");
+                Timber.v("All extra data already loaded");
                 Snackbar.make(binding.replayCoordinatorLayout, (loaderIndex == TRACK_LOADER_INDEX) ? R.string.replay_load_more_max_reached : R.string.playlist_load_more_max_reached, Snackbar.LENGTH_SHORT).show();
             }
         } else {
-            Log.v(TAG, "Empty replay list - extra load disabled");
+            Timber.v("Empty replay list - extra load disabled");
         }
     }
 
@@ -320,15 +320,15 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
      * Launch replay search
      */
     public void triggerSearch() {
-        Log.d(TAG, "Trigger search");
+        Timber.d("Trigger search");
         if (searchMenuItem != null) {
-            MenuItemCompat.expandActionView(searchMenuItem);
+            searchMenuItem.expandActionView();
             binding.replayAppbarLayout.setExpanded(true);
         }
     }
 
     public void openReplay(TrackDTO replayItem) {
-        Log.d(TAG, "Open replay ; " + replayItem) ;
+        Timber.d("Open replay ; %s", replayItem);
         Intent replayItemIntent = new Intent(this, ReplayItemActivity.class);
         replayItemIntent.putExtra(ReplayItemActivity.REPLAY_ITEM, replayItem);
         startActivity(replayItemIntent);
@@ -339,9 +339,9 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         if (searchParams != null) {
             outState.putBundle(SEARCH_PARAMS, searchParams);
         }
-        outState.putBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE, ((searchMenuItem != null) && (MenuItemCompat.isActionViewExpanded(searchMenuItem))));
+        outState.putBoolean(IS_SEARCH_VIEW_EXPANDED_BUNDLE, ((searchMenuItem != null) && (searchMenuItem.isActionViewExpanded())));
         if (searchMenuItem != null) {
-            outState.putString(SEARCHVIEW_TEXT, ((SearchView) MenuItemCompat.getActionView(searchMenuItem)).getQuery().toString());
+            outState.putString(SEARCHVIEW_TEXT, ((SearchView) searchMenuItem.getActionView()).getQuery().toString());
         }
         super.onSaveInstanceState(outState);
     }
@@ -370,7 +370,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         super.onNewIntent(intent);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.d(TAG, "Search : " + query);
+            Timber.d("Search : %s", query);
             Bundle bundle = new Bundle();
             bundle.putSerializable(SEARCH_TYPE, QueryType.SEARCH);
             bundle.putString(SEARCH_QUERY, query);
@@ -412,7 +412,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
      * @param playlistDTO the playlist to open
      */
     public void openPlaylist(PlaylistDTO playlistDTO) {
-        Log.v(TAG, "Playlist open required");
+        Timber.v("Playlist open required");
         Bundle bundle = new Bundle();
         bundle.putSerializable(PLAYLIST_BUNDLE, playlistDTO);
         setToolbarTitle(bundle);

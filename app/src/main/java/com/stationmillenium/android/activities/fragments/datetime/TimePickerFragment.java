@@ -5,18 +5,19 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.widget.TimePicker;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 
 import java.util.Calendar;
+
+import timber.log.Timber;
 
 /**
  * Implementation of {@link DialogFragment} to display a {@link TimePickerDialog}
@@ -26,12 +27,11 @@ import java.util.Calendar;
  */
 public class TimePickerFragment extends DialogFragment implements OnTimeSetListener {
 
-    private static final String TAG = "TimePickerFragment";
-
     //flag due to twice calls of callback : http://stackoverflow.com/questions/12436073/datepicker-ondatechangedlistener-called-twice
     private boolean alreadySet;
     private boolean isFragmentPaused; //to not send intent on screen rotation
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current time as the default values for the picker
@@ -48,8 +48,7 @@ public class TimePickerFragment extends DialogFragment implements OnTimeSetListe
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         if ((!alreadySet) && (!isFragmentPaused)) {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Selected time : " + hourOfDay + ":" + minute);
+            Timber.d("Selected time : " + hourOfDay + ":" + minute);
 
             //send intent to transfer chosen time
             Intent timeIntent = new Intent(getActivity(), SongSearchHistoryActivity.class);
@@ -60,8 +59,9 @@ public class TimePickerFragment extends DialogFragment implements OnTimeSetListe
 
             //flag we have send data
             alreadySet = true;
-        } else
-            Log.w(TAG, "Date already set");
+        } else {
+            Timber.w("Date already set");
+        }
     }
 
     @Override

@@ -13,11 +13,11 @@ import android.media.MediaMetadata;
 import android.media.session.MediaController;
 import android.media.session.PlaybackState;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.libutils.AppUtils;
@@ -27,13 +27,14 @@ import com.stationmillenium.android.services.MediaPlayerService;
 
 import java.lang.ref.WeakReference;
 
+import timber.log.Timber;
+
 /**
  * Notification builder for media player
  * Created by vincent on 14/12/14.
  */
 public class MediaPlayerNotificationBuilder {
 
-    private static final String TAG = "MPNotificationBuilder";
     private static final int[] COMPACT_VIEW_DOUBLE_ACTIONS = {0, 1};
     private static final int[] COMPACT_VIEW_SINGLE_ACTIONS = {0};
     private static final String NOTIFICATION_CHANNEL_ID = "channelId";
@@ -59,9 +60,7 @@ public class MediaPlayerNotificationBuilder {
                 @Override
                 public void onMetadataChanged(MediaMetadata metadata) {
                     super.onMetadataChanged(metadata);
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "New media metadata : " + metadata.getDescription());
-                    }
+                    Timber.d("New media metadata : %s", metadata.getDescription());
 
                     //set up data
                     currentTitle = ((metadata.getText(MediaMetadata.METADATA_KEY_ARTIST) == null)
@@ -76,24 +75,26 @@ public class MediaPlayerNotificationBuilder {
                             : metadata.getBitmap(MediaMetadata.METADATA_KEY_ART);
 
                     Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().initializeNotification(mediaPlayerServiceRef.get().getPlayerState() == PlayerState.PLAYING);
-                    ((NotificationManager) mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE)).notify(MediaPlayerService.NOTIFICATION_ID, notification);
+                    if (mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE) != null) {
+                        ((NotificationManager) mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE)).notify(MediaPlayerService.NOTIFICATION_ID, notification);
+                    }
                 }
 
                 @Override
-                public void onPlaybackStateChanged(PlaybackState state) {
+                public void onPlaybackStateChanged(@NonNull PlaybackState state) {
                     switch (state.getState()) {
                         case PlaybackState.STATE_PLAYING:
-                            Log.d(TAG, "Playback change state playing received");
+                            Timber.d("Playback change state playing received");
                             setupState(true);
                             break;
 
                         case PlaybackState.STATE_PAUSED:
-                            Log.d(TAG, "Playback change state playing received");
+                            Timber.d("Playback change state playing received");
                             setupState(false);
                             break;
 
                         case PlaybackState.STATE_BUFFERING: //no notification to display during buffering
-                            Log.d(TAG, "Playback change state buffering received");
+                            Timber.d("Playback change state buffering received");
                             setupState(false);
                             break;
                         case PlaybackState.STATE_CONNECTING:
@@ -127,6 +128,7 @@ public class MediaPlayerNotificationBuilder {
      */
     private void setupState(boolean pauseAction) {
         Notification notification = createNotification(pauseAction);
+        assert mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE) != null;
         ((NotificationManager) mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE)).notify(MediaPlayerService.NOTIFICATION_ID, notification);
     }
 
@@ -214,72 +216,9 @@ public class MediaPlayerNotificationBuilder {
             PendingIntent pausePlayPendingIntent = PendingIntent.getService(mediaPlayerServiceRef.get(), 0, pausePlayIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             if (AppUtils.isAPILevel21Available()) {
-                int[] compactViewActions = ((playerState == PlayerState.PLAYING) || (playerState == PlayerState.PAUSED))
-                        ? COMPACT_VIEW_DOUBLE_ACTIONS
-                        : COMPACT_VIEW_SINGLE_ACTIONS;
-
-                //create notification
-                Notification.Builder notificationBuilder = getNotificationBuilder()
-                        .setSmallIcon(R.drawable.ic_notif_icon)
-                        .setLargeIcon(titleArt.copy(titleArt.getConfig(), false)) //avoid recycled image
-                        .setTicker(mediaPlayerServiceRef.get().getString(R.string.notification_ticker_text))
-                        .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
-                        .setContentText(currentTitle)
-                        .setStyle(new Notification.MediaStyle()
-                                .setShowActionsInCompactView(compactViewActions)  // only show play/pause in compact view
-                                .setMediaSession(mediaPlayerServiceRef.get().getMediaSession().getSessionToken()))
-                        .setSubText(stateText)
-                        .setContentIntent(playerPendingIntent);
-
-                //add the chronometer
-                if (playerState == PlayerState.PLAYING) {
-                    notificationBuilder.setWhen(System.currentTimeMillis() - mediaPlayerServiceRef.get().getPosition())
-                            .setShowWhen(true)
-                            .setUsesChronometer(true);
-                }
-
-                //don't add play/pause button if buffering
-                if (playerState != PlayerState.BUFFERING) {
-                    notificationBuilder.addAction(new Notification.Action.Builder((pauseAction) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play,
-                            mediaPlayerServiceRef.get().getString((pauseAction) ? R.string.player_pause : R.string.player_play),
-                            pausePlayPendingIntent).build());
-                }
-
-                notificationBuilder.addAction(new Notification.Action.Builder(R.drawable.ic_media_stop, mediaPlayerServiceRef.get().getString(R.string.player_stop), stopPendingIntent).build());
-                return notificationBuilder.build();
-
+                return notificationAPI21(pauseAction, playerPendingIntent, stateText, stopPendingIntent, pausePlayPendingIntent);
             } else {
-                //create notification
-                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mediaPlayerServiceRef.get())
-                        .setSmallIcon(R.drawable.ic_notif_icon)
-                        .setLargeIcon(titleArt.copy(titleArt.getConfig(), false)) //avoid recycled image
-                        .setTicker(mediaPlayerServiceRef.get().getString(R.string.notification_ticker_text))
-                        .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
-                        .setContentText(currentTitle)
-                        .setVisibility(Notification.VISIBILITY_PUBLIC)
-                        .setStyle(new NotificationCompat.BigPictureStyle()
-                                .bigPicture(titleArt.copy(titleArt.getConfig(), false)) //avoid recycled image
-                                .setSummaryText(currentTitle))
-                        .setContentInfo(stateText)
-                        .setContentIntent(playerPendingIntent);
-
-                //add the chronometer
-                if (playerState == PlayerState.PLAYING) {
-                    notificationBuilder.setWhen(System.currentTimeMillis() - mediaPlayerServiceRef.get().getPosition())
-                            .setShowWhen(true)
-                            .setUsesChronometer(true);
-                }
-
-                //don't add play/pause button if buffering
-                if (playerState != PlayerState.BUFFERING) {
-                    //add proper action (pause or play)
-                    notificationBuilder.addAction((pauseAction) ? R.drawable.pause : R.drawable.play,
-                            mediaPlayerServiceRef.get().getString((pauseAction) ? R.string.player_pause : R.string.player_play),
-                            pausePlayPendingIntent);
-                }
-
-                notificationBuilder.addAction(R.drawable.stop, mediaPlayerServiceRef.get().getString(R.string.player_stop), stopPendingIntent);
-                return notificationBuilder.build();
+                return notificationOldFashion(pauseAction, playerPendingIntent, stateText, stopPendingIntent, pausePlayPendingIntent);
             }
 
         } else {
@@ -287,10 +226,82 @@ public class MediaPlayerNotificationBuilder {
         }
     }
 
+    private Notification notificationOldFashion(boolean pauseAction, PendingIntent playerPendingIntent, String stateText, PendingIntent stopPendingIntent, PendingIntent pausePlayPendingIntent) {
+        //create notification
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mediaPlayerServiceRef.get())
+                .setSmallIcon(R.drawable.ic_notif_icon)
+                .setLargeIcon(titleArt.copy(titleArt.getConfig(), false)) //avoid recycled image
+                .setTicker(mediaPlayerServiceRef.get().getString(R.string.notification_ticker_text))
+                .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
+                .setContentText(currentTitle)
+                .setVisibility(Notification.VISIBILITY_PUBLIC)
+                .setStyle(new NotificationCompat.BigPictureStyle()
+                        .bigPicture(titleArt.copy(titleArt.getConfig(), false)) //avoid recycled image
+                        .setSummaryText(currentTitle))
+                .setContentInfo(stateText)
+                .setContentIntent(playerPendingIntent);
+
+        //add the chronometer
+        if (playerState == PlayerState.PLAYING) {
+            notificationBuilder.setWhen(System.currentTimeMillis() - mediaPlayerServiceRef.get().getPosition())
+                    .setShowWhen(true)
+                    .setUsesChronometer(true);
+        }
+
+        //don't add play/pause button if buffering
+        if (playerState != PlayerState.BUFFERING) {
+            //add proper action (pause or play)
+            notificationBuilder.addAction((pauseAction) ? R.drawable.pause : R.drawable.play,
+                    mediaPlayerServiceRef.get().getString((pauseAction) ? R.string.player_pause : R.string.player_play),
+                    pausePlayPendingIntent);
+        }
+
+        notificationBuilder.addAction(R.drawable.stop, mediaPlayerServiceRef.get().getString(R.string.player_stop), stopPendingIntent);
+        return notificationBuilder.build();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private Notification notificationAPI21(boolean pauseAction, PendingIntent playerPendingIntent, String stateText, PendingIntent stopPendingIntent, PendingIntent pausePlayPendingIntent) {
+        int[] compactViewActions = ((playerState == PlayerState.PLAYING) || (playerState == PlayerState.PAUSED))
+                ? COMPACT_VIEW_DOUBLE_ACTIONS
+                : COMPACT_VIEW_SINGLE_ACTIONS;
+
+        //create notification
+        Notification.Builder notificationBuilder = getNotificationBuilder()
+                .setSmallIcon(R.drawable.ic_notif_icon)
+                .setLargeIcon(titleArt.copy(titleArt.getConfig(), false)) //avoid recycled image
+                .setTicker(mediaPlayerServiceRef.get().getString(R.string.notification_ticker_text))
+                .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
+                .setContentText(currentTitle)
+                .setStyle(new Notification.MediaStyle()
+                        .setShowActionsInCompactView(compactViewActions)  // only show play/pause in compact view
+                        .setMediaSession(mediaPlayerServiceRef.get().getMediaSession().getSessionToken()))
+                .setSubText(stateText)
+                .setContentIntent(playerPendingIntent);
+
+        //add the chronometer
+        if (playerState == PlayerState.PLAYING) {
+            notificationBuilder.setWhen(System.currentTimeMillis() - mediaPlayerServiceRef.get().getPosition())
+                    .setShowWhen(true)
+                    .setUsesChronometer(true);
+        }
+
+        //don't add play/pause button if buffering
+        if (playerState != PlayerState.BUFFERING) {
+            notificationBuilder.addAction(new Notification.Action.Builder((pauseAction) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play,
+                    mediaPlayerServiceRef.get().getString((pauseAction) ? R.string.player_pause : R.string.player_play),
+                    pausePlayPendingIntent).build());
+        }
+
+        notificationBuilder.addAction(new Notification.Action.Builder(R.drawable.ic_media_stop, mediaPlayerServiceRef.get().getString(R.string.player_stop), stopPendingIntent).build());
+        return notificationBuilder.build();
+    }
+
     @TargetApi(Build.VERSION_CODES.O)
     private Notification.Builder getNotificationBuilder() {
         if (AppUtils.isAPILevel26Available()) {
             NotificationManager notificationManager = (NotificationManager) mediaPlayerServiceRef.get().getSystemService(Context.NOTIFICATION_SERVICE);
+            assert notificationManager != null;
             if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null) {
                 NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, mediaPlayerServiceRef.get().getString(R.string.app_name), NotificationManager.IMPORTANCE_LOW);
                 notificationManager.createNotificationChannel(channel);

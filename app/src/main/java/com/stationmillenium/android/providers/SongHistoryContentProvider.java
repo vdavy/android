@@ -14,10 +14,9 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.R.string;
 import com.stationmillenium.android.libutils.AppUtils;
@@ -31,6 +30,8 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import timber.log.Timber;
 
 import static com.stationmillenium.android.providers.SongHistoryContract.ALL_SONGS_SEARCH;
 import static com.stationmillenium.android.providers.SongHistoryContract.DATE_SEARCH_INDEX;
@@ -46,7 +47,6 @@ import static com.stationmillenium.android.providers.SongHistoryContract.SUGGEST
 public class SongHistoryContentProvider extends ContentProvider {
 
     //static part
-    private static final String TAG = "SongHistoryProvider";
     private static final String ACTION_PARAM_NAME = "action";
     private static final String QUERY_PARAM_NAME = "query";
     private static final String SONG_SUGGEST_SEPARATOR = " - ";
@@ -61,8 +61,7 @@ public class SongHistoryContentProvider extends ContentProvider {
     @SuppressLint("SimpleDateFormat")
     @Override
     public boolean onCreate() {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Initialization of SongHistoryContentProvider");
+        Timber.d("Initialization of SongHistoryContentProvider");
         sdf = new SimpleDateFormat(getContext().getString(R.string.song_history_date_format));
         return true;
     }
@@ -71,10 +70,9 @@ public class SongHistoryContentProvider extends ContentProvider {
      * @see android.content.ContentProvider#query(android.net.Uri, java.lang.String[], java.lang.String, java.lang.String[], java.lang.String)
      */
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection,
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Querying data for URI : " + uri);
+        Timber.d("Querying data for URI : %s", uri);
 
         switch (URI_MATCHER.match(uri)) { //return the proper mime type
             case ALL_SONGS_SEARCH: //case of all song search, no param needed
@@ -91,8 +89,7 @@ public class SongHistoryContentProvider extends ContentProvider {
                 return sendQueryForSuggestSearch(uri);
 
             case SUGGEST_SEARCH_NO_SUGGEST: //case of empty suggestion
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "Empty suggestions cursor returned");
+                Timber.d("Empty suggestions cursor returned");
                 return createSuggestCursor();
 
             default:
@@ -137,7 +134,7 @@ public class SongHistoryContentProvider extends ContentProvider {
 
             return cursor;
         } catch (XMLParserException e) { //if any error occurs
-            Log.e(TAG, "Error while parsing XML", e);
+            Timber.e(e, "Error while parsing XML");
             return null;
         }
     }
@@ -187,12 +184,11 @@ public class SongHistoryContentProvider extends ContentProvider {
                 List<Song> songList = new XMLSongHistoryParser(is).parseXML(); //parse the XML
                 return convertSongListToMatrixCursor(songList); //convert and return cursor
             } catch (XMLParserException e) {
-                Log.e(TAG, "Error while parsing XML", e);
+                Timber.e(e, "Error while parsing XML");
                 return null;
             }
         } else { //if not network available, cancel request
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Network not available");
+            Timber.d("Network not available");
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(() -> Toast.makeText(getContext(), string.player_network_unavailable, Toast.LENGTH_SHORT).show());
             return null;
@@ -203,9 +199,8 @@ public class SongHistoryContentProvider extends ContentProvider {
      * @see android.content.ContentProvider#getType(android.net.Uri)
      */
     @Override
-    public String getType(Uri uri) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Request type for URI : " + uri);
+    public String getType(@NonNull Uri uri) {
+        Timber.d("Request type for URI : %s", uri);
 
         switch (URI_MATCHER.match(uri)) { //return the proper mime type
             case ALL_SONGS_SEARCH:
@@ -224,7 +219,7 @@ public class SongHistoryContentProvider extends ContentProvider {
      * @see android.content.ContentProvider#insert(android.net.Uri, android.content.ContentValues)
      */
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         throw new UnsupportedOperationException();
     }
 
@@ -232,7 +227,7 @@ public class SongHistoryContentProvider extends ContentProvider {
      * @see android.content.ContentProvider#delete(android.net.Uri, java.lang.String, java.lang.String[])
      */
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         throw new UnsupportedOperationException();
     }
 
@@ -240,7 +235,7 @@ public class SongHistoryContentProvider extends ContentProvider {
      * @see android.content.ContentProvider#update(android.net.Uri, android.content.ContentValues, java.lang.String, java.lang.String[])
      */
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         throw new UnsupportedOperationException();
     }
 
@@ -291,8 +286,7 @@ public class SongHistoryContentProvider extends ContentProvider {
             });
 
             if (index >= maxIndex) {
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "Cursor size reach max allowed size");
+                Timber.d("Cursor size reach max allowed size");
                 break;
             } else
                 index++;

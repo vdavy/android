@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
@@ -22,6 +20,8 @@ import com.stationmillenium.android.libutils.toasts.DisplayToastsUtil;
 import com.stationmillenium.android.libutils.xml.XMLCurrentTitleParser;
 
 import java.io.InputStream;
+
+import timber.log.Timber;
 
 /**
  * Service to manage current title grabbering
@@ -52,9 +52,7 @@ public class CurrentTitlePlayerService extends JobIntentService {
     protected void onHandleWork(@NonNull Intent intent) {
         if (AppUtils.isMediaPlayerServiceRunning(getApplicationContext())) { //is the media player service running,
             if (AppUtils.isNetworkAvailable(this)) { //is network ok ?
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Network is available - get XML data...");
-                }
+                Timber.d("Network is available - get XML data...");
                 InputStream is = NetworkUtils.connectToURL(getResources().getString(R.string.player_current_song_url),
                         null,
                         getResources().getString(R.string.player_connection_request_method),
@@ -63,16 +61,13 @@ public class CurrentTitlePlayerService extends JobIntentService {
                         Integer.parseInt(getResources().getString(R.string.player_connection_read_timeout)));
 
                 if (is != null) { //input stream ok
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Input stream is OK - process it...");
-                    }
+                    Timber.d("Input stream is OK - process it...");
                     try {
                         //get and parse XML data
                         XMLCurrentTitleParser currentTitleParser = new XMLCurrentTitleParser(is);
                         CurrentTitleDTO songDataDTO = currentTitleParser.parseXML();
-                        if (BuildConfig.DEBUG) {
-                            Log.d(TAG, "Gathered song data : " + songDataDTO);
-                        }
+                        Timber.d("Gathered song data : %s", songDataDTO);
+
                         //process image if needed
                         if ((songDataDTO != null)
                                 && (songDataDTO.getCurrentSong() != null)
@@ -83,31 +78,27 @@ public class CurrentTitlePlayerService extends JobIntentService {
                         //send intent
                         Intent intentToSend = new Intent(LocalIntents.CURRENT_TITLE_UPDATED.toString());
                         intentToSend.putExtra(LocalIntentsData.CURRENT_TITLE.toString(), songDataDTO);
-                        if (BuildConfig.DEBUG) {
-                            Log.d(TAG, "Send intent to update current title : " + intentToSend);
-                        }
+                        Timber.d("Send intent to update current title : %s", intentToSend);
+
                         LocalBroadcastManager.getInstance(this).sendBroadcast(intentToSend);
                         sendBroadcast(intentToSend); //for the widget
 
                     } catch (XMLParserException e) {
-                        Log.w(TAG, "Error while parsing XML data", e);
+                        Timber.w(e, "Error while parsing XML data");
                     }
 
-                } else if (BuildConfig.DEBUG) { //error while getting input stream
-                    Log.d(TAG, "No input stream - stopping service...");
+                } else { //error while getting input stream
+                    Timber.d("No input stream - stopping service...");
                 }
 
             } else {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Network is unavailable - stopping service...");
-                }
+                Timber.d("Network is unavailable - stopping service...");
+
                 displayToast.displayToast(R.string.player_network_unavailable);
             }
 
         } else { //media player service is not running, no need to update title
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Media player is not running - stopping service...");
-            }
+            Timber.d("Media player is not running - stopping service...");
         }
     }
 

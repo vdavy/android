@@ -13,11 +13,11 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.libutils.SharedPreferencesConstants;
+
+import timber.log.Timber;
 
 /**
  * Fragment to manage application preferences
@@ -27,7 +27,6 @@ import com.stationmillenium.android.libutils.SharedPreferencesConstants;
 public class SharedPreferencesFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     //static intialization part
-    private static final String TAG = "PreferencesFragment";
     private static final String APP_VERSION_PREFERENCE = "preferences_version";
 
     //preference fields
@@ -58,9 +57,7 @@ public class SharedPreferencesFragment extends PreferenceFragment implements Sha
      * Initialize the news number params
      */
     private void initNewsNumber() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Init the news number param summary");
-        }
+        Timber.d("Init the news number param summary");
         //set up news number summary
         //display the init value
         if (newsNumber.getValue() != null) {
@@ -69,9 +66,8 @@ public class SharedPreferencesFragment extends PreferenceFragment implements Sha
 
         //set up listener for updates
         newsNumber.setOnPreferenceChangeListener((preference, newValue) -> {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Update news number summary");
-            }
+            Timber.d("Update news number summary");
+
             if (newValue != null) {
                 CharSequence summary = newsNumber.getEntries()[newsNumber.findIndexOfValue(newValue.toString())];
                 preference.setSummary(summary);
@@ -86,17 +82,15 @@ public class SharedPreferencesFragment extends PreferenceFragment implements Sha
      * Initialize auto restart delay preference
      */
     private void initAutorestartDelay() {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Init the autorestart player delay summary");
-        }
+        Timber.d("Init the autorestart player delay summary");
+
         if (autorestartDelay.getValue() != null) {
             autorestartDelay.setSummary(getString(R.string.preferences_autorestart_player_timeout_summary, autorestartDelay.getEntry()));
         }
 
         autorestartDelay.setOnPreferenceChangeListener((preference, newValue) -> {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Update auto restart delay summary");
-            }
+            Timber.d("Update auto restart delay summary");
+
             if (newValue != null) {
                 CharSequence summary = autorestartDelay.getEntries()[autorestartDelay.findIndexOfValue(newValue.toString())];
                 preference.setSummary(getString(R.string.preferences_autorestart_player_timeout_summary, summary));
@@ -117,29 +111,24 @@ public class SharedPreferencesFragment extends PreferenceFragment implements Sha
         try { //try to set the version in app version preference summary
             String version = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
             appVersionPreference.setSummary(version);
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Set app version preference with value : " + version);
-            }
+            Timber.d("Set app version preference with value : %s", version);
+
         } catch (NameNotFoundException e) { //if any error use default message
-            Log.w(TAG, "Error while setting app version preference", e);
+            Timber.w(e, "Error while setting app version preference");
             appVersionPreference.setSummary(R.string.preferences_app_version_not_available);
         }
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Shared preferences changed - trigger backup");
-        }
+        Timber.d("Shared preferences changed - trigger backup");
         new BackupManager(getActivity()).dataChanged();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Unregister OnSharedPreferenceChangeListener");
-        }
+        Timber.d("Unregister OnSharedPreferenceChangeListener");
         PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
     }
 

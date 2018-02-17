@@ -6,14 +6,14 @@ package com.stationmillenium.android.activities.songsearchhistory;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.databinding.ImageDisplayLayoutBinding;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
+
+import timber.log.Timber;
 
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SONG_HISTORY_DISPLAY_IMAGE;
 
@@ -26,7 +26,6 @@ import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SONG
 public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity {
 
     //static parts
-    private final static String TAG = "SongImageActivity";
     private final static String IMAGE_URL_BUNDLE = "ImageURLBundle";
     private final static String ACTIVITY_TITLE_BUNDLE = "ActivityTitleBundle";
 
@@ -53,9 +52,7 @@ public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Resuming song search image display activity");
-        }
+        Timber.d("Resuming song search image display activity");
 
         //set title
         if (activityTitle == null) { //if title is null, try to get it from intent
@@ -69,10 +66,7 @@ public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity {
         }
         binding.setImageURL(imageURL);
 
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Image URL : " + imageURL);
-        }
-
+        Timber.d("Image URL : %s", imageURL);
         PiwikTracker.trackScreenView(SONG_HISTORY_DISPLAY_IMAGE);
     }
 

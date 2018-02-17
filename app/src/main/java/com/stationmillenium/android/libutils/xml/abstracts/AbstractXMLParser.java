@@ -3,10 +3,8 @@
  */
 package com.stationmillenium.android.libutils.xml.abstracts;
 
-import android.util.Log;
 import android.util.Xml;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song.ImageMetadata;
@@ -18,6 +16,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import timber.log.Timber;
+
 /**
  * Parser for the XML about current title
  * http://developer.android.com/training/basics/network-ops/xml.html for more details
@@ -25,8 +25,6 @@ import java.io.InputStream;
  * @author vincent
  */
 public abstract class AbstractXMLParser<T> {
-
-    private static final String TAG = "AbstractXMLParser";
 
     //vars
     protected XmlPullParser parser;
@@ -41,8 +39,7 @@ public abstract class AbstractXMLParser<T> {
     public AbstractXMLParser(InputStream is) throws XMLParserException {
         try {
             //create the new parser
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Create the XML parser");
+            Timber.d("Create the XML parser");
 
             if (is != null) { //check the input stream is not null
                 this.is = is;
@@ -52,15 +49,15 @@ public abstract class AbstractXMLParser<T> {
                 parser.nextTag();
 
             } else { //input stream is null : error thrown
-                Log.w(TAG, "Input stream is null !");
+                Timber.w("Input stream is null !");
                 throw new XMLParserException("XML parsing exception");
             }
 
         } catch (XmlPullParserException e) { //process errors
-            Log.w(TAG, "XML parsing exception", e);
+            Timber.w(e, "XML parsing exception");
             throw new XMLParserException("XML parsing exception", e);
         } catch (IOException e) {
-            Log.w(TAG, "XML IO exception", e);
+            Timber.w(e, "XML IO exception");
             throw new XMLParserException("XML parsing exception", e);
 
         }
@@ -84,9 +81,7 @@ public abstract class AbstractXMLParser<T> {
     protected void readArtistTag(Song dtoToFillIn) throws IOException, XmlPullParserException {
         String artist = readTagText("artist");
         if ((artist != null) && (!artist.equals(""))) {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Artist value : " + artist);
-
+            Timber.d("Artist value : %s", artist);
             dtoToFillIn.setArtist(artist);
         }
     }
@@ -101,8 +96,7 @@ public abstract class AbstractXMLParser<T> {
     protected void readTitleTag(Song song) throws IOException, XmlPullParserException {
         String title = readTagText("title");
         if ((title != null) && (!title.equals(""))) {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Title value : " + title);
+            Timber.d("Title value : %s", title);
             song.setTitle(title);
         }
     }
@@ -115,15 +109,13 @@ public abstract class AbstractXMLParser<T> {
      * @throws IOException            if any IO error occurs
      */
     protected void parseImageMetaData(ImageMetadata dtoToFillIn) throws XmlPullParserException, IOException {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Parse the image meta data");
+        Timber.d("Parse the image meta data");
         parser.require(XmlPullParser.START_TAG, null, "image"); //root tag
         while (parser.next() != XmlPullParser.END_TAG) { //process until the end
             if (parser.getEventType() != XmlPullParser.START_TAG) { //if not the start tag, continue
                 continue;
             }
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Image tag found");
+            Timber.d("Image tag found");
 
             //process the tag
             String name = parser.getName();
@@ -131,8 +123,7 @@ public abstract class AbstractXMLParser<T> {
                 case "path":  //path case
                     String path = readTagText("path");
                     if ((path != null) && (!path.equals(""))) {
-                        if (BuildConfig.DEBUG)
-                            Log.d(TAG, "Path value : " + path);
+                        Timber.d("Path value : %s", path);
                         dtoToFillIn.setPath(path);
                     }
 
@@ -140,8 +131,7 @@ public abstract class AbstractXMLParser<T> {
                 case "width":  //width case
                     String width = readTagText("width");
                     if ((width != null) && (!width.equals(""))) {
-                        if (BuildConfig.DEBUG)
-                            Log.d(TAG, "Width value : " + width);
+                        Timber.d("Width value : %s", width);
                         dtoToFillIn.setWidth(width);
                     }
 
@@ -149,8 +139,7 @@ public abstract class AbstractXMLParser<T> {
                 case "height":  //height case
                     String height = readTagText("height");
                     if ((height != null) && (!height.equals(""))) {
-                        if (BuildConfig.DEBUG)
-                            Log.d(TAG, "Height value : " + height);
+                        Timber.d("Height value : %s", height);
                         dtoToFillIn.setHeight(height);
                     }
                     break;
@@ -175,8 +164,7 @@ public abstract class AbstractXMLParser<T> {
         }
         parser.require(XmlPullParser.END_TAG, null, tag);
 
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Read value for tag '" + tag + "' : " + result);
+        Timber.d("Read value for tag '" + tag + "' : " + result);
         return result;
     }
 
@@ -185,13 +173,11 @@ public abstract class AbstractXMLParser<T> {
      */
     protected void closeInputStream() {
         try {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Close input stream");
+            Timber.d("Close input stream");
             if (is != null)
                 is.close();
         } catch (IOException e) {
-            Log.w(TAG, "Error while closing XML input stream");
+            Timber.w("Error while closing XML input stream");
         }
     }
-
 }

@@ -3,10 +3,6 @@
  */
 package com.stationmillenium.android.libutils.network;
 
-import android.util.Log;
-
-import com.stationmillenium.android.libutils.BuildConfig;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -16,6 +12,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import timber.log.Timber;
 
 /**
  * Network utils for the app
@@ -39,8 +37,7 @@ public class NetworkUtils {
      * @return the {@link InputStream} of the connection
      */
     public static InputStream connectToURL(String urlText, Map<String, String> parameters, String requestMethod, String contentType, int connectTimeout, int readTimeout) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Connect to server to get data");
+        Timber.d("Connect to server to get data");
         try {
             //manage parameters
             String urlTextWithPAram = writeQueryString(parameters, urlText);
@@ -54,20 +51,18 @@ public class NetworkUtils {
             if (contentType != null)
                 connection.setRequestProperty(CONTENT_TYPE, contentType);
 
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Connection to use : " + connection);
+            Timber.d("Connection to use : %s", connection);
 
             //connect
             connection.connect();
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Response code : " + connection.getResponseCode());
+            Timber.d("Response code : %s", connection.getResponseCode());
             return connection.getInputStream();
 
         } catch (MalformedURLException e) {
-            Log.e(TAG, "Error with URL", e);
+            Timber.e(e, "Error with URL");
             return null;
         } catch (IOException e) {
-            Log.e(TAG, "Error while getting XML data", e);
+            Timber.e(e, "Error while getting XML data");
             return null;
         }
     }
@@ -88,18 +83,15 @@ public class NetworkUtils {
                     queryString.append("="); //append = sign
                     queryString.append(URLEncoder.encode(param.getValue(), "UTF-8")); //append param value
                 } catch (UnsupportedEncodingException e) {
-                    Log.w(TAG, "Error while encoding param : " + param, e);
+                    Timber.w(e, "Error while encoding param : %s", param);
                 }
             }
 
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Query string to write to connection : " + queryString);
-
+            Timber.d("Query string to write to connection : %s", queryString);
             return baseURL + "?" + queryString;
 
         } else { //no params to add
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "No params specified");
+            Timber.d("No params specified");
             return baseURL;
         }
 

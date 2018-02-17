@@ -76,18 +76,18 @@
             android:layout_marginTop="@dimen/replay_item_text_margin" />
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/replay_waveform_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <ImageView
                 style="@style/ReplayItemWaveform"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 app:replayBackground="@{replayItem}"
                 app:percentPlayed="@{percentPlayed}"
-                android:visibility="gone"
                 tools:ignore="ContentDescription"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@id/replay_waveform_layout"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
 
@@ -100,8 +100,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintVertical_bias="0.7"/>
+                app:layout_constraintRight_toRightOf="parent"/>
 
         </android.support.constraint.ConstraintLayout>
 

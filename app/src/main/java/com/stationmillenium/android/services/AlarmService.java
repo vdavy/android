@@ -14,9 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.JobIntentService;
-import android.util.Log;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity.AlarmSharedPreferencesConstants;
 import com.stationmillenium.android.libutils.AppUtils;
@@ -30,6 +28,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import timber.log.Timber;
+
 /**
  * Service to manage alarm intent : launch player when alarm elapsed and set pending intents
  *
@@ -41,8 +41,6 @@ public class AlarmService extends JobIntentService {
      * Unique job ID for this service.
      */
     private static final int JOB_ID = 1000;
-
-    private static final String TAG = "AlarmService";
 
     private DisplayToastsUtil displayToast;
 
@@ -79,9 +77,7 @@ public class AlarmService extends JobIntentService {
 
     private void launchPlayer(SharedPreferences preferences) {
         //launch player
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Received intent to launch player");
-        }
+        Timber.d("Received intent to launch player");
         requestPlayerStart();
         scheduleNextRepeatAlarm(preferences);
     }
@@ -89,9 +85,7 @@ public class AlarmService extends JobIntentService {
     private void scheduleNextRepeatAlarm(SharedPreferences preferences) {
         //next, properly reset alarm preference
         if (getRepeatDays(preferences).length == 0) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "No repeat days set - disable alarm");
-            }
+            Timber.d("No repeat days set - disable alarm");
 
             //no repeat days set, so disable alarm
             preferences.edit()
@@ -99,9 +93,7 @@ public class AlarmService extends JobIntentService {
                     .apply();
 
         } else {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Repeat days set - restart service to set alarm");
-            }
+            Timber.d("Repeat days set - restart service to set alarm");
 
             //start the service
             Intent alarmIntent = new Intent(this, AlarmService.class);
@@ -115,9 +107,8 @@ public class AlarmService extends JobIntentService {
         if (!AppUtils.isMediaPlayerServiceRunning(this)) { //do not launch media player twice
             if (!AppUtils.isWifiOnlyAndWifiNotConnected(this)) { //if wifi requested, check it is enabled and connected
                 //start player service
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Start media player service for alarm triggering");
-                }
+                Timber.d("Start media player service for alarm triggering");
+
                 Intent playIntent = new Intent(this, MediaPlayerService.class);
                 playIntent.putExtra(LocalIntentsData.RESUME_PLAYER_ACTIVITY.toString(), false);
                 playIntent.putExtra(LocalIntentsData.GET_VOLUME_FROM_PREFERENCES.toString(), true);
@@ -125,41 +116,32 @@ public class AlarmService extends JobIntentService {
                 displayToast.displayToast(getString(R.string.alarm_triggered));
 
             } else {
-                Log.w(TAG, "Wifi requested but not connected for alarm");
+                Timber.w("Wifi requested but not connected for alarm");
                 displayToast.displayToast(getString(R.string.player_no_wifi));
             }
 
         } else {
             displayToast.displayToast(getString(R.string.alarm_already_triggered));
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Alarm not triggered, media player already running");
-            }
+            Timber.d("Alarm not triggered, media player already running");
         }
     }
 
     private void programAlarm(@NonNull Intent intent, SharedPreferences preferences) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Set alarm time intent received : " + intent);
-        }
+        Timber.d("Set alarm time intent received : %s", intent);
 
         if (preferences.getBoolean(AlarmSharedPreferencesConstants.ALARM_ENABLED, false)) { //check if alarm is enabled
             //get repeat days
             int[] repeatDays = getRepeatDays(preferences);
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Alarm repeat days : " + repeatDays);
+            Timber.d("Alarm repeat days : %s", repeatDays);
 
             Calendar alarmTime = getAlarmTimeCalendar(preferences); //get the alarm time set in a calendar
             if (alarmTime != null) { //if alarm time is set
                 if (repeatDays.length == 0) { //no repeat days case
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "No repeat days for alarm");
-                    }
+                    Timber.d("No repeat days for alarm");
 
                     //if alarm time elapsed : set it for tomorrow
                     if (Calendar.getInstance().after(alarmTime)) {
-                        if (BuildConfig.DEBUG) {
-                            Log.d(TAG, "Alarm time elapsed - set if for next day");
-                        }
+                        Timber.d("Alarm time elapsed - set if for next day");
                         alarmTime.add(Calendar.DATE, 1);
                     }
 
@@ -167,9 +149,8 @@ public class AlarmService extends JobIntentService {
                     programAlarm(alarmTime);
 
                 } else { //process alarm with repeat days
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "Alarm with repeat days");
-                    }
+                    Timber.d("Alarm with repeat days");
+
                     int dayIndex = convertCalendarDayIndexToArrayIndex(alarmTime); //convert the day index
                     int nextRepeatDay = -1;
                     for (int day : repeatDays) { //check each day
@@ -187,15 +168,11 @@ public class AlarmService extends JobIntentService {
 
                     //deal with the case of the repeat day is the same day
                     if ((nextRepeatDay == dayIndex) && (Calendar.getInstance().after(alarmTime))) {
-                        if (BuildConfig.DEBUG) {
-                            Log.d(TAG, "Repeat day is the same day as today - repeat in one week");
-                        }
+                        Timber.d("Repeat day is the same day as today - repeat in one week");
                         alarmTime.add(Calendar.DATE, 7);
 
                     } else if (nextRepeatDay != dayIndex) { //as repeat date is not today, we need to add some day delay
-                        if (BuildConfig.DEBUG) {
-                            Log.d(TAG, "Repeat day is not today : add some delay");
-                        }
+                        Timber.d("Repeat day is not today : add some delay");
                         alarmTime.setFirstDayOfWeek(Calendar.SUNDAY); //set start day of week as sunday
                         nextRepeatDay += 2; //shift 2 days forward
                         if (nextRepeatDay > 7) { //at the end of the week, return to the beginning
@@ -215,9 +192,7 @@ public class AlarmService extends JobIntentService {
                 }
 
             } else { //alarm time not set
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Alarm time not set - can't program alarm");
-                }
+                Timber.d("Alarm time not set - can't program alarm");
 
                 displayToast.displayToast(getString(R.string.alarm_no_time_set));
                 preferences.edit() //disable the alarm
@@ -226,9 +201,7 @@ public class AlarmService extends JobIntentService {
             }
 
         } else { //alarm disabled, cancel intent
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Alarm disabled - cancel intent");
-            }
+            Timber.d("Alarm disabled - cancel intent");
             cancelAlarm();
         }
     }
@@ -293,8 +266,7 @@ public class AlarmService extends JobIntentService {
     private Calendar getAlarmTimeCalendar(SharedPreferences preferences) {
         long timePickerTime = preferences.getLong(AlarmSharedPreferencesConstants.ALARM_TIME, 0); //get the time in millis from timepicker
         if (timePickerTime != 0) {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Alarm time is set - use it");
+            Timber.d("Alarm time is set - use it");
 
             Calendar setTimeCalendar = Calendar.getInstance(); //set in into calendar
             setTimeCalendar.setTimeInMillis(timePickerTime);
@@ -307,9 +279,7 @@ public class AlarmService extends JobIntentService {
             return currentTime;
 
         } else { //alarm time not set, so return null
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Alarm time is not set - use current time with delta");
-            }
+            Timber.d("Alarm time is not set - use current time with delta");
             return null;
         }
     }
@@ -321,9 +291,7 @@ public class AlarmService extends JobIntentService {
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void programAlarm(Calendar programTime) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Program alarm");
-        }
+        Timber.d("Program alarm");
 
         //program alarm
         PendingIntent playPendingIntent = createLaunchPlayerPendingIntent();

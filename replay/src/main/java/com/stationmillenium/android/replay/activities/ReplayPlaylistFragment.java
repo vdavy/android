@@ -2,6 +2,7 @@ package com.stationmillenium.android.replay.activities;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,7 +30,7 @@ public class ReplayPlaylistFragment extends Fragment {
     private ReplayPlaylistAdapter replayPlaylistAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         replayPlaylistAdapter = new ReplayPlaylistAdapter((ReplayActivity) getActivity());
         binding = DataBindingUtil.inflate(inflater, R.layout.replay_playlist_fragment, container, false);
         binding.replayRecyclerview.setAdapter(replayPlaylistAdapter);

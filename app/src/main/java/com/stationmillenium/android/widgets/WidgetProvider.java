@@ -16,14 +16,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.util.Log;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.stationmillenium.android.BuildConfig;
+import com.bumptech.glide.request.transition.Transition;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.HomeActivity;
 import com.stationmillenium.android.activities.PlayerActivity;
@@ -35,6 +35,7 @@ import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.services.MediaPlayerService;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import timber.log.Timber;
 
 /**
  * Class to manage the widget
@@ -43,14 +44,9 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
  */
 public class WidgetProvider extends AppWidgetProvider {
 
-    //main static fields
-    private static final String TAG = "WidgetProvider";
-
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Widget updating...");
-        }
+        Timber.d("Widget updating...");
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
@@ -80,17 +76,12 @@ public class WidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(@NonNull final Context context, @NonNull Intent intent) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Widget receiving intent : " + intent);
-        }
+        Timber.d("Widget receiving intent : %s", intent);
         super.onReceive(context, intent);
         if (LocalIntents.CURRENT_TITLE_UPDATED.toString().equals(intent.getAction())) {
 
             if (AppUtils.isMediaPlayerServiceRunning(context)) { //check if media player service is running to apply data
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Media player service running - applying received data...");
-                }
-
+                Timber.d("Media player service running - applying received data...");
                 CurrentTitleDTO songData = (CurrentTitleDTO) intent.getExtras().get(LocalIntentsData.CURRENT_TITLE.toString());
 
                 if (songData != null) {
@@ -107,20 +98,21 @@ public class WidgetProvider extends AppWidgetProvider {
 
                     //update image
                     Glide.with(context)
-                        .load(songData.getCurrentSong().getImageURL())
                         .asBitmap()
-                        .placeholder(R.drawable.player_default_image)
-                        .error(R.drawable.player_default_image)
-                        .centerCrop()
-                        .transform(new RoundedCornersTransformation(context, context.getResources().getDimensionPixelSize(R.dimen.widget_rounded_image), 0))
+                        .load(songData.getCurrentSong().getImageURL())
+                        .apply(new RequestOptions()
+                            .placeholder(R.drawable.player_default_image)
+                            .error(R.drawable.player_default_image)
+                            .centerCrop()
+                            .transform(new RoundedCornersTransformation(context.getResources().getDimensionPixelSize(R.dimen.widget_rounded_image), 0)))
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
-                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                                 updateWidgetData(resource);
                             }
 
                             @Override
-                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
                                 if (errorDrawable instanceof BitmapDrawable) {
                                     Bitmap errorBitmap = ((BitmapDrawable) errorDrawable).getBitmap();
                                     updateWidgetData(errorBitmap);
@@ -140,9 +132,7 @@ public class WidgetProvider extends AppWidgetProvider {
                 }
 
             } else {
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Media player service not running - reseting widgets...");
-                }
+                Timber.d("Media player service not running - reseting widgets...");
                 updateWidgetsStates(context, PlayerState.STOPPED); //reset the widget
             }
 

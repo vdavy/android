@@ -1,7 +1,6 @@
 package com.stationmillenium.android.replay.utils.view;
 
 import android.support.v7.widget.RecyclerView.Adapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +11,14 @@ import com.stationmillenium.android.replay.dto.PlaylistDTO;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Replay playlist adapter for recycle view
  * Created by vincent on 10/04/2017.
  */
 public class ReplayPlaylistAdapter extends Adapter<ReplayPlaylistViewHolder> {
 
-    private static final String TAG = "ReplayPlaylistAdapter";
     private ReplayActivity replayActivity;
     private List<PlaylistDTO> playlistDTOs;
 
@@ -28,14 +28,14 @@ public class ReplayPlaylistAdapter extends Adapter<ReplayPlaylistViewHolder> {
 
     @Override
     public ReplayPlaylistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.v(TAG, "Create view...");
+        Timber.v("Create view...");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.replay_playlist_list_item, parent, false);
         return new ReplayPlaylistViewHolder(view, replayActivity);
     }
 
     @Override
     public void onBindViewHolder(ReplayPlaylistViewHolder holder, int position) {
-        Log.v(TAG, "Bind view...");
+        Timber.v("Bind view...");
         PlaylistDTO playlistDTO = playlistDTOs.get(position);
         holder.bindReplay(playlistDTO);
     }

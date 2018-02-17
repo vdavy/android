@@ -3,7 +3,6 @@ package com.stationmillenium.android.replay.utils;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.Log;
 
 import com.stationmillenium.android.replay.dto.PlaylistDTO;
 import com.stationmillenium.android.replay.dto.TrackDTO;
@@ -15,6 +14,8 @@ import java.io.Serializable;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static com.stationmillenium.android.libutils.SharedPreferencesConstants.REPLAY_DISPLAY_TITLES;
@@ -54,7 +55,7 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
     public SoundcloudTrackRestLoader(@NonNull Context context, int limit) {
         this(context);
         this.limit = limit;
-        Log.d(TAG, "Init REST loader with limit param : " + limit);
+        Timber.d("Init REST loader with limit param : %s", limit);
     }
 
     /**
@@ -89,7 +90,7 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
         // clean up wrong chars : http://glaforge.appspot.com/article/how-to-remove-accents-from-a-string
         this.query = Normalizer.normalize(query, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         this.queryType = queryType;
-        Log.d(TAG, "Init REST loader with query search : " + this.query + " - and query type : " + this.queryType);
+        Timber.d("Init REST loader with query search : " + this.query + " - and query type : " + this.queryType);
     }
 
     /**
@@ -102,7 +103,7 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
     public SoundcloudTrackRestLoader(@NonNull Context context, @NonNull QueryType queryType, @NonNull String query, int limit) {
         this(context, queryType, query);
         this.limit= limit;
-        Log.d(TAG, "Search limit is : " + this.limit);
+        Timber.d("Search limit is : %s", this.limit);
     }
 
     /**
@@ -112,7 +113,7 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
     @Override
     public List<TrackDTO> loadInBackground() {
         if (playlistDTO != null && limit == 0) {
-            Log.d(TAG, "Read tracks form playlist : " + playlistDTO.getTracks().size());
+            Timber.d("Read tracks form playlist : %s", playlistDTO.getTracks().size());
             TrackListDateSorter.sortTrackListByDescDate(playlistDTO.getTracks());
             return playlistDTO.getTracks();
         }
@@ -123,21 +124,21 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                 if (!isLoadInBackgroundCanceled()) {
-                    Log.v(TAG, "Query tracks list at URL " + url);
+                    Timber.v("Query tracks list at URL %s", url);
                     TrackDTO[] trackDTOs = restTemplate.getForObject(url, TrackDTO[].class);
-                    Log.d(TAG, "Got tracks list : " + trackDTOs.length);
+                    Timber.d("Got tracks list : %s", trackDTOs.length);
                     return Arrays.asList(trackDTOs);
                 } else {
-                    Log.d(TAG, "Load in background cancelled");
+                    Timber.d("Load in background cancelled");
                     return EMPTY_LIST;
                 }
             } else {
-                Log.d(TAG, "Null URL - returning empty list");
+                Timber.d("Null URL - returning empty list");
                 return EMPTY_LIST;
             }
 
         } catch (Exception e) {
-            Log.w(TAG, "Error with tracks list", e);
+            Timber.w(e, "Error with tracks list");
             return EMPTY_LIST;
         }
     }

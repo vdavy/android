@@ -3,13 +3,13 @@ package com.stationmillenium.android.libutils.activities;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
-import com.stationmillenium.android.BuildConfig;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
+
+import timber.log.Timber;
 
 /**
  * Receiver for the update title broadcast in {@link PlayerActivity}
@@ -17,8 +17,6 @@ import com.stationmillenium.android.libutils.intents.LocalIntentsData;
  * @author vincent
  */
 public class PlayerActivityUpdateTitleBroadcastReceiver extends BroadcastReceiver {
-
-    private static final String TAG = "UpdateTitleBR";
 
     private PlayerActivity playerActivity;
 
@@ -28,13 +26,10 @@ public class PlayerActivityUpdateTitleBroadcastReceiver extends BroadcastReceive
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Update title intent received - process...");
+        Timber.d("Update title intent received - process...");
 
         if (AppUtils.isMediaPlayerServiceRunning(playerActivity.getApplicationContext())) {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Media player service running - applying received data...");
-            }
+            Timber.d("Media player service running - applying received data...");
 
             CurrentTitleDTO songData = null;
             if ((intent != null) && (intent.getExtras() != null)) {
@@ -46,15 +41,12 @@ public class PlayerActivityUpdateTitleBroadcastReceiver extends BroadcastReceive
                 playerActivity.setSongData(songData);
 
             } else { //no data available - use default
-                Log.w(TAG, "No data available !");
+                Timber.w("No data available !");
                 playerActivity.setSongData(null);
             }
 
         } else {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "Media player service not running - reseting widgets...");
-            }
-
+            Timber.d("Media player service not running - reseting widgets...");
             playerActivity.forceStopState();
         }
     }

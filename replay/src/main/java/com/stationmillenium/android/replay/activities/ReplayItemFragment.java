@@ -3,6 +3,7 @@ package com.stationmillenium.android.replay.activities;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,7 @@ public class ReplayItemFragment extends Fragment {
     private ReplayItemFragmentBinding binding;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.replay_item_fragment, container, false);
         return binding.getRoot();
     }

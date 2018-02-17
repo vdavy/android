@@ -14,7 +14,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -31,6 +30,8 @@ import com.stationmillenium.android.providers.TweetsListLoader;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.HOME;
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SHARE_APP_INVITE;
 
@@ -41,7 +42,6 @@ import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SHAR
  */
 public class HomeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<TweetItem>> {
 
-    private static final String TAG = "MainActivity";
     private static final int LOADER_INDEX = 0;
     private static final int APP_INVITE_INTENT = 10;
     private static final int SOCIAL_NETWORKS_INDEX = 0;
@@ -73,7 +73,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
                         .build());
             }
 
-            Log.d(TAG, "Display the main activity");
+            Timber.d("Display the main activity");
         }
 
         super.onCreate(savedInstanceState);
@@ -110,11 +110,11 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
         new AlertDialog.Builder(this).setTitle(R.string.app_invite_send_by).setItems(R.array.send_by_mode, (dialog, which) -> {
             switch (which) {
                 case SOCIAL_NETWORKS_INDEX:
-                    Log.d(TAG, "Share through social networks");
+                    Timber.d("Share through social networks");
                     shareAppThroughSocialNetworks();
                     break;
                 case EMAIL_SMS_INDEX:
-                    Log.d(TAG, "Share through Email & SMS");
+                    Timber.d("Share through Email & SMS");
                     sendAppInvitationIntent();
                     break;
             }
@@ -146,16 +146,16 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+        Timber.d("onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
 
         if (requestCode == APP_INVITE_INTENT) {
             if (resultCode == RESULT_OK) {
                 String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
-                Log.d(TAG, "Invitation sent - ids : " + (ids.length >= 1 ? ids[0] : "no id"));
+                Timber.d("Invitation sent - ids : %s", (ids.length >= 1 ? ids[0] : "no id"));
                 PiwikTracker.trackScreenView(SHARE_APP_INVITE);
                 Toast.makeText(this, R.string.app_invite_thanks, Toast.LENGTH_SHORT).show();
             } else {
-                Log.d(TAG, "Invitation was cancelled");
+                Timber.d("Invitation was cancelled");
             }
         }
     }
@@ -203,7 +203,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
             startActivity(intent);
 
         } catch (ActivityNotFoundException e) {
-            Log.w(TAG, "Native app not found", e);
+            Timber.w(e, "Native app not found");
 
             //lauch web browser instead
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webURL));
@@ -222,9 +222,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
      * @param item the clicked tweet
      */
     public void openTweet(TweetItem item) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "List item clicked - open URL");
-        }
+        Timber.d("List item clicked - open URL");
         String url = item.getTweetURL();
         if (url != null) {
             if ((!url.startsWith("http://")) && (!url.startsWith("https://"))) {
@@ -232,18 +230,17 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
             }
 
             //open url
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "URL to open : " + url);
-            }
+            Timber.d("URL to open : %s", url);
+
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(browserIntent);
-        } else if (BuildConfig.DEBUG) {
-            Log.d(TAG, "No URL on this tweet");
+        } else {
+            Timber.d("No URL on this tweet");
         }
     }
 
     public void onRefresh() {
-        Log.d(TAG, "Data refresh requested");
+        Timber.d("Data refresh requested");
         getSupportLoaderManager().restartLoader(LOADER_INDEX, null, this).forceLoad();
     }
 }
