@@ -102,4 +102,13 @@ public class PiwikTracker {
             Timber.v("Debug mode - not sending page tracking info");
         }
     }
+
+    /**
+     * Piwik User Id
+     * @return the user ID, or null if not available
+     */
+    public static String getUserId() {
+        return (piwikAppTracker != null) ? piwikAppTracker.getUserId() : null;
+    }
+
 }

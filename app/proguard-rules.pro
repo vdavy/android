@@ -35,3 +35,11 @@
   **[] $VALUES;
   public *;
 }
+
+# Crashlytics rules
+# see https://firebase.google.com/docs/crashlytics/get-deobfuscated-reports?authuser=0
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
