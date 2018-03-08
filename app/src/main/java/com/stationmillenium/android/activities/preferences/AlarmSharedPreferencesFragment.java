@@ -25,9 +25,7 @@ import com.stationmillenium.android.libutils.preferences.SeekBarDialogPreference
 import com.stationmillenium.android.libutils.preferences.TimePreference;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -172,21 +170,6 @@ public class AlarmSharedPreferencesFragment extends PreferenceFragment implement
             activity.sendUpdateAlarmTimeIntent(); //update alarm
             return true;
         });
-    }
-
-    /**
-     * Convert the alarm days list from {@link String} to {@link Set}
-     *
-     * @param alarmDaysString the original {@link String}
-     * @return the converted {@link Set}
-     */
-    private Set<String> convertAlarmDaysStringToSet(String alarmDaysString) {
-        Set<String> selectedDays = null;
-        if ((alarmDaysString != null) && (!alarmDaysString.equals(""))) {
-            String[] alarmDaysArray = alarmDaysString.split(ALARM_DAYS_LIST_STRING_SEPARATOR);
-            selectedDays = new HashSet<>(Arrays.asList(alarmDaysArray));
-        }
-        return selectedDays;
     }
 
     @Override

@@ -10,9 +10,12 @@ dependencies {
     api "org.twitter4j:twitter4j-core:${rootProject.ext.twitterVersion}"
     api "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
     api "com.google.firebase:firebase-invites:${rootProject.ext.playServicesVersion}"
-    api "com.google.firebase:firebase-crash:${rootProject.ext.playServicesVersion}"
     compile "com.google.android.gms:play-services-cast-framework:${rootProject.ext.playServicesVersion}"
     api 'com.android.support.constraint:constraint-layout:1.0.2'
+    api "com.google.firebase:firebase-core:${rootProject.ext.playServicesVersion}"
+    api('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+        transitive = true
+    }
 
     testCompile "junit:junit:${rootProject.ext.junitVersion}"
     testCompile "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"

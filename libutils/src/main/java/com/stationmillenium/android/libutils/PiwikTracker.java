@@ -16,8 +16,6 @@ import timber.log.Timber;
  */
 public class PiwikTracker {
 
-    private static final String TAG = "PiwikTracker";
-
     private static final String APP_TRACKER = "App tracker";
     private static final String STREAM_TRACKER = "Stream tracker";
 
@@ -104,4 +102,13 @@ public class PiwikTracker {
             Timber.v("Debug mode - not sending page tracking info");
         }
     }
+
+    /**
+     * Piwik User Id
+     * @return the user ID, or null if not available
+     */
+    public static String getUserId() {
+        return (piwikAppTracker != null) ? piwikAppTracker.getUserId() : null;
+    }
+
 }

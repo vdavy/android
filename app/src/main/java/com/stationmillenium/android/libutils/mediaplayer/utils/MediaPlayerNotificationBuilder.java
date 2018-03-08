@@ -306,8 +306,7 @@ public class MediaPlayerNotificationBuilder {
                 NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, mediaPlayerServiceRef.get().getString(R.string.app_name), NotificationManager.IMPORTANCE_LOW);
                 notificationManager.createNotificationChannel(channel);
             }
-            Notification.Builder builder = new Notification.Builder(mediaPlayerServiceRef.get(), NOTIFICATION_CHANNEL_ID);
-            return builder;
+            return new Notification.Builder(mediaPlayerServiceRef.get(), NOTIFICATION_CHANNEL_ID);
         } else {
             return  new Notification.Builder(mediaPlayerServiceRef.get());
         }
