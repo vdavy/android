@@ -228,9 +228,6 @@
             android:name=".services.AutoRestartPlayerService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
 
     </application>
 
