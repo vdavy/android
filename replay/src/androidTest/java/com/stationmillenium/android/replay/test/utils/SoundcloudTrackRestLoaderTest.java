@@ -80,7 +80,7 @@ public class SoundcloudTrackRestLoaderTest {
     }
 
     private void assertCompleteList(List<TrackDTO> trackDTOs) {
-        assertItemList(trackDTOs, 50);
+        assertItemList(trackDTOs, 10);
     }
 
     private void assertReplayList(List<TrackDTO> trackDTOs) {

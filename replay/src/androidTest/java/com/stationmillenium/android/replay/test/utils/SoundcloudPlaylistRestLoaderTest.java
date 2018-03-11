@@ -45,7 +45,7 @@ public class SoundcloudPlaylistRestLoaderTest {
     }
 
     private void assertCompleteList(List<PlaylistDTO> playlistDTOs) {
-        assertItemList(playlistDTOs, 50);
+        assertItemList(playlistDTOs, 14);
     }
 
     private void assertPlaylistList(List<PlaylistDTO> playlistDTOs) {
