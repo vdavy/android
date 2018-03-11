@@ -20,6 +20,11 @@ android {
         unitTests.returnDefaultValues = true
     }
 
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
     // see : http://stackoverflow.com/questions/20827885/android-studio-0-4-duplicate-files-copied-in-apk-meta-inf-license-txt
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
