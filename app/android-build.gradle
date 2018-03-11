@@ -48,6 +48,11 @@ android {
         exclude 'META-INF/license.txt'
     }
 
+    // see: https://stackoverflow.com/questions/47298895/more-than-one-file-was-found-with-os-independent-path-protobuf-meta
+    packagingOptions {
+        pickFirst 'protobuf.meta'
+    }
+
 }
 
 
