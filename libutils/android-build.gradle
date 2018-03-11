@@ -25,4 +25,10 @@ android {
         targetCompatibility 1.8
     }
 
+    // see : https://stackoverflow.com/questions/44342455/more-than-one-file-was-found-with-os-independent-path-meta-inf-license
+    packagingOptions {
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+    }
+
 }

@@ -18,14 +18,18 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeDown;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.stationmillenium.android.replay.test.activities.RecyclerViewMatcher.withRecyclerView;
+import static com.stationmillenium.android.replay.test.activities.TestUtils.withCustomConstraints;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.not;
@@ -42,7 +46,7 @@ public class TestReplayActivity {
 
     @Test
     public void testHeader() {
-        onView(withId(R.id.replay_count)).check(matches(withText("50 replays disponibles")));
+        onView(withId(R.id.replay_count)).check(matches(withText("14 playlists disponibles")));
         onView(withRecyclerView(R.id.replay_recyclerview).atPosition(0)).check(matches(hasDescendant(allOf(withId(R.id.replay_title), withText(any(String.class))))));
         onView(withRecyclerView(R.id.replay_recyclerview).atPosition(0)).check(matches(hasDescendant(allOf(withId(R.id.replay_description), withText(any(String.class))))));
         onView(withRecyclerView(R.id.replay_recyclerview).atPosition(0)).check(matches(hasDescendant(allOf(withId(R.id.replay_date), withText(any(String.class))))));
@@ -51,6 +55,7 @@ public class TestReplayActivity {
 
     @Test
     public void testExtraReplay() throws InterruptedException {
+        onView(allOf(withId(R.id.replay_viewpager), hasFocus())).perform(withCustomConstraints(swipeLeft(), isDisplayingAtLeast(85)));
         testHeader();
         onView(withId(R.id.replay_recyclerview)).perform(scrollToPosition(49));
         UiDevice.getInstance(getInstrumentation()).swipe(500, 1000, 500, 500, 150);
@@ -60,12 +65,13 @@ public class TestReplayActivity {
 
     @Test
     public void testReload() throws InterruptedException {
-        onView(withId(R.id.replay_recyclerview)).perform(swipeDown());
-        onView(withId(R.id.replay_count)).check(matches(withText("50 replays disponibles")));
+        onView(allOf(withId(R.id.replay_srl), hasFocus())).perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(85)));
+        onView(withId(R.id.replay_count)).check(matches(withText("14 playlists disponibles")));
     }
 
     @Test
     public void testFABClick() {
+        onView(allOf(withId(R.id.replay_viewpager), hasFocus())).perform(withCustomConstraints(swipeLeft(), isDisplayingAtLeast(85)));
         onView(withId(R.id.replay_search_menu)).check(doesNotExist());
         onView(withId(R.id.search_fab)).perform(click());
         onView(withId(R.id.replay_search_menu)).check(matches(isDisplayed()));
@@ -78,6 +84,7 @@ public class TestReplayActivity {
 
     @Test
     public void testSearchViewRotate() throws InterruptedException, RemoteException {
+        onView(allOf(withId(R.id.replay_viewpager), hasFocus())).perform(withCustomConstraints(swipeLeft(), isDisplayingAtLeast(85)));
         onView(withId(R.id.replay_search_menu)).check(doesNotExist());
         onView(withId(R.id.search_fab)).perform(click());
         onView(withId(R.id.replay_search_menu)).check(matches(isDisplayed()));
