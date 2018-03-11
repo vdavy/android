@@ -4,7 +4,7 @@
 -dontwarn twitter4j.**
 
 # Avoid libs
--keep class android.support.v7.widget.SearchView { *; }
+-keep class android.support.v7.** { *; }
 -keep class twitter4j.** { *; }
 
 -keepattributes EnclosingMethod
@@ -43,3 +43,6 @@
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
+
+# Google cast
+-keep class com.stationmillenium.android.cast.CastOptionsProvider { *; }
