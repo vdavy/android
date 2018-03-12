@@ -7,6 +7,7 @@
         <item name="android:statusBarColor">@color/accent</item>
         <item name="android:dropDownItemStyle">@style/SuggestAutoCompleteStyle</item>
         <item name="castMiniControllerStyle">@style/CustomCastMiniController</item>
+        <item name="castIntroOverlayStyle">@style/CustomCastIntroOverlay</item>
     </style>
 
 </resources>
