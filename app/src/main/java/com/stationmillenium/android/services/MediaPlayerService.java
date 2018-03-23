@@ -419,7 +419,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         //send local broadcast intent for widget
         Intent widgetIntent = new Intent(state.getAssociatedIntent().toString());
-        sendBroadcast(widgetIntent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(widgetIntent);
 
         //adjust the remote control state
         switch (playerState) {

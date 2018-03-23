@@ -195,11 +195,6 @@
         <receiver android:name=".widgets.WidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.stationmillenium.android.intents.ON_PLAYER_PLAY" />
-                <action android:name="com.stationmillenium.android.intents.ON_PLAYER_PAUSE" />
-                <action android:name="com.stationmillenium.android.intents.ON_PLAYER_STOP" />
-                <action android:name="com.stationmillenium.android.intents.ON_PLAYER_BUFFERING" />
-                <action android:name="com.stationmillenium.android.intents.CURRENT_TITLE_UPDATED" />
             </intent-filter>
 
             <meta-data

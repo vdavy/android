@@ -81,7 +81,6 @@ public class CurrentTitlePlayerService extends JobIntentService {
                         Timber.d("Send intent to update current title : %s", intentToSend);
 
                         LocalBroadcastManager.getInstance(this).sendBroadcast(intentToSend);
-                        sendBroadcast(intentToSend); //for the widget
 
                     } catch (XMLParserException e) {
                         Timber.w(e, "Error while parsing XML data");
