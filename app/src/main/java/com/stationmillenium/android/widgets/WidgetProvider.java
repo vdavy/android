@@ -11,12 +11,14 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -258,4 +260,15 @@ public class WidgetProvider extends AppWidgetProvider {
         awm.partiallyUpdateAppWidget(awm.getAppWidgetIds(componentName), remoteViews);
     }
 
+    @Override
+    public void onEnabled(Context context) {
+        for (LocalIntents localIntent : new LocalIntents[] { LocalIntents.CURRENT_TITLE_UPDATED, LocalIntents.ON_PLAYER_PLAY, LocalIntents.ON_PLAYER_PAUSE, LocalIntents.ON_PLAYER_STOP, LocalIntents.ON_PLAYER_BUFFERING}) {
+            LocalBroadcastManager.getInstance(context).registerReceiver(this, new IntentFilter(localIntent.toString()));
+        }
+    }
+
+    @Override
+    public void onDisabled(Context context) {
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
+    }
 }
