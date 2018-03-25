@@ -142,4 +142,8 @@
         <item name="tabIndicatorColor">@color/accent</item>
     </style>
 
+    <style name="Drawer">
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>
