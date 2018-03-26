@@ -154,4 +154,8 @@
         <item name="android:textColorHint">@color/icons</item>
     </style>
 
+    <style name="Drawer">
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>

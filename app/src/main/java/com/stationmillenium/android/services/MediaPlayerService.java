@@ -10,6 +10,7 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -46,6 +47,7 @@ import com.stationmillenium.android.libutils.mediaplayer.utils.MediaPlayerCurren
 import com.stationmillenium.android.libutils.mediaplayer.utils.MediaPlayerNotificationBuilder;
 import com.stationmillenium.android.libutils.mediaplayer.utils.MediaPlayerOnAudioFocusChangeHandler;
 import com.stationmillenium.android.libutils.mediaplayer.utils.MediaPlayerServiceHandler;
+import com.stationmillenium.android.widgets.WidgetProvider;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -102,6 +104,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
     private MediaPlayerNotificationBuilder mediaPlayerNotificationBuilder;
     private MediaPlayerOnAudioFocusChangeHandler mediaPlayerOnAudioFocusChangeHandler;
+    private WidgetProvider widgetProvider;
 
     /**
      * Create an {@link Intent} to open the {@link PlayerActivity} with data
@@ -396,6 +399,9 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         cancelCurrentTitleTimerServiceTimer();
         cancelAutoRestartPlayerServiceTimer();
 
+        //disengage widget update
+        //unregisterWidgetBR();
+
         //stop service
         Timber.d("Stop service");
         stopForeground(true);
@@ -476,7 +482,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                     mediaPlayer.release();
                 }
                 mediaPlayer = null;
-
+                unregisterWidgetBR();
                 try { //reinit media player
                     initMediaPlayer();
                 } catch (IOException e) {
@@ -515,7 +521,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         //free resources
         Timber.d("Free handlers");
-
+        unregisterWidgetBR();
         if (audioManager != null) {
             if (remoteControlClient != null) {
                 audioManager.unregisterRemoteControlClient(remoteControlClient);
@@ -583,6 +589,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         //set reference
         MediaPlayerCurrentPositionGrabber.setMediaPlayerReference(mediaPlayer);
+        registerWidgetBR();
 
         //send state intent
         sendStateIntent(PlayerState.BUFFERING);
@@ -722,4 +729,21 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             mediaPlayer.setVolume(volumeLog, volumeLog);
         }
     }
+
+    private void registerWidgetBR() {
+        if (widgetProvider == null) {
+            widgetProvider = new WidgetProvider();
+            for (LocalIntents localIntent : new LocalIntents[]{LocalIntents.CURRENT_TITLE_UPDATED, LocalIntents.ON_PLAYER_PLAY, LocalIntents.ON_PLAYER_PAUSE, LocalIntents.ON_PLAYER_STOP, LocalIntents.ON_PLAYER_BUFFERING}) {
+                LocalBroadcastManager.getInstance(this).registerReceiver(widgetProvider, new IntentFilter(localIntent.toString()));
+            }
+        }
+    }
+
+    private void unregisterWidgetBR() {
+        if (widgetProvider != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(widgetProvider);
+            widgetProvider = null;
+        }
+    }
+
 }

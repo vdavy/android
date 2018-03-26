@@ -10,4 +10,5 @@
     app:menu="@menu/navigation_drawer"
     app:headerLayout="@layout/navigation_drawer_header"
     app:itemTextColor="@color/nav_drawer_text_color_state"
-    app:itemIconTint="@color/nav_drawer_icon_color_state"/>
+    app:itemIconTint="@color/nav_drawer_icon_color_state"
+    app:theme="@style/Drawer"/>
