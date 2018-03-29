@@ -17,15 +17,15 @@ dependencies {
     api 'jp.wasabeef:glide-transformations:3.1.1'
     api 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    testCompile "junit:junit:${rootProject.ext.junitVersion}"
-    testCompile "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"
+    testImplementation "junit:junit:${rootProject.ext.junitVersion}"
+    testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"
 
-    androidTestCompile "com.android.support.test:runner:${rootProject.ext.supportTestVersion}"
-    androidTestCompile "com.android.support.test:rules:${rootProject.ext.supportTestVersion}"
-    androidTestCompile "com.android.support.test.espresso:espresso-core:${rootProject.ext.espressoCoreVersion}"
-    androidTestCompile "com.android.support.test.espresso:espresso-contrib:${rootProject.ext.espressoCoreVersion}"
-    androidTestCompile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
-    androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:${rootProject.ext.uiautomatorVersion}"
-    androidTestCompile "com.google.dexmaker:dexmaker-mockito:${rootProject.ext.dexmakerVersion}"
+    androidTestImplementation "com.android.support.test:runner:${rootProject.ext.supportTestVersion}"
+    androidTestImplementation "com.android.support.test:rules:${rootProject.ext.supportTestVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:${rootProject.ext.espressoCoreVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:${rootProject.ext.espressoCoreVersion}"
+    androidTestImplementation "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
+    androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:${rootProject.ext.uiautomatorVersion}"
+    androidTestImplementation "com.google.dexmaker:dexmaker-mockito:${rootProject.ext.dexmakerVersion}"
 }
 
