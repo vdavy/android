@@ -279,13 +279,17 @@ public class PlayerActivity extends AppCompatActivity {
         //if the player is not running
         if (!AppUtils.isMediaPlayerServiceRunning(getApplicationContext())) {
             //auto start player
-            if ((getIntent() != null) && (getIntent().getBooleanExtra(LocalIntentsData.ALLOW_AUTOSTART.toString(), false))) {
-                if (getDefaultSharedPreferences(this).getBoolean(AUTOSTART_RADIO, false)) {
+            if (getIntent() != null) {
+                if (getIntent().getBooleanExtra(LocalIntentsData.ALLOW_AUTOSTART.toString(), false)) {
+                    if (getDefaultSharedPreferences(this).getBoolean(AUTOSTART_RADIO, false)) {
+                        startPlayer();
+                    }
+                    getIntent().removeExtra(LocalIntentsData.ALLOW_AUTOSTART.toString());
+                } else if (getIntent().getBooleanExtra(LocalIntentsData.FORCE_AUTOSTART.toString(), false)) {
                     startPlayer();
+                    getIntent().removeExtra(LocalIntentsData.FORCE_AUTOSTART.toString());
                 }
-                getIntent().removeExtra(LocalIntentsData.ALLOW_AUTOSTART.toString());
             }
-
             playerFragment.setPlayerState(PlayerState.STOPPED); //be sure we are in stopped state
         } else {
             askForRefresh(); //check if need some fresh data

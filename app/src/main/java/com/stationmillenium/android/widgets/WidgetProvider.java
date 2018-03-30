@@ -51,9 +51,9 @@ public class WidgetProvider extends AppWidgetProvider {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
         //play pending intent
-        Intent playIntent = new Intent(context, MediaPlayerService.class);
-        playIntent.putExtra(LocalIntentsData.RESUME_PLAYER_ACTIVITY.toString(), false);
-        PendingIntent playPendingIntent = PendingIntent.getService(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent playIntent = new Intent(context, PlayerActivity.class);
+        playIntent.putExtra(LocalIntentsData.FORCE_AUTOSTART.toString(), true);
+        PendingIntent playPendingIntent = PendingIntent.getActivity(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.widget_play_button, playPendingIntent);
 
         //pause pending intent
@@ -206,9 +206,9 @@ public class WidgetProvider extends AppWidgetProvider {
                 stopButtonVisible = false;
 
                 //update play pending intent
-                Intent playIntent = new Intent(context, MediaPlayerService.class);
-                playIntent.putExtra(LocalIntentsData.RESUME_PLAYER_ACTIVITY.toString(), false);
-                PendingIntent playPendingIntent = PendingIntent.getService(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                Intent playIntent = new Intent(context, PlayerActivity.class);
+                playIntent.putExtra(LocalIntentsData.FORCE_AUTOSTART.toString(), true);
+                PendingIntent playPendingIntent = PendingIntent.getActivity(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 remoteViews.setOnClickPendingIntent(R.id.widget_play_button, playPendingIntent);
 
                 //set global pending intent
