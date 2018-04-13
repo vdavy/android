@@ -355,6 +355,9 @@ public class PlayerActivity extends AppCompatActivity {
             Timber.d("Open player with data");
             playerActivityUpdateTitleBroadcastReceiver.onReceive(this, intent);
             playerFragment.setPlayerState((PlayerState) intent.getSerializableExtra(LocalIntentsData.CURRENT_STATE.toString()));
+        } else if (intent.getBooleanExtra(LocalIntentsData.FORCE_AUTOSTART.toString(), false)) {
+            startPlayer();
+            intent.removeExtra(LocalIntentsData.FORCE_AUTOSTART.toString());
         }
     }
 
