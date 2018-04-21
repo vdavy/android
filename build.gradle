@@ -8,21 +8,23 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'com.google.gms:google-services:3.2.0'
+        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath 'com.google.gms:google-services:3.2.1'
         classpath 'com.google.firebase:firebase-plugins:1.1.5'
-        classpath 'io.fabric.tools:gradle:1.25.1'
+        classpath 'io.fabric.tools:gradle:1.25.2'
     }
 }
 
 ext {
     // libs version
-    supportLibVersion = '27.1.0'
-    jacksonVersion = '2.9.4'
-    piwikSdkVersion = '3.0.0'
-    playServicesVersion = '11.8.0'
+    supportLibVersion = '27.1.1'
+    jacksonVersion = '2.9.5'
+    piwikSdkVersion = '3.0.1'
+    playServicesVersion = '15.0.0'
     twitterVersion = "4.0.6"
     glideVersion = "4.6.1"
+    timberVersion = "4.7.0"
+    constraintLayoutVersion = "1.1.0"
 
     // test libs version
     supportTestVersion = "1.0.1"

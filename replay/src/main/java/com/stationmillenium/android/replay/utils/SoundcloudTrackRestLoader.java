@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.Serializable;
 import java.text.Normalizer;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import timber.log.Timber;
@@ -127,7 +128,17 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
                     Timber.v("Query tracks list at URL %s", url);
                     TrackDTO[] trackDTOs = restTemplate.getForObject(url, TrackDTO[].class);
                     Timber.d("Got tracks list : %s", trackDTOs.length);
-                    return Arrays.asList(trackDTOs);
+                    List<TrackDTO> trackDTOList = Arrays.asList(trackDTOs);
+                    Collections.sort(trackDTOList, (o1, o2) -> {
+                        if (o1 == null || o1.getLastModified() == null) {
+                            return 1;
+                        } else if (o2 == null || o2.getLastModified() == null) {
+                            return -1;
+                        } else {
+                            return o1.getLastModified().compareTo(o2.getLastModified());
+                        }
+                    });
+                    return trackDTOList;
                 } else {
                     Timber.d("Load in background cancelled");
                     return EMPTY_LIST;
