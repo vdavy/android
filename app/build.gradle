@@ -12,6 +12,8 @@ dependencies {
     api "com.google.firebase:firebase-invites:${rootProject.ext.firebaseVersion}"
     implementation "com.google.android.gms:play-services-cast-framework:${rootProject.ext.playServicesVersion}"
     api "com.android.support.constraint:constraint-layout:${rootProject.ext.constraintLayoutVersion}"
+    api "com.google.android.gms:play-services-cast-framework:${rootProject.ext.playServicesVersion}"
+    api "com.google.firebase:firebase-core:${rootProject.ext.firebaseVersion}"
     implementation "com.google.android.gms:play-services-cast-framework:${rootProject.ext.playServicesVersion}"
     api "com.google.firebase:firebase-core:${rootProject.ext.firebaseVersion}"
     api('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
