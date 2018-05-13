@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.MediaLoadOptions;
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
@@ -103,8 +104,8 @@ public class PlayerActivity extends AppCompatActivity {
                 .setMetadata(mediaMetadata)
                 .build();
             remoteMediaClient = castSession.getRemoteMediaClient();
-            remoteMediaClient.addListener(rmcListener);
-            remoteMediaClient.load(mediaInfo);
+            remoteMediaClient.registerCallback(rmcListener);
+            remoteMediaClient.load(mediaInfo, new MediaLoadOptions.Builder().build());
         }
 
         @Override
@@ -116,7 +117,7 @@ public class PlayerActivity extends AppCompatActivity {
         public void onSessionEnding(CastSession castSession) {
             Timber.v("onSessionEnding");
             if (castSession != null && castSession.getRemoteMediaClient() != null && rmcListener != null) {
-                castSession.getRemoteMediaClient().removeListener(rmcListener);
+                castSession.getRemoteMediaClient().unregisterCallback(rmcListener);
             }
         }
 
@@ -157,12 +158,12 @@ public class PlayerActivity extends AppCompatActivity {
             .setMetadata(mediaMetadata)
             .build();
         remoteMediaClient = castSession.getRemoteMediaClient();
-        remoteMediaClient.addListener(rmcListener);
+        remoteMediaClient.registerCallback(rmcListener);
         remoteMediaClient.load(mediaInfo);
         Snackbar.make(preferencesActivityBinding.playerCoordinatorLayout, R.string.player_casting, Snackbar.LENGTH_SHORT).show();
     }
 
-    private RemoteMediaClient.Listener rmcListener = new RemoteMediaClient.Listener() {
+    private RemoteMediaClient.Callback rmcListener = new RemoteMediaClient.Callback() {
         @Override
         public void onStatusUpdated() {
             Timber.v("onStatusUpdated");
