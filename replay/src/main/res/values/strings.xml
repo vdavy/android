@@ -25,17 +25,17 @@
     <string name="replay_load_more_max_reached">Nombre maxi de replays atteint</string>
     <string name="playlist_load_more">Chargement de plus de playlists&#8230;</string>
     <string name="playlist_load_more_max_reached">Nombre maxi de playlists atteint</string>
-    <string name="playlist_load_playlist_more_max_reached">Tous les replays de la playlist sont chargés</string>
+    <string name="playlist_load_playlist_more_max_reached">Toutes les playlists sont chargées</string>
+    <string name="playlist_load_playlist_replay_more_max_reached">Tous les replays de la playlist sont chargés</string>
     <string name="replay_date_duration_separator">-</string>
 
     <string name="replay_toolbar_normal_title">Le replay</string>
-    <string name="replay_toolbar_hash_title">Le replay : #%s</string>
     <string name="replay_toolbar_search_title">Le replay : %s</string>
     <string name="replay_toolbar_playlist_title">Playlist : %s</string>
 
     <string name="replay_search_menu">Rechercher</string>
     <string name="replay_search_text">Recherche de replays</string>
-    <string name="replay_search_hint">Rechercher des replays&#8230;</string>
+    <string name="replay_search_hint">Rechercher playlists/replays&#8230;</string>
 
     <string name="replay_unavailable">Replay indisponible</string>
 

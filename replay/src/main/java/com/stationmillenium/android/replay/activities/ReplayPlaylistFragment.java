@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,12 +34,7 @@ public class ReplayPlaylistFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.replay_playlist_fragment, container, false);
         binding.replayRecyclerview.setAdapter(replayPlaylistAdapter);
         binding.replaySrl.setColorSchemeResources(R.color.primary, R.color.accent);
-        binding.replaySrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                ((ReplayActivity) getActivity()).onPlaylistRefresh();
-            }
-        });
+        binding.replaySrl.setOnRefreshListener(() -> ((ReplayActivity) getActivity()).onPlaylistRefresh());
         binding.replayRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -53,7 +47,7 @@ public class ReplayPlaylistFragment extends Fragment {
                         // last item is fully displayed
                         && linearLayoutManager.findLastVisibleItemPosition() == (replayPlaylistAdapter.getItemCount() - 1)
                         && linearLayoutManager.findLastCompletelyVisibleItemPosition() == (replayPlaylistAdapter.getItemCount() - 1)) {
-                    ((ReplayActivity) getActivity()).triggerExtraDataLoad(ReplayActivity.PLAYLIST_LOADER_INDEX, replayPlaylistAdapter.getItemCount());
+                    ((ReplayActivity) getActivity()).triggerExtraDataLoad(ReplayActivity.PLAYLIST_LOADER_INDEX, replayPlaylistAdapter.getPlaylistDTOs());
                 }
             }
         });

@@ -114,9 +114,10 @@ public class SoundcloudTrackRestLoader extends AsyncTaskLoader<List<? extends Se
     @Override
     public List<TrackDTO> loadInBackground() {
         if (playlistDTO != null && limit == 0) {
-            Timber.d("Read tracks form playlist : %s", playlistDTO.getTracks().size());
-            TrackListDateSorter.sortTrackListByDescDate(playlistDTO.getTracks());
-            return playlistDTO.getTracks();
+//            Timber.d("Read tracks form playlist : %s", playlistDTO.getTracks().size());
+//            TrackListDateSorter.sortTrackListByDescDate(playlistDTO.getTracks());
+//            return playlistDTO.getTracks();
+            return EMPTY_LIST;
         }
 
         try {

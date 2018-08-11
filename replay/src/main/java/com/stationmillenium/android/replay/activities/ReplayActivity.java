@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -27,11 +28,12 @@ import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.databinding.ReplayActivityBinding;
 import com.stationmillenium.android.replay.dto.PlaylistDTO;
 import com.stationmillenium.android.replay.dto.TrackDTO;
-import com.stationmillenium.android.replay.utils.SoundcloudPlaylistRestLoader;
+import com.stationmillenium.android.replay.utils.ReplayPlaylistRestLoader;
 import com.stationmillenium.android.replay.utils.SoundcloudTrackRestLoader;
 import com.stationmillenium.android.replay.utils.SoundcloudTrackRestLoader.QueryType;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
@@ -44,16 +46,15 @@ import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.REPL
  */
 public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks<List<? extends Serializable>> {
 
-    private static final String TAG = "ReplayActivity";
     public static final int TRACK_LOADER_INDEX = 0;
     public static final int PLAYLIST_LOADER_INDEX = 1;
     private static final String LIMIT = "limit";
+    private static final String ALREADY_LOADED_ITEMS = "already_loaded_items";
     private static final String SEARCH_TYPE = "search_type";
     private static final String SEARCH_QUERY = "search_query";
     private static final String SEARCH_PARAMS = "search_params";
     private static final String IS_SEARCH_VIEW_EXPANDED_BUNDLE = "expand_search_view";
     private static final String SEARCHVIEW_TEXT = "searchview_text";
-    private static final int EXTRA_REPLAY_COUNT = 30;
     private static final int TOTAL_MAX_REPLAY = 200;
     private static final int PLAYLIST_TAB_INDEX = 0;
     private static final int TITLES_TAB_INDEX = 1;
@@ -67,6 +68,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
     private DrawerUtils drawerUtils;
 
     private Bundle searchParams;
+    private Bundle savedSearchParams;
     private boolean expandActionViewOnCreate;
     private String searchviewText;
     private String titleTabTitle;
@@ -108,7 +110,12 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
                 if (position == PLAYLIST_TAB_INDEX) {
                     binding.setItemCount(replayPlaylistFragment.getItemCount());
                     titleTabTitle = getSupportActionBar().getTitle().toString();
-                    setToolbarTitle(null);
+                    if (savedSearchParams != null) {
+                        setToolbarTitle(savedSearchParams);
+                        savedSearchParams = null;
+                    } else {
+                        setToolbarTitle(null);
+                    }
                 } else {
                     binding.setItemCount(replayTitleFragment.getItemCount());
                     getSupportActionBar().setTitle(titleTabTitle);
@@ -212,26 +219,47 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
     @Override
     public Loader<List<? extends Serializable>> onCreateLoader(int id, Bundle args) {
         if (id == TRACK_LOADER_INDEX) {
-            replayTitleFragment.setRefreshing(true);
-            if (args != null) {
-                if (args.containsKey(PLAYLIST_BUNDLE)) {
-                    binding.replayViewpager.setCurrentItem(TITLES_TAB_INDEX);
-                    return (args.containsKey(LIMIT))
-                            ? new SoundcloudTrackRestLoader(this, (PlaylistDTO) args.get(PLAYLIST_BUNDLE), args.getInt(LIMIT))
-                            : new SoundcloudTrackRestLoader(this, (PlaylistDTO) args.get(PLAYLIST_BUNDLE));
-                } else if (args.containsKey(SEARCH_TYPE)) {
-                    return (args.containsKey(LIMIT))
-                            ? new SoundcloudTrackRestLoader(this, (QueryType) args.getSerializable(SEARCH_TYPE), args.getString(SEARCH_QUERY), args.getInt(LIMIT))
-                            : new SoundcloudTrackRestLoader(this, (QueryType) args.getSerializable(SEARCH_TYPE), args.getString(SEARCH_QUERY));
-                } else if (args.containsKey(LIMIT)) {
-                    return new SoundcloudTrackRestLoader(this, args.getInt(LIMIT));
-                }
-            }
-            return new SoundcloudTrackRestLoader(this);
+            return createTrackLoader(args);
         } else {
-            replayPlaylistFragment.setRefreshing(true);
-            return (args != null && args.containsKey(LIMIT)) ? new SoundcloudPlaylistRestLoader(this, args.getInt(LIMIT)) : new SoundcloudPlaylistRestLoader(this);
+            return createPlaylistLoader(args);
         }
+    }
+
+    @NonNull
+    private Loader<List<? extends Serializable>> createPlaylistLoader(Bundle args) {
+        replayPlaylistFragment.setRefreshing(true);
+        if (args != null) {
+            if (args.containsKey(SEARCH_QUERY)) {
+                return (args.containsKey(LIMIT))
+                        ? new ReplayPlaylistRestLoader(this, args.getString(SEARCH_QUERY),
+                            args.getInt(LIMIT), (List<PlaylistDTO>) args.getSerializable(ALREADY_LOADED_ITEMS))
+                        : new ReplayPlaylistRestLoader(this, args.getString(SEARCH_QUERY));
+            } else if (args.containsKey(LIMIT)) {
+                return new ReplayPlaylistRestLoader(this, args.getInt(LIMIT), (List<PlaylistDTO>) args.getSerializable(ALREADY_LOADED_ITEMS));
+            }
+        }
+        return new ReplayPlaylistRestLoader(this);
+    }
+
+    @NonNull
+    private Loader<List<? extends Serializable>> createTrackLoader(Bundle args) {
+        replayTitleFragment.setRefreshing(true);
+        if (args != null) {
+            if (args.containsKey(PLAYLIST_BUNDLE)) {
+                binding.replayViewpager.setCurrentItem(TITLES_TAB_INDEX);
+                return (args.containsKey(LIMIT))
+                        ? new SoundcloudTrackRestLoader(this, (PlaylistDTO) args.get(PLAYLIST_BUNDLE), args.getInt(LIMIT))
+                        : new SoundcloudTrackRestLoader(this, (PlaylistDTO) args.get(PLAYLIST_BUNDLE));
+            } else if (args.containsKey(SEARCH_TYPE)) {
+                return (args.containsKey(LIMIT))
+                        ? new SoundcloudTrackRestLoader(this, (QueryType) args.getSerializable(SEARCH_TYPE), args.getString(SEARCH_QUERY),
+                            args.getInt(LIMIT))
+                        : new SoundcloudTrackRestLoader(this, (QueryType) args.getSerializable(SEARCH_TYPE), args.getString(SEARCH_QUERY));
+            } else if (args.containsKey(LIMIT)) {
+                return new SoundcloudTrackRestLoader(this, args.getInt(LIMIT));
+            }
+        }
+        return new SoundcloudTrackRestLoader(this);
     }
 
     @Override
@@ -269,6 +297,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
 
     public void onPlaylistRefresh() {
         Timber.d("Playlist data refresh requested");
+        setToolbarTitle(null); // we reinit the search params to default
         getSupportLoaderManager().restartLoader(PLAYLIST_LOADER_INDEX, null, this).forceLoad();
     }
 
@@ -290,26 +319,38 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
      * End scrolling happened
      * Trigger extra data load
      * @param loaderIndex the loader index to use, to select data type
-     * @param replayCount the current replay count
+     * @param listItems the current item for re-injection
      */
-    public void triggerExtraDataLoad(int loaderIndex, int replayCount) {
-        if (replayCount > 0) {
-            if (searchParams != null && searchParams.containsKey(PLAYLIST_BUNDLE) && replayCount >= ((PlaylistDTO) searchParams.get(PLAYLIST_BUNDLE)).getTrackCount()) {
+    public void triggerExtraDataLoad(int loaderIndex, List<? extends Serializable> listItems) {
+        if (listItems.size() > 0) {
+            if ((listItems.size() % getResources().getInteger(R.integer.default_page_size) > 0)
+                || (searchParams != null && searchParams.containsKey(PLAYLIST_BUNDLE) && listItems.size() >= ((PlaylistDTO) searchParams.get(PLAYLIST_BUNDLE)).getTrackCount())) {
                 Timber.v("All extra data already loaded");
-                Snackbar.make(binding.replayCoordinatorLayout, R.string.playlist_load_playlist_more_max_reached, Snackbar.LENGTH_SHORT).show();
-            } else if (replayCount <= TOTAL_MAX_REPLAY) {
+                Snackbar.make(binding.replayCoordinatorLayout,
+                        (loaderIndex == TRACK_LOADER_INDEX)
+                                ? R.string.playlist_load_playlist_replay_more_max_reached
+                                : R.string.playlist_load_playlist_more_max_reached,
+                        Snackbar.LENGTH_SHORT).show();
+            } else if (listItems.size() <= TOTAL_MAX_REPLAY) {
                 Timber.d("Load extra data");
                 Bundle bundle = new Bundle();
-                bundle.putInt(LIMIT, replayCount + EXTRA_REPLAY_COUNT);
+                bundle.putInt(LIMIT, listItems.size() + getResources().getInteger(R.integer.default_page_size));
+                bundle.putSerializable(ALREADY_LOADED_ITEMS, (ArrayList<Serializable>) listItems);
                 if (loaderIndex == TRACK_LOADER_INDEX && searchParams != null) {
                     Timber.v("Add search params for extra data load");
                     bundle.putAll(searchParams);
                 }
-                Snackbar.make(binding.replayCoordinatorLayout, (loaderIndex == TRACK_LOADER_INDEX) ? R.string.replay_load_more : R.string.playlist_load_more, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(binding.replayCoordinatorLayout, (loaderIndex == TRACK_LOADER_INDEX)
+                            ? R.string.replay_load_more
+                            : R.string.playlist_load_more,
+                        Snackbar.LENGTH_SHORT).show();
                 getSupportLoaderManager().restartLoader(loaderIndex, bundle, this).forceLoad();
             } else {
                 Timber.v("All extra data already loaded");
-                Snackbar.make(binding.replayCoordinatorLayout, (loaderIndex == TRACK_LOADER_INDEX) ? R.string.replay_load_more_max_reached : R.string.playlist_load_more_max_reached, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(binding.replayCoordinatorLayout, (loaderIndex == TRACK_LOADER_INDEX)
+                            ? R.string.replay_load_more_max_reached
+                            : R.string.playlist_load_more_max_reached,
+                        Snackbar.LENGTH_SHORT).show();
             }
         } else {
             Timber.v("Empty replay list - extra load disabled");
@@ -356,9 +397,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
             if (searchParams.containsKey(PLAYLIST_BUNDLE)) {
                 titleTabTitle = getString(R.string.replay_toolbar_playlist_title, ((PlaylistDTO) searchParams.get(PLAYLIST_BUNDLE)).getTitle());
             } else {
-                getSupportActionBar().setTitle(getString((searchParams.getSerializable(SEARCH_TYPE) == QueryType.SEARCH)
-                                ? R.string.replay_toolbar_search_title : R.string.replay_toolbar_hash_title,
-                        searchParams.getString(SEARCH_QUERY)));
+                getSupportActionBar().setTitle(getString(R.string.replay_toolbar_search_title, searchParams.getString(SEARCH_QUERY)));
             }
         } else {
             getSupportActionBar().setTitle(R.string.replay_toolbar_normal_title);
@@ -372,10 +411,11 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
             String query = intent.getStringExtra(SearchManager.QUERY);
             Timber.d("Search : %s", query);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(SEARCH_TYPE, QueryType.SEARCH);
             bundle.putString(SEARCH_QUERY, query);
             setToolbarTitle(bundle);
-            getSupportLoaderManager().restartLoader(TRACK_LOADER_INDEX, bundle, this).forceLoad();
+            getSupportLoaderManager().restartLoader(binding.replayViewpager.getCurrentItem() == PLAYLIST_TAB_INDEX
+                    ? PLAYLIST_LOADER_INDEX
+                    : TRACK_LOADER_INDEX, bundle, this).forceLoad();
         }
     }
 
@@ -413,6 +453,11 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
      */
     public void openPlaylist(PlaylistDTO playlistDTO) {
         Timber.v("Playlist open required");
+        // save search params if we are in search mode
+        if (searchParams != null && searchParams.containsKey(SEARCH_QUERY)) {
+            savedSearchParams = searchParams;
+        }
+
         Bundle bundle = new Bundle();
         bundle.putSerializable(PLAYLIST_BUNDLE, playlistDTO);
         setToolbarTitle(bundle);

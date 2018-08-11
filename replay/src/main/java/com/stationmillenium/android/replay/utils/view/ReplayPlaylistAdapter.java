@@ -48,4 +48,8 @@ public class ReplayPlaylistAdapter extends Adapter<ReplayPlaylistViewHolder> {
     public void setPlaylistDTOs(List<PlaylistDTO> playlistDTOs) {
         this.playlistDTOs = playlistDTOs;
     }
+
+    public List<PlaylistDTO> getPlaylistDTOs() {
+        return playlistDTOs;
+    }
 }

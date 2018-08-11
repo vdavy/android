@@ -75,20 +75,6 @@ public class GlideUtils {
                                 new ColorFilterTransformation(ResourcesCompat.getColor(imageView.getContext().getResources(), R.color.accent, null)),
                                 new BlurTransformation(10),
                                 new RoundedCornersTransformation(imageView.getResources().getDimensionPixelSize(R.dimen.replay_item_tag_space), 0))))
-//                .listener(new RequestListener<Drawable>() {
-//                    @Override
-//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                        Timber.e(e);
-//                        return false;
-//                    }
-//
-//                    @Override
-//                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                        imageView.setVisibility(View.VISIBLE);
-//                        return false;
-//                    }
-//
-//                })
                 .into(imageView);
     }
 
