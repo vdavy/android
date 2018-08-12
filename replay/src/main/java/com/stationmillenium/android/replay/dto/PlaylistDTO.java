@@ -1,7 +1,6 @@
 package com.stationmillenium.android.replay.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 
@@ -14,10 +13,8 @@ public class PlaylistDTO implements Serializable {
 
     private int id;
     private String title;
-    @JsonProperty("imageURL")
-    private String artworkURL;
-    @JsonProperty("count")
-    private int trackCount;
+    private String imageURL;
+    private int count;
 
     public int getId() {
         return id;
@@ -35,19 +32,19 @@ public class PlaylistDTO implements Serializable {
         this.title = title;
     }
 
-    public String getArtworkURL() {
-        return artworkURL;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setArtworkURL(String artworkURL) {
-        this.artworkURL = artworkURL;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
-    public int getTrackCount() {
-        return trackCount;
+    public int getCount() {
+        return count;
     }
 
-    public void setTrackCount(int trackCount) {
-        this.trackCount = trackCount;
+    public void setCount(int count) {
+        this.count = count;
     }
 }

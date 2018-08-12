@@ -67,14 +67,14 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/replay_duration"
+                android:id="@+id/replay_count"
                 style="@style/MaterialTheme.Text.Duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
-                android:text="@{@plurals/playlist_item_count(playlistItem.trackCount, playlistItem.trackCount)}"
+                android:text="@{@plurals/playlist_item_count(playlistItem.count, playlistItem.count)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/replay_artwork" />
 

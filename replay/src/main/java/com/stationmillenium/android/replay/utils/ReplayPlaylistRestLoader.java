@@ -3,6 +3,7 @@ package com.stationmillenium.android.replay.utils;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
+import android.text.Html;
 
 import com.stationmillenium.android.replay.dto.PlaylistDTO;
 
@@ -24,7 +25,7 @@ import static java.util.Collections.EMPTY_LIST;
  */
 public class ReplayPlaylistRestLoader extends AsyncTaskLoader<List<? extends Serializable>> {
 
-    private int pageNumber;
+    private int limit;
     private List<PlaylistDTO> alreadyLoadedPlaylists;
     private String query;
 
@@ -57,7 +58,7 @@ public class ReplayPlaylistRestLoader extends AsyncTaskLoader<List<? extends Ser
     public ReplayPlaylistRestLoader(@NonNull Context context, String query, int limit, List<PlaylistDTO> alreadyLoadedPlaylists) {
         this(context);
         this.query = query;
-        this.pageNumber = limit;
+        this.limit = limit;
         this.alreadyLoadedPlaylists = alreadyLoadedPlaylists;
         Timber.d("Init playlist loader with search %s and with limit param : %s", query, limit);
     }
@@ -70,7 +71,7 @@ public class ReplayPlaylistRestLoader extends AsyncTaskLoader<List<? extends Ser
      */
     public ReplayPlaylistRestLoader(@NonNull Context context, int limit, List<PlaylistDTO> alreadyLoadedPlaylists) {
         this(context);
-        this.pageNumber = limit;
+        this.limit = limit;
         this.alreadyLoadedPlaylists = alreadyLoadedPlaylists;
         Timber.d("Init playlist loader with limit param : %s", limit);
     }
@@ -89,6 +90,7 @@ public class ReplayPlaylistRestLoader extends AsyncTaskLoader<List<? extends Ser
                 Timber.v("Query playlist list at URL %s", url);
                 PlaylistDTO[] playlistDTOs = restTemplate.getForObject(url, PlaylistDTO[].class);
                 Timber.d("Got playlist list : %s", playlistDTOs.length);
+                unescapeStringFields(playlistDTOs);
                 if (alreadyLoadedPlaylists != null && alreadyLoadedPlaylists.size() > 0) {
                     alreadyLoadedPlaylists.addAll(Arrays.asList(playlistDTOs));
                     return alreadyLoadedPlaylists;
@@ -105,6 +107,17 @@ public class ReplayPlaylistRestLoader extends AsyncTaskLoader<List<? extends Ser
         }
     }
 
+    private void unescapeStringFields(PlaylistDTO[] playlistDTOs) {
+        for (PlaylistDTO playlistDTO : playlistDTOs) {
+            if (playlistDTO.getTitle() != null) {
+                playlistDTO.setTitle(Html.fromHtml(playlistDTO.getTitle()).toString());
+            }
+            if (playlistDTO.getImageURL() != null) {
+                playlistDTO.setImageURL(Html.fromHtml(playlistDTO.getImageURL()).toString());
+            }
+        }
+    }
+
     private String getURL() {
         return  (query != null && query.length() > 0)
                 ? URLManager.getPlaylistsSearchURL(getContext(), query)
@@ -117,7 +130,7 @@ public class ReplayPlaylistRestLoader extends AsyncTaskLoader<List<? extends Ser
      * @return URL with page number
      */
     private String processLimitClause(String url) {
-        return URLManager.addPageNumber(getContext(), url, pageNumber);
+        return URLManager.addPageNumber(getContext(), url, limit);
     }
 
 }

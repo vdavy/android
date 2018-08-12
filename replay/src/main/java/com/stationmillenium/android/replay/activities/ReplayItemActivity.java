@@ -20,7 +20,6 @@ import com.stationmillenium.android.libutils.PiwikTracker.PiwikPages;
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.databinding.ReplayItemActivityBinding;
 import com.stationmillenium.android.replay.dto.TrackDTO;
-import com.stationmillenium.android.replay.utils.URLManager;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -35,7 +34,6 @@ import timber.log.Timber;
  */
 public class ReplayItemActivity extends AppCompatActivity implements MediaPlayerControl, OnPreparedListener, OnBufferingUpdateListener, OnInfoListener, OnCompletionListener {
 
-    private static final String TAG = "ReplayItemActivity";
     public static final String REPLAY_ITEM = "ReplayItem";
     private static final String REPLAY_POSITION = "replay_position";
     private static final int PERCENT_PLAYED_TIMER_START = 0;
@@ -85,11 +83,11 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         mediaPlayer.setOnCompletionListener(this);
         mediaController = new MediaController(this);
         try {
-            mediaPlayer.setDataSource(URLManager.getStreamURLFromTrack(getBaseContext(), replay));
+            mediaPlayer.setDataSource(""/*URLManager.getStreamURLFromTrack(getBaseContext(), replay)*/);
             mediaPlayer.prepareAsync();
             mediaPlayerStopped = false;
         } catch (IOException e) {
-            Timber.e(e, "Can't read replay : %s", URLManager.getStreamURLFromTrack(getBaseContext(), replay));
+            // Timber.e(e, "Can't read replay : %s", URLManager.getStreamURLFromTrack(getBaseContext(), replay));
             Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_unavailable, Snackbar.LENGTH_SHORT).show();
         }
     }
@@ -104,19 +102,6 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         } else {
             Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_unavailable, Snackbar.LENGTH_SHORT).show();
         }
-    }
-
-    /**
-     * Search tag for replay from replay item
-     *
-     * @param tag the tag to search for
-     */
-    public void searchTag(String tag) {
-        Timber.d("Search tag : %s", tag);
-        Intent searchTagIntent = new Intent(this, ReplayActivity.class);
-        searchTagIntent.putExtra(ReplayActivity.REPLAY_TAG, tag);
-        startActivity(searchTagIntent);
-        finish();
     }
 
     @Override

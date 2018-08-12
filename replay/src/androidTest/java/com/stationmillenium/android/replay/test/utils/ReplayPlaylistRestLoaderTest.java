@@ -6,7 +6,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.stationmillenium.android.replay.dto.PlaylistDTO;
 import com.stationmillenium.android.replay.utils.ReplayPlaylistRestLoader;
-import com.stationmillenium.android.replay.utils.SoundcloudTrackRestLoader;
+import com.stationmillenium.android.replay.utils.ReplayTrackRestLoader;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +18,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * Test {@link SoundcloudTrackRestLoader}
+ * Test {@link ReplayTrackRestLoader}
  * Created by vincent on 28/08/16.
  */
 @RunWith(AndroidJUnit4.class)
@@ -51,7 +51,7 @@ public class ReplayPlaylistRestLoaderTest {
         for (PlaylistDTO playlistDTO : playlistDTOs) {
             assertNotNull(playlistDTO);
             assertNotNull(playlistDTO.getTitle());
-            assertTrue(playlistDTO.getTrackCount() > 0);
+            assertTrue(playlistDTO.getCount() > 0);
         }
     }
 

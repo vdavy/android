@@ -6,7 +6,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.stationmillenium.android.replay.dto.PlaylistDTO;
 import com.stationmillenium.android.replay.dto.TrackDTO;
-import com.stationmillenium.android.replay.utils.SoundcloudTrackRestLoader;
+import com.stationmillenium.android.replay.utils.ReplayTrackRestLoader;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,22 +18,22 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * Test {@link SoundcloudTrackRestLoader}
+ * Test {@link ReplayTrackRestLoader}
  * Created by vincent on 28/08/16.
  */
 @RunWith(AndroidJUnit4.class)
 @MediumTest
-public class SoundcloudTrackRestLoaderTest {
+public class ReplayTrackRestLoaderTest {
 
     @Test
     public void testTracksList() {
-        List<TrackDTO> trackDTOs = new SoundcloudTrackRestLoader(InstrumentationRegistry.getTargetContext()).loadInBackground();
+        List<TrackDTO> trackDTOs = new ReplayTrackRestLoader(InstrumentationRegistry.getTargetContext()).loadInBackground();
         assertCompleteList(trackDTOs);
     }
 
     @Test
     public void test10TracksList() {
-        List<TrackDTO> trackDTOs = new SoundcloudTrackRestLoader(InstrumentationRegistry.getTargetContext(), 5).loadInBackground();
+        List<TrackDTO> trackDTOs = new ReplayTrackRestLoader(InstrumentationRegistry.getTargetContext(), 5).loadInBackground();
         assertItemList(trackDTOs, 5);
     }
 
@@ -45,37 +45,37 @@ public class SoundcloudTrackRestLoaderTest {
 
     @Test
     public void testGenreList() {
-        List<TrackDTO> trackDTOs = new SoundcloudTrackRestLoader(InstrumentationRegistry.getTargetContext(), SoundcloudTrackRestLoader.QueryType.GENRE, "Sports").loadInBackground();
+        List<TrackDTO> trackDTOs = new ReplayTrackRestLoader(InstrumentationRegistry.getTargetContext(), ReplayTrackRestLoader.QueryType.GENRE, "Sports").loadInBackground();
         assertCompleteList(trackDTOs);
     }
 
     @Test
     public void testSearchList() {
-        List<TrackDTO> trackDTOs = new SoundcloudTrackRestLoader(InstrumentationRegistry.getTargetContext(), SoundcloudTrackRestLoader.QueryType.SEARCH, "Sports").loadInBackground();
+        List<TrackDTO> trackDTOs = new ReplayTrackRestLoader(InstrumentationRegistry.getTargetContext(), ReplayTrackRestLoader.QueryType.SEARCH, "Sports").loadInBackground();
         assertCompleteList(trackDTOs);
     }
 
     @Test
     public void test5SearchList() {
-        List<TrackDTO> trackDTOs = new SoundcloudTrackRestLoader(InstrumentationRegistry.getTargetContext(), SoundcloudTrackRestLoader.QueryType.SEARCH, "Sports", 5).loadInBackground();
+        List<TrackDTO> trackDTOs = new ReplayTrackRestLoader(InstrumentationRegistry.getTargetContext(), ReplayTrackRestLoader.QueryType.SEARCH, "Sports", 5).loadInBackground();
         assertItemList(trackDTOs, 5);
     }
 
     @Test
     public void test2GenreList() {
-        List<TrackDTO> trackDTOs = new SoundcloudTrackRestLoader(InstrumentationRegistry.getTargetContext(), SoundcloudTrackRestLoader.QueryType.GENRE, "Sport", 2).loadInBackground();
+        List<TrackDTO> trackDTOs = new ReplayTrackRestLoader(InstrumentationRegistry.getTargetContext(), ReplayTrackRestLoader.QueryType.GENRE, "Sport", 2).loadInBackground();
         assertItemList(trackDTOs, 2);
     }
 
     @Test
     public void test5TagsList() {
-        List<TrackDTO> trackDTOs = new SoundcloudTrackRestLoader(InstrumentationRegistry.getTargetContext(), SoundcloudTrackRestLoader.QueryType.TAG, "Sports", 5).loadInBackground();
+        List<TrackDTO> trackDTOs = new ReplayTrackRestLoader(InstrumentationRegistry.getTargetContext(), ReplayTrackRestLoader.QueryType.TAG, "Sports", 5).loadInBackground();
         assertItemList(trackDTOs, 5);
     }
 
     @Test
     public void testTagList() {
-        List<TrackDTO> trackDTOs = new SoundcloudTrackRestLoader(InstrumentationRegistry.getTargetContext(), SoundcloudTrackRestLoader.QueryType.TAG, "Sports").loadInBackground();
+        List<TrackDTO> trackDTOs = new ReplayTrackRestLoader(InstrumentationRegistry.getTargetContext(), ReplayTrackRestLoader.QueryType.TAG, "Sports").loadInBackground();
         assertCompleteList(trackDTOs);
     }
 
@@ -89,9 +89,9 @@ public class SoundcloudTrackRestLoaderTest {
             assertTrue(trackDTO.getId() > 0);
             assertTrue(trackDTO.getDuration() > 0);
             assertNotNull(trackDTO.getTitle());
-            assertNotNull(trackDTO.getLastModified());
+            assertNotNull(trackDTO.getDate());
             assertNotNull(trackDTO.getTagList());
-            assertNotNull(trackDTO.getStreamURL());
+            assertNotNull(trackDTO.getFileURL());
             assertNotNull(trackDTO.getWaveformURL());
         }
     }
@@ -100,10 +100,10 @@ public class SoundcloudTrackRestLoaderTest {
     public void testPlaylistTracksLoad() {
         PlaylistDTO playlistDTO = new PlaylistDTO();
         playlistDTO.setId(318163137);
-        List<TrackDTO> trackDTOs = new SoundcloudTrackRestLoader(InstrumentationRegistry.getTargetContext(), playlistDTO, 5).loadInBackground();
+        List<TrackDTO> trackDTOs = new ReplayTrackRestLoader(InstrumentationRegistry.getTargetContext(), playlistDTO, 5).loadInBackground();
         assertItemList(trackDTOs, 5);
         playlistDTO.setTracks(trackDTOs);
-        trackDTOs = new SoundcloudTrackRestLoader(InstrumentationRegistry.getTargetContext(), playlistDTO).loadInBackground();
+        trackDTOs = new ReplayTrackRestLoader(InstrumentationRegistry.getTargetContext(), playlistDTO).loadInBackground();
         assertItemList(trackDTOs, 5);
     }
 

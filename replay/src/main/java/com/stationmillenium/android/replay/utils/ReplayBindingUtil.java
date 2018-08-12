@@ -28,12 +28,12 @@ public class ReplayBindingUtil {
      * @return the formatted text
      */
     @NonNull
-    private static String computeReplayDuration(@NonNull Context context, int duration) {
-        int durationSeconds = duration / 1000; //original duration is in ms
-        int durationMinutes = durationSeconds / 60;
+    private static String computeReplayDuration(@NonNull Context context, long duration) {
+        long durationSeconds = duration / 1_000_000_000; //original duration is in ns
+        long durationMinutes = durationSeconds / 60;
         durationSeconds = durationSeconds % 60;
         if (durationMinutes >= 60) {
-            int durationHours = durationMinutes / 60;
+            long durationHours = durationMinutes / 60;
             durationMinutes = durationMinutes % 60;
             return context.getString(R.string.replay_duration_hours, String.valueOf(durationHours),
                     (durationMinutes < 10 ? "0" + durationMinutes : durationMinutes),
@@ -44,13 +44,21 @@ public class ReplayBindingUtil {
     }
 
     @BindingAdapter("android:text")
-    public static void bindReplayDuration(@NonNull TextView textView, int duration) {
+    public static void bindReplayDuration(@NonNull TextView textView, long duration) {
         textView.setText(computeReplayDuration(textView.getContext(), duration));
     }
 
     @BindingAdapter("android:text")
     public static void bindReplayDate(@NonNull TextView textView, Date lastModified) {
-        textView.setText(DateFormat.getDateInstance().format(lastModified));
+        if (lastModified != null) {
+            textView.setText(DateFormat.getDateInstance().format(lastModified));
+        }
+    }
+
+    @BindingAdapter("fileSize")
+    public static void bindReplayFileSize(@NonNull TextView textView, long fileSize) {
+        float fileSizeMB = (float) fileSize / 1024 / 1024;
+        textView.setText(textView.getContext().getString(R.string.replay_size, fileSizeMB));
     }
 
     @BindingAdapter("percentPlayed")

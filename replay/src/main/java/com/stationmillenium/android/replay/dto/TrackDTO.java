@@ -2,7 +2,6 @@ package com.stationmillenium.android.replay.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,29 +14,14 @@ import java.util.Date;
 public class TrackDTO implements Serializable {
 
     private int id;
-    private int duration;
     private String title;
-    private String description;
-    @JsonProperty("last_modified")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm:ss ZZZZZ")
-    private Date lastModified;
-    @JsonProperty("tag_list")
-    private String tagList;
-    private String genre;
-    @JsonProperty("stream_url")
-    private String streamURL;
-    @JsonProperty("waveform_url")
-    private String waveformURL;
-    @JsonProperty("artwork_url")
-    private String artworkURL;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private Date date;
+    private long duration;
+    private long fileSize;
+    private String fileURL;
+    private String imageURL;
 
-    @Override
-    public String toString() {
-        return "TrackDTO{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                '}';
-    }
 
     public int getId() {
         return id;
@@ -47,12 +31,8 @@ public class TrackDTO implements Serializable {
         this.id = id;
     }
 
-    public int getDuration() {
+    public long getDuration() {
         return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
     }
 
     public String getTitle() {
@@ -63,59 +43,39 @@ public class TrackDTO implements Serializable {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public Date getDate() {
+        return date;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public Date getLastModified() {
-        return lastModified;
+    public String getFileURL() {
+        return fileURL;
     }
 
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
+    public void setFileURL(String fileURL) {
+        this.fileURL = fileURL;
     }
 
-    public String getTagList() {
-        return tagList;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setTagList(String tagList) {
-        this.tagList = tagList;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
-    public String getGenre() {
-        return genre;
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public long getFileSize() {
+        return fileSize;
     }
 
-    public String getStreamURL() {
-        return streamURL;
-    }
-
-    public void setStreamURL(String streamURL) {
-        this.streamURL = streamURL;
-    }
-
-    public String getWaveformURL() {
-        return waveformURL;
-    }
-
-    public void setWaveformURL(String waveformURL) {
-        this.waveformURL = waveformURL;
-    }
-
-    public String getArtworkURL() {
-        return artworkURL;
-    }
-
-    public void setArtworkURL(String artworkURL) {
-        this.artworkURL = artworkURL;
+    public void setFileSize(long fileSize) {
+        this.fileSize = fileSize;
     }
 }

@@ -17,12 +17,12 @@ public class TrackListDateSorter {
         Collections.sort(tracksList, new Comparator<TrackDTO>() {
             @Override
             public int compare(TrackDTO o1, TrackDTO o2) {
-                if (o1 == null || o1.getLastModified() == null) {
+                if (o1 == null || o1.getDate() == null) {
                     return 1;
-                } else if (o2 == null || o2.getLastModified() == null) {
+                } else if (o2 == null || o2.getDate() == null) {
                     return -1;
                 } else {
-                    return o1.getLastModified().compareTo(o2.getLastModified()) * -1;
+                    return o1.getDate().compareTo(o2.getDate()) * -1;
                 }
             }
         });

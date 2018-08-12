@@ -5,7 +5,7 @@ import android.support.test.filters.MediumTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.stationmillenium.android.replay.dto.TrackDTO;
-import com.stationmillenium.android.replay.utils.SoundcloudTrackRestLoader;
+import com.stationmillenium.android.replay.utils.ReplayTrackRestLoader;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,18 +18,18 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * Test {@link SoundcloudTrackRestLoader}
+ * Test {@link ReplayTrackRestLoader}
  * Created by vincent on 28/08/16.
  */
 @RunWith(AndroidJUnit4.class)
 @MediumTest
 public class SoundcloudQueryTest {
 
-    private SoundcloudTrackRestLoader restClient;
+    private ReplayTrackRestLoader restClient;
 
     @Before
     public void beforeTest() {
-        restClient = new SoundcloudTrackRestLoader(InstrumentationRegistry.getTargetContext());
+        restClient = new ReplayTrackRestLoader(InstrumentationRegistry.getTargetContext());
     }
 
     @Test
@@ -43,10 +43,10 @@ public class SoundcloudQueryTest {
             assertTrue(trackDTO.getDuration() > 0);
             assertNotNull(trackDTO.getTitle());
             assertNotNull(trackDTO.getDescription());
-            assertNotNull(trackDTO.getLastModified());
+            assertNotNull(trackDTO.getDate());
             assertNotNull(trackDTO.getTagList());
             assertNotNull(trackDTO.getGenre());
-            assertNotNull(trackDTO.getStreamURL());
+            assertNotNull(trackDTO.getFileURL());
             assertNotNull(trackDTO.getWaveformURL());
         }
     }

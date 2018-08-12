@@ -4,13 +4,8 @@
     <string name="soudncloud_client_id">8a934c041fbb1f823f9eea645799f03f</string>
     <string name="soundcloud_user_id">148534611</string>
 
-    <string name="soundcloud_tracklist_URL">https://api.soundcloud.com/users/%1$s/tracks?client_id=%2$s</string>
     <string name="replay_playlists_URL">https://dev.station-millenium.com/replay-api/v1/series</string>
-    <string name="soundcloud_stream_URL">https://api.soundcloud.com/tracks/%1$s/stream?client_id=%2$s</string>
-    <string name="soundcloud_genre_tracklist_URL">https://api.soundcloud.com/tracks?client_id=%1$s&amp;genres=%2$s</string>
-    <string name="soundcloud_search_tracklist_URL">https://api.soundcloud.com/tracks?client_id=%1$s&amp;q=%2$s</string>
-    <string name="soundcloud_tag_tracklist_URL">https://api.soundcloud.com/tracks?client_id=%1$s&amp;tags=%2$s</string>
-    <string name="soundcloud_playlist_tracks_URL">https://api.soundcloud.com/playlists/%1$s/tracks?client_id=%2$s</string>
+    <string name="replay_tracks_URL">https://dev.station-millenium.com/replay-api/v1/podcasts</string>
 
     <string name="limit_param">pageSize</string>
     <string name="client_id_param">client_id</string>
