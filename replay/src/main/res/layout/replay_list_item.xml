@@ -100,7 +100,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/replay_separator" />
 
             <TextView
-                android:id="@+id/replay_genre"
+                android:id="@+id/replay_filesize"
                 style="@style/MaterialTheme.Text.Genre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

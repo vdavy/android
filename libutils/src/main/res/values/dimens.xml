@@ -3,6 +3,9 @@
 
     <dimen name="replay_count_text_size">18sp</dimen>
 
+    <dimen name="replay_played_time_text_size">20sp</dimen>
+    <dimen name="replay_played_time_padding">8dp</dimen>
+
     <!-- http://stackoverflow.com/questions/30839465/floatingactionbutton-default-margin-not-working-in-lollipop -->
     <dimen name="action_button_margin">0dp</dimen>
 

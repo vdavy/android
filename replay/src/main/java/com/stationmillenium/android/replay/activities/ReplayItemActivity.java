@@ -83,11 +83,11 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         mediaPlayer.setOnCompletionListener(this);
         mediaController = new MediaController(this);
         try {
-            mediaPlayer.setDataSource(""/*URLManager.getStreamURLFromTrack(getBaseContext(), replay)*/);
+            mediaPlayer.setDataSource(replay.getFileURL());
             mediaPlayer.prepareAsync();
             mediaPlayerStopped = false;
         } catch (IOException e) {
-            // Timber.e(e, "Can't read replay : %s", URLManager.getStreamURLFromTrack(getBaseContext(), replay));
+            Timber.e(e, "Can't read replay : %s", replay.getFileSize());
             Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_unavailable, Snackbar.LENGTH_SHORT).show();
         }
     }
@@ -240,24 +240,10 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
 
             @Override
             public void run() {
-                //compute time
-                float duration = getDuration();
-                float playedPercent;
-                if (duration > 0) {
-                    playedPercent = getCurrentPosition() / duration;
-                    Timber.v("Played percent : %s", playedPercent);
-                } else {
-                    Timber.d("Duration is 0 second");
-                    playedPercent = 0;
-                }
-                //update in ui thread
-                final int playedPercentIn10000 = (int) (playedPercent * 10000);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        replayItemFragment.setPercentPlayed(playedPercentIn10000);
-                    }
+                runOnUiThread(() -> {
+                    replayItemFragment.setPlayedTimeAndDuration(getCurrentPosition(), getDuration());
                 });
+
             }
 
         };
@@ -268,6 +254,6 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     public void onCompletion(MediaPlayer mp) {
         Timber.d("Replay done - stop timer");
         cancelTimer();
-        replayItemFragment.setPercentPlayed(10000);
+        replayItemFragment.setPlayedTimeAndDuration(1, 0);
     }
 }

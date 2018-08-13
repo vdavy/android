@@ -101,9 +101,12 @@
         <item name="android:textSize">@dimen/replay_item_text_size</item>
     </style>
 
-    <style name="ReplayItemWaveform">
+    <style name="ReplayItemProgressBar">
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/replay_played_time_text_size</item>
         <item name="android:layout_marginTop">@dimen/replay_item_text_margin</item>
-        <item name="android:background">@drawable/replay_waveform_background</item>
+        <item name="android:background">@drawable/replay_progress_background</item>
         <item name="android:scaleType">fitXY</item>
         <item name="android:padding">@dimen/replay_item_textview_padding</item>
     </style>

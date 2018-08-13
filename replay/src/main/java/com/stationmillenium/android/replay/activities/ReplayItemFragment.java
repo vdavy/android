@@ -32,7 +32,7 @@ public class ReplayItemFragment extends Fragment {
      */
     public void setReplay(TrackDTO replay) {
         binding.setReplayItem(replay);
-        setPercentPlayed(0);
+        setPlayedTimeAndDuration(0, 0);
     }
 
     /**
@@ -52,10 +52,12 @@ public class ReplayItemFragment extends Fragment {
     }
 
     /**
-     * Set the played percent for waveform hiding
-     * @param playedPercent the played percent, starting from 0 and ending to 10000
+     * Set the played time and the duration for progress display
+     * @param playedTime the played time in second
+     * @param duration the duration in second
      */
-    public void setPercentPlayed(int playedPercent) {
-        binding.setPercentPlayed(playedPercent);
+    public void setPlayedTimeAndDuration(int playedTime, int duration) {
+        binding.setPlayedTime(playedTime);
+        binding.setDuration(duration);
     }
 }

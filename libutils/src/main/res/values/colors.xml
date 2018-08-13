@@ -13,7 +13,9 @@
 
     <color name="material_blue_grey_600">#546E7A</color>
     <color name="material_grey_200">#EEEEEE</color>
+    <!-- <color name="material_blue_grey_200">#B0BEC5</color> -->
     <color name="material_blue_grey_200">#B0BEC5</color>
+
 
     <color name="nav_drawer_menu">@color/material_blue_grey_600</color>
 

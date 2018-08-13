@@ -18,6 +18,7 @@
 
     <string name="replay_duration">%1$s:%2$s</string>
     <string name="replay_duration_hours">%1$s:%2$s:%3$s</string>
+    <string name="replay_duration_played">%1$s / %2$s</string>
 
     <string name="replay_size">%1$.2f Mo</string>
 
