@@ -34,4 +34,9 @@
 
     <dimen name="zero_dp_dimen">0dp</dimen>
 
+    <dimen name="replay_download_text_size">18sp</dimen>
+    <dimen name="replay_download_padding_horizontal">20dp</dimen>
+    <dimen name="replay_download_padding_vertical">12dp</dimen>
+    <dimen name="replay_download_drawable_padding">6dp</dimen>
+
 </resources>

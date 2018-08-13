@@ -7,6 +7,7 @@ import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -124,7 +125,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     public void start() {
         if (!mediaPlayerStopped) {
             mediaPlayer.start();
-            launchPlayedPercentimer();
+            launchPlayedPercentTimer();
         }
     }
 
@@ -189,7 +190,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         Timber.d("Media player ready");
         // Media player ready - let's play sound
         mediaPlayer.start();
-        launchPlayedPercentimer();
+        launchPlayedPercentTimer();
         replayItemFragment.setProgressBarVisible(false);
         if (replayPosition > 0) {
             mediaPlayer.seekTo(replayPosition);
@@ -234,7 +235,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         return false;
     }
 
-    private void launchPlayedPercentimer() {
+    private void launchPlayedPercentTimer() {
         playedPercentTimer = new Timer();
         TimerTask task = new TimerTask() {
 
@@ -255,5 +256,13 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         Timber.d("Replay done - stop timer");
         cancelTimer();
         replayItemFragment.setPlayedTimeAndDuration(1, 0);
+    }
+
+    /**
+     * Download a replay
+     * @param url replay URL
+     */
+    public void downloadReplay(String url) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 }

@@ -23,6 +23,7 @@ public class ReplayItemFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.replay_item_fragment, container, false);
+        binding.setActivity((ReplayItemActivity) getActivity());
         return binding.getRoot();
     }
 

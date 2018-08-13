@@ -111,6 +111,19 @@
         <item name="android:padding">@dimen/replay_item_textview_padding</item>
     </style>
 
+    <style name="DownloadReplayButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@color/icons</item>
+        <item name="colorButtonNormal">@color/primary</item>
+        <item name="android:textSize">@dimen/replay_download_text_size</item>
+        <item name="android:paddingLeft">@dimen/replay_download_padding_horizontal</item>
+        <item name="android:paddingStart">@dimen/replay_download_padding_horizontal</item>
+        <item name="android:paddingRight">@dimen/replay_download_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/replay_download_padding_horizontal</item>
+        <item name="android:paddingTop">@dimen/replay_download_padding_vertical</item>
+        <item name="android:paddingBottom">@dimen/replay_download_padding_vertical</item>
+        <item name="android:drawablePadding">@dimen/replay_download_drawable_padding</item>
+    </style>
+
     <style name="SuggestAutoCompleteStyle" parent="Widget.AppCompat.DropDownItem.Spinner">
         <item name="android:textColor">@color/secondary_text</item>
     </style>
