@@ -9,9 +9,8 @@ android {
         applicationId "com.stationmillenium.android"
         minSdkVersion 15
         targetSdkVersion 27
-        versionName "3.5.0-beta1"
-        versionCode 171
-        versionName "3.4.6"
+        versionName "3.6.0-beta1"
+        versionCode 176
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         testApplicationId "com.stationmillenium.android.test"
         multiDexEnabled true

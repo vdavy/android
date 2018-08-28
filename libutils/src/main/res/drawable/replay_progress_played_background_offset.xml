@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/replay_waveform_played_background"
+    android:drawable="@drawable/replay_progress_played_background"
     android:insetTop="@dimen/replay_item_textview_padding"
     android:insetBottom="@dimen/replay_item_textview_padding"
     android:insetLeft="@dimen/replay_item_textview_padding"

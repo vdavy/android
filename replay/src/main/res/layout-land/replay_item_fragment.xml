@@ -10,8 +10,16 @@
             type="com.stationmillenium.android.replay.dto.TrackDTO" />
 
         <variable
-            name="percentPlayed"
+            name="duration"
             type="java.lang.Integer" />
+
+        <variable
+            name="playedTime"
+            type="java.lang.Integer" />
+
+        <variable
+            name="activity"
+            type="com.stationmillenium.android.replay.activities.ReplayItemActivity" />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -28,7 +36,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.15"
+            app:layout_constraintVertical_bias="0.05"
             app:replayImage="@{replayItem}"
             tools:ignore="ContentDescription" />
 
@@ -42,33 +50,20 @@
             android:text="@{replayItem.title}"
             app:layout_constraintLeft_toRightOf="@id/replay_item_artwork"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/replay_item_artwork"
             tools:ignore="ContentDescription" />
-
-        <TextView
-            android:id="@+id/replay_item_description"
-            style="@style/MaterialTheme.ItemText.Description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/replay_item_image_text_margin"
-            android:layout_marginStart="@dimen/replay_item_image_text_margin"
-            android:layout_marginTop="@dimen/replay_item_text_margin"
-            android:text="@{replayItem.description}"
-            app:layout_constraintLeft_toRightOf="@id/replay_item_artwork"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/replay_item_title" />
 
         <TextView
             android:id="@+id/replay_item_duration"
             style="@style/MaterialTheme.Text.Duration.Item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:layout_marginLeft="@dimen/replay_item_image_text_margin"
             android:layout_marginStart="@dimen/replay_item_image_text_margin"
-            android:layout_marginTop="@dimen/replay_item_text_margin"
             android:text="@{replayItem.duration}"
-            app:layout_constraintLeft_toRightOf="@id/replay_item_artwork"
-            app:layout_constraintTop_toBottomOf="@id/replay_item_description" />
+            app:layout_constraintBottom_toBottomOf="@id/replay_item_artwork"
+            app:layout_constraintLeft_toRightOf="@id/replay_item_artwork" />
 
         <TextView
             android:id="@+id/replay_item_separator"
@@ -87,45 +82,63 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/replay_item_textview_left_margin"
             android:layout_marginStart="@dimen/replay_item_textview_left_margin"
-            android:text="@{replayItem.lastModified}"
+            android:text="@{replayItem.date}"
             app:layout_constraintBaseline_toBaselineOf="@id/replay_item_duration"
             app:layout_constraintLeft_toRightOf="@id/replay_item_separator" />
 
-        <com.stationmillenium.android.replay.utils.view.FlowLayout
-            android:id="@+id/replay_item_linear_layout"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginLeft="@dimen/replay_item_image_text_margin"
-            android:layout_marginStart="@dimen/replay_item_image_text_margin"
-            android:layout_marginTop="@dimen/replay_item_text_margin"
-            app:layout_constraintLeft_toRightOf="@id/replay_item_artwork"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/replay_item_duration" />
+        <TextView
+            android:id="@+id/replay_filesize"
+            style="@style/MaterialTheme.Text.Genre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            app:fileSize="@{replayItem.fileSize}"
+            app:layout_constraintBaseline_toBaselineOf="@id/replay_item_duration"
+            app:layout_constraintRight_toRightOf="parent" />
 
-        <ImageView
-            android:id="@+id/replay_item_waveform"
-            style="@style/ReplayItemWaveform"
+        <TextView
+            android:id="@+id/replay_item_progress"
+            style="@style/ReplayItemProgressBar"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            app:layout_constraintBottom_toBottomOf="@id/replay_item_linear_layout"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:paddingBottom="@dimen/replay_played_time_padding"
+            android:paddingTop="@dimen/replay_played_time_padding"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:percentPlayed="@{percentPlayed}"
-            app:replayBackground="@{replayItem}"
+            app:layout_constraintTop_toBottomOf="@id/replay_item_artwork"
+            app:replayDuration="@{duration}"
+            app:replayPlayedTime="@{playedTime}"
             tools:ignore="ContentDescription" />
+
+        <Button
+            android:id="@+id/replay_download_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:drawableLeft="@drawable/download_replay_icon"
+            android:drawableStart="@drawable/download_replay_icon"
+            android:onClick="@{() -> activity.downloadReplay(replayItem.fileURL)}"
+            android:text="@string/replay_download"
+            android:theme="@style/DownloadReplayButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/replay_item_progress" />
 
         <ProgressBar
             android:id="@+id/replay_item_progressbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:indeterminate="true"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.8" />
+            app:layout_constraintTop_toBottomOf="@id/replay_download_button" />
 
     </android.support.constraint.ConstraintLayout>
 

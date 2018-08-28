@@ -7,7 +7,7 @@
         android:icon="@drawable/ic_nav_drawer_home"
         android:checkable="true"/>
 
-    <group android:id="@+id/main_features"
+    <group
         android:checkableBehavior="single">
 
         <item

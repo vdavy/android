@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <clip
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/replay_waveform_played_background_offset"
+    android:drawable="@drawable/replay_progress_played_background_offset"
     android:clipOrientation="horizontal"
     android:gravity="left" />

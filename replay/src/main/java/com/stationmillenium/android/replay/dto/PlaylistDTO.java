@@ -1,12 +1,8 @@
 package com.stationmillenium.android.replay.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Soundcloud playlist DTO
@@ -17,15 +13,8 @@ public class PlaylistDTO implements Serializable {
 
     private int id;
     private String title;
-    private String description;
-    @JsonProperty("artwork_url")
-    private String artworkURL;
-    @JsonProperty("last_modified")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm:ss ZZZZZ")
-    private Date lastModified;
-    @JsonProperty("track_count")
-    private int trackCount;
-    private List<TrackDTO> tracks;
+    private String imageURL;
+    private int count;
 
     public int getId() {
         return id;
@@ -43,43 +32,19 @@ public class PlaylistDTO implements Serializable {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
-    public String getArtworkURL() {
-        return artworkURL;
+    public int getCount() {
+        return count;
     }
 
-    public void setArtworkURL(String artworkURL) {
-        this.artworkURL = artworkURL;
-    }
-
-    public Date getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
-    }
-
-    public int getTrackCount() {
-        return trackCount;
-    }
-
-    public void setTrackCount(int trackCount) {
-        this.trackCount = trackCount;
-    }
-
-    public List<TrackDTO> getTracks() {
-        return tracks;
-    }
-
-    public void setTracks(List<TrackDTO> tracks) {
-        this.tracks = tracks;
+    public void setCount(int count) {
+        this.count = count;
     }
 }

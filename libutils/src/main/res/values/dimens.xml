@@ -3,6 +3,9 @@
 
     <dimen name="replay_count_text_size">18sp</dimen>
 
+    <dimen name="replay_played_time_text_size">20sp</dimen>
+    <dimen name="replay_played_time_padding">8dp</dimen>
+
     <!-- http://stackoverflow.com/questions/30839465/floatingactionbutton-default-margin-not-working-in-lollipop -->
     <dimen name="action_button_margin">0dp</dimen>
 
@@ -11,7 +14,6 @@
     <dimen name="replay_item_text_size">18sp</dimen>
 
     <dimen name="replay_item_textview_padding">2dp</dimen>
-    <dimen name="replay_item_tag_space">5dp</dimen>
     <dimen name="replay_item_textview_left_margin">4dp</dimen>
 
     <dimen name="replay_cardview_corner_radius">3dp</dimen>
@@ -19,9 +21,6 @@
 
     <dimen name="nav_drawer_header_padding">10sp</dimen>
 
-    <dimen name="player_time_size">20sp</dimen>
-    <dimen name="player_time_padding_width">5dp</dimen>
-    <dimen name="player_time_padding_height">2dp</dimen>
     <dimen name="player_buttons_width_margin">8dp</dimen>
     <dimen name="player_time_width_margin">24dp</dimen>
     <dimen name="player_buttons_height_margin">8dp</dimen>
@@ -30,5 +29,10 @@
     <dimen name="widget_rounded_image">3dp</dimen>
 
     <dimen name="zero_dp_dimen">0dp</dimen>
+
+    <dimen name="replay_download_text_size">18sp</dimen>
+    <dimen name="replay_download_padding_horizontal">20dp</dimen>
+    <dimen name="replay_download_padding_vertical">12dp</dimen>
+    <dimen name="replay_download_drawable_padding">6dp</dimen>
 
 </resources>

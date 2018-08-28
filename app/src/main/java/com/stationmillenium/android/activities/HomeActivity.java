@@ -226,7 +226,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
         String url = item.getTweetURL();
         if (url != null) {
             if ((!url.startsWith("http://")) && (!url.startsWith("https://"))) {
-                url = "http://" + url;
+                url = "https://" + url;
             }
 
             //open url

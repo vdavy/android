@@ -48,4 +48,8 @@ public class ReplayTitleAdapter extends Adapter<ReplayTitleViewHolder> {
     public void setTrackDTOs(List<TrackDTO> trackDTOs) {
         this.trackDTOs = trackDTOs;
     }
+
+    public List<TrackDTO> getTrackDTOs() {
+        return trackDTOs;
+    }
 }

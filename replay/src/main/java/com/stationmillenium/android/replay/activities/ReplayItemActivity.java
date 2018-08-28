@@ -7,6 +7,7 @@ import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -20,7 +21,6 @@ import com.stationmillenium.android.libutils.PiwikTracker.PiwikPages;
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.databinding.ReplayItemActivityBinding;
 import com.stationmillenium.android.replay.dto.TrackDTO;
-import com.stationmillenium.android.replay.utils.URLManager;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -35,7 +35,6 @@ import timber.log.Timber;
  */
 public class ReplayItemActivity extends AppCompatActivity implements MediaPlayerControl, OnPreparedListener, OnBufferingUpdateListener, OnInfoListener, OnCompletionListener {
 
-    private static final String TAG = "ReplayItemActivity";
     public static final String REPLAY_ITEM = "ReplayItem";
     private static final String REPLAY_POSITION = "replay_position";
     private static final int PERCENT_PLAYED_TIMER_START = 0;
@@ -85,11 +84,11 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         mediaPlayer.setOnCompletionListener(this);
         mediaController = new MediaController(this);
         try {
-            mediaPlayer.setDataSource(URLManager.getStreamURLFromTrack(getBaseContext(), replay));
+            mediaPlayer.setDataSource(replay.getFileURL());
             mediaPlayer.prepareAsync();
             mediaPlayerStopped = false;
         } catch (IOException e) {
-            Timber.e(e, "Can't read replay : %s", URLManager.getStreamURLFromTrack(getBaseContext(), replay));
+            Timber.e(e, "Can't read replay : %s", replay.getFileSize());
             Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_unavailable, Snackbar.LENGTH_SHORT).show();
         }
     }
@@ -104,19 +103,6 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         } else {
             Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_unavailable, Snackbar.LENGTH_SHORT).show();
         }
-    }
-
-    /**
-     * Search tag for replay from replay item
-     *
-     * @param tag the tag to search for
-     */
-    public void searchTag(String tag) {
-        Timber.d("Search tag : %s", tag);
-        Intent searchTagIntent = new Intent(this, ReplayActivity.class);
-        searchTagIntent.putExtra(ReplayActivity.REPLAY_TAG, tag);
-        startActivity(searchTagIntent);
-        finish();
     }
 
     @Override
@@ -139,7 +125,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     public void start() {
         if (!mediaPlayerStopped) {
             mediaPlayer.start();
-            launchPlayedPercentimer();
+            launchPlayedPercentTimer();
         }
     }
 
@@ -204,7 +190,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         Timber.d("Media player ready");
         // Media player ready - let's play sound
         mediaPlayer.start();
-        launchPlayedPercentimer();
+        launchPlayedPercentTimer();
         replayItemFragment.setProgressBarVisible(false);
         if (replayPosition > 0) {
             mediaPlayer.seekTo(replayPosition);
@@ -249,30 +235,16 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         return false;
     }
 
-    private void launchPlayedPercentimer() {
+    private void launchPlayedPercentTimer() {
         playedPercentTimer = new Timer();
         TimerTask task = new TimerTask() {
 
             @Override
             public void run() {
-                //compute time
-                float duration = getDuration();
-                float playedPercent;
-                if (duration > 0) {
-                    playedPercent = getCurrentPosition() / duration;
-                    Timber.v("Played percent : %s", playedPercent);
-                } else {
-                    Timber.d("Duration is 0 second");
-                    playedPercent = 0;
-                }
-                //update in ui thread
-                final int playedPercentIn10000 = (int) (playedPercent * 10000);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        replayItemFragment.setPercentPlayed(playedPercentIn10000);
-                    }
+                runOnUiThread(() -> {
+                    replayItemFragment.setPlayedTimeAndDuration(getCurrentPosition(), getDuration());
                 });
+
             }
 
         };
@@ -283,6 +255,14 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     public void onCompletion(MediaPlayer mp) {
         Timber.d("Replay done - stop timer");
         cancelTimer();
-        replayItemFragment.setPercentPlayed(10000);
+        replayItemFragment.setPlayedTimeAndDuration(1, 0);
+    }
+
+    /**
+     * Download a replay
+     * @param url replay URL
+     */
+    public void downloadReplay(String url) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 }

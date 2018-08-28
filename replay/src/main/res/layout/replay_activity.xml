@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="itemCount"
-            type="java.lang.Integer"/>
+            type="java.lang.Integer" />
+
         <variable
             name="tabIndex"
-            type="java.lang.Integer"/>
+            type="java.lang.Integer" />
+
         <variable
             name="activity"
-            type="com.stationmillenium.android.replay.activities.ReplayActivity"/>
+            type="com.stationmillenium.android.replay.activities.ReplayActivity" />
     </data>
 
     <android.support.v4.widget.DrawerLayout
@@ -36,9 +39,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/colorPrimary"
+                    android:theme="@style/MaterialTheme.Toolbar"
                     app:layout_scrollFlags="scroll|enterAlways"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                    android:theme="@style/MaterialTheme.Toolbar"/>
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
                 <TextView
                     android:id="@+id/replay_count"
@@ -48,14 +51,14 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
                     android:text="@{(safeUnbox(tabIndex) == 1) ? @plurals/replay_count(itemCount, itemCount) : @plurals/playlist_count(itemCount, itemCount)}"
-                    app:layout_scrollFlags="scroll|enterAlways"/>
+                    app:layout_scrollFlags="scroll|enterAlways" />
 
                 <android.support.design.widget.TabLayout
                     android:id="@+id/replay_tabs"
                     style="@style/MaterialTheme.Tabs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_scrollFlags="scroll|enterAlways"/>
+                    app:layout_scrollFlags="scroll|enterAlways" />
 
             </android.support.design.widget.AppBarLayout>
 
@@ -72,12 +75,11 @@
                 android:layout_marginBottom="@dimen/action_button_margin"
                 android:layout_marginEnd="@dimen/action_button_margin"
                 android:layout_marginRight="@dimen/action_button_margin"
+                android:onClick="@{() -> activity.triggerSearch()}"
                 android:src="@drawable/ic_replay_search"
                 app:backgroundTint="@color/primary_dark"
                 app:layout_anchor="@id/replay_viewpager"
-                app:layout_anchorGravity="bottom|right|end"
-                android:onClick="@{() -> activity.triggerSearch()}"
-                android:visibility="@{safeUnbox(tabIndex) == 1 ? View.VISIBLE : View.GONE}"/>
+                app:layout_anchorGravity="bottom|right|end" />
 
         </android.support.design.widget.CoordinatorLayout>
 
