@@ -3,11 +3,11 @@ package com.stationmillenium.android.libutils.dtos;
 import java.io.Serializable;
 
 /**
- * A tweet item DTO
+ * A facebook item DTO
  *
  * @author vincent
  */
-public class TweetItem implements Serializable {
+public class FacebookItem implements Serializable {
 
     /**
      *
@@ -17,12 +17,12 @@ public class TweetItem implements Serializable {
     private String tweetURL;
 
     /**
-     * Create a {@link TweetItem}
+     * Create a {@link FacebookItem}
      *
      * @param tweetText the tweet text
      * @param tweetURL  the tweet associated URL
      */
-    public TweetItem(String tweetText, String tweetURL) {
+    public FacebookItem(String tweetText, String tweetURL) {
         super();
         this.tweetText = tweetText;
         this.tweetURL = tweetURL;

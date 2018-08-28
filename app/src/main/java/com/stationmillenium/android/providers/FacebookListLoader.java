@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.stationmillenium.android.libutils.SharedPreferencesConstants;
-import com.stationmillenium.android.libutils.dtos.TweetItem;
+import com.stationmillenium.android.libutils.dtos.FacebookItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +19,10 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 /**
- * Loader for all tweets
+ * Loader for all facebook posts
  * Created by vincent on 17/02/17.
  */
-public class TweetsListLoader extends AsyncTaskLoader<List<TweetItem>> {
+public class FacebookListLoader extends AsyncTaskLoader<List<FacebookItem>> {
 
     private static final String MAX_TWEETS_DEFAULT = "10";
 
@@ -30,7 +30,7 @@ public class TweetsListLoader extends AsyncTaskLoader<List<TweetItem>> {
     private String consumerSecret;
     private String username;
 
-    public TweetsListLoader(@NonNull Context context, String consumerKey, String consumerSecret, String username) {
+    public FacebookListLoader(@NonNull Context context, String consumerKey, String consumerSecret, String username) {
         super(context);
         this.consumerKey = consumerKey;
         this.consumerSecret = consumerSecret;
@@ -38,8 +38,8 @@ public class TweetsListLoader extends AsyncTaskLoader<List<TweetItem>> {
     }
 
     @Override
-    public List<TweetItem> loadInBackground() {
-        Timber.d("Load tweets...");
+    public List<FacebookItem> loadInBackground() {
+        Timber.d("Load facebook feed...");
 
         //build tweeter auth conf
         ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -55,9 +55,9 @@ public class TweetsListLoader extends AsyncTaskLoader<List<TweetItem>> {
             String maxTweetsString = PreferenceManager.getDefaultSharedPreferences(getContext())
                     .getString(SharedPreferencesConstants.TWEETS_DISPLAY_NUMBER, MAX_TWEETS_DEFAULT);
             int maxTweets = Integer.parseInt(maxTweetsString);
-            Timber.d("Max tweets to load : %s", maxTweets);
+            Timber.d("Max facebook posts to load : %s", maxTweets);
 
-            List<TweetItem> tweetItemList = new ArrayList<>();
+            List<FacebookItem> facebookItemList = new ArrayList<>();
             for (twitter4j.Status status : tweetsList) { //process each tweet
                 //load tweet url
                 String tweetURL = null;
@@ -65,18 +65,18 @@ public class TweetsListLoader extends AsyncTaskLoader<List<TweetItem>> {
                     tweetURL = status.getURLEntities()[0].getURL();
                 }
 
-                tweetItemList.add(new TweetItem(status.getText(), tweetURL)); //add to list
+                facebookItemList.add(new FacebookItem(status.getText(), tweetURL)); //add to list
 
-                if (tweetItemList.size() >= maxTweets) { //limit tweets list
+                if (facebookItemList.size() >= maxTweets) { //limit tweets list
                     break;
                 }
             }
 
-            Timber.d("Gathered tweets list : %s", tweetItemList);
-            return tweetItemList;
+            Timber.d("Gathered facebook posts list : %s", facebookItemList);
+            return facebookItemList;
 
         } catch (Exception e) { //if any error occurs
-            Timber.e(e, "Error while getting latest tweets");
+            Timber.e(e, "Error while getting latest facebook feed");
             return null;
         }
     }

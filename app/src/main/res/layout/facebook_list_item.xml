@@ -4,8 +4,9 @@
     <data>
 
         <variable
-            name="tweet"
-            type="com.stationmillenium.android.libutils.dtos.TweetItem" />
+            name="facebookItem"
+            type="com.stationmillenium.android.libutils.dtos.FacebookItem" />
+
         <variable
             name="activity"
             type="com.stationmillenium.android.activities.HomeActivity" />
@@ -16,9 +17,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:onClick="@{() -> activity.openFacebook(facebookItem)}"
         app:cardCornerRadius="3dp"
-        app:cardElevation="3dp"
-        android:onClick="@{() -> activity.openTweet(tweet)}">
+        app:cardElevation="3dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -44,11 +45,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/tweets_item_icon"
                 android:layout_toEndOf="@id/tweets_item_icon"
+                android:layout_toRightOf="@id/tweets_item_icon"
                 android:paddingLeft="5dp"
                 android:paddingStart="5dp"
-                android:text="@{tweet.tweetText}"
+                android:text="@{facebookItem.tweetText}"
                 android:textSize="12sp" />
 
         </RelativeLayout>
