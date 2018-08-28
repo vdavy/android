@@ -5,6 +5,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
 import com.stationmillenium.android.libutils.SharedPreferencesConstants;
 import com.stationmillenium.android.libutils.dtos.FacebookItem;
 
@@ -40,6 +42,15 @@ public class FacebookListLoader extends AsyncTaskLoader<List<FacebookItem>> {
     @Override
     public List<FacebookItem> loadInBackground() {
         Timber.d("Load facebook feed...");
+
+        GraphRequest request = GraphRequest.newGraphPathRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/132025813602837/feed",
+                response -> {
+                   Timber.d(response.toString());
+                });
+
+        request.executeAsync();
 
         //build tweeter auth conf
         ConfigurationBuilder cb = new ConfigurationBuilder();

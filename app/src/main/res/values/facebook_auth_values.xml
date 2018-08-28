@@ -5,4 +5,7 @@
     <string name="tweeter_consumer_key">DcHyEdcrZsZK6Hklre8w</string>
     <string name="tweeter_consumer_secret">3Sxg3thFsTwUeGVqrsmOfUoST84v9UxbIISGyvhCU</string>
 
+    <!-- facebook auth params -->
+    <string name="facebook_app_id">219856035284001</string>
+
 </resources>
