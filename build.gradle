@@ -22,7 +22,7 @@ ext {
     supportLibVersion = '27.1.1'
     jacksonVersion = '2.9.6'
     piwikSdkVersion = '3.0.3'
-    playServicesVersion = '16.0.1'
+    playServicesVersion = '16.0.3'
     twitterVersion = "4.0.6"
     glideVersion = "4.7.1"
     timberVersion = "4.7.1"
