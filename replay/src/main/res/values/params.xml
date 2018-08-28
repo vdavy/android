@@ -4,9 +4,6 @@
     <string name="replay_playlists_URL">https://www.station-millenium.com/replay-api/v1/series</string>
     <string name="replay_tracks_URL">https://www.station-millenium.com/replay-api/v1/podcasts</string>
 
-    <string name="limit_param">pageSize</string>
-    <string name="client_id_param">client_id</string>
-
     <string name="page_number_param">page</string>
     <string name="per_page_param">per_page</string>
     <string name="search_param">search</string>
