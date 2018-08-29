@@ -4,8 +4,8 @@
     <data>
 
         <variable
-            name="facebookItem"
-            type="com.stationmillenium.android.libutils.dtos.FacebookItem" />
+            name="facebookPost"
+            type="com.stationmillenium.android.libutils.dtos.FacebookPost" />
 
         <variable
             name="activity"
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:onClick="@{() -> activity.openFacebook(facebookItem)}"
+        android:onClick="@{() -> activity.openFacebook(facebookPost)}"
         app:cardCornerRadius="3dp"
         app:cardElevation="3dp">
 
@@ -49,7 +49,7 @@
                 android:layout_toRightOf="@id/tweets_item_icon"
                 android:paddingLeft="5dp"
                 android:paddingStart="5dp"
-                android:text="@{facebookItem.tweetText}"
+                android:text="@{facebookPost.postText}"
                 android:textSize="12sp" />
 
         </RelativeLayout>

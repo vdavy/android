@@ -8,7 +8,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.stationmillenium.android.libutils.SharedPreferencesConstants;
-import com.stationmillenium.android.libutils.dtos.FacebookItem;
+import com.stationmillenium.android.libutils.dtos.FacebookPost;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import twitter4j.conf.ConfigurationBuilder;
  * Loader for all facebook posts
  * Created by vincent on 17/02/17.
  */
-public class FacebookListLoader extends AsyncTaskLoader<List<FacebookItem>> {
+public class FacebookFeedLoader extends AsyncTaskLoader<List<FacebookPost>> {
 
     private static final String MAX_TWEETS_DEFAULT = "10";
 
@@ -32,7 +32,7 @@ public class FacebookListLoader extends AsyncTaskLoader<List<FacebookItem>> {
     private String consumerSecret;
     private String username;
 
-    public FacebookListLoader(@NonNull Context context, String consumerKey, String consumerSecret, String username) {
+    public FacebookFeedLoader(@NonNull Context context, String consumerKey, String consumerSecret, String username) {
         super(context);
         this.consumerKey = consumerKey;
         this.consumerSecret = consumerSecret;
@@ -40,7 +40,7 @@ public class FacebookListLoader extends AsyncTaskLoader<List<FacebookItem>> {
     }
 
     @Override
-    public List<FacebookItem> loadInBackground() {
+    public List<FacebookPost> loadInBackground() {
         Timber.d("Load facebook feed...");
 
         GraphRequest request = GraphRequest.newGraphPathRequest(
@@ -68,7 +68,7 @@ public class FacebookListLoader extends AsyncTaskLoader<List<FacebookItem>> {
             int maxTweets = Integer.parseInt(maxTweetsString);
             Timber.d("Max facebook posts to load : %s", maxTweets);
 
-            List<FacebookItem> facebookItemList = new ArrayList<>();
+            List<FacebookPost> facebookPostList = new ArrayList<>();
             for (twitter4j.Status status : tweetsList) { //process each tweet
                 //load tweet url
                 String tweetURL = null;
@@ -76,15 +76,15 @@ public class FacebookListLoader extends AsyncTaskLoader<List<FacebookItem>> {
                     tweetURL = status.getURLEntities()[0].getURL();
                 }
 
-                facebookItemList.add(new FacebookItem(status.getText(), tweetURL)); //add to list
+                facebookPostList.add(new FacebookPost(status.getText(), tweetURL)); //add to list
 
-                if (facebookItemList.size() >= maxTweets) { //limit tweets list
+                if (facebookPostList.size() >= maxTweets) { //limit tweets list
                     break;
                 }
             }
 
-            Timber.d("Gathered facebook posts list : %s", facebookItemList);
-            return facebookItemList;
+            Timber.d("Gathered facebook posts list : %s", facebookPostList);
+            return facebookPostList;
 
         } catch (Exception e) { //if any error occurs
             Timber.e(e, "Error while getting latest facebook feed");

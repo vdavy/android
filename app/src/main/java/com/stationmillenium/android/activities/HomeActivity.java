@@ -25,8 +25,8 @@ import com.stationmillenium.android.activities.fragments.HomeFragment;
 import com.stationmillenium.android.databinding.HomeActivityBinding;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.drawer.DrawerUtils;
-import com.stationmillenium.android.libutils.dtos.FacebookItem;
-import com.stationmillenium.android.providers.FacebookListLoader;
+import com.stationmillenium.android.libutils.dtos.FacebookPost;
+import com.stationmillenium.android.providers.FacebookFeedLoader;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.SHAR
  *
  * @author vincent
  */
-public class HomeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<FacebookItem>> {
+public class HomeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<FacebookPost>> {
 
     private static final int LOADER_INDEX = 0;
     private static final int APP_INVITE_INTENT = 10;
@@ -173,19 +173,19 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
-    public Loader<List<FacebookItem>> onCreateLoader(int id, Bundle args) {
+    public Loader<List<FacebookPost>> onCreateLoader(int id, Bundle args) {
         fragment.setRefreshing(true);
-        return new FacebookListLoader(this, getString(R.string.tweeter_consumer_key), getString(R.string.tweeter_consumer_secret), getString(R.string.tweeter_user_name));
+        return new FacebookFeedLoader(this, getString(R.string.tweeter_consumer_key), getString(R.string.tweeter_consumer_secret), getString(R.string.tweeter_user_name));
     }
 
     @Override
-    public void onLoadFinished(Loader<List<FacebookItem>> loader, List<FacebookItem> data) {
+    public void onLoadFinished(Loader<List<FacebookPost>> loader, List<FacebookPost> data) {
         fragment.setReplayList(data);
         fragment.setRefreshing(false);
     }
 
     @Override
-    public void onLoaderReset(Loader<List<FacebookItem>> loader) {
+    public void onLoaderReset(Loader<List<FacebookPost>> loader) {
         fragment.setReplayList(null);
         fragment.setRefreshing(false);
     }
@@ -218,12 +218,12 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     /**
-     * Open tweet URL - called from databinding
-     * @param item the clicked tweet
+     * Open facebook post URL - called from databinding
+     * @param item the clicked facebook post
      */
-    public void openFacebook(FacebookItem item) {
+    public void openFacebook(FacebookPost item) {
         Timber.d("List item clicked - open URL");
-        String url = item.getTweetURL();
+        String url = item.getPostURL();
         if (url != null) {
             if ((!url.startsWith("http://")) && (!url.startsWith("https://"))) {
                 url = "https://" + url;
