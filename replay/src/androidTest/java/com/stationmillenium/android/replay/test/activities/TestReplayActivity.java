@@ -48,7 +48,6 @@ public class TestReplayActivity {
     public void testHeader() {
         onView(withId(R.id.replay_count)).check(matches(withText("14 playlists disponibles")));
         onView(withRecyclerView(R.id.replay_recyclerview).atPosition(0)).check(matches(hasDescendant(allOf(withId(R.id.replay_title), withText(any(String.class))))));
-        onView(withRecyclerView(R.id.replay_recyclerview).atPosition(0)).check(matches(hasDescendant(allOf(withId(R.id.replay_description), withText(any(String.class))))));
         onView(withRecyclerView(R.id.replay_recyclerview).atPosition(0)).check(matches(hasDescendant(allOf(withId(R.id.replay_date), withText(any(String.class))))));
         onView(withRecyclerView(R.id.replay_recyclerview).atPosition(0)).check(matches(hasDescendant(allOf(withId(R.id.replay_count), withText(any(String.class))))));
     }
