@@ -173,12 +173,6 @@
         <item name="10">120</item>
     </string-array>
 
-    <!-- replay preferences -->
-    <string name="preferences_replay_category">Replay</string>
-    <string name="preferences_replay_display_titles_summary_off">L\'ensemble des titres du replay ne sera pas affiché</string>
-    <string name="preferences_replay_display_titles_summary_on">L\'ensemble des titres du replay sera affiché</string>
-    <string name="preferences_replay_display_titles">Afficher l\'ensemble des titres du replay</string>
-
     <!-- links -->
     <string name="links_latest_tweets"><b>Les derniers tweets Millenium</b></string>
 

@@ -37,17 +37,6 @@
             android:title="@string/preferences_autorestart_player_timeout" />
     </PreferenceCategory>
 
-    <!-- player preferences -->
-    <PreferenceCategory android:title="@string/preferences_replay_category">
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:icon="@drawable/ic_replay_titles"
-            android:key="preferences_replay_display_titles"
-            android:summaryOff="@string/preferences_replay_display_titles_summary_off"
-            android:summaryOn="@string/preferences_replay_display_titles_summary_on"
-            android:title="@string/preferences_replay_display_titles" />
-    </PreferenceCategory>
-
     <!-- news preferences -->
     <PreferenceCategory android:title="@string/preferences_links">
         <ListPreference
