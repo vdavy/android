@@ -1,0 +1,7 @@
+<resources>
+
+    <!-- Facebook feed URL -->
+    <string name="facebook_feed_url">https://station-millenium.com/facebook-api/v1/feed</string>
+    <string name="limit_param_name">limit</string>
+
+</resources>

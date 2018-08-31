@@ -49,7 +49,7 @@
                 android:layout_toRightOf="@id/tweets_item_icon"
                 android:paddingLeft="5dp"
                 android:paddingStart="5dp"
-                android:text="@{facebookPost.postText}"
+                android:text="@{facebookPost.text}"
                 android:textSize="12sp" />
 
         </RelativeLayout>

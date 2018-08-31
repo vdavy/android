@@ -54,32 +54,32 @@
     <string name="preferences_player_wifi_only">Uniquement en Wifi</string>
     <string name="preferences_player_autostart">Démarrer la lecture automatiquement</string>
     <string name="preferences_player_autostart_summary">Démarrer la lecture de la radio automatiquement lors de l\'affichage du player</string>
-    <string name="preferences_links">Tweets Millenium</string>
-    <string name="preferences_links_tweets_number">Nombre de derniers tweets</string>
-    <string name="preferences_links_tweets_number_summary">Nombre de derniers tweets à afficher</string>
-    <string-array name="preferences_links_tweets_number_values">
-        <item name="1">1 tweet</item>
-        <item name="2">2 tweets</item>
-        <item name="3">3 tweets</item>
-        <item name="4">4 tweets</item>
-        <item name="5">5 tweets</item>
-        <item name="6">6 tweets</item>
-        <item name="7">7 tweets</item>
-        <item name="8">8 tweets</item>
-        <item name="9">9 tweets</item>
-        <item name="10">10 tweets</item>
-        <item name="11">11 tweets</item>
-        <item name="12">12 tweets</item>
-        <item name="13">13 tweets</item>
-        <item name="14">14 tweets</item>
-        <item name="15">15 tweets</item>
-        <item name="16">16 tweets</item>
-        <item name="17">17 tweets</item>
-        <item name="18">18 tweets</item>
-        <item name="19">19 tweets</item>
-        <item name="20">20 tweets</item>
+    <string name="preferences_links">Facebook Millenium</string>
+    <string name="preferences_links_facebook_posts_number">Nombre de derniers posts</string>
+    <string name="preferences_links_facebook_posts_number_summary">Nombre de derniers posts à afficher</string>
+    <string-array name="preferences_links_facebook_posts_number_values">
+        <item name="1">1 post</item>
+        <item name="2">2 posts</item>
+        <item name="3">3 posts</item>
+        <item name="4">4 posts</item>
+        <item name="5">5 posts</item>
+        <item name="6">6 posts</item>
+        <item name="7">7 posts</item>
+        <item name="8">8 posts</item>
+        <item name="9">9 posts</item>
+        <item name="10">10 posts</item>
+        <item name="11">11 posts</item>
+        <item name="12">12 posts</item>
+        <item name="13">13 posts</item>
+        <item name="14">14 posts</item>
+        <item name="15">15 posts</item>
+        <item name="16">16 posts</item>
+        <item name="17">17 posts</item>
+        <item name="18">18 posts</item>
+        <item name="19">19 posts</item>
+        <item name="20">20 posts</item>
     </string-array>
-    <string-array name="preferences_links_tweets_number_values_internal">
+    <string-array name="preferences_links_facebook_posts_number_values_internal">
         <item name="1">1</item>
         <item name="2">2</item>
         <item name="3">3</item>
@@ -180,7 +180,7 @@
     <string name="preferences_replay_display_titles">Afficher l\'ensemble des titres du replay</string>
 
     <!-- links -->
-    <string name="links_latest_tweets"><b>Les derniers tweets Millenium</b></string>
+    <string name="links_latest_facebook_feeds"><b>Millenium sur Facebook</b></string>
 
     <!-- other resources -->
     <string name="empty_string" />

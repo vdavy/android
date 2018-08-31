@@ -13,35 +13,23 @@ public class FacebookPost implements Serializable {
      *
      */
     private static final long serialVersionUID = -8684823554663528375L;
-    private String postText;
-    private String postURL;
+    private String text;
+    private String url;
 
-    /**
-     * Create a {@link FacebookPost}
-     *
-     * @param postText the post text
-     * @param postURL  the post associated URL
-     */
-    public FacebookPost(String postText, String postURL) {
-        super();
-        this.postText = postText;
-        this.postURL = postURL;
+    public String getText() {
+        return text;
     }
 
-    /**
-     * @return the post URL
-     */
-    public String getPostURL() {
-        return postURL;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    @Override
-    public String toString() {
-        return postText;
+    public String getUrl() {
+        return url;
     }
 
-    public String getPostText() {
-        return postText;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
 }

@@ -175,7 +175,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<List<FacebookPost>> onCreateLoader(int id, Bundle args) {
         fragment.setRefreshing(true);
-        return new FacebookFeedLoader(this, getString(R.string.tweeter_consumer_key), getString(R.string.tweeter_consumer_secret), getString(R.string.tweeter_user_name));
+        return new FacebookFeedLoader(this);
     }
 
     @Override
@@ -223,7 +223,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
      */
     public void openFacebook(FacebookPost item) {
         Timber.d("List item clicked - open URL");
-        String url = item.getPostURL();
+        String url = item.getUrl();
         if (url != null) {
             if ((!url.startsWith("http://")) && (!url.startsWith("https://"))) {
                 url = "https://" + url;

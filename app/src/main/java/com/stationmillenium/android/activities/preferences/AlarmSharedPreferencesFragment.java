@@ -38,9 +38,6 @@ import timber.log.Timber;
  */
 public class AlarmSharedPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
-    //static intialization part
-    private static final String ALARM_DAYS_LIST_STRING_SEPARATOR = "\\|";
-
     //preference fields
     private CheckBoxPreference alarmEnabled;
     private TimePreference alarmTime;
