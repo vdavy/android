@@ -1,11 +1,7 @@
 # Proguard config for Android app
 
-# Don't warn on missing classes
--dontwarn twitter4j.**
-
 # Avoid libs
 -keep class android.support.v7.widget.SearchView { *; }
--keep class twitter4j.** { *; }
 
 -keepattributes EnclosingMethod
 -optimizationpasses 5
@@ -14,6 +10,7 @@
 -keep class com.fasterxml.jackson.** { *; }
 -keep class org.springframework.** { *; }
 -keep class com.stationmillenium.android.replay.dto.** { public *; }
+-keep class com.stationmillenium.android.libutils.dtos.** { public *; }
 
 # Don't warn on missing classes
 -dontwarn org.springframework.http.client.**
