@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
 
@@ -72,6 +73,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     @Override
     protected void onResume() {
         super.onResume();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initMediaPlayer();
         PiwikTracker.trackScreenViewWithTitle(PiwikPages.REPLAY_ITEM, replay.getTitle());
     }

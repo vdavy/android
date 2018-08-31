@@ -161,7 +161,6 @@
         <!-- replay item display activity -->
         <activity
             android:name=".replay.activities.ReplayItemActivity"
-            android:keepScreenOn="true"
             android:label="@string/replay_item_activity_title"
             android:parentActivityName=".replay.activities.ReplayActivity"
             android:theme="@style/MaterialTheme"
