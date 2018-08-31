@@ -173,6 +173,10 @@
         <item name="10">120</item>
     </string-array>
 
+    <!-- alarm notif -->
+    <string name="alarm_notification_title">Alarme Station Millenium</string>
+    <string name="alarm_notification_content">Lancement du player...</string>
+
     <!-- links -->
     <string name="links_latest_facebook_feeds"><b>Millenium sur Facebook</b></string>
 
