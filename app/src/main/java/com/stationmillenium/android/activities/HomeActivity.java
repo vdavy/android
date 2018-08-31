@@ -223,20 +223,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
      */
     public void openFacebook(FacebookPost item) {
         Timber.d("List item clicked - open URL");
-        String url = item.getUrl();
-        if (url != null) {
-            if ((!url.startsWith("http://")) && (!url.startsWith("https://"))) {
-                url = "https://" + url;
-            }
-
-            //open url
-            Timber.d("URL to open : %s", url);
-
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(browserIntent);
-        } else {
-            Timber.d("No URL on this facebook post");
-        }
+        openSocialNetwork(getString(R.string.facebook_internal_url_prefix, item.getUrl()), item.getUrl());
     }
 
     public void onRefresh() {
