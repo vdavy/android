@@ -61,6 +61,7 @@ public class AlarmService extends JobIntentService {
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         if (AppUtils.isAPILevel26Available() && intent != null && LocalIntents.ON_ALARM_TIME_ELAPSED.toString().equals(intent.getAction())) {
             startForeground(NOTIF_ID, buildNotification());
+            requestPlayerStart();
             enqueueWork(this, intent);
         }
         return super.onStartCommand(intent, flags, startId);
@@ -95,19 +96,15 @@ public class AlarmService extends JobIntentService {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this); //load preferences first
         if (LocalIntents.SET_ALARM_TIME.toString().equals(intent.getAction())) {
             programAlarm(intent, preferences);
+        } else if (AppUtils.isAPILevel26Available()) {
+            scheduleNextRepeatAlarm(preferences);
+            if (AppUtils.isAPILevel26Available()) {
+                stopForeground(true);
+            }
         } else {
-            launchPlayer(preferences);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.N)
-    private void launchPlayer(SharedPreferences preferences) {
-        //launch player
-        Timber.d("Received intent to launch player");
-        requestPlayerStart();
-        scheduleNextRepeatAlarm(preferences);
-        if (AppUtils.isAPILevel26Available()) {
-            stopForeground(true);
+            Timber.d("Received intent to launch player");
+            requestPlayerStart();
+            scheduleNextRepeatAlarm(preferences);
         }
     }
 
