@@ -274,7 +274,7 @@ public class MediaPlayerNotificationBuilder {
                 .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
                 .setContentText(currentTitle)
                 .setStyle(new Notification.MediaStyle()
-                        .setShowActionsInCompactView(compactViewActions)  // only show play/pause in compact view
+                        .setShowActionsInCompactView(compactViewActions)  // only show play/pause inalarm compact view
                         .setMediaSession(mediaPlayerServiceRef.get().getMediaSession().getSessionToken()))
                 .setSubText(stateText)
                 .setContentIntent(playerPendingIntent);

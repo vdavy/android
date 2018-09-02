@@ -14,9 +14,9 @@
     <string name="antenna_grid_page_url">https://www.station-millenium.com/radio/la-grille-des-programmes/</string>
 
     <!-- links -->
-    <string name="tweeter_user_name">millenium22</string>
-    <string name="facebook_internal_url">fb://page/132025813602837</string>
-    <string name="facebook_web_url">https://www.facebook.com/stationmillenium</string>
+    <string name="facebook_internal_url">fb://facewebmodal/f?href=https://www.facebook.com/station.millenium</string>
+    <string name="facebook_internal_url_prefix">fb://facewebmodal/f?href=%s</string>
+    <string name="facebook_web_url">https://www.facebook.com/station.millenium</string>
     <string name="twitter_internal_url">twitter://user?screen_name=millenium22</string>
     <string name="twitter_web_url">https://www.twitter.com/millenium22</string>
     <string name="web_site_url">https://www.station-millenium.com</string>

@@ -5,6 +5,9 @@ package com.stationmillenium.android.services;
 
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +16,9 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.JobIntentService;
+import android.support.v4.app.NotificationCompat;
 
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity.AlarmSharedPreferencesConstants;
@@ -41,6 +46,8 @@ public class AlarmService extends JobIntentService {
      * Unique job ID for this service.
      */
     private static final int JOB_ID = 1000;
+    private static int NOTIF_ID = 1;
+    private static final String NOTIFICATION_CHANNEL_ID = "channelId";
 
     private DisplayToastsUtil displayToast;
 
@@ -50,11 +57,30 @@ public class AlarmService extends JobIntentService {
         displayToast = new DisplayToastsUtil(getApplicationContext());
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         if (AppUtils.isAPILevel26Available() && intent != null && LocalIntents.ON_ALARM_TIME_ELAPSED.toString().equals(intent.getAction())) {
+            startForeground(NOTIF_ID, buildNotification());
+            requestPlayerStart();
             enqueueWork(this, intent);
         }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private Notification buildNotification() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        assert notificationManager != null;
+        if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null) {
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, getString(R.string.app_name), NotificationManager.IMPORTANCE_LOW);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        return new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notif_alarm)
+                .setContentTitle(getString(R.string.alarm_notification_title))
+                .setContentText(getString(R.string.alarm_notification_content))
+                .build();
     }
 
     /**
@@ -70,16 +96,16 @@ public class AlarmService extends JobIntentService {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this); //load preferences first
         if (LocalIntents.SET_ALARM_TIME.toString().equals(intent.getAction())) {
             programAlarm(intent, preferences);
+        } else if (AppUtils.isAPILevel26Available()) {
+            scheduleNextRepeatAlarm(preferences);
+            if (AppUtils.isAPILevel26Available()) {
+                stopForeground(true);
+            }
         } else {
-            launchPlayer(preferences);
+            Timber.d("Received intent to launch player");
+            requestPlayerStart();
+            scheduleNextRepeatAlarm(preferences);
         }
-    }
-
-    private void launchPlayer(SharedPreferences preferences) {
-        //launch player
-        Timber.d("Received intent to launch player");
-        requestPlayerStart();
-        scheduleNextRepeatAlarm(preferences);
     }
 
     private void scheduleNextRepeatAlarm(SharedPreferences preferences) {
@@ -102,6 +128,7 @@ public class AlarmService extends JobIntentService {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
     private void requestPlayerStart() {
         //launch player
         if (!AppUtils.isMediaPlayerServiceRunning(this)) { //do not launch media player twice
@@ -112,7 +139,11 @@ public class AlarmService extends JobIntentService {
                 Intent playIntent = new Intent(this, MediaPlayerService.class);
                 playIntent.putExtra(LocalIntentsData.RESUME_PLAYER_ACTIVITY.toString(), false);
                 playIntent.putExtra(LocalIntentsData.GET_VOLUME_FROM_PREFERENCES.toString(), true);
-                startService(playIntent);
+                if (AppUtils.isAPILevel26Available()) {
+                    startForegroundService(playIntent);
+                } else {
+                    startService(playIntent);
+                }
                 displayToast.displayToast(getString(R.string.alarm_triggered));
 
             } else {
@@ -209,6 +240,7 @@ public class AlarmService extends JobIntentService {
     /**
      * Cancel the alarm
      */
+    @TargetApi(Build.VERSION_CODES.O)
     private void cancelAlarm() {
         PendingIntent playPendingIntent = createLaunchPlayerPendingIntent();
         getAlarmManager().cancel(playPendingIntent);
@@ -217,10 +249,13 @@ public class AlarmService extends JobIntentService {
     /**
      * Create a launch player {@link PendingIntent}
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private PendingIntent createLaunchPlayerPendingIntent() {
         Intent launchPlayerIntent = new Intent(this, AlarmService.class);
         launchPlayerIntent.setAction(LocalIntents.ON_ALARM_TIME_ELAPSED.toString());
-        return PendingIntent.getService(this, 0, launchPlayerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return AppUtils.isAPILevel26Available()
+                ? PendingIntent.getForegroundService(this, 0, launchPlayerIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                : PendingIntent.getService(this, 0, launchPlayerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**
@@ -240,7 +275,7 @@ public class AlarmService extends JobIntentService {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private int[] getRepeatDays(SharedPreferences preferences) {
-        Set<String> repeatDaysSet =  preferences.getStringSet(AlarmSharedPreferencesConstants.ALARM_DAYS, null);
+        Set<String> repeatDaysSet = preferences.getStringSet(AlarmSharedPreferencesConstants.ALARM_DAYS, null);
 
         //process set to convert to array
         if ((repeatDaysSet != null) && (!repeatDaysSet.isEmpty())) {
@@ -345,7 +380,6 @@ public class AlarmService extends JobIntentService {
         dayIndex -= 2;
         return dayIndex;
     }
-
 
 
 }

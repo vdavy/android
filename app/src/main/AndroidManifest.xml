@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL"/>
 
     <application
         android:name=".app.StationMilleniumApp"
@@ -98,16 +97,14 @@
             android:name=".activities.AntennaGridActivity"
             android:label="@string/antenna_grid_activity_title"
             android:theme="@style/MaterialTheme"
-            tools:ignore="UnusedAttribute">
-        </activity>
+            tools:ignore="UnusedAttribute"></activity>
 
         <!-- alarm preferences activity -->
         <activity
             android:name=".activities.preferences.AlarmSharedPreferencesActivity"
             android:label="@string/preferences_alarm_screen"
             android:theme="@style/MaterialTheme"
-            tools:ignore="UnusedAttribute">
-        </activity>
+            tools:ignore="UnusedAttribute"></activity>
 
         <!-- song history search activity -->
         <activity
@@ -167,7 +164,6 @@
         <!-- replay item display activity -->
         <activity
             android:name=".replay.activities.ReplayItemActivity"
-            android:keepScreenOn="true"
             android:label="@string/replay_item_activity_title"
             android:parentActivityName=".replay.activities.ReplayActivity"
             android:theme="@style/MaterialTheme"

@@ -42,12 +42,8 @@ public class SoundcloudQueryTest {
             assertTrue(trackDTO.getId() > 0);
             assertTrue(trackDTO.getDuration() > 0);
             assertNotNull(trackDTO.getTitle());
-            assertNotNull(trackDTO.getDescription());
             assertNotNull(trackDTO.getDate());
-            assertNotNull(trackDTO.getTagList());
-            assertNotNull(trackDTO.getGenre());
             assertNotNull(trackDTO.getFileURL());
-            assertNotNull(trackDTO.getWaveformURL());
         }
     }
 

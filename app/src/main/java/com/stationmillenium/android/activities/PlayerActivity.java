@@ -280,17 +280,13 @@ public class PlayerActivity extends AppCompatActivity {
         //if the player is not running
         if (!AppUtils.isMediaPlayerServiceRunning(getApplicationContext())) {
             //auto start player
-            if (getIntent() != null) {
-                if (getIntent().getBooleanExtra(LocalIntentsData.ALLOW_AUTOSTART.toString(), false)) {
-                    if (getDefaultSharedPreferences(this).getBoolean(AUTOSTART_RADIO, false)) {
-                        startPlayer();
-                    }
-                    getIntent().removeExtra(LocalIntentsData.ALLOW_AUTOSTART.toString());
-                } else if (getIntent().getBooleanExtra(LocalIntentsData.FORCE_AUTOSTART.toString(), false)) {
+            if ((getIntent() != null) && (getIntent().getBooleanExtra(LocalIntentsData.ALLOW_AUTOSTART.toString(), false))) {
+                if (getDefaultSharedPreferences(this).getBoolean(AUTOSTART_RADIO, false)) {
                     startPlayer();
-                    getIntent().removeExtra(LocalIntentsData.FORCE_AUTOSTART.toString());
                 }
+                getIntent().removeExtra(LocalIntentsData.ALLOW_AUTOSTART.toString());
             }
+
             playerFragment.setPlayerState(PlayerState.STOPPED); //be sure we are in stopped state
         } else {
             askForRefresh(); //check if need some fresh data
@@ -356,15 +352,11 @@ public class PlayerActivity extends AppCompatActivity {
             Timber.d("Open player with data");
             playerActivityUpdateTitleBroadcastReceiver.onReceive(this, intent);
             playerFragment.setPlayerState((PlayerState) intent.getSerializableExtra(LocalIntentsData.CURRENT_STATE.toString()));
-        } else if (intent.getBooleanExtra(LocalIntentsData.FORCE_AUTOSTART.toString(), false)) {
-            startPlayer();
-            intent.removeExtra(LocalIntentsData.FORCE_AUTOSTART.toString());
         }
     }
 
     /**
      * Start the player
-     *
      */
     public void startPlayer() {
         //start player service
@@ -433,7 +425,6 @@ public class PlayerActivity extends AppCompatActivity {
 
     /**
      * Stop the player
-     *
      */
     public void stopPlayer() {
         Timber.d("Stop player button clicked");
@@ -444,7 +435,6 @@ public class PlayerActivity extends AppCompatActivity {
 
     /**
      * Pause the player
-     *
      */
     public void pausePlayer() {
         Timber.d("Pause player button clicked");

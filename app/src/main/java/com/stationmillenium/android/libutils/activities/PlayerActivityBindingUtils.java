@@ -54,10 +54,12 @@ public class PlayerActivityBindingUtils {
         historyList.setAdapter((values != null) ? new ArrayAdapter<>(historyList.getContext(), R.layout.player_history_list_item, R.id.player_history_item_text, values) : null);
     }
 
-    @BindingAdapter({"artist", "title"})
-    public static void setArtistAndTitle(TextView textView, String artist, String title) {
+    @BindingAdapter({"artist", "title", "playerState"})
+    public static void setArtistAndTitle(TextView textView, String artist, String title, PlayerState playerState) {
         //update current title
-        if ((artist != null) && (title != null)) {
+        if (playerState == PlayerState.BUFFERING) {
+            textView.setText(R.string.player_loading);
+        } else if ((artist != null) && (title != null)) {
             String titleText = textView.getResources().getString(R.string.player_current_title, artist, title);
             textView.setText(titleText);
         } else {

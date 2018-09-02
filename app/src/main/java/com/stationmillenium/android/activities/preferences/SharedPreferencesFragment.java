@@ -43,7 +43,7 @@ public class SharedPreferencesFragment extends PreferenceFragment implements Sha
         addPreferencesFromResource(R.xml.preferences);
 
         //init fields
-        newsNumber = (ListPreference) findPreference(SharedPreferencesConstants.TWEETS_DISPLAY_NUMBER);
+        newsNumber = (ListPreference) findPreference(SharedPreferencesConstants.FACEBOOK_FEED_DISPLAY_NUMBER);
         initNewsNumber();
         autorestartDelay = (ListPreference) findPreference(SharedPreferencesConstants.PLAYER_AUTORESTART_DELAY);
         initAutorestartDelay();
