@@ -11,7 +11,7 @@ dependencies {
     api "com.google.firebase:firebase-invites:${rootProject.ext.playServicesVersion}"
     api "com.android.support.constraint:constraint-layout:${rootProject.ext.constraintLayoutVersion}"
     api "com.google.firebase:firebase-core:${rootProject.ext.playServicesVersion}"
-    api('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+    api("com.crashlytics.sdk.android:crashlytics:${rootProject.ext.crashlyticsVersion}@aar") {
         transitive = true
     }
 
