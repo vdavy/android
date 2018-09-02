@@ -7,7 +7,7 @@ dependencies {
     api "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     api "com.android.support:mediarouter-v7:${rootProject.ext.supportLibVersion}"
     api "com.android.support:design:${rootProject.ext.supportLibVersion}"
-    api "com.google.android.gms:play-services-cast-framework:${rootProject.ext.playServicesVersion}"
+    api "com.google.android.gms:play-services-cast-framework:${rootProject.ext.cafVersion}"
 
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"
