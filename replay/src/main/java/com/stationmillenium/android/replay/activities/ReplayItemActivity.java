@@ -1,6 +1,9 @@
 package com.stationmillenium.android.replay.activities;
 
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
@@ -9,8 +12,11 @@ import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.WindowManager;
@@ -29,6 +35,10 @@ import java.util.TimerTask;
 
 import timber.log.Timber;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.app.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 /**
  * Activity to play a replay
  * Inspired from http://stackoverflow.com/questions/3747139/how-can-i-show-a-mediacontroller-while-playing-audio-in-android/5265629#5265629
@@ -40,12 +50,16 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     private static final String REPLAY_POSITION = "replay_position";
     private static final int PERCENT_PLAYED_TIMER_START = 0;
     private static final int PERCENT_PLAYED_TIMER_UPDATE = 500;
+    private static final int REQUEST_PERMISSION_EXTERNAL_STORAGE = 1;
 
     private ReplayItemFragment replayItemFragment;
     private ReplayItemActivityBinding replayItemActivityBinding;
 
     private MediaPlayer mediaPlayer;
     private MediaController mediaController;
+
+    private DownloadManager downloadManager;
+    private TrackDTO replayToDownload;
 
     private TrackDTO replay;
     private int bufferPercentage;
@@ -68,6 +82,9 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
             replayPosition = savedInstanceState.getInt(REPLAY_POSITION);
             Timber.d("Restore media player position to : %s", replayPosition);
         }
+
+        // get download manager reference for podcast download
+        downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
     }
 
     @Override
@@ -118,7 +135,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     }
 
     private void cancelTimer() {
-        if  (playedPercentTimer != null) {
+        if (playedPercentTimer != null) {
             playedPercentTimer.cancel();
         }
     }
@@ -262,9 +279,49 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
 
     /**
      * Download a replay
-     * @param url replay URL
+     *
+     * @param replayItem replay to download
      */
-    public void downloadReplay(String url) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+    public void downloadReplay(TrackDTO replayItem) {
+        if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PERMISSION_GRANTED) {
+            startDownload(replayItem);
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, WRITE_EXTERNAL_STORAGE)) {
+                Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_file_download_auth,
+                        Snackbar.LENGTH_SHORT)
+                        .setAction(R.string.replay_file_download_auth_ask, v -> requestPermission())
+                        .show();
+            } else {
+                replayToDownload = replayItem;
+                requestPermission();
+            }
+        }
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE},
+                REQUEST_PERMISSION_EXTERNAL_STORAGE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSION_EXTERNAL_STORAGE
+                && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startDownload(replayToDownload);
+        } else {
+            Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_file_download_auth_refused,
+                    Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    private void startDownload(TrackDTO replayItem) {
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(replayItem.getFileURL()));
+        request.setDescription(replayItem.getTitle());
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, getString(R.string.replay_file_download_path, replayItem.getTitle()));
+        request.setNotificationVisibility(VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        downloadManager.enqueue(request);
+        Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_file_download_auth_granted,
+                Snackbar.LENGTH_SHORT).show();
     }
 }

@@ -127,7 +127,7 @@
                 android:layout_marginTop="24dp"
                 android:drawableLeft="@drawable/download_replay_icon"
                 android:drawableStart="@drawable/download_replay_icon"
-                android:onClick="@{() -> activity.downloadReplay(replayItem.fileURL)}"
+                android:onClick="@{() -> activity.downloadReplay(replayItem)}"
                 android:text="@string/replay_download"
                 android:theme="@style/DownloadReplayButton"
                 app:layout_constraintLeft_toLeftOf="parent"

@@ -51,4 +51,10 @@
 
     <string name="replay_prompt">Sélectionner une playlist</string>
 
+    <string name="replay_file_download_auth">L\'accès au stockage externe est nécessaire pour télécharger le replay</string>
+    <string name="replay_file_download_auth_ask">Activer</string>
+    <string name="replay_file_download_auth_refused">Autorisation refusée : impossible de télécharger le replay</string>
+    <string name="replay_file_download_auth_granted">Démarrage du téléchargement du replay</string>
+    <string name="replay_file_download_path">/%s.mp3</string>
+
 </resources>
