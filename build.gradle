@@ -22,9 +22,9 @@ ext {
     playServicesVersion = '16.0.3'
     cafVersion = '16.0.1'
     crashlyticsVersion = '2.9.5'
-    glideVersion = "4.7.1"
+    glideVersion = "4.8.0"
     timberVersion = "4.7.1"
-    constraintLayoutVersion = "1.1.2"
+    constraintLayoutVersion = "1.1.3"
 
     // test libs version
     supportTestVersion = "1.0.1"
