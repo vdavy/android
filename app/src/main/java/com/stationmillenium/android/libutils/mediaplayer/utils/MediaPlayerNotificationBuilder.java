@@ -37,7 +37,7 @@ public class MediaPlayerNotificationBuilder {
 
     private static final int[] COMPACT_VIEW_DOUBLE_ACTIONS = {0, 1};
     private static final int[] COMPACT_VIEW_SINGLE_ACTIONS = {0};
-    private static final String NOTIFICATION_CHANNEL_ID = "channelId";
+    public static final String NOTIFICATION_CHANNEL_ID = "channelId";
 
     private static WeakReference<MediaPlayerService> mediaPlayerServiceRef;
 

@@ -3,8 +3,10 @@
  */
 package com.stationmillenium.android.services;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ComponentName;
@@ -29,6 +31,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
@@ -54,6 +58,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import timber.log.Timber;
+
+import static com.stationmillenium.android.libutils.mediaplayer.utils.MediaPlayerNotificationBuilder.NOTIFICATION_CHANNEL_ID;
 
 /**
  * Service to play audio stream
@@ -120,12 +126,17 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         return playerIntent;
     }
 
+    @SuppressLint("NewApi")
     @Override
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void onCreate() {
         if (!AppUtils.isAPILevel21Available()) { //we use new API in Lollipop
             pcbbrComponentName = new ComponentName(this, PlaybackControlButtonsBroadcastReceiver.class);
         }
+        if (AppUtils.isAPILevel26Available()) {
+            startForeground(NOTIFICATION_ID, buildForegroundWaintingNotification());
+        }
+
         // Start up the thread running the service.  Note that we create a
         // separate thread because the service normally runs in the process's
         // main thread, which we don't want to block.  We also make it
@@ -171,6 +182,22 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             }
 
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private Notification buildForegroundWaintingNotification() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        assert notificationManager != null;
+        if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null) {
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, getString(R.string.app_name), NotificationManager.IMPORTANCE_LOW);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        return new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notif_icon)
+                .setContentTitle(getString(R.string.notification_ticker_text))
+                .setContentText(getString(R.string.player_notification_loading))
+                .build();
     }
 
     @Override
