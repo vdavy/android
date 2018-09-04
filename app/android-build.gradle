@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion "28.0.2"
 
     defaultConfig {
         applicationId "com.stationmillenium.android"
         minSdkVersion 15
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 187
         versionName "3.6.3"
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
