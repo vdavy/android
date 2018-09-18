@@ -31,6 +31,14 @@
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+                <!-- The main content view -->
+                <fragment
+                    android:id="@+id/player_fragment"
+                    android:name="com.stationmillenium.android.activities.fragments.PlayerFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toTopOf="@id/cast_mini_controller" />
+
                 <fragment
                     android:id="@+id/cast_mini_controller"
                     class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
@@ -39,14 +47,6 @@
                     android:visibility="gone"
                     app:castControlButtons="@array/cast_mini_controller_control_buttons"
                     app:layout_constraintBottom_toBottomOf="parent" />
-
-                <!-- The main content view -->
-                <fragment
-                    android:id="@+id/player_fragment"
-                    android:name="com.stationmillenium.android.activities.fragments.PlayerFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintBottom_toTopOf="@id/cast_mini_controller" />
 
             </android.support.constraint.ConstraintLayout>
 

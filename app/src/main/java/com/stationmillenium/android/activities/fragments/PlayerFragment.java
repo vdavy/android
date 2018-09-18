@@ -134,4 +134,8 @@ public class PlayerFragment extends Fragment {
         }
         super.onSaveInstanceState(outState);
     }
+
+    public void setPlayingOnChromecast(boolean playingOnChromecast) {
+        binding.setPlayingOnChromecast(playingOnChromecast);
+    }
 }

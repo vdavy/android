@@ -33,5 +33,6 @@
 
     <!-- cast -->
     <string name="app_id">FA0D6C80</string>
+    <string name="image_url">https://www.station-millenium.com/cast/logo.jpg</string>
 
 </resources>

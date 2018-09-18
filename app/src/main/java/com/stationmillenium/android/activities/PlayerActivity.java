@@ -8,32 +8,26 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.android.gms.cast.MediaInfo;
-import com.google.android.gms.cast.MediaLoadOptions;
-import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.CastState;
 import com.google.android.gms.cast.framework.CastStateListener;
-import com.google.android.gms.cast.framework.IntroductoryOverlay;
 import com.google.android.gms.cast.framework.SessionManagerListener;
-import com.google.android.gms.cast.framework.media.RemoteMediaClient;
-import com.google.android.gms.common.images.WebImage;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.fragments.PlayerFragment;
 import com.stationmillenium.android.databinding.PlayerActivityBinding;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.PiwikTracker;
+import com.stationmillenium.android.libutils.activities.PlayerActivityCastUtils;
+import com.stationmillenium.android.libutils.activities.PlayerActivitySessionManagerListener;
 import com.stationmillenium.android.libutils.activities.PlayerActivityUpdateTitleBroadcastReceiver;
 import com.stationmillenium.android.libutils.activities.PlayerState;
 import com.stationmillenium.android.libutils.drawer.DrawerUtils;
@@ -71,150 +65,29 @@ public class PlayerActivity extends AppCompatActivity {
 
     private DrawerUtils drawerUtils;
     private PlayerFragment playerFragment;
-    private PlayerActivityBinding preferencesActivityBinding;
+
+    private PlayerActivityBinding playerActivityBinding;
 
     private Timer currentPlayingTimeTimer;
+
     private Calendar lastTimeUpdated;
     private PlayerActivityUpdateTitleBroadcastReceiver playerActivityUpdateTitleBroadcastReceiver;
-
     private MenuItem castMenu;
-    private CastStateListener castStateListener = newState -> {
-        if (newState != CastState.NO_DEVICES_AVAILABLE) {
-            showIntroductoryOverlay();
-        }
-    };
+
+    private CastStateListener castStateListener;
     private CastContext castContext;
-    private RemoteMediaClient remoteMediaClient;
-    private SessionManagerListener<CastSession> sessionManagerListener = new SessionManagerListener<CastSession>() {
-        @Override
-        public void onSessionStarting(CastSession castSession) {
-            Timber.v("onSessionStarting");
-        }
+    private SessionManagerListener<CastSession> sessionManagerListener;
+    private PlayerActivityCastUtils playerActivityCastUtils;
 
-        @Override
-        public void onSessionStarted(CastSession castSession, String s) {
-            Timber.v("onSessionStarted");
-            MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
-            mediaMetadata.putString(MediaMetadata.KEY_ARTIST, "Station");
-            mediaMetadata.putString(MediaMetadata.KEY_TITLE, "Millenium");
-            mediaMetadata.addImage(new WebImage(Uri.parse("https://www.station-millenium.com/favicon.png")));
-            MediaInfo mediaInfo = new MediaInfo.Builder(PlayerActivity.this.getString(R.string.player_stream_url))
-                .setStreamType(MediaInfo.STREAM_TYPE_LIVE)
-                .setContentType("audio/mp3")
-                .setMetadata(mediaMetadata)
-                .build();
-            remoteMediaClient = castSession.getRemoteMediaClient();
-            remoteMediaClient.registerCallback(rmcListener);
-            remoteMediaClient.load(mediaInfo, new MediaLoadOptions.Builder().build());
-        }
-
-        @Override
-        public void onSessionStartFailed(CastSession castSession, int i) {
-            Timber.v("onSessionStartFailed");
-        }
-
-        @Override
-        public void onSessionEnding(CastSession castSession) {
-            Timber.v("onSessionEnding");
-            if (castSession != null && castSession.getRemoteMediaClient() != null && rmcListener != null) {
-                castSession.getRemoteMediaClient().unregisterCallback(rmcListener);
-            }
-        }
-
-        @Override
-        public void onSessionEnded(CastSession castSession, int i) {
-            Timber.v("onSessionEnded");
-        }
-
-        @Override
-        public void onSessionResuming(CastSession castSession, String s) {
-            Timber.v("onSessionResuming");
-        }
-
-        @Override
-        public void onSessionResumed(CastSession castSession, boolean b) {
-            Timber.v("onSessionResumed");
-        }
-
-        @Override
-        public void onSessionResumeFailed(CastSession castSession, int i) {
-            Timber.v("onSessionResumeFailed");
-        }
-
-        @Override
-        public void onSessionSuspended(CastSession castSession, int i) {
-            Timber.v("onSessionSuspended");
-        }
-    };
-
-    private void startCast(CastSession castSession) {
-        MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
-        mediaMetadata.putString(MediaMetadata.KEY_ARTIST, "Station");
-        mediaMetadata.putString(MediaMetadata.KEY_TITLE, "Millenium");
-        mediaMetadata.addImage(new WebImage(Uri.parse("https://www.station-millenium.com/favicon.png")));
-        MediaInfo mediaInfo = new MediaInfo.Builder(PlayerActivity.this.getString(R.string.player_stream_url))
-            .setStreamType(MediaInfo.STREAM_TYPE_LIVE)
-            .setContentType("audio/mp3")
-            .setMetadata(mediaMetadata)
-            .build();
-        remoteMediaClient = castSession.getRemoteMediaClient();
-        remoteMediaClient.registerCallback(rmcListener);
-        remoteMediaClient.load(mediaInfo);
-        Snackbar.make(preferencesActivityBinding.playerCoordinatorLayout, R.string.player_casting, Snackbar.LENGTH_SHORT).show();
-    }
-
-    private RemoteMediaClient.Callback rmcListener = new RemoteMediaClient.Callback() {
-        @Override
-        public void onStatusUpdated() {
-            Timber.v("onStatusUpdated");
-            if (remoteMediaClient != null && remoteMediaClient.isBuffering()) {
-                Timber.d("buffering");
-            }
-            if (remoteMediaClient != null && remoteMediaClient.isPlaying()) {
-                Timber.d("playing");
-            }
-            if (remoteMediaClient != null && remoteMediaClient.isPaused()) {
-                Timber.d("paused");
-            }
-            if (remoteMediaClient != null && !remoteMediaClient.isPaused() && !remoteMediaClient.isPlaying()) {
-                Timber.d("nada");
-            }
-        }
-
-        @Override
-        public void onMetadataUpdated() {
-            Timber.v("onMetadataUpdated");
-        }
-
-        @Override
-        public void onQueueStatusUpdated() {
-            Timber.v("onQueueStatusUpdated");
-        }
-
-        @Override
-        public void onPreloadStatusUpdated() {
-            Timber.v("onPreloadStatusUpdated");
-        }
-
-        @Override
-        public void onSendingRemoteMediaRequest() {
-            Timber.v("onSendingRemoteMediaRequest");
-        }
-
-        @Override
-        public void onAdBreakStatusUpdated() {
-            Timber.v("onAdBreakStatusUpdated");
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //init view
         super.onCreate(savedInstanceState);
-        preferencesActivityBinding = DataBindingUtil.setContentView(this, R.layout.player_activity);
-        setSupportActionBar(preferencesActivityBinding.playerToolbar);
+        playerActivityBinding = DataBindingUtil.setContentView(this, R.layout.player_activity);
+        setSupportActionBar(playerActivityBinding.playerToolbar);
 
-        drawerUtils = new DrawerUtils(this, preferencesActivityBinding.playerDrawerLayout, preferencesActivityBinding.playerToolbar, R.id.nav_drawer_player);
+        drawerUtils = new DrawerUtils(this, playerActivityBinding.playerDrawerLayout, playerActivityBinding.playerToolbar, R.id.nav_drawer_player);
         playerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.player_fragment);
 
         //set the volume stream will be controlled but pressing buttons
@@ -222,6 +95,13 @@ public class PlayerActivity extends AppCompatActivity {
 
         // Cast init : https://developers.google.com/cast/docs/android_sender_integrate#initialize_the_cast_context
         castContext = CastContext.getSharedInstance(this);
+        playerActivityCastUtils = new PlayerActivityCastUtils(this, playerFragment);
+        sessionManagerListener = new PlayerActivitySessionManagerListener(playerActivityCastUtils.getRmcListener());
+        castStateListener = newState -> {
+            if (newState != CastState.NO_DEVICES_AVAILABLE) {
+                playerActivityCastUtils.showIntroductoryOverlay(castMenu);
+            }
+        };
     }
 
     @Override
@@ -363,7 +243,7 @@ public class PlayerActivity extends AppCompatActivity {
         Timber.d("Play player button clicked");
         if (castContext.getCastState() == CastState.CONNECTED) {
             Timber.d("Play on Chromecast");
-            startCast(castContext.getSessionManager().getCurrentCastSession());
+            playerActivityCastUtils.startCast(castContext.getSessionManager().getCurrentCastSession());
         } else if (playerFragment.getPlayerState() == STOPPED) {
             if (!AppUtils.isMediaPlayerServiceRunning(this)) {
                 if (!AppUtils.isWifiOnlyAndWifiNotConnected(this)) {
@@ -374,7 +254,7 @@ public class PlayerActivity extends AppCompatActivity {
 
                 } else {
                     Timber.w("Wifi requested for streaming radio, but not connected");
-                    Snackbar.make(preferencesActivityBinding.playerCoordinatorLayout, R.string.player_no_wifi, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(playerActivityBinding.playerCoordinatorLayout, R.string.player_no_wifi, Snackbar.LENGTH_SHORT).show();
                 }
 
             } else {
@@ -481,6 +361,7 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     // https://developers.google.com/cast/docs/android_sender_integrate#add_a_cast_button
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -491,14 +372,7 @@ public class PlayerActivity extends AppCompatActivity {
         return true;
     }
 
-    private void showIntroductoryOverlay() {
-        if ((castMenu != null) && castMenu.isVisible()) {
-            new Handler().post(() -> new IntroductoryOverlay.Builder(
-                    PlayerActivity.this, castMenu)
-                    .setTitleText(R.string.introducing_cast)
-                    .setSingleTime()
-                    .build()
-                    .show());
-        }
+    public PlayerActivityBinding getPlayerActivityBinding() {
+        return playerActivityBinding;
     }
 }
