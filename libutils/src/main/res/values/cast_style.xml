@@ -7,20 +7,15 @@
         <item name="castTitleTextAppearance">@style/TitleText</item>
         <item name="castSubtitleTextAppearance">@style/SubtitleText</item>
         <item name="castBackground">@color/primary_dark</item>
-        <item name="castButtonColor">@color/accent</item>
-        <item name="castProgressBarColor">#00ff00</item>
-        <item name="castPlayButtonDrawable">@drawable/cast_ic_mini_controller_play_large</item>
-        <item name="castPauseButtonDrawable">@drawable/cast_ic_mini_controller_pause</item>
-        <item name="castStopButtonDrawable">@drawable/cast_ic_mini_controller_stop_large</item>
-        <item name="castLargePlayButtonDrawable">@drawable/cast_ic_mini_controller_play_large</item>
-        <item name="castLargePauseButtonDrawable">@drawable/cast_ic_mini_controller_pause_large</item>
-        <item name="castLargeStopButtonDrawable">@drawable/cast_ic_mini_controller_stop_large</item>
-        <item name="castSkipPreviousButtonDrawable">@drawable/cast_ic_mini_controller_skip_prev</item>
-        <item name="castSkipNextButtonDrawable">@drawable/cast_ic_mini_controller_skip_next</item>
-        <item name="castRewind30ButtonDrawable">@drawable/cast_ic_mini_controller_rewind30</item>
-        <item name="castForward30ButtonDrawable">@drawable/cast_ic_mini_controller_forward30</item>
-        <item name="castMuteToggleButtonDrawable">@drawable/cast_ic_mini_controller_mute</item>
-        <item name="castClosedCaptionsButtonDrawable">@drawable/cast_ic_mini_controller_closed_caption</item>
+        <item name="castButtonColor">@color/icons</item>
+        <item name="castProgressBarColor">@color/icons</item>
+        <item name="castPlayButtonDrawable">@drawable/cast_play</item>
+        <item name="castPauseButtonDrawable">@drawable/cast_pause</item>
+        <item name="castStopButtonDrawable">@drawable/cast_stop</item>
+        <item name="castLargePlayButtonDrawable">@drawable/cast_play</item>
+        <item name="castLargePauseButtonDrawable">@drawable/cast_pause</item>
+        <item name="castLargeStopButtonDrawable">@drawable/cast_stop</item>
+        <item name="castMuteToggleButtonDrawable">@drawable/cast_mute_selector</item>
     </style>
 
     <array name="cast_mini_controller_control_buttons">
@@ -30,12 +25,16 @@
     </array>
 
     <style name="CustomCastIntroOverlay" parent="CastIntroOverlay">
-        <item name="castButtonTextAppearance">@style/TextAppearance.CustomCastIntroOverlay.Button</item>
-        <item name="castTitleTextAppearance">@style/TextAppearance.CustomCastIntroOverlay.Title</item>
+        <item name="castButtonTextAppearance">@style/TextAppearance.CustomCastIntroOverlay.Button
+        </item>
+        <item name="castTitleTextAppearance">@style/TextAppearance.CustomCastIntroOverlay.Title
+        </item>
     </style>
+
     <style name="TextAppearance.CustomCastIntroOverlay.Button" parent="android:style/TextAppearance">
         <item name="android:textColor">#ff0000</item>
     </style>
+
     <style name="TextAppearance.CustomCastIntroOverlay.Title" parent="android:style/TextAppearance.Large">
         <item name="android:textColor">#00ff00</item>
     </style>
