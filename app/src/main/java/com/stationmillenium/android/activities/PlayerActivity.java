@@ -96,7 +96,7 @@ public class PlayerActivity extends AppCompatActivity {
         // Cast init : https://developers.google.com/cast/docs/android_sender_integrate#initialize_the_cast_context
         castContext = CastContext.getSharedInstance(this);
         playerActivityCastUtils = new PlayerActivityCastUtils(this, playerFragment);
-        sessionManagerListener = new PlayerActivitySessionManagerListener(playerActivityCastUtils.getRmcListener());
+        sessionManagerListener = new PlayerActivitySessionManagerListener(playerActivityCastUtils.getRmcListener(), this, playerFragment, playerActivityCastUtils);
         castStateListener = newState -> {
             if (newState != CastState.NO_DEVICES_AVAILABLE) {
                 playerActivityCastUtils.showIntroductoryOverlay(castMenu);

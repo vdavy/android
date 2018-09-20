@@ -30,18 +30,22 @@ public class PlayerActivityCastUtils {
     private RemoteMediaClient.Callback rmcListener = new RemoteMediaClient.Callback() {
         @Override
         public void onStatusUpdated() {
-            switch (remoteMediaClient.getPlayerState()) {
-                case PLAYER_STATE_PLAYING:
-                case PLAYER_STATE_PAUSED:
-                case PLAYER_STATE_BUFFERING:
-                    playerFragment.setPlayingOnChromecast(false);
-                    break;
-
-                default:
-                    playerFragment.setPlayingOnChromecast(false);
-            }
+            checkIfPlayingOnChromecast(remoteMediaClient.getPlayerState());
         }
     };
+
+    public void checkIfPlayingOnChromecast(int playerStatus) {
+        switch (playerStatus) {
+            case PLAYER_STATE_PLAYING:
+            case PLAYER_STATE_PAUSED:
+            case PLAYER_STATE_BUFFERING:
+                playerFragment.setPlayingOnChromecast(false);
+                break;
+
+            default:
+                playerFragment.setPlayingOnChromecast(false);
+        }
+    }
 
     public PlayerActivityCastUtils(PlayerActivity playerActivity, PlayerFragment playerFragment) {
         this.playerActivity = playerActivity;
