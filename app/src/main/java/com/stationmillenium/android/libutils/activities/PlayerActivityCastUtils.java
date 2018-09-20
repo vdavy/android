@@ -50,9 +50,9 @@ public class PlayerActivityCastUtils {
 
     public void startCast(CastSession castSession) {
         MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
-        mediaMetadata.putString(MediaMetadata.KEY_ARTIST, "Station");
-        mediaMetadata.putString(MediaMetadata.KEY_TITLE, "Millenium");
-        mediaMetadata.addImage(new WebImage(Uri.parse(playerActivity.getString(R.string.image_url))));
+        mediaMetadata.putString(MediaMetadata.KEY_ARTIST, playerActivity.getString(R.string.cast_default_artist));
+        mediaMetadata.putString(MediaMetadata.KEY_TITLE, playerActivity.getString(R.string.cast_default_title));
+        mediaMetadata.addImage(new WebImage(Uri.parse(playerActivity.getString(R.string.cast_default_image_url))));
         MediaInfo mediaInfo = new MediaInfo.Builder(playerActivity.getString(R.string.player_stream_url))
                 .setStreamType(MediaInfo.STREAM_TYPE_LIVE)
                 .setContentType(CAST_MIME_TYPE)
