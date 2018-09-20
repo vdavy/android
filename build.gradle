@@ -20,7 +20,7 @@ ext {
     jacksonVersion = '2.9.6'
     piwikSdkVersion = '3.0.3'
     playServicesVersion = '16.0.3'
-    cafVersion = '16.0.1'
+    cafVersion = '16.0.2'
     crashlyticsVersion = '2.9.5'
     glideVersion = "4.8.0"
     timberVersion = "4.7.1"
