@@ -25,6 +25,7 @@ public class PiwikTracker {
 
     public enum PiwikPages {
         PLAYER("/player"),
+        PLAYER_CHROMECAST("/player/chromecast"),
         ANTENNA_GRID("/main/antenna-grid"),
         HOME("/main"),
         REPLAY("/replay"),

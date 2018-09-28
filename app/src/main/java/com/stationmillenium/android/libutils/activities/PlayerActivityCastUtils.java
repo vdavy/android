@@ -15,10 +15,12 @@ import com.google.android.gms.common.images.WebImage;
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.activities.fragments.PlayerFragment;
+import com.stationmillenium.android.libutils.PiwikTracker;
 
 import static com.google.android.gms.cast.MediaStatus.PLAYER_STATE_BUFFERING;
 import static com.google.android.gms.cast.MediaStatus.PLAYER_STATE_PAUSED;
 import static com.google.android.gms.cast.MediaStatus.PLAYER_STATE_PLAYING;
+import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.PLAYER_CHROMECAST;
 
 public class PlayerActivityCastUtils {
 
@@ -67,6 +69,7 @@ public class PlayerActivityCastUtils {
         remoteMediaClient.registerCallback(rmcListener);
         remoteMediaClient.load(mediaInfo, mediaLoadOptions);
         Snackbar.make(playerActivity.getPlayerActivityBinding().playerCoordinatorLayout, R.string.player_casting, Snackbar.LENGTH_SHORT).show();
+        PiwikTracker.trackScreenView(PLAYER_CHROMECAST);
     }
 
     public void showIntroductoryOverlay(MenuItem castMenu) {
