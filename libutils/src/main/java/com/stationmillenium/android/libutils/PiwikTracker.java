@@ -29,6 +29,7 @@ public class PiwikTracker {
         HOME("/main"),
         REPLAY("/replay"),
         REPLAY_ITEM("/replay/item"),
+        REPLAY_ITEM_DOWNLOAD("/replay/item/download"),
         ALARM("/alarm-preferences"),
         PREFERENCES("/preferences"),
         SONG_SEARCH_HISTORY("/song-search-history"),

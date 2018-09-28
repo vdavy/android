@@ -18,6 +18,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.MediaController;
@@ -92,7 +93,15 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         super.onResume();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initMediaPlayer();
-        PiwikTracker.trackScreenViewWithTitle(PiwikPages.REPLAY_ITEM, replay.getTitle());
+        piwikTrack(PiwikPages.REPLAY_ITEM);
+    }
+
+    private void piwikTrack(PiwikPages piwikPage) {
+        if (!TextUtils.isEmpty(replay.getTitle())) {
+            PiwikTracker.trackScreenViewWithTitle(piwikPage, replay.getTitle());
+        } else {
+            PiwikTracker.trackScreenView(piwikPage);
+        }
     }
 
     private void initMediaPlayer() {
@@ -323,5 +332,6 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         downloadManager.enqueue(request);
         Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_file_download_auth_granted,
                 Snackbar.LENGTH_SHORT).show();
+        piwikTrack(PiwikPages.REPLAY_ITEM_DOWNLOAD);
     }
 }
