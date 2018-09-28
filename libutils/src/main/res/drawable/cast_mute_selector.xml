@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- not selected -->
-    <item android:state_selected="false"
-        android:drawable="@drawable/cast_mute"/>
+    android:drawable="@drawable/cast_mute"/>
     <!-- selected -->
-    <item android:state_selected="true"
-        android:drawable="@drawable/cast_muted"/>
+    <item android:drawable="@drawable/cast_muted"
+          android:state_selected="true"/>
     <!-- default -->
     <item android:drawable="@drawable/cast_mute"/>
 </selector>
