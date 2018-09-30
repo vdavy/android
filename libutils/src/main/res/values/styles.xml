@@ -143,21 +143,12 @@
         <item name="tabIndicatorColor">@color/accent</item>
     </style>
 
-    <!-- TODO : review ! -->
-    <style name="CastMaterialTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <!--<item name="android:textColorPrimary">@color/icons</item>-->
-        <!--&lt;!&ndash;<item name="colorPrimary">@color/primary</item>&ndash;&gt;-->
-        <!--&lt;!&ndash;<item name="colorPrimaryDark">@color/accent</item>&ndash;&gt;-->
-        <!--&lt;!&ndash;<item name="colorAccent">@color/accent</item>&ndash;&gt;-->
-        <!--&lt;!&ndash;<item name="android:dropDownItemStyle">@style/SuggestAutoCompleteStyle</item>&ndash;&gt;-->
-        <!--<item name="android:textColorSecondary">@color/icons</item>-->
-        <!--<item name="android:textColorHint">@color/icons</item>-->
-        <!--<item name="castMiniControllerStyle">@style/CustomCastMiniController</item>-->
-        <!--<item name="castIntroOverlayStyle">@style/CustomCastIntroOverlay</item>-->
-    </style>
-
     <style name="Drawer">
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="CastMaterialTheme" parent="MaterialTheme">
+        <item name="mediaRouteTheme">@style/MediaRouteTheme</item>
     </style>
 
 </resources>

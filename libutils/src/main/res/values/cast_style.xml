@@ -47,4 +47,16 @@
         <item name="android:textColor">#ffffff</item>
     </style>
 
+    <style name="MediaRouteTheme">
+        <item name="mediaRouteCloseDrawable">@drawable/mr_dialog_close_light</item>
+        <item name="mediaRoutePauseDrawable">@drawable/cast_pause</item>
+        <item name="mediaRoutePlayDrawable">@drawable/cast_play</item>
+        <item name="mediaRouteStopDrawable">@drawable/cast_stop</item>
+        <item name="mediaRouteControlPanelThemeOverlay">@style/MediaRouterDarkTheme</item>
+    </style>
+
+    <style name="MediaRouterDarkTheme" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="mediaRouteAudioTrackDrawable">@drawable/mr_vol_type_audiotrack_dark</item>
+    </style>
+
 </resources>
