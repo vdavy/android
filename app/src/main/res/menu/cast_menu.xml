@@ -5,7 +5,7 @@
     <item
         android:id="@+id/cast_menu"
         android:title="@string/player_cast"
-        app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
+        app:actionProviderClass="com.stationmillenium.android.libutils.cast.CustomMediaRouteActionProvider"
         app:showAsAction="always" />
 
 </menu>
