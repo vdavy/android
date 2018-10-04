@@ -2,6 +2,7 @@ package com.stationmillenium.android.libutils.cast;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.CustomMediaRouteControllerDialog;
 import android.support.v7.app.MediaRouteControllerDialog;
 import android.support.v7.app.MediaRouteControllerDialogFragment;
 
