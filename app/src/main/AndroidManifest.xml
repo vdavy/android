@@ -180,7 +180,7 @@
             android:launchMode="singleTask"
             android:parentActivityName=".activities.PlayerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MaterialTheme">
+            android:theme="@style/CastMaterialTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
