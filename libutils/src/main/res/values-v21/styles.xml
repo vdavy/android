@@ -8,6 +8,7 @@
         <item name="android:dropDownItemStyle">@style/SuggestAutoCompleteStyle</item>
         <item name="castMiniControllerStyle">@style/CustomCastMiniController</item>
         <item name="castIntroOverlayStyle">@style/CustomCastIntroOverlay</item>
+        <item name="castExpandedControllerStyle">@style/CustomCastExpandedController</item>
     </style>
 
 </resources>

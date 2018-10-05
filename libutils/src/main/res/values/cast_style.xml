@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- TODO : review !-->
     <style name="CustomCastMiniController" parent="CastMiniController">
         <item name="castShowImageThumbnail">true</item>
         <item name="castTitleTextAppearance">@style/TitleText</item>
@@ -58,5 +57,22 @@
     <style name="MediaRouterDarkTheme" parent="ThemeOverlay.AppCompat.Dark">
         <item name="mediaRouteAudioTrackDrawable">@drawable/mr_vol_type_audiotrack_dark</item>
     </style>
+
+    <style name="CustomCastExpandedController" parent="CastExpandedController">
+        <item name="castButtonColor">@color/icons</item>
+        <item name="castProgressBarColor">@color/icons</item>
+        <item name="castPlayButtonDrawable">@drawable/cast_play</item>
+        <item name="castPauseButtonDrawable">@drawable/cast_pause</item>
+        <item name="castStopButtonDrawable">@drawable/cast_stop</item>
+        <item name="castMuteToggleButtonDrawable">@drawable/cast_mute_selector</item>
+        <item name="castControlButtons">@array/cast_expanded_controller_control_buttons</item>
+    </style>
+
+    <array name="cast_expanded_controller_control_buttons">
+        <item>@id/cast_button_type_empty</item>
+        <item>@id/cast_button_type_empty</item>
+        <item>@id/cast_button_type_empty</item>
+        <item>@id/cast_button_type_mute_toggle</item>
+    </array>
 
 </resources>
