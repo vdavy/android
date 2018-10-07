@@ -43,4 +43,4 @@
 
 # Google cast
 -keep class com.stationmillenium.android.cast.CastOptionsProvider { public *; }
--keep class android.support.v7.app.MediaRouteActionProvider { *; }
+-keep class com.stationmillenium.android.libutils.cast.CustomMediaRouteActionProvider { *; }
