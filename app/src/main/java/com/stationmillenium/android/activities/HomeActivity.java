@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
@@ -47,6 +48,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int SOCIAL_NETWORKS_INDEX = 0;
     private static final int EMAIL_SMS_INDEX = 1;
 
+    private HomeActivityBinding binding;
     private DrawerUtils drawerUtils;
     private HomeFragment fragment;
 
@@ -77,7 +79,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         super.onCreate(savedInstanceState);
-        HomeActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.home_activity);
+        binding = DataBindingUtil.setContentView(this, R.layout.home_activity);
         setSupportActionBar(binding.mainToolbar);
         fragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.home_fragment);
 
@@ -126,12 +128,12 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
      */
     private void sendAppInvitationIntent() {
         Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.app_invite_title))
-            .setMessage(getString(R.string.app_invite_message))
-            .setCustomImage(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
-                getPackageName() + "/" +
-                R.drawable.app_invite_image))
-            .setCallToActionText(getString(R.string.app_invite_cta))
-            .build();
+                .setMessage(getString(R.string.app_invite_message))
+                .setCustomImage(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                        getPackageName() + "/" +
+                        R.drawable.app_invite_image))
+                .setCallToActionText(getString(R.string.app_invite_cta))
+                .build();
         startActivityForResult(intent, APP_INVITE_INTENT);
     }
 
@@ -193,8 +195,9 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
     /**
      * Open social network native app if available or browser instead
      * Called by data binding
+     *
      * @param internalURL the internal native app URL
-     * @param webURL the web browser URL
+     * @param webURL      the web browser URL
      */
     public void openSocialNetwork(String internalURL, String webURL) {
         try {
@@ -206,8 +209,15 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
             Timber.w(e, "Native app not found");
 
             //lauch web browser instead
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webURL));
-            startActivity(browserIntent);
+            try {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webURL));
+                startActivity(browserIntent);
+            } catch (ActivityNotFoundException e1) {
+                Timber.w(e1, "Can't launch web app");
+                Snackbar.make(binding.mainCoordinatorLayout,
+                        R.string.error_opening_facebook,
+                        Snackbar.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -219,6 +229,7 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
 
     /**
      * Open facebook post URL - called from databinding
+     *
      * @param item the clicked facebook post
      */
     public void openFacebook(FacebookPost item) {
