@@ -180,7 +180,7 @@
 
     <!-- home -->
     <string name="links_latest_facebook_feeds"><b>Millenium sur Facebook</b></string>
-    <string name="error_opening_facebook">Ce post n\'est pas disponible</string>
+    <string name="error_opening_facebook">Ce post n\'est pas disponible dans l\'appli Facebook</string>
 
     <!-- other resources -->
     <string name="empty_string" />
