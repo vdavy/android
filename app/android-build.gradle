@@ -8,9 +8,9 @@ android {
     defaultConfig {
         applicationId "com.stationmillenium.android"
         minSdkVersion 15
-        versionName "4.0.0-beta5"
         targetSdkVersion 28
-        versionCode 194
+        versionCode 196
+        versionName "4.0.0-beta5"
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         testApplicationId "com.stationmillenium.android.test"
         multiDexEnabled true

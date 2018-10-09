@@ -73,6 +73,7 @@ public class ReplayTitleFragment extends Fragment {
     public void setRefreshing(boolean refreshing) {
         if (binding != null) {
             binding.replaySrl.setRefreshing(refreshing);
+            binding.setLoading(refreshing);
         }
     }
 
