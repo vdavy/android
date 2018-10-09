@@ -186,7 +186,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:visibility="@{playingOnChromecast ? View.GONE : View.VISIBLE}"
+            android:visibility="@{safeUnbox(playingOnChromecast) ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
