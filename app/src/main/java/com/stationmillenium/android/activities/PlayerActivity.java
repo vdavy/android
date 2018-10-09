@@ -161,7 +161,8 @@ public class PlayerActivity extends AppCompatActivity {
         if (!AppUtils.isMediaPlayerServiceRunning(getApplicationContext())) {
             //auto start player
             if ((getIntent() != null) && (getIntent().getBooleanExtra(LocalIntentsData.ALLOW_AUTOSTART.toString(), false))) {
-                if (getDefaultSharedPreferences(this).getBoolean(AUTOSTART_RADIO, false)) {
+                if (getDefaultSharedPreferences(this).getBoolean(AUTOSTART_RADIO, false)
+                        && (castContext.getCastState() == CastState.NO_DEVICES_AVAILABLE || castContext.getCastState() == CastState.NOT_CONNECTED)) {
                     startPlayer();
                 }
                 getIntent().removeExtra(LocalIntentsData.ALLOW_AUTOSTART.toString());
