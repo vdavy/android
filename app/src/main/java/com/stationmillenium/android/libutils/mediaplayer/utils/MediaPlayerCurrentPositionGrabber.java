@@ -40,8 +40,9 @@ public class MediaPlayerCurrentPositionGrabber {
                 Timber.w(e, "Error while getting media player current position");
                 return 0;
             }
-        } else
+        } else {
             return 0;
+        }
     }
 
 }
