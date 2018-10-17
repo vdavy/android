@@ -1,4 +1,4 @@
-package com.stationmillenium.android.libutils.activities;
+package com.stationmillenium.android.libutils.cast;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -14,14 +14,12 @@ import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.IntroductoryOverlay;
 import com.google.android.gms.cast.framework.media.RemoteMediaClient;
 import com.google.android.gms.common.images.WebImage;
-import com.stationmillenium.android.R;
-import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.libutils.PiwikTracker;
+import com.stationmillenium.android.libutils.R;
 
 import static com.google.android.gms.cast.MediaStatus.PLAYER_STATE_BUFFERING;
 import static com.google.android.gms.cast.MediaStatus.PLAYER_STATE_PAUSED;
 import static com.google.android.gms.cast.MediaStatus.PLAYER_STATE_PLAYING;
-import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.PLAYER_CHROMECAST;
 
 public class ActivityCastUtils {
 
@@ -55,12 +53,12 @@ public class ActivityCastUtils {
         }
     }
 
-    public ActivityCastUtils(PlayerActivity activity, PlayingOnChromecast playingOnChromecast) {
+    public ActivityCastUtils(Activity activity, PlayingOnChromecast playingOnChromecast) {
         this.activity = activity;
         this.playingOnChromecast = playingOnChromecast;
     }
 
-    public void startCast(CastSession castSession, String artist, String title, String imageURL, String mediaURL, int streamType, View snackBarView) {
+    public void startCast(CastSession castSession, String artist, String title, String imageURL, String mediaURL, int streamType, View snackBarView, PiwikTracker.PiwikPages piwikPages) {
         MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
         mediaMetadata.putString(MediaMetadata.KEY_ARTIST, artist);
         mediaMetadata.putString(MediaMetadata.KEY_TITLE, title);
@@ -75,7 +73,7 @@ public class ActivityCastUtils {
         remoteMediaClient.registerCallback(rmcListener);
         remoteMediaClient.load(mediaInfo, mediaLoadOptions);
         Snackbar.make(snackBarView, R.string.player_casting, Snackbar.LENGTH_SHORT).show();
-        PiwikTracker.trackScreenView(PLAYER_CHROMECAST);
+        PiwikTracker.trackScreenView(piwikPages);
     }
 
     public void showIntroductoryOverlay(MenuItem castMenu) {

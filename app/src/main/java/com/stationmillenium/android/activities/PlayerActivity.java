@@ -27,10 +27,10 @@ import com.stationmillenium.android.activities.fragments.PlayerFragment;
 import com.stationmillenium.android.databinding.PlayerActivityBinding;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.PiwikTracker;
-import com.stationmillenium.android.libutils.activities.ActivityCastUtils;
-import com.stationmillenium.android.libutils.activities.ActivitySessionManagerListener;
 import com.stationmillenium.android.libutils.activities.PlayerActivityUpdateTitleBroadcastReceiver;
 import com.stationmillenium.android.libutils.activities.PlayerState;
+import com.stationmillenium.android.libutils.cast.ActivityCastUtils;
+import com.stationmillenium.android.libutils.cast.ActivitySessionManagerListener;
 import com.stationmillenium.android.libutils.drawer.DrawerUtils;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
@@ -48,6 +48,7 @@ import timber.log.Timber;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.PLAYER;
+import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.PLAYER_CHROMECAST;
 import static com.stationmillenium.android.libutils.SharedPreferencesConstants.AUTOSTART_RADIO;
 import static com.stationmillenium.android.libutils.activities.PlayerState.STOPPED;
 
@@ -73,8 +74,8 @@ public class PlayerActivity extends AppCompatActivity {
 
     private Calendar lastTimeUpdated;
     private PlayerActivityUpdateTitleBroadcastReceiver playerActivityUpdateTitleBroadcastReceiver;
-    private MenuItem castMenu;
 
+    private MenuItem castMenu;
     private CastStateListener castStateListener;
     private CastContext castContext;
     private SessionManagerListener<CastSession> sessionManagerListener;
@@ -247,7 +248,7 @@ public class PlayerActivity extends AppCompatActivity {
             Timber.d("Play on Chromecast");
             activityCastUtils.startCast(castContext.getSessionManager().getCurrentCastSession(), getString(R.string.cast_default_artist),
                     getString(R.string.cast_default_title), getString(R.string.cast_default_image_url), getString(R.string.player_stream_url),
-                    MediaInfo.STREAM_TYPE_LIVE, playerActivityBinding.playerCoordinatorLayout);
+                    MediaInfo.STREAM_TYPE_LIVE, playerActivityBinding.playerCoordinatorLayout, PLAYER_CHROMECAST);
         } else if (playerFragment.getPlayerState() == STOPPED) {
             if (!AppUtils.isMediaPlayerServiceRunning(this)) {
                 if (!AppUtils.isWifiOnlyAndWifiNotConnected(this)) {
@@ -365,7 +366,6 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     // https://developers.google.com/cast/docs/android_sender_integrate#add_a_cast_button
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);

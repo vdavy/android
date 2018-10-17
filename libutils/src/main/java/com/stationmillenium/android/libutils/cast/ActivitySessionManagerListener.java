@@ -1,8 +1,9 @@
-package com.stationmillenium.android.libutils.activities;
+package com.stationmillenium.android.libutils.cast;
 
 import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.SessionManagerListener;
 import com.google.android.gms.cast.framework.media.RemoteMediaClient;
+import com.stationmillenium.android.libutils.activities.PlayerState;
 
 import timber.log.Timber;
 

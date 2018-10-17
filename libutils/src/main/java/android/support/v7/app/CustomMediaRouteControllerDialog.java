@@ -68,11 +68,6 @@ import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
 
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY_PAUSE;
-import static android.support.v4.media.session.PlaybackStateCompat.ACTION_STOP;
-
 public class CustomMediaRouteControllerDialog extends MediaRouteControllerDialog {
     // Tags should be less than 24 characters long (see docs for android.util.Log.isLoggable())
     private static final String TAG = "MediaRouteCtrlDialog";
@@ -503,9 +498,9 @@ public class CustomMediaRouteControllerDialog extends MediaRouteControllerDialog
         updateLayoutHeight(animate);
     }
 
-    private boolean isBitmapRecycled(Bitmap bitmap) {
-        return bitmap != null && bitmap.isRecycled();
-    }
+//    private boolean isBitmapRecycled(Bitmap bitmap) {
+//        return bitmap != null && bitmap.isRecycled();
+//    }
 
     private boolean canShowPlaybackControlLayout() {
         return mCustomControlView == null && (mDescription != null || mState != null);
@@ -999,17 +994,17 @@ public class CustomMediaRouteControllerDialog extends MediaRouteControllerDialog
         }
     }
 
-    private boolean isPlayActionSupported() {
-        return (mState.getActions() & (ACTION_PLAY | ACTION_PLAY_PAUSE)) != 0;
-    }
-
-    private boolean isPauseActionSupported() {
-        return (mState.getActions() & (ACTION_PAUSE | ACTION_PLAY_PAUSE)) != 0;
-    }
-
-    private boolean isStopActionSupported() {
-        return (mState.getActions() & ACTION_STOP) != 0;
-    }
+//    private boolean isPlayActionSupported() {
+//        return (mState.getActions() & (ACTION_PLAY | ACTION_PLAY_PAUSE)) != 0;
+//    }
+//
+//    private boolean isPauseActionSupported() {
+//        return (mState.getActions() & (ACTION_PAUSE | ACTION_PLAY_PAUSE)) != 0;
+//    }
+//
+//    private boolean isStopActionSupported() {
+//        return (mState.getActions() & ACTION_STOP) != 0;
+//    }
 
     boolean isVolumeControlAvailable(MediaRouter.RouteInfo route) {
         return mVolumeControlEnabled && route.getVolumeHandling()
