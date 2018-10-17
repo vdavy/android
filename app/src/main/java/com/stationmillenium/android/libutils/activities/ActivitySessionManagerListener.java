@@ -3,8 +3,6 @@ package com.stationmillenium.android.libutils.activities;
 import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.SessionManagerListener;
 import com.google.android.gms.cast.framework.media.RemoteMediaClient;
-import com.stationmillenium.android.activities.PlayerActivity;
-import com.stationmillenium.android.activities.fragments.PlayerFragment;
 
 import timber.log.Timber;
 
@@ -12,18 +10,36 @@ import static com.google.android.gms.cast.MediaStatus.PLAYER_STATE_BUFFERING;
 import static com.google.android.gms.cast.MediaStatus.PLAYER_STATE_PAUSED;
 import static com.google.android.gms.cast.MediaStatus.PLAYER_STATE_PLAYING;
 
-public class PlayerActivitySessionManagerListener implements SessionManagerListener<CastSession> {
+public class ActivitySessionManagerListener implements SessionManagerListener<CastSession> {
+
+    @FunctionalInterface
+    public interface StopPlayer {
+        void stopPlayer();
+    }
+
+    @FunctionalInterface
+    public interface StartPlayer {
+        void startPlayer();
+    }
+
+    @FunctionalInterface
+    public interface GetPlayerState {
+        PlayerState getPlayerState();
+    }
 
     private RemoteMediaClient.Callback rmcListener;
-    private PlayerActivity playerActivity;
-    private PlayerFragment playerFragment;
-    private PlayerActivityCastUtils playerActivityCastUtils;
+    private ActivityCastUtils activityCastUtils;
 
-    public PlayerActivitySessionManagerListener(RemoteMediaClient.Callback rmcListener, PlayerActivity playerActivity, PlayerFragment playerFragment, PlayerActivityCastUtils playerActivityCastUtils) {
+    private StopPlayer stopPlayer;
+    private StartPlayer startPlayer;
+    private GetPlayerState getPlayerState;
+
+    public ActivitySessionManagerListener(RemoteMediaClient.Callback rmcListener, ActivityCastUtils activityCastUtils, StopPlayer stopPlayer, StartPlayer startPlayer, GetPlayerState getPlayerState) {
         this.rmcListener = rmcListener;
-        this.playerActivity = playerActivity;
-        this.playerFragment = playerFragment;
-        this.playerActivityCastUtils = playerActivityCastUtils;
+        this.activityCastUtils = activityCastUtils;
+        this.stopPlayer = stopPlayer;
+        this.startPlayer = startPlayer;
+        this.getPlayerState = getPlayerState;
     }
 
     @Override
@@ -33,10 +49,10 @@ public class PlayerActivitySessionManagerListener implements SessionManagerListe
 
     @Override
     public void onSessionStarted(CastSession castSession, String s) {
-        if (playerFragment.getPlayerState() != PlayerState.STOPPED) {
+        if (getPlayerState.getPlayerState() != PlayerState.STOPPED) {
             Timber.d("Switching to Chromecast");
-            playerActivity.stopPlayer();
-            playerActivity.startPlayer(); //will start on chromecast
+            stopPlayer.stopPlayer();
+            startPlayer.startPlayer(); //will start on chromecast
         }
     }
 
@@ -65,12 +81,12 @@ public class PlayerActivitySessionManagerListener implements SessionManagerListe
     @Override
     public void onSessionResumed(CastSession castSession, boolean b) {
         Timber.d("Switching to Chromecast on resume");
-        playerActivityCastUtils.checkIfPlayingOnChromecast(castSession.getRemoteMediaClient().getPlayerState());
+        activityCastUtils.checkIfPlayingOnChromecast(castSession.getRemoteMediaClient().getPlayerState());
         if ((castSession.getRemoteMediaClient().getPlayerState() == PLAYER_STATE_PLAYING
                 ||castSession.getRemoteMediaClient().getPlayerState() == PLAYER_STATE_PAUSED
                 ||castSession.getRemoteMediaClient().getPlayerState() == PLAYER_STATE_BUFFERING)
-            && playerFragment.getPlayerState() != PlayerState.STOPPED) {
-            playerActivity.stopPlayer();
+            && getPlayerState.getPlayerState() != PlayerState.STOPPED) {
+            stopPlayer.stopPlayer();
         }
     }
 

@@ -31,6 +31,7 @@ public class PiwikTracker {
         REPLAY("/replay"),
         REPLAY_ITEM("/replay/item"),
         REPLAY_ITEM_DOWNLOAD("/replay/item/download"),
+        REPLAY_ITEM_CHROMECAST("/replay/item/chromecast"),
         ALARM("/alarm-preferences"),
         PREFERENCES("/preferences"),
         SONG_SEARCH_HISTORY("/song-search-history"),

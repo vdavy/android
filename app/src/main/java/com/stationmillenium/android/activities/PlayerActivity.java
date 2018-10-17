@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastSession;
@@ -26,8 +27,8 @@ import com.stationmillenium.android.activities.fragments.PlayerFragment;
 import com.stationmillenium.android.databinding.PlayerActivityBinding;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.PiwikTracker;
-import com.stationmillenium.android.libutils.activities.PlayerActivityCastUtils;
-import com.stationmillenium.android.libutils.activities.PlayerActivitySessionManagerListener;
+import com.stationmillenium.android.libutils.activities.ActivityCastUtils;
+import com.stationmillenium.android.libutils.activities.ActivitySessionManagerListener;
 import com.stationmillenium.android.libutils.activities.PlayerActivityUpdateTitleBroadcastReceiver;
 import com.stationmillenium.android.libutils.activities.PlayerState;
 import com.stationmillenium.android.libutils.drawer.DrawerUtils;
@@ -77,7 +78,7 @@ public class PlayerActivity extends AppCompatActivity {
     private CastStateListener castStateListener;
     private CastContext castContext;
     private SessionManagerListener<CastSession> sessionManagerListener;
-    private PlayerActivityCastUtils playerActivityCastUtils;
+    private ActivityCastUtils activityCastUtils;
 
 
     @Override
@@ -95,11 +96,11 @@ public class PlayerActivity extends AppCompatActivity {
 
         // Cast init : https://developers.google.com/cast/docs/android_sender_integrate#initialize_the_cast_context
         castContext = CastContext.getSharedInstance(this);
-        playerActivityCastUtils = new PlayerActivityCastUtils(this, playerFragment);
-        sessionManagerListener = new PlayerActivitySessionManagerListener(playerActivityCastUtils.getRmcListener(), this, playerFragment, playerActivityCastUtils);
+        activityCastUtils = new ActivityCastUtils(this, (playingOnChromecast) -> playerFragment.setPlayingOnChromecast(playingOnChromecast));
+        sessionManagerListener = new ActivitySessionManagerListener(activityCastUtils.getRmcListener(), activityCastUtils, () -> stopPlayer(), () -> startPlayer(), () -> playerFragment.getPlayerState());
         castStateListener = newState -> {
             if (newState != CastState.NO_DEVICES_AVAILABLE) {
-                playerActivityCastUtils.showIntroductoryOverlay(castMenu);
+                activityCastUtils.showIntroductoryOverlay(castMenu);
             }
         };
     }
@@ -244,7 +245,9 @@ public class PlayerActivity extends AppCompatActivity {
         Timber.d("Play player button clicked");
         if (castContext.getCastState() == CastState.CONNECTED) {
             Timber.d("Play on Chromecast");
-            playerActivityCastUtils.startCast(castContext.getSessionManager().getCurrentCastSession());
+            activityCastUtils.startCast(castContext.getSessionManager().getCurrentCastSession(), getString(R.string.cast_default_artist),
+                    getString(R.string.cast_default_title), getString(R.string.cast_default_image_url), getString(R.string.player_stream_url),
+                    MediaInfo.STREAM_TYPE_LIVE, playerActivityBinding.playerCoordinatorLayout);
         } else if (playerFragment.getPlayerState() == STOPPED) {
             if (!AppUtils.isMediaPlayerServiceRunning(this)) {
                 if (!AppUtils.isWifiOnlyAndWifiNotConnected(this)) {
@@ -373,7 +376,4 @@ public class PlayerActivity extends AppCompatActivity {
         return true;
     }
 
-    public PlayerActivityBinding getPlayerActivityBinding() {
-        return playerActivityBinding;
-    }
 }
