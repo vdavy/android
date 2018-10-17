@@ -19,13 +19,25 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
 
+import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.framework.CastButtonFactory;
+import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastSession;
+import com.google.android.gms.cast.framework.CastState;
+import com.google.android.gms.cast.framework.CastStateListener;
+import com.google.android.gms.cast.framework.SessionManagerListener;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.PiwikTracker.PiwikPages;
+import com.stationmillenium.android.libutils.activities.PlayerState;
+import com.stationmillenium.android.libutils.cast.ActivityCastUtils;
+import com.stationmillenium.android.libutils.cast.ActivitySessionManagerListener;
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.databinding.ReplayItemActivityBinding;
 import com.stationmillenium.android.replay.dto.TrackDTO;
@@ -39,6 +51,7 @@ import timber.log.Timber;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.app.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.REPLAY_ITEM_CHROMECAST;
 
 /**
  * Activity to play a replay
@@ -68,6 +81,14 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     private int replayPosition;
     private Timer playedPercentTimer;
 
+    private boolean playerBuffering = false;
+
+    private MenuItem castMenu;
+    private CastStateListener castStateListener;
+    private CastContext castContext;
+    private SessionManagerListener<CastSession> sessionManagerListener;
+    private ActivityCastUtils activityCastUtils;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +107,33 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
 
         // get download manager reference for podcast download
         downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+
+        // Cast init : https://developers.google.com/cast/docs/android_sender_integrate#initialize_the_cast_context
+        castContext = CastContext.getSharedInstance(this);
+        activityCastUtils = new ActivityCastUtils(this, (playingOnChromecast) -> {
+            replayItemFragment.setPlayingOnChromecast(playingOnChromecast);
+            mediaController.setEnabled(!playingOnChromecast);
+            if (mediaController.isShowing()) {
+                mediaController.hide();
+            }
+        });
+        sessionManagerListener = new ActivitySessionManagerListener(activityCastUtils.getRmcListener(), activityCastUtils, () -> mediaPlayer.stop(), () -> start(),
+                () -> {
+                    if (mediaPlayerStopped) {
+                        return PlayerState.STOPPED;
+                    } else if (isPlaying()) {
+                        return PlayerState.PLAYING;
+                    } else if (playerBuffering) {
+                        return PlayerState.BUFFERING;
+                    } else {
+                        return PlayerState.PAUSED;
+                    }
+                });
+        castStateListener = newState -> {
+            if (newState != CastState.NO_DEVICES_AVAILABLE) {
+                activityCastUtils.showIntroductoryOverlay(castMenu);
+            }
+        };
     }
 
     @Override
@@ -93,6 +141,11 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         super.onResume();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initMediaPlayer();
+
+        // cast part
+        castContext.addCastStateListener(castStateListener);
+        castContext.getSessionManager().addSessionManagerListener(sessionManagerListener, CastSession.class);
+
         piwikTrack(PiwikPages.REPLAY_ITEM);
     }
 
@@ -105,19 +158,26 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     }
 
     private void initMediaPlayer() {
-        replayItemFragment.setProgressBarVisible(true);
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setOnPreparedListener(this);
-        mediaPlayer.setOnInfoListener(this);
-        mediaPlayer.setOnCompletionListener(this);
-        mediaController = new MediaController(this);
-        try {
-            mediaPlayer.setDataSource(replay.getFileURL());
-            mediaPlayer.prepareAsync();
-            mediaPlayerStopped = false;
-        } catch (IOException e) {
-            Timber.e(e, "Can't read replay : %s", replay.getFileSize());
-            Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_unavailable, Snackbar.LENGTH_SHORT).show();
+        if (castContext.getCastState() == CastState.CONNECTED) {
+            Timber.d("Play on Chromecast");
+            activityCastUtils.startCast(castContext.getSessionManager().getCurrentCastSession(), replay.getTitle(),
+                    replay.getTitle(), replay.getImageURL(), replay.getFileURL(),
+                    MediaInfo.STREAM_TYPE_BUFFERED, replayItemActivityBinding.replayItemCoordinatorLayout, REPLAY_ITEM_CHROMECAST);
+        } else {
+            replayItemFragment.setProgressBarVisible(true);
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setOnPreparedListener(this);
+            mediaPlayer.setOnInfoListener(this);
+            mediaPlayer.setOnCompletionListener(this);
+            mediaController = new MediaController(this);
+            try {
+                mediaPlayer.setDataSource(replay.getFileURL());
+                mediaPlayer.prepareAsync();
+                mediaPlayerStopped = false;
+            } catch (IOException e) {
+                Timber.e(e, "Can't read replay : %s", replay.getFileSize());
+                Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_unavailable, Snackbar.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -141,6 +201,10 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         cancelTimer();
         mediaPlayer.stop();
         mediaPlayer.release();
+
+        // cast part
+        castContext.removeCastStateListener(castStateListener);
+        castContext.getSessionManager().removeSessionManagerListener(sessionManagerListener, CastSession.class);
     }
 
     private void cancelTimer() {
@@ -254,10 +318,12 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
             case MediaPlayer.MEDIA_INFO_BUFFERING_START:
                 Timber.v("Media player buffering...");
                 replayItemFragment.setProgressBarVisible(true);
+                playerBuffering = true;
                 return true;
             case MediaPlayer.MEDIA_INFO_BUFFERING_END:
                 Timber.v("Media player end buffering");
                 replayItemFragment.setProgressBarVisible(false);
+                playerBuffering = false;
                 return true;
         }
         return false;
@@ -333,5 +399,16 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_file_download_auth_granted,
                 Snackbar.LENGTH_SHORT).show();
         piwikTrack(PiwikPages.REPLAY_ITEM_DOWNLOAD);
+    }
+
+    // https://developers.google.com/cast/docs/android_sender_integrate#add_a_cast_button
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.cast_menu, menu);
+        castMenu = CastButtonFactory.setUpMediaRouteButton(getApplicationContext(),
+                menu,
+                R.id.cast_menu);
+        return true;
     }
 }
