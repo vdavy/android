@@ -112,9 +112,11 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         castContext = CastContext.getSharedInstance(this);
         activityCastUtils = new ActivityCastUtils(this, (playingOnChromecast) -> {
             replayItemFragment.setPlayingOnChromecast(playingOnChromecast);
-            mediaController.setEnabled(!playingOnChromecast);
-            if (mediaController.isShowing()) {
-                mediaController.hide();
+            if (mediaController != null) {
+                mediaController.setEnabled(!playingOnChromecast);
+                if (mediaController.isShowing()) {
+                    mediaController.hide();
+                }
             }
         });
         sessionManagerListener = new ActivitySessionManagerListener(activityCastUtils.getRmcListener(), activityCastUtils, () -> mediaPlayer.stop(), () -> start(),
@@ -196,6 +198,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     @Override
     protected void onPause() {
         super.onPause();
+        //TODO : quand on est sur le cast !!
         replayPosition = mediaPlayer.getCurrentPosition(); // backup current position in case of screen rotation
         mediaPlayerStopped = true;
         cancelTimer();

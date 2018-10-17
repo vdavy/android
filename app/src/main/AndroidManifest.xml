@@ -167,7 +167,7 @@
             android:name=".replay.activities.ReplayItemActivity"
             android:label="@string/replay_item_activity_title"
             android:parentActivityName=".replay.activities.ReplayActivity"
-            android:theme="@style/MaterialTheme"
+            android:theme="@style/CastMaterialTheme"
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
