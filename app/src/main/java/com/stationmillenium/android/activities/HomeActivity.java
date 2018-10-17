@@ -58,11 +58,9 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
         if (BuildConfig.DEBUG) {
             StrictMode.ThreadPolicy.Builder tpBuilder = new StrictMode.ThreadPolicy.Builder()
                     .detectAll()
-                    .penaltyLog()
-                    .penaltyDialog();
+                    .penaltyLog();
 
             tpBuilder.penaltyFlashScreen();
-
 
             StrictMode.setThreadPolicy(tpBuilder.build());
 
