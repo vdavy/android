@@ -178,7 +178,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
             Timber.d("Play on Chromecast");
             activityCastUtils.startCast(castContext.getSessionManager().getCurrentCastSession(), playlistTitle,
                     replay.getTitle(), replay.getImageURL(), replay.getFileURL(),
-                    MediaInfo.STREAM_TYPE_BUFFERED, mediaPlayer != null ? mediaPlayer.getCurrentPosition() : 0,
+                    MediaInfo.STREAM_TYPE_BUFFERED, getMediaPlayerCurrentPosition(),
                     replayItemActivityBinding.replayItemCoordinatorLayout, REPLAY_ITEM_CHROMECAST);
         } else {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -199,6 +199,14 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         }
     }
 
+    private long getMediaPlayerCurrentPosition() {
+        try {
+            return mediaPlayer != null ? mediaPlayer.getCurrentPosition() : 0;
+        } catch(Exception e) {
+            return 0;
+        }
+    }
+
     private void extractReplayData() {
         Intent intent = getIntent();
         replay = (TrackDTO) intent.getSerializableExtra(REPLAY_ITEM);
@@ -216,7 +224,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     protected void onPause() {
         super.onPause();
         if (mediaPlayer != null && !mediaPlayerStopped) {
-            replayPosition = mediaPlayer.getCurrentPosition(); // backup current position in case of screen rotation
+            replayPosition = (int) getMediaPlayerCurrentPosition(); // backup current position in case of screen rotation
             mediaPlayer.stop();
             mediaPlayer.release();
         }
