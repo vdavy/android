@@ -124,7 +124,9 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
                 }
             }
         });
-        sessionManagerListener = new ActivitySessionManagerListener(activityCastUtils.getRmcListener(), activityCastUtils, () -> mediaPlayer.stop(), () -> start(),
+        sessionManagerListener = new ActivitySessionManagerListener(activityCastUtils.getRmcListener(), activityCastUtils,
+                () -> { if (mediaPlayer != null) mediaPlayer.stop(); },
+                () -> start(),
                 () -> {
                     if (mediaPlayerStopped) {
                         return PlayerState.STOPPED;
@@ -232,7 +234,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
 
     @Override
     public void start() {
-        if (!mediaPlayerStopped) {
+        if (mediaPlayer != null && !mediaPlayerStopped) {
             mediaPlayer.start();
             launchPlayedPercentTimer();
         }
@@ -240,7 +242,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
 
     @Override
     public void pause() {
-        if (!mediaPlayerStopped) {
+        if (mediaPlayer != null && !mediaPlayerStopped) {
             mediaPlayer.pause();
             cancelTimer();
         }
@@ -248,25 +250,25 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
 
     @Override
     public int getDuration() {
-        return (!mediaPlayerStopped) ? mediaPlayer.getDuration() : 0;
+        return (mediaPlayer != null && !mediaPlayerStopped) ? mediaPlayer.getDuration() : 0;
     }
 
     @Override
     public int getCurrentPosition() {
         // call only when play, if not raise exception
-        return (!mediaPlayerStopped) ? mediaPlayer.getCurrentPosition() : 0;
+        return (mediaPlayer != null && !mediaPlayerStopped) ? mediaPlayer.getCurrentPosition() : 0;
     }
 
     @Override
     public void seekTo(int pos) {
-        if (!mediaPlayerStopped) {
+        if (mediaPlayer != null && !mediaPlayerStopped) {
             mediaPlayer.seekTo(pos);
         }
     }
 
     @Override
     public boolean isPlaying() {
-        return !mediaPlayerStopped && mediaPlayer.isPlaying();
+        return !mediaPlayerStopped && mediaPlayer != null && mediaPlayer.isPlaying();
     }
 
     @Override

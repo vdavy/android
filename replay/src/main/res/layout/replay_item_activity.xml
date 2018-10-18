@@ -24,20 +24,27 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <fragment
-            android:id="@+id/replay_item_fragment"
-            android:name="com.stationmillenium.android.replay.activities.ReplayItemFragment"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <fragment
-            android:id="@+id/cast_mini_controller"
-            class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:castControlButtons="@array/replay__cast_mini_controller_control_buttons"/>
+            <fragment
+                android:id="@+id/replay_item_fragment"
+                android:name="com.stationmillenium.android.replay.activities.ReplayItemFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <fragment
+                android:id="@+id/cast_mini_controller"
+                class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:castControlButtons="@array/cast_mini_controller_control_buttons"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 

@@ -153,8 +153,4 @@
         <item name="mediaRouteTheme">@style/MediaRouteTheme</item>
     </style>
 
-    <style name="CastMaterialTheme.Replay">
-        <item name="castExpandedControllerStyle">@style/ReplayCustomCastExpandedController</item>
-    </style>
-
 </resources>
