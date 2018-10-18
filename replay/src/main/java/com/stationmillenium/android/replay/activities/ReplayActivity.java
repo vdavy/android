@@ -359,6 +359,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         Timber.d("Open replay ; %s", replayItem);
         Intent replayItemIntent = new Intent(this, ReplayItemActivity.class);
         replayItemIntent.putExtra(ReplayItemActivity.REPLAY_ITEM, replayItem);
+        replayItemIntent.putExtra(ReplayItemActivity.REPLAY_PLAYLIST, ((PlaylistDTO) searchParams.get(PLAYLIST_BUNDLE)).getTitle());
         startActivity(replayItemIntent);
     }
 

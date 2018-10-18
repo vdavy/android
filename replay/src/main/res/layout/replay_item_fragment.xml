@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="replayItem"
-            type="com.stationmillenium.android.replay.dto.TrackDTO" />
+            type="com.stationmillenium.android.replay.dto.TrackDTO"/>
 
         <variable
             name="duration"
-            type="java.lang.Integer" />
+            type="java.lang.Integer"/>
 
         <variable
             name="playedTime"
-            type="java.lang.Integer" />
+            type="java.lang.Integer"/>
 
         <variable
             name="activity"
-            type="com.stationmillenium.android.replay.activities.ReplayItemActivity" />
+            type="com.stationmillenium.android.replay.activities.ReplayItemActivity"/>
     </data>
 
     <LinearLayout
@@ -35,14 +35,14 @@
             android:layout_height="120dp"
             android:layout_gravity="center_horizontal"
             app:replayImage="@{replayItem}"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"/>
 
         <TextView
             style="@style/MaterialTheme.ItemText.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{replayItem.title}"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"/>
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -62,7 +62,7 @@
                 android:text="@{replayItem.duration}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/replay_item_separator"
@@ -74,7 +74,7 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/replay_date_duration_separator"
                 app:layout_constraintBaseline_toBaselineOf="@id/replay_item_duration"
-                app:layout_constraintLeft_toRightOf="@id/replay_item_duration" />
+                app:layout_constraintLeft_toRightOf="@id/replay_item_duration"/>
 
             <TextView
                 android:id="@+id/replay_date"
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{replayItem.date}"
                 app:layout_constraintBaseline_toBaselineOf="@id/replay_item_duration"
-                app:layout_constraintLeft_toRightOf="@id/replay_item_separator" />
+                app:layout_constraintLeft_toRightOf="@id/replay_item_separator"/>
 
             <TextView
                 android:id="@+id/replay_filesize"
@@ -96,7 +96,7 @@
                 android:paddingRight="3dp"
                 app:fileSize="@{replayItem.fileSize}"
                 app:layout_constraintBaseline_toBaselineOf="@id/replay_item_duration"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"/>
 
         </android.support.constraint.ConstraintLayout>
 
@@ -119,20 +119,35 @@
                 app:layout_constraintTop_toTopOf="@id/replay_waveform_layout"
                 app:replayDuration="@{duration}"
                 app:replayPlayedTime="@{playedTime}"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"/>
 
             <Button
+                android:id="@+id/replay_play_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:drawableLeft="@drawable/play_replay_icon"
+                android:drawableStart="@drawable/play_replay_icon"
+                android:onClick="@{() -> activity.playReplay()}"
+                android:text="@string/replay_play"
+                android:theme="@style/ReplayButton"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/replay_item_playing_progressbar"/>
+
+            <Button
+                android:id="@+id/replay_download_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:drawableLeft="@drawable/download_replay_icon"
                 android:drawableStart="@drawable/download_replay_icon"
                 android:onClick="@{() -> activity.downloadReplay(replayItem)}"
                 android:text="@string/replay_download"
-                android:theme="@style/DownloadReplayButton"
+                android:theme="@style/ReplayButton"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/replay_item_playing_progressbar" />
+                app:layout_constraintTop_toBottomOf="@id/replay_play_button"/>
 
             <ProgressBar
                 android:id="@+id/replay_item_progressbar"
@@ -143,7 +158,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/replay_download_button"/>
 
         </android.support.constraint.ConstraintLayout>
 

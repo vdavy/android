@@ -61,6 +61,7 @@ import static com.stationmillenium.android.libutils.PiwikTracker.PiwikPages.REPL
 public class ReplayItemActivity extends AppCompatActivity implements MediaPlayerControl, OnPreparedListener, OnBufferingUpdateListener, OnInfoListener, OnCompletionListener {
 
     public static final String REPLAY_ITEM = "ReplayItem";
+    public static final String REPLAY_PLAYLIST = "ReplayPlaylist";
     private static final String REPLAY_POSITION = "replay_position";
     private static final int PERCENT_PLAYED_TIMER_START = 0;
     private static final int PERCENT_PLAYED_TIMER_UPDATE = 500;
@@ -76,6 +77,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     private TrackDTO replayToDownload;
 
     private TrackDTO replay;
+    private String playlistTitle;
     private int bufferPercentage;
     private boolean mediaPlayerStopped;
     private int replayPosition;
@@ -112,6 +114,9 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         castContext = CastContext.getSharedInstance(this);
         activityCastUtils = new ActivityCastUtils(this, (playingOnChromecast) -> {
             replayItemFragment.setPlayingOnChromecast(playingOnChromecast);
+            if (playingOnChromecast) {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
             if (mediaController != null) {
                 mediaController.setEnabled(!playingOnChromecast);
                 if (mediaController.isShowing()) {
@@ -141,8 +146,9 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     @Override
     protected void onResume() {
         super.onResume();
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        initMediaPlayer();
+        if (replayPosition > 0) {
+            initMediaPlayer();
+        }
 
         // cast part
         castContext.addCastStateListener(castStateListener);
@@ -159,13 +165,19 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         }
     }
 
+    public void playReplay() {
+        replayPosition = 0;
+        initMediaPlayer();
+    }
+
     private void initMediaPlayer() {
         if (castContext.getCastState() == CastState.CONNECTED) {
             Timber.d("Play on Chromecast");
-            activityCastUtils.startCast(castContext.getSessionManager().getCurrentCastSession(), replay.getTitle(),
+            activityCastUtils.startCast(castContext.getSessionManager().getCurrentCastSession(), playlistTitle,
                     replay.getTitle(), replay.getImageURL(), replay.getFileURL(),
                     MediaInfo.STREAM_TYPE_BUFFERED, replayItemActivityBinding.replayItemCoordinatorLayout, REPLAY_ITEM_CHROMECAST);
         } else {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             replayItemFragment.setProgressBarVisible(true);
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setOnPreparedListener(this);
@@ -186,6 +198,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     private void extractReplayData() {
         Intent intent = getIntent();
         replay = (TrackDTO) intent.getSerializableExtra(REPLAY_ITEM);
+        playlistTitle = intent.getStringExtra(REPLAY_PLAYLIST);
         if (replay != null) {
             Timber.v("Display replay item : %s", replay);
             replayItemFragment.setReplay(replay);
@@ -198,12 +211,13 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     @Override
     protected void onPause() {
         super.onPause();
-        //TODO : quand on est sur le cast !!
-        replayPosition = mediaPlayer.getCurrentPosition(); // backup current position in case of screen rotation
+        if (mediaPlayer != null) {
+            replayPosition = mediaPlayer.getCurrentPosition(); // backup current position in case of screen rotation
+            mediaPlayer.stop();
+            mediaPlayer.release();
+        }
         mediaPlayerStopped = true;
         cancelTimer();
-        mediaPlayer.stop();
-        mediaPlayer.release();
 
         // cast part
         castContext.removeCastStateListener(castStateListener);
@@ -304,7 +318,9 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         //the MediaController will hide after 3 seconds - tap the screen to make it appear again
-        mediaController.show();
+        if (mediaController != null) {
+            mediaController.show();
+        }
         return false;
     }
 

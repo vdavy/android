@@ -105,7 +105,7 @@
         <item name="android:padding">@dimen/replay_item_textview_padding</item>
     </style>
 
-    <style name="DownloadReplayButton" parent="Widget.AppCompat.Button.Colored">
+    <style name="ReplayButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:textColor">@color/icons</item>
         <item name="colorButtonNormal">@color/primary</item>
         <item name="android:textSize">@dimen/replay_download_text_size</item>
