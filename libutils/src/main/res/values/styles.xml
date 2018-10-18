@@ -11,6 +11,7 @@
         <item name="castMiniControllerStyle">@style/CustomCastMiniController</item>
         <item name="castIntroOverlayStyle">@style/CustomCastIntroOverlay</item>
         <item name="castExpandedControllerStyle">@style/CustomCastExpandedController</item>
+        <item name="castExpandedControllerToolbarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
     <style name="MaterialTheme.ToolbarTextView">
@@ -150,6 +151,10 @@
 
     <style name="CastMaterialTheme" parent="MaterialTheme">
         <item name="mediaRouteTheme">@style/MediaRouteTheme</item>
+    </style>
+
+    <style name="CastMaterialTheme.Replay">
+        <item name="castExpandedControllerStyle">@style/ReplayCustomCastExpandedController</item>
     </style>
 
 </resources>

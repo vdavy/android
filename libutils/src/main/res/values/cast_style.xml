@@ -17,8 +17,14 @@
         <item name="castMuteToggleButtonDrawable">@drawable/cast_mute_selector</item>
     </style>
 
-    <array name="cast_mini_controller_control_buttons">
+    <array name="player_cast_mini_controller_control_buttons">
         <item>@id/cast_button_type_empty</item>
+        <item>@id/cast_button_type_play_pause_toggle</item>
+        <item>@id/cast_button_type_mute_toggle</item>
+    </array>
+
+    <array name="replay__cast_mini_controller_control_buttons">
+        <item>@id/cast_button_type_rewind_30_seconds</item>
         <item>@id/cast_button_type_play_pause_toggle</item>
         <item>@id/cast_button_type_mute_toggle</item>
     </array>
@@ -65,13 +71,24 @@
         <item name="castPauseButtonDrawable">@drawable/cast_pause</item>
         <item name="castStopButtonDrawable">@drawable/cast_stop</item>
         <item name="castMuteToggleButtonDrawable">@drawable/cast_mute_selector</item>
-        <item name="castControlButtons">@array/cast_expanded_controller_control_buttons</item>
+        <item name="castControlButtons">@array/player_cast_expanded_controller_control_buttons</item>
     </style>
 
-    <array name="cast_expanded_controller_control_buttons">
+    <style name="ReplayCustomCastExpandedController" parent="CustomCastExpandedController">
+        <item name="castControlButtons">@array/replay_cast_expanded_controller_control_buttons</item>
+    </style>
+
+    <array name="player_cast_expanded_controller_control_buttons">
         <item>@id/cast_button_type_empty</item>
         <item>@id/cast_button_type_empty</item>
         <item>@id/cast_button_type_empty</item>
+        <item>@id/cast_button_type_mute_toggle</item>
+    </array>
+
+    <array name="replay_cast_expanded_controller_control_buttons">
+        <item>@id/cast_button_type_empty</item>
+        <item>@id/cast_button_type_rewind_30_seconds</item>
+        <item>@id/cast_button_type_forward_30_seconds</item>
         <item>@id/cast_button_type_mute_toggle</item>
     </array>
 
