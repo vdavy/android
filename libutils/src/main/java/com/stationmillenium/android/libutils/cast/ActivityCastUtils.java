@@ -58,7 +58,7 @@ public class ActivityCastUtils {
         this.playingOnChromecast = playingOnChromecast;
     }
 
-    public void startCast(CastSession castSession, String artist, String title, String imageURL, String mediaURL, int streamType, View snackBarView, PiwikTracker.PiwikPages piwikPages) {
+    public void startCast(CastSession castSession, String artist, String title, String imageURL, String mediaURL, int streamType, long playPosition, View snackBarView, PiwikTracker.PiwikPages piwikPages) {
         MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
         mediaMetadata.putString(MediaMetadata.KEY_ARTIST, artist);
         mediaMetadata.putString(MediaMetadata.KEY_TITLE, title);
@@ -68,11 +68,16 @@ public class ActivityCastUtils {
                 .setContentType(CAST_MIME_TYPE)
                 .setMetadata(mediaMetadata)
                 .build();
-        MediaLoadOptions mediaLoadOptions = new MediaLoadOptions.Builder().setAutoplay(true).build();
+        MediaLoadOptions.Builder mediaLoadOptionsBuilder = new MediaLoadOptions.Builder()
+                .setAutoplay(true);
+        if (playPosition > 0) {
+            mediaLoadOptionsBuilder.setPlayPosition(playPosition);
+        }
         remoteMediaClient = castSession.getRemoteMediaClient();
         remoteMediaClient.registerCallback(rmcListener);
-        remoteMediaClient.load(mediaInfo, mediaLoadOptions);
+        remoteMediaClient.load(mediaInfo, mediaLoadOptionsBuilder.build());
         Snackbar.make(snackBarView, R.string.player_casting, Snackbar.LENGTH_SHORT).show();
+        playingOnChromecast.setPlayingOnChromecast(true);
         PiwikTracker.trackScreenView(piwikPages);
     }
 

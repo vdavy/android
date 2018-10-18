@@ -248,7 +248,8 @@ public class PlayerActivity extends AppCompatActivity {
             Timber.d("Play on Chromecast");
             activityCastUtils.startCast(castContext.getSessionManager().getCurrentCastSession(), getString(R.string.cast_default_artist),
                     getString(R.string.cast_default_title), getString(R.string.cast_default_image_url), getString(R.string.player_stream_url),
-                    MediaInfo.STREAM_TYPE_LIVE, playerActivityBinding.playerCoordinatorLayout, PLAYER_CHROMECAST);
+                    MediaInfo.STREAM_TYPE_LIVE, 0,
+                    playerActivityBinding.playerCoordinatorLayout, PLAYER_CHROMECAST);
         } else if (playerFragment.getPlayerState() == STOPPED) {
             if (!AppUtils.isMediaPlayerServiceRunning(this)) {
                 if (!AppUtils.isWifiOnlyAndWifiNotConnected(this)) {

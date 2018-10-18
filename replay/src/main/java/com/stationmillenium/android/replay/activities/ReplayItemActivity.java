@@ -116,6 +116,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
             replayItemFragment.setPlayingOnChromecast(playingOnChromecast);
             if (playingOnChromecast) {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                cancelTimer();
             }
             if (mediaController != null) {
                 mediaController.setEnabled(!playingOnChromecast);
@@ -126,7 +127,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
         });
         sessionManagerListener = new ActivitySessionManagerListener(activityCastUtils.getRmcListener(), activityCastUtils,
                 () -> { if (mediaPlayer != null) mediaPlayer.stop(); },
-                () -> start(),
+                () -> initMediaPlayer(),
                 () -> {
                     if (mediaPlayerStopped) {
                         return PlayerState.STOPPED;
@@ -177,7 +178,8 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
             Timber.d("Play on Chromecast");
             activityCastUtils.startCast(castContext.getSessionManager().getCurrentCastSession(), playlistTitle,
                     replay.getTitle(), replay.getImageURL(), replay.getFileURL(),
-                    MediaInfo.STREAM_TYPE_BUFFERED, replayItemActivityBinding.replayItemCoordinatorLayout, REPLAY_ITEM_CHROMECAST);
+                    MediaInfo.STREAM_TYPE_BUFFERED, mediaPlayer != null ? mediaPlayer.getCurrentPosition() : 0,
+                    replayItemActivityBinding.replayItemCoordinatorLayout, REPLAY_ITEM_CHROMECAST);
         } else {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             replayItemFragment.setProgressBarVisible(true);
@@ -213,7 +215,7 @@ public class ReplayItemActivity extends AppCompatActivity implements MediaPlayer
     @Override
     protected void onPause() {
         super.onPause();
-        if (mediaPlayer != null) {
+        if (mediaPlayer != null && !mediaPlayerStopped) {
             replayPosition = mediaPlayer.getCurrentPosition(); // backup current position in case of screen rotation
             mediaPlayer.stop();
             mediaPlayer.release();

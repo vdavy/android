@@ -63,6 +63,9 @@ public class ReplayItemFragment extends Fragment {
     }
 
     public void setPlayingOnChromecast(boolean playingOnChromecast) {
-        setProgressBarVisible(false);
+        if (playingOnChromecast) {
+            setProgressBarVisible(false);
+            setPlayedTimeAndDuration(0, 0);
+        }
     }
 }
