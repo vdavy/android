@@ -65,6 +65,8 @@
         <item name="castPauseButtonDrawable">@drawable/cast_pause</item>
         <item name="castStopButtonDrawable">@drawable/cast_stop</item>
         <item name="castMuteToggleButtonDrawable">@drawable/cast_mute_selector</item>
+        <item name="castRewind30ButtonDrawable">@drawable/cast_rewind</item>
+        <item name="castForward30ButtonDrawable">@drawable/cast_forward</item>
         <item name="castControlButtons">@array/cast_expanded_controller_control_buttons</item>
     </style>
 

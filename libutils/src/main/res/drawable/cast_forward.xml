@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- activated -->
+    <item android:state_enabled="true"
+        android:drawable="@drawable/cast_ic_forward" />
+    <!-- deactivated -->
+    <item android:state_enabled="false"
+        android:drawable="@drawable/cast_ic_forward_grey" />
+    <!-- default -->
+    <item android:drawable="@drawable/cast_ic_forward"/>
+</selector>
