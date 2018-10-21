@@ -97,7 +97,8 @@ public class PlayerActivity extends AppCompatActivity {
 
         // Cast init : https://developers.google.com/cast/docs/android_sender_integrate#initialize_the_cast_context
         castContext = CastContext.getSharedInstance(this);
-        activityCastUtils = new ActivityCastUtils(this, (playingOnChromecast) -> playerFragment.setPlayingOnChromecast(playingOnChromecast));
+        activityCastUtils = new ActivityCastUtils(this,
+                (playingOnChromecast) -> playerFragment.setPlayingOnChromecast(playingOnChromecast, activityCastUtils.isPlayingStream(getString(R.string.player_stream_url))));
         sessionManagerListener = new ActivitySessionManagerListener(activityCastUtils.getRmcListener(), activityCastUtils, () -> stopPlayer(), () -> startPlayer(), () -> playerFragment.getPlayerState());
         castStateListener = newState -> {
             if (newState != CastState.NO_DEVICES_AVAILABLE) {
