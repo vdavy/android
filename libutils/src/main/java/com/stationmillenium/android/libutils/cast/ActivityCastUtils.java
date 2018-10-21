@@ -45,7 +45,7 @@ public class ActivityCastUtils {
             case PLAYER_STATE_PLAYING:
             case PLAYER_STATE_PAUSED:
             case PLAYER_STATE_BUFFERING:
-                playingOnChromecast.setPlayingOnChromecast(false);
+                playingOnChromecast.setPlayingOnChromecast(true);
                 break;
 
             default:
