@@ -136,6 +136,6 @@ public class PlayerFragment extends Fragment {
     }
 
     public void setPlayingOnChromecast(boolean playingOnChromecast, boolean isPlayingStream) {
-        binding.setPlayingOnChromecast(playingOnChromecast);
+        binding.setShowPlayButtons(!playingOnChromecast && !isPlayingStream);
     }
 }
