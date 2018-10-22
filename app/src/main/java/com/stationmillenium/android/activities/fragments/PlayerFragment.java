@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -136,6 +137,8 @@ public class PlayerFragment extends Fragment {
     }
 
     public void setPlayingOnChromecast(boolean playingOnChromecast, boolean isPlayingStream) {
-        binding.setShowPlayButtons(!playingOnChromecast && !isPlayingStream);
+        binding.setHidePlayButtons(playingOnChromecast || isPlayingStream);
+        int margin = getActivity().findViewById(R.id.cast_mini_controller).getVisibility() == View.VISIBLE ? getActivity().findViewById(R.id.cast_mini_controller).getHeight() : 0;
+        ((ConstraintLayout.LayoutParams) binding.playerButtonsLayout.getLayoutParams()).setMargins(0, 0, 0, margin);
     }
 }
