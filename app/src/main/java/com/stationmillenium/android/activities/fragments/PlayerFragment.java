@@ -137,8 +137,8 @@ public class PlayerFragment extends Fragment {
     }
 
     public void setPlayingOnChromecast(boolean playingOnChromecast, boolean isPlayingStream) {
-        binding.setHidePlayButtons(playingOnChromecast || isPlayingStream);
-        int margin = getActivity().findViewById(R.id.cast_mini_controller).getVisibility() == View.VISIBLE ? getActivity().findViewById(R.id.cast_mini_controller).getHeight() : 0;
+        binding.setHidePlayButtons(playingOnChromecast && isPlayingStream);
+        int margin = getActivity().findViewById(R.id.cast_mini_controller).getVisibility() == View.VISIBLE ? getActivity().getResources().getDimensionPixelSize(R.dimen.player_buttons_magin) : 0;
         ((ConstraintLayout.LayoutParams) binding.playerButtonsLayout.getLayoutParams()).setMargins(0, 0, 0, margin);
     }
 }

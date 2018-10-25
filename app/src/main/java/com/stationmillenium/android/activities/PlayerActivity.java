@@ -179,6 +179,10 @@ public class PlayerActivity extends AppCompatActivity {
         // cast part
         castContext.addCastStateListener(castStateListener);
         castContext.getSessionManager().addSessionManagerListener(sessionManagerListener, CastSession.class);
+        if (castContext.getSessionManager().getCurrentCastSession() != null && castContext.getSessionManager().getCurrentCastSession() != null
+                && castContext.getSessionManager().getCurrentCastSession().getRemoteMediaClient() != null) {
+            activityCastUtils.checkIfPlayingOnChromecast(castContext.getSessionManager().getCurrentCastSession().getRemoteMediaClient().getPlayerState());
+        }
 
         // adapt player states
         managePlayerStates();

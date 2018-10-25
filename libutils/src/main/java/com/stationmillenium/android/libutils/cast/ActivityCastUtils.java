@@ -54,8 +54,7 @@ public class ActivityCastUtils {
     }
 
     public boolean isPlayingStream(String streamUrl) {
-        return  remoteMediaClient.getMediaInfo() != null && remoteMediaClient.getMediaInfo().getContentId() == streamUrl;
-
+        return  remoteMediaClient != null && remoteMediaClient.getMediaInfo() != null && remoteMediaClient.getMediaInfo().getContentId() == streamUrl;
     }
 
     public ActivityCastUtils(Activity activity, PlayingOnChromecast playingOnChromecast) {
