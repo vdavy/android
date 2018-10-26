@@ -66,7 +66,7 @@ public class ActivityCastUtils {
         MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK);
         mediaMetadata.putString(MediaMetadata.KEY_ARTIST, artist);
         mediaMetadata.putString(MediaMetadata.KEY_TITLE, title);
-        mediaMetadata.addImage(new WebImage(Uri.parse(imageURL)));
+        mediaMetadata.addImage(new WebImage(Uri.parse(imageURL != null ? imageURL : activity.getString(R.string.cast_default_image_url))));
         MediaInfo mediaInfo = new MediaInfo.Builder(mediaURL)
                 .setStreamType(streamType)
                 .setContentType(CAST_MIME_TYPE)
