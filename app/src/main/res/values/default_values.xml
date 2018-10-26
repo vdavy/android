@@ -31,10 +31,4 @@
     <string name="song_history_max_items">30</string>
     <string name="song_history_date_format">dd/MM/yyyy HH:mm</string>
 
-    <!-- cast -->
-    <string name="app_id">FA0D6C80</string>
-    <string name="cast_default_image_url">https://www.station-millenium.com/cast/logo.jpg</string>
-    <string name="cast_default_artist">La Radio Hits &amp; Mix</string>
-    <string name="cast_default_title">Station Millenium</string>
-
 </resources>
