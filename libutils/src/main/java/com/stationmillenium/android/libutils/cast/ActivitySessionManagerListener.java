@@ -69,6 +69,7 @@ public class ActivitySessionManagerListener implements SessionManagerListener<Ca
 
     @Override
     public void onSessionEnded(CastSession castSession, int i) {
+        activityCastUtils.endingSession();
         if (castSession != null && castSession.getRemoteMediaClient() != null && rmcListener != null) {
             castSession.getRemoteMediaClient().unregisterCallback(rmcListener);
         }

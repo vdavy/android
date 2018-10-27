@@ -53,10 +53,6 @@ public class ActivityCastUtils {
         }
     }
 
-    public boolean isPlayingStream(String streamUrl) {
-        return  remoteMediaClient != null && remoteMediaClient.getMediaInfo() != null && remoteMediaClient.getMediaInfo().getContentId() == streamUrl;
-    }
-
     public ActivityCastUtils(Activity activity, PlayingOnChromecast playingOnChromecast) {
         this.activity = activity;
         this.playingOnChromecast = playingOnChromecast;
@@ -99,6 +95,10 @@ public class ActivityCastUtils {
 
     public RemoteMediaClient.Callback getRmcListener() {
         return rmcListener;
+    }
+
+    public void endingSession() {
+        playingOnChromecast.setPlayingOnChromecast(false);
     }
 
 }
