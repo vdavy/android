@@ -80,8 +80,6 @@ public class PlayerActivity extends AppCompatActivity {
     private CastContext castContext;
     private SessionManagerListener<CastSession> sessionManagerListener;
     private ActivityCastUtils activityCastUtils;
-    private boolean startCastFromPlayer;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +97,7 @@ public class PlayerActivity extends AppCompatActivity {
         // Cast init : https://developers.google.com/cast/docs/android_sender_integrate#initialize_the_cast_context
         castContext = CastContext.getSharedInstance(this);
         activityCastUtils = new ActivityCastUtils(this,
-                (playingOnChromecast) -> {
-                    playerFragment.setPlayingOnChromecast(playingOnChromecast, activityCastUtils.isPlayingStream(getString(R.string.player_stream_url)) || startCastFromPlayer);
-                    startCastFromPlayer = false;
-                });
+                (playingOnChromecast) -> playerFragment.setPlayingOnChromecast(playingOnChromecast));
         sessionManagerListener = new ActivitySessionManagerListener(activityCastUtils.getRmcListener(), activityCastUtils, () -> stopPlayer(), () -> startPlayer(), () -> playerFragment.getPlayerState());
         castStateListener = newState -> {
             if (newState != CastState.NO_DEVICES_AVAILABLE) {
@@ -255,7 +250,6 @@ public class PlayerActivity extends AppCompatActivity {
         Timber.d("Play player button clicked");
         if (castContext.getCastState() == CastState.CONNECTED) {
             Timber.d("Play on Chromecast");
-            startCastFromPlayer = true;
             activityCastUtils.startCast(castContext.getSessionManager().getCurrentCastSession(), getString(R.string.cast_default_artist),
                     getString(R.string.cast_default_title), getString(R.string.cast_default_image_url), getString(R.string.player_stream_url),
                     MediaInfo.STREAM_TYPE_LIVE, 0,
