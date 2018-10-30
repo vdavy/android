@@ -175,7 +175,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:indeterminate="true"
-            android:visibility="@{safeUnbox(playerState) == PlayerState.BUFFERING ? View.VISIBLE : View.GONE}"
+            android:visibility="@{playerState == PlayerState.BUFFERING ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -202,7 +202,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:visibility="@{playingOnChromecast ? View.GONE : View.VISIBLE}"
+            android:visibility="@{safeUnbox(playingOnChromecast) ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
