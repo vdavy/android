@@ -17,12 +17,13 @@ buildscript {
 ext {
     // libs version
     supportLibVersion = '28.0.0'
-    jacksonVersion = '2.9.6'
+    jacksonVersion = '2.9.9'
     piwikSdkVersion = '3.0.3'
-    playServicesVersion = '16.0.4'
-    cafVersion = '16.0.3'
-    crashlyticsVersion = '2.9.5'
-    glideVersion = "4.8.0"
+    playServicesVersion = '16.1.1'
+    playServicesCoreVersion = '16.0.8'
+    cafVersion = '16.2.0'
+    crashlyticsVersion = '2.9.8'
+    glideVersion = "4.9.0"
     timberVersion = "4.7.1"
     constraintLayoutVersion = "1.1.3"
 
