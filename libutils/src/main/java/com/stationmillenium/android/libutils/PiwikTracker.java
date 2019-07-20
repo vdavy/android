@@ -3,10 +3,10 @@ package com.stationmillenium.android.libutils;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.piwik.sdk.Piwik;
-import org.piwik.sdk.Tracker;
-import org.piwik.sdk.TrackerConfig;
-import org.piwik.sdk.extra.TrackHelper;
+import org.matomo.sdk.Matomo;
+import org.matomo.sdk.Tracker;
+import org.matomo.sdk.TrackerBuilder;
+import org.matomo.sdk.extra.TrackHelper;
 
 import timber.log.Timber;
 
@@ -55,8 +55,9 @@ public class PiwikTracker {
      * @param context the context to get resources
      */
     public static void initPiwikTrackers(@NonNull Context context) {
-        piwikAppTracker = Piwik.getInstance(context).newTracker(new TrackerConfig(context.getString(R.string.piwik_url), context.getResources().getInteger(R.integer.piwik_app_site_id), APP_TRACKER));
-        piwikStreamTracker = Piwik.getInstance(context).newTracker(new TrackerConfig(context.getString(R.string.piwik_url), context.getResources().getInteger(R.integer.piwik_stream_site_id), STREAM_TRACKER));
+        Matomo matomo = Matomo.getInstance(context);
+        piwikAppTracker = new TrackerBuilder(context.getString(R.string.piwik_url), context.getResources().getInteger(R.integer.piwik_app_site_id), APP_TRACKER).build(matomo);
+        piwikStreamTracker = new TrackerBuilder(context.getString(R.string.piwik_url), context.getResources().getInteger(R.integer.piwik_stream_site_id), STREAM_TRACKER).build(matomo);
         piwikGoalId = context.getResources().getInteger(R.integer.piwik_goal_id);
     }
 

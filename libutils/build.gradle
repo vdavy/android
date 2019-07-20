@@ -2,7 +2,7 @@ apply from: 'android-build.gradle'
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    api "org.piwik.sdk:piwik-sdk:${rootProject.ext.piwikSdkVersion}"
+    api "org.matomo.sdk:tracker:${rootProject.ext.piwikSdkVersion}"
     api "com.jakewharton.timber:timber:${rootProject.ext.timberVersion}"
     api "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     api "com.android.support:mediarouter-v7:${rootProject.ext.supportLibVersion}"
