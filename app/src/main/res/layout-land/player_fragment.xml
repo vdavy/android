@@ -37,10 +37,6 @@
             type="com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song" />
 
         <variable
-            name="timeTextView"
-            type="android.widget.TextView" />
-
-        <variable
             name="playingOnChromecast"
             type="java.lang.Boolean" />
     </data>
@@ -242,7 +238,7 @@
                 style="@style/MaterialTheme.Text.Genre.PlayerButtonsMargin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text='@{(playingMinutes != null &amp;&amp; playingSeconds != null &amp;&amp; playingMinutes.length() > 0 &amp;&amp; playingSeconds.length() > 0) ? @string/player_notification_time(playingMinutes, playingSeconds) : timeTextView.text}'
+                android:text='@{(playingMinutes != null &amp;&amp; playingSeconds != null &amp;&amp; playingMinutes.length() > 0 &amp;&amp; playingSeconds.length() > 0) ? @string/player_notification_time(playingMinutes, playingSeconds) : @string/player_time_unavailable}'
                 android:visibility="@{playerState == PlayerState.PLAYING || playerState == PlayerState.PAUSED ? View.VISIBLE : View.GONE}" />
 
         </LinearLayout>

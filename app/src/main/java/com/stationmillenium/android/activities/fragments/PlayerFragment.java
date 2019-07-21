@@ -54,7 +54,6 @@ public class PlayerFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.player_fragment, container, false);
         binding.setActivity((PlayerActivity) getActivity());
         binding.setPlayerState(PlayerState.STOPPED);
-        binding.setTimeTextView(binding.playerCurrentTime);
 
         //image switcher
         binding.playerImageSwitcher.setFactory(() -> {
