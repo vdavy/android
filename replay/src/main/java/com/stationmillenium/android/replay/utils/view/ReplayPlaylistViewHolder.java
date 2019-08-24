@@ -1,7 +1,8 @@
 package com.stationmillenium.android.replay.utils.view;
 
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.stationmillenium.android.replay.activities.ReplayActivity;
 import com.stationmillenium.android.replay.databinding.ReplayPlaylistListItemBinding;

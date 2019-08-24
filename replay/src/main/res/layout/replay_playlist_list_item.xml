@@ -18,7 +18,7 @@
             type="com.stationmillenium.android.replay.activities.ReplayActivity" />
     </data>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:layout_margin="5dp"
@@ -26,7 +26,7 @@
         app:cardCornerRadius="3dp"
         app:cardElevation="3dp">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/replay_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -78,8 +78,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/replay_artwork" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 </layout>

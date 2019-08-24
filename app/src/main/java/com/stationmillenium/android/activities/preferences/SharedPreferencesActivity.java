@@ -4,10 +4,11 @@
 package com.stationmillenium.android.activities.preferences;
 
 import android.content.res.Configuration;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.databinding.PreferencesActivityBinding;

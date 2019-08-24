@@ -1,9 +1,10 @@
 package com.stationmillenium.android.replay.utils;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.content.AsyncTaskLoader;
 import android.text.Html;
+
+import androidx.annotation.NonNull;
+import androidx.loader.content.AsyncTaskLoader;
 
 import com.stationmillenium.android.replay.dto.TrackDTO;
 

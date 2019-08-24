@@ -2,7 +2,8 @@ package com.stationmillenium.android.replay.utils;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.stationmillenium.android.replay.R;
 

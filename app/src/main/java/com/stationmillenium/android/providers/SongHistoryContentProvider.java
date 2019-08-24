@@ -14,8 +14,9 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.R.string;

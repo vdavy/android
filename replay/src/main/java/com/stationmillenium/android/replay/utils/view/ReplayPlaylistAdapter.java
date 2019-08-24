@@ -1,9 +1,10 @@
 package com.stationmillenium.android.replay.utils.view;
 
-import android.support.v7.widget.RecyclerView.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 import com.stationmillenium.android.replay.R;
 import com.stationmillenium.android.replay.activities.ReplayActivity;

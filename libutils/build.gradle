@@ -6,20 +6,20 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     api "org.matomo.sdk:tracker:${rootProject.ext.piwikSdkVersion}"
     api "com.jakewharton.timber:timber:${rootProject.ext.timberVersion}"
-    api "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
-    api "com.android.support:mediarouter-v7:${rootProject.ext.supportLibVersion}"
-    api "com.android.support:design:${rootProject.ext.supportLibVersion}"
+    api 'androidx.appcompat:appcompat:1.0.0'
+    api 'androidx.mediarouter:mediarouter:1.0.0'
+    api 'com.google.android.material:material:1.0.0'
     api "com.google.android.gms:play-services-cast-framework:${rootProject.ext.cafVersion}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"
 
-    androidTestImplementation "com.android.support.test:runner:${rootProject.ext.supportTestVersion}"
-    androidTestImplementation "com.android.support.test:rules:${rootProject.ext.supportTestVersion}"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:${rootProject.ext.espressoCoreVersion}"
-    androidTestImplementation "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
-    androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:${rootProject.ext.uiautomatorVersion}"
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test:rules:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.annotation:annotation:1.0.0'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     androidTestImplementation "com.google.dexmaker:dexmaker-mockito:${rootProject.ext.dexmakerVersion}"
 }
 

@@ -2,9 +2,9 @@ package com.stationmillenium.android.libutils.cast;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.CustomMediaRouteControllerDialog;
-import android.support.v7.app.MediaRouteControllerDialog;
-import android.support.v7.app.MediaRouteControllerDialogFragment;
+
+import androidx.mediarouter.app.MediaRouteControllerDialog;
+import androidx.mediarouter.app.MediaRouteControllerDialogFragment;
 
 public class CustomMediaRouteControllerDialogFragment extends MediaRouteControllerDialogFragment {
 
@@ -17,6 +17,6 @@ public class CustomMediaRouteControllerDialogFragment extends MediaRouteControll
     @Override
     public MediaRouteControllerDialog onCreateControllerDialog(
             Context context, Bundle savedInstanceState) {
-        return new CustomMediaRouteControllerDialog(context);
+        return new MediaRouteControllerDialog(context);
     }
 }

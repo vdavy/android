@@ -4,12 +4,12 @@
 
     <data />
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/replay_srl"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/replay_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -18,6 +18,6 @@
             android:scrollbars="vertical"
             app:layoutManager="LinearLayoutManager" />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </layout>

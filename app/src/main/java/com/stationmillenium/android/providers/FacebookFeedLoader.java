@@ -3,8 +3,9 @@ package com.stationmillenium.android.providers;
 import android.content.Context;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.content.AsyncTaskLoader;
+
+import androidx.annotation.NonNull;
+import androidx.loader.content.AsyncTaskLoader;
 
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.libutils.SharedPreferencesConstants;

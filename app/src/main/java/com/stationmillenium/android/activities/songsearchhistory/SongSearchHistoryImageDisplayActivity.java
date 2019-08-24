@@ -3,10 +3,11 @@
  */
 package com.stationmillenium.android.activities.songsearchhistory;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.databinding.ImageDisplayLayoutBinding;

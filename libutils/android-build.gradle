@@ -9,7 +9,7 @@ android {
         targetSdkVersion 28
         versionCode 0
         versionName ""
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         testApplicationId "com.stationmillenium.android.libutils.test"
         multiDexEnabled true
     }

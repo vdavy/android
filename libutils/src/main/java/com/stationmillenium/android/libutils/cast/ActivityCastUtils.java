@@ -3,7 +3,6 @@ package com.stationmillenium.android.libutils.cast;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -14,6 +13,7 @@ import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.IntroductoryOverlay;
 import com.google.android.gms.cast.framework.media.RemoteMediaClient;
 import com.google.android.gms.common.images.WebImage;
+import com.google.android.material.snackbar.Snackbar;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.R;
 

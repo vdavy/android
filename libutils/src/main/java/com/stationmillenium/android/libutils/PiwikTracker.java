@@ -1,7 +1,8 @@
 package com.stationmillenium.android.libutils;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import org.matomo.sdk.Matomo;
 import org.matomo.sdk.Tracker;

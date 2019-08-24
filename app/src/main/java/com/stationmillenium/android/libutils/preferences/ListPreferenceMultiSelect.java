@@ -7,9 +7,10 @@ import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
 
 import com.stationmillenium.android.R;
 

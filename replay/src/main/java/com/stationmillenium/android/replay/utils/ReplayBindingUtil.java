@@ -1,11 +1,12 @@
 package com.stationmillenium.android.replay.utils;
 
 import android.content.Context;
-import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.support.annotation.NonNull;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.databinding.BindingAdapter;
 
 import com.stationmillenium.android.replay.R;
 

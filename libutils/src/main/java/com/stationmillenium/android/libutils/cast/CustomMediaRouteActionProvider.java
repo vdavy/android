@@ -1,7 +1,8 @@
 package com.stationmillenium.android.libutils.cast;
 
 import android.content.Context;
-import android.support.v7.app.MediaRouteActionProvider;
+
+import androidx.mediarouter.app.MediaRouteActionProvider;
 
 public class CustomMediaRouteActionProvider extends MediaRouteActionProvider {
 

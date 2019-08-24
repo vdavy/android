@@ -4,18 +4,19 @@
 package com.stationmillenium.android.activities.songsearchhistory;
 
 import android.annotation.SuppressLint;
-import android.databinding.BindingAdapter;
-import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.cursoradapter.widget.SimpleCursorAdapter;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.databinding.SongSearchHistoryFragmentBinding;

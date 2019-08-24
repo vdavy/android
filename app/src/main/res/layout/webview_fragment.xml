@@ -12,7 +12,7 @@
             type="java.lang.Integer" />
     </data>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/webview_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,6 +41,6 @@
 
         </LinearLayout>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </layout>

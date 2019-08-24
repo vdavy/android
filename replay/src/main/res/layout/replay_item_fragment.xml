@@ -44,7 +44,7 @@
             android:text="@{replayItem.title}"
             tools:ignore="ContentDescription"/>
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/replay_item_text_margin"
@@ -98,9 +98,9 @@
                 app:layout_constraintBaseline_toBaselineOf="@id/replay_item_duration"
                 app:layout_constraintRight_toRightOf="parent"/>
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/replay_waveform_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -160,7 +160,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/replay_download_button"/>
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
