@@ -24,7 +24,7 @@ ext {
     playServicesVersion = '16.1.1'
     playServicesCoreVersion = '16.0.8'
     cafVersion = '16.2.0'
-    crashlyticsVersion = '2.9.8'
+    crashlyticsVersion = '2.10.1'
     glideVersion = "4.9.0"
     timberVersion = "4.7.1"
     constraintLayoutVersion = "1.1.3"
