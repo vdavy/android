@@ -235,7 +235,7 @@ public class MediaPlayerNotificationBuilder {
                 .setTicker(mediaPlayerServiceRef.get().getString(R.string.notification_ticker_text))
                 .setContentTitle(mediaPlayerServiceRef.get().getString(R.string.app_name))
                 .setContentText(currentTitle)
-                .setVisibility(Notification.VISIBILITY_PUBLIC)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setStyle(new NotificationCompat.BigPictureStyle()
                         .bigPicture(titleArt.copy(titleArt.getConfig(), false)) //avoid recycled image
                         .setSummaryText(currentTitle))

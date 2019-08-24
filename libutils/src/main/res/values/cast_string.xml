@@ -4,6 +4,7 @@
     <!-- cast -->
     <string name="introducing_cast">Diffuser sur un Chromecast</string>
     <string name="player_casting">Lecture sur le Chromecast</string>
+    <string name="player_cast">Caster</string>
 
     <!-- default values -->
     <string name="app_id">FA0D6C80</string>

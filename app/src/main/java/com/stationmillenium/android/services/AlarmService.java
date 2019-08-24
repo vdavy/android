@@ -3,6 +3,7 @@
  */
 package com.stationmillenium.android.services;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -250,7 +251,7 @@ public class AlarmService extends JobIntentService {
     /**
      * Create a launch player {@link PendingIntent}
      */
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    @SuppressLint("NewApi")
     private PendingIntent createLaunchPlayerPendingIntent() {
         Intent launchPlayerIntent = new Intent(this, AlarmService.class);
         launchPlayerIntent.setAction(LocalIntents.ON_ALARM_TIME_ELAPSED.toString());

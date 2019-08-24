@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.IdRes;
@@ -87,9 +86,6 @@ public class DrawerUtils {
         return intent;
     }
 
-    /**
-     * Call this method in {@link Activity#onPostCreate(Bundle)}
-     */
     public void onPostCreate() {
         drawerToggle.syncState();
     }

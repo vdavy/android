@@ -1,5 +1,6 @@
 package com.stationmillenium.android.replay.activities;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -156,6 +157,7 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
         getSupportLoaderManager().initLoader(PLAYLIST_LOADER_INDEX, null, this).forceLoad();
     }
 
+    @SuppressLint("RestrictedApi")
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.replay_menu, menu);

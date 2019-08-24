@@ -197,6 +197,7 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
         }
     }
 
+    @SuppressLint("RestrictedApi")
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
