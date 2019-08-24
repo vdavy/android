@@ -1,4 +1,6 @@
 apply from: 'android-build.gradle'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
@@ -8,6 +10,7 @@ dependencies {
     api "com.android.support:mediarouter-v7:${rootProject.ext.supportLibVersion}"
     api "com.android.support:design:${rootProject.ext.supportLibVersion}"
     api "com.google.android.gms:play-services-cast-framework:${rootProject.ext.cafVersion}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"

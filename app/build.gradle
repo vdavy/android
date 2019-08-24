@@ -1,4 +1,6 @@
 apply from: 'android-build.gradle'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
@@ -25,6 +27,7 @@ dependencies {
     androidTestImplementation "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
     androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:${rootProject.ext.uiautomatorVersion}"
     androidTestImplementation "com.google.dexmaker:dexmaker-mockito:${rootProject.ext.dexmakerVersion}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 apply plugin: 'com.google.gms.google-services'
