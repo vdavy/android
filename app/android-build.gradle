@@ -5,6 +5,10 @@ android {
     compileSdkVersion 28
     buildToolsVersion "29.0.2"
 
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
     defaultConfig {
         applicationId "com.stationmillenium.android"
         minSdkVersion 16
