@@ -6,7 +6,7 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     api "org.matomo.sdk:tracker:${rootProject.ext.piwikSdkVersion}"
     api "com.jakewharton.timber:timber:${rootProject.ext.timberVersion}"
-    api 'androidx.appcompat:appcompat:1.0.0'
+    api 'androidx.appcompat:appcompat:1.0.2'
     api 'androidx.mediarouter:mediarouter:1.0.0'
     api 'com.google.android.material:material:1.0.0'
     api "com.google.android.gms:play-services-cast-framework:${rootProject.ext.cafVersion}"
@@ -15,10 +15,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"
 
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test:rules:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    androidTestImplementation 'androidx.annotation:annotation:1.0.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     androidTestImplementation "com.google.dexmaker:dexmaker-mockito:${rootProject.ext.dexmakerVersion}"
 }
