@@ -19,13 +19,6 @@ class ReplayItemFragment : Fragment() {
 
     private lateinit var binding: ReplayItemFragmentBinding
 
-    /**
-     * Get the root view to dock media player controls
-     * @return the fragment root view
-     */
-    val rootView: View
-        get() = binding.root
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.replay_item_fragment, container, false)
         binding.activity = activity as ReplayItemActivity

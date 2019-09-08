@@ -2,12 +2,41 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data />
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/replay_item_coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <com.google.android.exoplayer2.ui.PlayerControlView
+                android:id="@+id/ep_player_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:visibility="gone"/>
+
+            <fragment
+                android:id="@+id/cast_mini_controller"
+                class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:castControlButtons="@array/cast_mini_controller_control_buttons"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <fragment
+                android:id="@+id/replay_item_fragment"
+                android:name="com.stationmillenium.android.replay.activities.ReplayItemFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
@@ -24,28 +53,8 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <fragment
-                android:id="@+id/replay_item_fragment"
-                android:name="com.stationmillenium.android.replay.activities.ReplayItemFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <fragment
-                android:id="@+id/cast_mini_controller"
-                class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:castControlButtons="@array/cast_mini_controller_control_buttons"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <data />
 
 </layout>
