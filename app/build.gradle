@@ -7,8 +7,8 @@ dependencies {
     api project(':libutils')
     api project(':replay')
 
-    api 'androidx.appcompat:appcompat:1.0.2'
-    api 'androidx.mediarouter:mediarouter:1.0.0'
+    api 'androidx.appcompat:appcompat:1.1.0'
+    api 'androidx.mediarouter:mediarouter:1.1.0'
     api 'androidx.annotation:annotation:1.1.0'
     api "com.google.firebase:firebase-invites:${rootProject.ext.playServicesVersion}"
     api "com.google.firebase:firebase-core:${rootProject.ext.playServicesCoreVersion}"

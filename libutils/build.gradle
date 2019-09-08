@@ -6,8 +6,8 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     api "org.matomo.sdk:tracker:${rootProject.ext.piwikSdkVersion}"
     api "com.jakewharton.timber:timber:${rootProject.ext.timberVersion}"
-    api 'androidx.appcompat:appcompat:1.0.2'
-    api 'androidx.mediarouter:mediarouter:1.0.0'
+    api 'androidx.appcompat:appcompat:1.1.0'
+    api 'androidx.mediarouter:mediarouter:1.1.0'
     api 'com.google.android.material:material:1.0.0'
     api "com.google.android.gms:play-services-cast-framework:${rootProject.ext.cafVersion}"
     api 'androidx.annotation:annotation:1.1.0'

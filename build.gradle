@@ -22,7 +22,7 @@ ext {
     jacksonVersion = '2.9.9'
     piwikSdkVersion = '4.1.0'
     playServicesVersion = '17.0.0'
-    playServicesCoreVersion = '17.1.0'
+    playServicesCoreVersion = '17.2.0'
     cafVersion = '17.0.0'
     crashlyticsVersion = '2.10.1'
     glideVersion = "4.9.0"
