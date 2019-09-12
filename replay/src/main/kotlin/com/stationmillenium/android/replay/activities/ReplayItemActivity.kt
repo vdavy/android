@@ -3,8 +3,12 @@ package com.stationmillenium.android.replay.activities
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.DownloadManager
 import android.app.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -12,7 +16,6 @@ import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -22,6 +25,8 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import com.google.android.gms.cast.MediaInfo
@@ -50,6 +55,7 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
     private lateinit var replayItemActivityBinding: ReplayItemActivityBinding
 
     private lateinit var exoPlayer: ExoPlayer
+    private lateinit var playerNotificationManager: PlayerNotificationManager
 
     private var downloadManager: DownloadManager? = null
     private var replayToDownload: TrackDTO? = null
@@ -91,7 +97,7 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
         activityCastUtils = ActivityCastUtils(this) { playingOnChromecast ->
             replayItemFragment.setPlayingOnChromecast(playingOnChromecast)
             if (playingOnChromecast) {
-                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+//                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                 cancelTimer()
             }
             replayItemActivityBinding.epPlayerView.isEnabled = !playingOnChromecast
@@ -151,9 +157,11 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
                     MediaInfo.STREAM_TYPE_BUFFERED, exoPlayer.currentPosition,
                     replayItemActivityBinding.replayItemCoordinatorLayout, REPLAY_ITEM_CHROMECAST)
         } else {
-            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+//            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             replayItemFragment.setProgressBarVisible(true)
             exoPlayer = ExoPlayerFactory.newSimpleInstance(this)
+            playerNotificationManager = initPlayerNotificationManager()
+            playerNotificationManager.setPlayer(exoPlayer)
             replayItemActivityBinding.epPlayerView.player = exoPlayer
             val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)))
             val source = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(replay!!.fileURL))
@@ -165,6 +173,34 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
             mediaPlayerStopped = false
         }
     }
+
+    private fun initPlayerNotificationManager() : PlayerNotificationManager =
+        PlayerNotificationManager.createWithNotificationChannel(
+                this,
+                REPLAY_NOTIF_CHANNEL_ID,
+                R.string.app_name,
+                R.string.app_name,
+                NOTIFICATION_ID,
+                object : MediaDescriptionAdapter {
+                    override fun createCurrentContentIntent(player: Player?): PendingIntent? {
+                        var replayItemIntent = Intent(this@ReplayItemActivity, ReplayItemActivity.javaClass)
+                        replayItemIntent.putExtra(REPLAY_ITEM, replay)
+                        replayItemIntent.putExtra(REPLAY_PLAYLIST, intent.getStringExtra(REPLAY_PLAYLIST))
+                        return PendingIntent.getActivity(
+                                this@ReplayItemActivity,
+                                0,
+                                replayItemIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT)
+                    }
+
+                    override fun getCurrentContentText(player: Player?): String? = getString(R.string.replay_notification)
+
+
+                    override fun getCurrentContentTitle(player: Player?): String = replay?.title ?: ""
+
+                    override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback?): Bitmap? = BitmapFactory.decodeResource(resources, R.drawable.play_replay_icon)
+                }
+        )
 
     override fun onPlayerError(error: ExoPlaybackException?) {
         Timber.e(error, "Can't read replay : %s", replay!!.fileSize)
@@ -190,6 +226,7 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
             replayPosition = exoPlayer.currentPosition.toInt() // backup current position in case of screen rotation
             exoPlayer.stop()
             exoPlayer.removeListener(this)
+            playerNotificationManager.setPlayer(null)
             exoPlayer.release()
         }
         mediaPlayerStopped = true
@@ -319,3 +356,6 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
         private const val REQUEST_PERMISSION_EXTERNAL_STORAGE = 1
     }
 }
+
+private const val NOTIFICATION_ID = 1
+private const val REPLAY_NOTIF_CHANNEL_ID = "replayNotifChannelID"

@@ -58,4 +58,6 @@
     <string name="replay_file_download_auth_granted">Démarrage du téléchargement du replay</string>
     <string name="replay_file_download_path">/%s.mp3</string>
 
+    <string name="replay_notification">Replay Millenium</string>
+
 </resources>
