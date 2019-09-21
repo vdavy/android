@@ -3,12 +3,9 @@ package com.stationmillenium.android.replay.activities
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.DownloadManager
 import android.app.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -22,13 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.framework.*
 import com.google.android.material.snackbar.Snackbar
@@ -41,6 +32,8 @@ import com.stationmillenium.android.libutils.cast.ActivitySessionManagerListener
 import com.stationmillenium.android.replay.R
 import com.stationmillenium.android.replay.databinding.ReplayItemActivityBinding
 import com.stationmillenium.android.replay.dto.TrackDTO
+import com.stationmillenium.android.replay.services.ReplayPlayerService
+import com.stationmillenium.android.replay.services.playerLink
 import timber.log.Timber
 import java.util.*
 
@@ -54,16 +47,12 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
     private lateinit var replayItemFragment: ReplayItemFragment
     private lateinit var replayItemActivityBinding: ReplayItemActivityBinding
 
-    private lateinit var exoPlayer: ExoPlayer
-    private lateinit var playerNotificationManager: PlayerNotificationManager
-
     private var downloadManager: DownloadManager? = null
     private var replayToDownload: TrackDTO? = null
 
     private var replay: TrackDTO? = null
     private var playlistTitle: String? = null
     private var mediaPlayerStopped: Boolean = false
-    private var replayPosition: Int = 0
     private var playedPercentTimer: Timer? = null
 
     private var playerBuffering = false
@@ -77,16 +66,19 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         replayItemActivityBinding = DataBindingUtil.setContentView(this, R.layout.replay_item_activity)
+        instance = this
         setSupportActionBar(replayItemActivityBinding.replayItemToolbar)
         if (supportActionBar != null) {
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         }
 
         replayItemFragment = supportFragmentManager.findFragmentById(R.id.replay_item_fragment) as ReplayItemFragment
-        extractReplayData()
-        if (savedInstanceState != null && savedInstanceState.containsKey(REPLAY_POSITION)) {
-            replayPosition = savedInstanceState.getInt(REPLAY_POSITION)
-            Timber.d("Restore media player position to : %s", replayPosition)
+        val alreadyPlaying = extractReplayData()
+        if (savedInstanceState != null && savedInstanceState.containsKey(REPLAY_PLAYING) || alreadyPlaying) {
+            Timber.d("Restore media player playing")
+            playerLink?.addListener(this)
+            setPlayerControlPlayerRef(playerLink)
+            launchPlayedPercentTimer()
         }
 
         // get download manager reference for podcast download
@@ -97,7 +89,6 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
         activityCastUtils = ActivityCastUtils(this) { playingOnChromecast ->
             replayItemFragment.setPlayingOnChromecast(playingOnChromecast)
             if (playingOnChromecast) {
-//                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                 cancelTimer()
             }
             replayItemActivityBinding.epPlayerView.isEnabled = !playingOnChromecast
@@ -106,12 +97,12 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
             }
         }
         sessionManagerListener = ActivitySessionManagerListener(activityCastUtils.rmcListener, activityCastUtils,
-                { exoPlayer.stop() },
+                { playerLink?.stop() },
                 { initMediaPlayer() },
                 {
                     when {
                         mediaPlayerStopped -> PlayerState.STOPPED
-                        exoPlayer.playbackState == ExoPlayer.STATE_READY -> PlayerState.PLAYING
+                        playerLink?.playbackState == ExoPlayer.STATE_READY -> PlayerState.PLAYING
                         playerBuffering -> PlayerState.BUFFERING
                         else -> PlayerState.PAUSED
                     }
@@ -125,9 +116,6 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
 
     override fun onResume() {
         super.onResume()
-        if (replayPosition > 0) {
-            initMediaPlayer()
-        }
 
         // cast part
         castContext.addCastStateListener(castStateListener)
@@ -145,7 +133,6 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
     }
 
     fun playReplay() {
-        replayPosition = 0
         initMediaPlayer()
     }
 
@@ -154,61 +141,25 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
             Timber.d("Play on Chromecast")
             activityCastUtils.startCast(castContext.sessionManager.currentCastSession, playlistTitle,
                     replay!!.title, replay!!.imageURL, replay!!.fileURL,
-                    MediaInfo.STREAM_TYPE_BUFFERED, exoPlayer.currentPosition,
+                    MediaInfo.STREAM_TYPE_BUFFERED, /*exoPlayer.currentPosition*/0,
                     replayItemActivityBinding.replayItemCoordinatorLayout, REPLAY_ITEM_CHROMECAST)
         } else {
-//            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             replayItemFragment.setProgressBarVisible(true)
-            exoPlayer = ExoPlayerFactory.newSimpleInstance(this)
-            playerNotificationManager = initPlayerNotificationManager()
-            playerNotificationManager.setPlayer(exoPlayer)
-            replayItemActivityBinding.epPlayerView.player = exoPlayer
-            val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)))
-            val source = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(replay!!.fileURL))
-            with(exoPlayer) {
-                prepare(source)
-                playWhenReady = true
-                addListener(this@ReplayItemActivity)
-            }
+            playerEventListener = this
+            val replayServiceIntent = Intent(this, ReplayPlayerService::class.java)
+            replayServiceIntent.putExtra(REPLAY_ITEM, replay)
+            replayServiceIntent.putExtra(REPLAY_PLAYLIST, playlistTitle)
+            startService(replayServiceIntent)
             mediaPlayerStopped = false
         }
     }
-
-    private fun initPlayerNotificationManager() : PlayerNotificationManager =
-        PlayerNotificationManager.createWithNotificationChannel(
-                this,
-                REPLAY_NOTIF_CHANNEL_ID,
-                R.string.app_name,
-                R.string.app_name,
-                NOTIFICATION_ID,
-                object : MediaDescriptionAdapter {
-                    override fun createCurrentContentIntent(player: Player?): PendingIntent? {
-                        var replayItemIntent = Intent(this@ReplayItemActivity, ReplayItemActivity.javaClass)
-                        replayItemIntent.putExtra(REPLAY_ITEM, replay)
-                        replayItemIntent.putExtra(REPLAY_PLAYLIST, intent.getStringExtra(REPLAY_PLAYLIST))
-                        return PendingIntent.getActivity(
-                                this@ReplayItemActivity,
-                                0,
-                                replayItemIntent,
-                                PendingIntent.FLAG_UPDATE_CURRENT)
-                    }
-
-                    override fun getCurrentContentText(player: Player?): String? = getString(R.string.replay_notification)
-
-
-                    override fun getCurrentContentTitle(player: Player?): String = replay?.title ?: ""
-
-                    override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback?): Bitmap? = BitmapFactory.decodeResource(resources, R.drawable.play_replay_icon)
-                }
-        )
 
     override fun onPlayerError(error: ExoPlaybackException?) {
         Timber.e(error, "Can't read replay : %s", replay!!.fileSize)
         Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_unavailable, Snackbar.LENGTH_SHORT).show()
     }
 
-    private fun extractReplayData() {
-        val intent = intent
+    private fun extractReplayData() : Boolean {
         replay = intent.getSerializableExtra(REPLAY_ITEM) as TrackDTO
         playlistTitle = intent.getStringExtra(REPLAY_PLAYLIST)
         if (replay != null) {
@@ -218,17 +169,13 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
         } else {
             Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_unavailable, Snackbar.LENGTH_SHORT).show()
         }
+        return intent.getBooleanExtra(REPLAY_PLAYING, false)
     }
 
     override fun onPause() {
         super.onPause()
-        if (!mediaPlayerStopped) {
-            replayPosition = exoPlayer.currentPosition.toInt() // backup current position in case of screen rotation
-            exoPlayer.stop()
-            exoPlayer.removeListener(this)
-            playerNotificationManager.setPlayer(null)
-            exoPlayer.release()
-        }
+        playerLink?.removeListener(this)
+        playerEventListener = null
         mediaPlayerStopped = true
         cancelTimer()
 
@@ -249,13 +196,10 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
                 launchPlayedPercentTimer()
                 replayItemFragment.setProgressBarVisible(false)
                 playerBuffering = false
-                if (replayPosition > 0) {
-                    exoPlayer.seekTo(replayPosition.toLong())
-                }
             }
             ExoPlayer.STATE_ENDED -> {
                 cancelTimer()
-                exoPlayer.release()
+                playerLink?.removeListener(this)
                 mediaPlayerStopped = true
             }
             ExoPlayer.STATE_BUFFERING -> {
@@ -272,15 +216,17 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(REPLAY_POSITION, replayPosition)
+        outState.putBoolean(REPLAY_PLAYING, true)
         super.onSaveInstanceState(outState)
     }
+
     private fun launchPlayedPercentTimer() {
         playedPercentTimer = Timer()
         val task = object : TimerTask() {
 
             override fun run() {
-                runOnUiThread { replayItemFragment.setPlayedTimeAndDuration(exoPlayer.currentPosition.toInt(), exoPlayer.duration.toInt()) }
+                runOnUiThread { replayItemFragment.setPlayedTimeAndDuration(playerLink?.currentPosition?.toInt() ?: 0,
+                        playerLink?.duration?.toInt() ?: 0) }
 
             }
 
@@ -346,16 +292,21 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
         return true
     }
 
+    fun setPlayerControlPlayerRef(player: ExoPlayer?) {
+        replayItemActivityBinding.epPlayerView.player = player
+    }
+
     companion object {
 
         const val REPLAY_ITEM = "ReplayItem"
         const val REPLAY_PLAYLIST = "ReplayPlaylist"
-        private const val REPLAY_POSITION = "replay_position"
+        const val REPLAY_PLAYING = "replay_playing"
         private const val PERCENT_PLAYED_TIMER_START = 0
         private const val PERCENT_PLAYED_TIMER_UPDATE = 500
         private const val REQUEST_PERMISSION_EXTERNAL_STORAGE = 1
+
+        var instance : ReplayItemActivity? = null
     }
 }
 
-private const val NOTIFICATION_ID = 1
-private const val REPLAY_NOTIF_CHANNEL_ID = "replayNotifChannelID"
+var playerEventListener : Player.EventListener? = null
