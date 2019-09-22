@@ -136,6 +136,13 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
         initMediaPlayer()
     }
 
+    fun stopReplay() {
+        playerLink?.let {
+            it.stop()
+            mediaPlayerStopped = true
+        }
+    }
+
     private fun initMediaPlayer() {
         if (castContext.castState == CastState.CONNECTED) {
             Timber.d("Play on Chromecast")
