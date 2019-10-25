@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.stationmillenium.android.libutils.xml;
 
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
@@ -142,11 +139,17 @@ public class XMLCurrentTitleParser extends AbstractXMLParser<CurrentTitleDTO> {
 
                 //process the tag
                 String name = parser.getName();
-                if (name.equals("artist")) { //artist case
-                    readArtistTag(song);
+                switch (name) {
+                    case "artist":
+                         readArtistTag(song);
+                         break;
+                    case "title":
+                        readTitleTag(song);
+                        break;
+                    case "image":  //image case
+                        song.setMetadata(new ImageMetadata());
+                        parseImageMetaData(song.getMetadata());
 
-                } else if (name.equals("title")) { //title case
-                    readTitleTag(song);
                 }
             }
 
