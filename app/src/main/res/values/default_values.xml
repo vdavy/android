@@ -3,12 +3,9 @@
 
     <!-- default values for player -->
     <string name="player_stream_url">https://www.station-millenium.com/millenium.mp3</string>
-    <string name="player_current_song_url">https://www.station-millenium.com/coverart/android/currentSongs</string>
-    <string name="player_connection_read_timeout">10000</string>
-    <string name="player_connection_connect_timeout">15000</string>
-    <string name="player_connection_request_method">GET</string>
-    <string name="player_connection_content_type">text/xml; charset=utf-8</string>
-    <string name="player_image_url_root">https://www.station-millenium.com/coverart</string>
+    <string name="player_current_song_url">https://dev.station-millenium.com:8080/coverart/api/v1/getLastTrack</string>
+    <string name="player_image_url_root">https://dev.station-millenium.com:8080/coverart/api/v1/getImage/</string>
+    <string name="player_last_5_tracks_url">https://dev.station-millenium.com:8080/coverart/api/v1/getLast5Tracks</string>
 
     <!-- antenna grid -->
     <string name="antenna_grid_page_url">https://www.station-millenium.com/radio/la-grille-des-programmes/</string>
