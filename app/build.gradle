@@ -1,6 +1,6 @@
 apply from: 'android-build.gradle'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
@@ -17,6 +17,8 @@ dependencies {
     api("com.crashlytics.sdk.android:crashlytics:${rootProject.ext.crashlyticsVersion}@aar") {
         transitive = true
     }
+
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 
     testImplementation "junit:junit:${rootProject.ext.junitVersion}"
     testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"
