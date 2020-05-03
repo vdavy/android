@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
     sourceSets {
@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId "com.stationmillenium.android"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 209
         versionName "4.2.2-beta1"
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
