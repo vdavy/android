@@ -4,7 +4,6 @@
 package com.stationmillenium.android.providers;
 
 import android.annotation.SuppressLint;
-import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -20,25 +19,23 @@ import androidx.annotation.NonNull;
 
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.R.string;
+import com.stationmillenium.android.dtos.CurrentTrack;
 import com.stationmillenium.android.libutils.AppUtils;
+import com.stationmillenium.android.libutils.DateTime;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song;
-import com.stationmillenium.android.libutils.exceptions.XMLParserException;
-import com.stationmillenium.android.libutils.network.NetworkUtils;
-import com.stationmillenium.android.libutils.xml.XMLSongHistoryParser;
 
-import java.io.InputStream;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 import timber.log.Timber;
 
 import static com.stationmillenium.android.providers.SongHistoryContract.ALL_SONGS_SEARCH;
 import static com.stationmillenium.android.providers.SongHistoryContract.DATE_SEARCH_INDEX;
-import static com.stationmillenium.android.providers.SongHistoryContract.FULL_TEXT_SEARCH_INDEX;
-import static com.stationmillenium.android.providers.SongHistoryContract.SUGGEST_SEARCH;
-import static com.stationmillenium.android.providers.SongHistoryContract.SUGGEST_SEARCH_NO_SUGGEST;
 
 /**
  * Content provider for songs history search
@@ -46,11 +43,6 @@ import static com.stationmillenium.android.providers.SongHistoryContract.SUGGEST
  * @author vincent
  */
 public class SongHistoryContentProvider extends ContentProvider {
-
-    //static part
-    private static final String ACTION_PARAM_NAME = "action";
-    private static final String QUERY_PARAM_NAME = "query";
-    private static final String SONG_SUGGEST_SEPARATOR = " - ";
 
     private static final UriMatcher URI_MATCHER = SongHistoryContract.buildURIMatcher();
     //instance vars
@@ -77,21 +69,10 @@ public class SongHistoryContentProvider extends ContentProvider {
 
         switch (URI_MATCHER.match(uri)) { //return the proper mime type
             case ALL_SONGS_SEARCH: //case of all song search, no param needed
-                Map<String, String> params = prepareHttpQueryParams(HttpActionCode.DEFAULT, null);
-                return sendQueryAndGetCursor(params);
+                return sendQueryAndGetCursor(Objects.requireNonNull(getContext()).getString(R.string.song_history_url));
 
             case DATE_SEARCH_INDEX: //case of full text query, process query string
-                return sendRequestFromURI(uri, HttpActionCode.DATE);
-
-            case FULL_TEXT_SEARCH_INDEX: //case of full text query, process query string
-                return sendRequestFromURI(uri, HttpActionCode.FULL_TEXT);
-
-            case SUGGEST_SEARCH: //case of suggest query, process query string as full text with suggest projection
-                return sendQueryForSuggestSearch(uri);
-
-            case SUGGEST_SEARCH_NO_SUGGEST: //case of empty suggestion
-                Timber.d("Empty suggestions cursor returned");
-                return createSuggestCursor();
+                return sendQueryAndGetCursor(Objects.requireNonNull(getContext()).getString(R.string.song_history_url) + "/" + uri.getLastPathSegment());
 
             default:
                 throw new IllegalArgumentException("Unsupported Uri: " + uri);
@@ -99,93 +80,21 @@ public class SongHistoryContentProvider extends ContentProvider {
     }
 
     /**
-     * Send the query for suggest search
-     *
-     * @param uri the {@link Uri} to get the param
-     * @return the {@link Cursor} with data
-     */
-    private Cursor sendQueryForSuggestSearch(Uri uri) {
-        //prepare params
-        String query = uri.getLastPathSegment();
-        Map<String, String> params = prepareHttpQueryParams(HttpActionCode.SUGGEST, query);
-
-        //network access
-        InputStream is = NetworkUtils.connectToURL(getContext().getString(R.string.song_history_url), //get connection
-                params,
-                getContext().getString(R.string.song_history_request_method),
-                getContext().getString(R.string.song_history_content_type),
-                Integer.parseInt(getContext().getString(R.string.song_history_connect_timeout)),
-                Integer.parseInt(getContext().getString(R.string.song_history_read_timeout)));
-
-        try { //convert data into cursor
-            List<Song> songList = new XMLSongHistoryParser(is).parseXML(); //parse the XML
-            MatrixCursor cursor = createSuggestCursor();
-
-            int index = 0;
-            for (Song song : songList) { //add each song into the cursor
-                cursor.addRow(new Object[]{
-                        index,
-                        song.getTitle(),
-                        song.getArtist(),
-                        song.getArtist() + SONG_SUGGEST_SEPARATOR + song.getTitle(),
-                });
-
-                index++;
-            }
-
-            return cursor;
-        } catch (XMLParserException e) { //if any error occurs
-            Timber.e(e, "Error while parsing XML");
-            return null;
-        }
-    }
-
-    /**
-     * Create the suggest {@link Cursor}
-     *
-     * @return the associated {@link MatrixCursor}
-     */
-    private MatrixCursor createSuggestCursor() {
-        return new MatrixCursor(new String[]{ //init the returned cursor
-                SongHistoryContract.Columns._ID,
-                SearchManager.SUGGEST_COLUMN_TEXT_1,
-                SearchManager.SUGGEST_COLUMN_TEXT_2,
-                SearchManager.SUGGEST_COLUMN_QUERY
-        });
-    }
-
-    /**
-     * Send a query by getting params from the {@link Uri}
-     *
-     * @param uri    the {@link Uri} to get params
-     * @param action the {@link HttpActionCode} to send right query
-     * @return the corresponding {@link Cursor}
-     */
-    private Cursor sendRequestFromURI(Uri uri, HttpActionCode action) {
-        String query = uri.getLastPathSegment();
-        Map<String, String> params = prepareHttpQueryParams(action, query);
-        return sendQueryAndGetCursor(params);
-    }
-
-    /**
      * Send the query and return the {@link Cursor}
      *
-     * @param params the {@link Map} of parameters
+     * @param url the URL to query
      * @return the {@link Cursor} with results
      */
-    private Cursor sendQueryAndGetCursor(Map<String, String> params) {
+    private Cursor sendQueryAndGetCursor(String url) {
         if (AppUtils.isNetworkAvailable(getContext())) {
-            InputStream is = NetworkUtils.connectToURL(getContext().getString(R.string.song_history_url), //get connection
-                    params,
-                    getContext().getString(R.string.song_history_request_method),
-                    getContext().getString(R.string.song_history_content_type),
-                    Integer.parseInt(getContext().getString(R.string.song_history_connect_timeout)),
-                    Integer.parseInt(getContext().getString(R.string.song_history_read_timeout)));
             try {
-                List<Song> songList = new XMLSongHistoryParser(is).parseXML(); //parse the XML
-                return convertSongListToMatrixCursor(songList); //convert and return cursor
-            } catch (XMLParserException e) {
-                Timber.e(e, "Error while parsing XML");
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                CurrentTrack[] currentTrack = restTemplate.getForObject(url, CurrentTrack[].class);
+
+                return convertSongListToMatrixCursor(currentTrack); //convert and return cursor
+            } catch (Exception e) {
+                Timber.e(e, "Error getting history tracks");
                 return null;
             }
         } else { //if not network available, cancel request
@@ -201,19 +110,7 @@ public class SongHistoryContentProvider extends ContentProvider {
      */
     @Override
     public String getType(@NonNull Uri uri) {
-        Timber.d("Request type for URI : %s", uri);
-
-        switch (URI_MATCHER.match(uri)) { //return the proper mime type
-            case ALL_SONGS_SEARCH:
-            case DATE_SEARCH_INDEX:
-            case FULL_TEXT_SEARCH_INDEX:
-                return ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + SongHistoryContract.MIME_TYPE;
-
-            case SUGGEST_SEARCH:
-                return SearchManager.SUGGEST_MIME_TYPE;
-            default:
-                throw new IllegalArgumentException("Unsupported Uri: " + uri);
-        }
+        return ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + SongHistoryContract.MIME_TYPE;
     }
 
     /**
@@ -241,71 +138,37 @@ public class SongHistoryContentProvider extends ContentProvider {
     }
 
     /**
-     * Prepare the params for the HTTP query
-     *
-     * @param actionCode the action code as {@link HttpActionCode}
-     * @param query      the query as {@link string}
-     * @return the {@link Map} of params
-     */
-    private Map<String, String> prepareHttpQueryParams(HttpActionCode actionCode, String query) {
-        Map<String, String> paramsMap = new HashMap<>();
-        paramsMap.put(ACTION_PARAM_NAME, actionCode.toString());
-        if ((query != null) && (!query.equals("")))
-            paramsMap.put(QUERY_PARAM_NAME, query);
-
-        return paramsMap;
-    }
-
-    /**
      * Convert a song list to a {@link Cursor}
      *
-     * @param songList the {@link List} of {@link Song}
+     * @param tracks the {@link List} of {@link Song}
      * @return the filled-in {@link MatrixCursor}
      */
-    private MatrixCursor convertSongListToMatrixCursor(List<Song> songList) {
+    private MatrixCursor convertSongListToMatrixCursor(CurrentTrack[] tracks) {
         MatrixCursor cursor = new MatrixCursor(new String[]{
                 SongHistoryContract.Columns._ID,
                 SongHistoryContract.Columns.ARTIST,
                 SongHistoryContract.Columns.TITLE,
                 SongHistoryContract.Columns.DATE,
                 SongHistoryContract.Columns.IMAGE_PATH,
-                SongHistoryContract.Columns.IMAGE_WIDTH,
-                SongHistoryContract.Columns.IMAGE_HEIGHT
         });
 
         int index = 0;
-        int maxIndex = Integer.parseInt(getContext().getString(R.string.song_history_max_items)) - 1; //index count is -1 than the total size
-        for (Song song : songList) { //add each song into the cursor
-            cursor.addRow(new Object[]{
-                    index,
-                    song.getArtist(),
-                    song.getTitle(),
-                    sdf.format(song.getPlayedDate()),
-                    (song.getMetadata() != null) ? song.getMetadata().getPath() : null,
-                    (song.getMetadata() != null) ? song.getMetadata().getWidth() : null,
-                    (song.getMetadata() != null) ? song.getMetadata().getHeight() : null
-            });
-
-            if (index >= maxIndex) {
-                Timber.d("Cursor size reach max allowed size");
-                break;
-            } else
+        for (CurrentTrack track : tracks) {
+            if (track != null && track.isTrack()) {
+                String imageURL = null;
+                if (track.isImage()) {
+                    imageURL = getContext().getString(R.string.player_image_url_root) + track.getTime();
+                }
+                cursor.addRow(new Object[]{
+                        index,
+                        track.getArtist(),
+                        track.getTitle(),
+                        sdf.format(new Date(DateTime.parseRfc3339(track.getTime()).getValue())),
+                        imageURL,
+                });
                 index++;
+            }
         }
-
         return cursor;
     }
-
-    /**
-     * List of available HTTP action code for server query
-     *
-     * @author vincent
-     */
-    private enum HttpActionCode {
-        DEFAULT,
-        FULL_TEXT,
-        DATE,
-        SUGGEST
-    }
-
 }

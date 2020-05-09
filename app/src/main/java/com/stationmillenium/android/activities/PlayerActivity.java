@@ -219,6 +219,7 @@ public class PlayerActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         Timber.d("Player state intent received : %s", intent);
         if (PlayerState.PAUSED.getAssociatedIntent().toString().equals(intent.getAction())) {
             Timber.d("Pause player");
@@ -228,9 +229,9 @@ public class PlayerActivity extends AppCompatActivity {
             Timber.d("Playing player");
             playerFragment.setPlayerState(PlayerState.PLAYING);
 
-        } else if (PlayerState.STOPPED.getAssociatedIntent().toString().equals(intent.getAction())) {
+        } else if (STOPPED.getAssociatedIntent().toString().equals(intent.getAction())) {
             Timber.d("Stop player");
-            playerFragment.setPlayerState(PlayerState.STOPPED);
+            playerFragment.setPlayerState(STOPPED);
 
         } else if (PlayerState.BUFFERING.getAssociatedIntent().toString().equals(intent.getAction())) {
             Timber.d("Buffering player");

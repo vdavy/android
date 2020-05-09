@@ -79,7 +79,9 @@ public class CurrentTitlePlayerService extends JobIntentService {
                                 song.setArtist(historyTrack.getArtist());
                                 song.setTitle(historyTrack.getTitle());
                                 song.setPlayedDate(new Date(DateTime.parseRfc3339(historyTrack.getTime()).getValue()));
-                                song.setImageURL(getResources().getString(R.string.player_image_url_root) + historyTrack.getTime());
+                                if (historyTrack.isImage()) {
+                                    song.setImageURL(getResources().getString(R.string.player_image_url_root) + historyTrack.getTime());
+                                }
 
                                 currentTitleDTO.getHistory().add(song);
                             }
