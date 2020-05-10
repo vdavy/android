@@ -19,10 +19,10 @@ import androidx.annotation.NonNull;
 
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.R.string;
-import com.stationmillenium.android.dtos.CurrentTrack;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.DateTime;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO.Song;
+import com.stationmillenium.android.libutils.dtos.CurrentTrack;
 
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;

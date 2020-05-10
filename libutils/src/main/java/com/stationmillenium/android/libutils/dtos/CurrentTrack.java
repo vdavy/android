@@ -1,4 +1,4 @@
-package com.stationmillenium.android.dtos;
+package com.stationmillenium.android.libutils.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -11,10 +11,10 @@ import androidx.core.app.JobIntentService;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.stationmillenium.android.R;
-import com.stationmillenium.android.dtos.CurrentTrack;
 import com.stationmillenium.android.libutils.AppUtils;
 import com.stationmillenium.android.libutils.DateTime;
 import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
+import com.stationmillenium.android.libutils.dtos.CurrentTrack;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.libutils.toasts.DisplayToastsUtil;
