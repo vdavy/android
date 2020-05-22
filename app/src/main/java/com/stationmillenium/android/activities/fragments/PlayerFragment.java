@@ -44,8 +44,6 @@ public class PlayerFragment extends Fragment {
     //widgets
     private PlayerFragmentBinding binding;
 
-    private List<String> currentTitleList = null;
-
     @SuppressLint("NewApi")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,7 +78,6 @@ public class PlayerFragment extends Fragment {
     private void reinitOnStop() {
         binding.setHistoryArray(null);
         binding.setSongData(null);
-        currentTitleList = null;
     }
 
     public PlayerState getPlayerState() {
@@ -105,21 +102,8 @@ public class PlayerFragment extends Fragment {
     }
 
     public void setHistoryList(List<String> historyList) {
-        if (historyList == null) {
-            binding.setHistoryArray(null);
-            currentTitleList = null;
-        } else if (currentTitleList == null) {
+        if (historyList != null) {
             binding.setHistoryArray(historyList);
-            currentTitleList = historyList;
-        } else {
-            for (int i = 0; i < currentTitleList.size(); i++) {
-                if (currentTitleList.get(i) != null && historyList.get(i) != null
-                        && !currentTitleList.get(i).equals(historyList.get(i))) {
-                    binding.setHistoryArray(historyList);
-                    currentTitleList = historyList;
-                    break;
-                }
-            }
         }
     }
 
