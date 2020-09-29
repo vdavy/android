@@ -14,9 +14,7 @@ dependencies {
     api "com.google.firebase:firebase-core:${rootProject.ext.playServicesCoreVersion}"
     api 'androidx.constraintlayout:constraintlayout:1.1.3'
     api "com.google.android.gms:play-services-cast-framework:${rootProject.ext.cafVersion}"
-    api("com.crashlytics.sdk.android:crashlytics:${rootProject.ext.crashlyticsVersion}@aar") {
-        transitive = true
-    }
+    implementation "com.google.firebase:firebase-crashlytics:${rootProject.ext.crashlyticsVersion}"
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 

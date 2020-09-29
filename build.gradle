@@ -4,15 +4,12 @@ buildscript {
     repositories {
         jcenter()
         google()
-        maven {
-            url 'https://maven.fabric.io/public'
-        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.3'
+        classpath 'com.android.tools.build:gradle:4.0.1'
         classpath 'com.google.gms:google-services:4.3.3'
-        classpath 'io.fabric.tools:gradle:1.30.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.3.0'
     }
 }
 
@@ -24,7 +21,7 @@ ext {
     playServicesVersion = '17.0.0'
     playServicesCoreVersion = '17.4.0'
     cafVersion = '18.1.0'
-    crashlyticsVersion = '2.10.1'
+    crashlyticsVersion = '17.2.1'
     glideVersion = "4.9.0"
     timberVersion = "4.7.1"
     constraintLayoutVersion = "1.1.3"
