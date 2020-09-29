@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
     sourceSets {
@@ -12,9 +12,9 @@ android {
     defaultConfig {
         applicationId "com.stationmillenium.android"
         minSdkVersion 16
-        targetSdkVersion 28
-        versionCode 209
-        versionName "4.2.2-beta1"
+        targetSdkVersion 29
+        versionCode 211
+        versionName "4.2.3-beta1"
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         testApplicationId "com.stationmillenium.android.test"
         multiDexEnabled true
@@ -38,9 +38,7 @@ android {
         targetCompatibility 1.8
     }
 
-    dataBinding {
-        enabled = true
-    }
+    buildFeatures.dataBinding = true
 
     testOptions {
         unitTests.returnDefaultValues = true
