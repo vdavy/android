@@ -18,9 +18,7 @@ android {
         multiDexEnabled true
     }
 
-    dataBinding {
-        enabled = true
-    }
+    buildFeatures.dataBinding = true
 
     compileOptions {
         sourceCompatibility 1.8
