@@ -33,6 +33,7 @@ import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -60,6 +61,7 @@ import java.util.TimerTask;
 
 import timber.log.Timber;
 
+import static android.content.Intent.EXTRA_KEY_EVENT;
 import static com.stationmillenium.android.libutils.mediaplayer.utils.MediaPlayerNotificationBuilder.NOTIFICATION_CHANNEL_ID;
 
 /**
@@ -113,6 +115,8 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
     private MediaPlayerOnAudioFocusChangeHandler mediaPlayerOnAudioFocusChangeHandler;
     private WidgetProvider widgetProvider;
 
+    private boolean mediaPlayerPaused;
+
     /**
      * Create an {@link Intent} to open the {@link PlayerActivity} with data
      *
@@ -155,6 +159,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         if (AppUtils.isAPILevel21Available()) {
             mediaSession = new MediaSession(this, "MediaPlayerService");
             mediaSession.setCallback(new MediaSession.Callback() {
+
                 @Override
                 public void onPlay() {
                     Timber.d("Media session callback play");
@@ -164,7 +169,11 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
                 @Override
                 public void onPause() {
                     Timber.d("Media session callback pause");
-                    pauseMediaPlayer(getApplicationContext());
+                    if (mediaPlayerPaused) {
+                        playMediaPlayer(getApplicationContext());
+                    } else {
+                        pauseMediaPlayer(getApplicationContext());
+                    }
                 }
 
                 @Override
@@ -366,6 +375,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         //send state intent
         sendStateIntent(PlayerState.PLAYING);
+        mediaPlayerPaused = false;
 
         //update notification
         if (!AppUtils.isAPILevel21Available()) {
@@ -394,6 +404,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         //send state intent
         sendStateIntent(PlayerState.PAUSED);
+        mediaPlayerPaused = true;
 
         //update notification
         if (!AppUtils.isAPILevel21Available()) {
@@ -422,6 +433,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
 
         //send state intent
         sendStateIntent(PlayerState.STOPPED);
+        mediaPlayerPaused = false;
 
         //stop current title update
         cancelCurrentTitleTimerServiceTimer();
@@ -752,7 +764,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
      */
     public void setMediaPlayerVolume(int volume) {
         // see : http://stackoverflow.com/questions/5215459/android-mediaplayer-setvolume-function
-        float volumeLog = 1 - (float)(Math.log(MEDIA_PLAYER_MAX_VOLUME - volume) / Math.log(MEDIA_PLAYER_MAX_VOLUME));
+        float volumeLog = 1 - (float) (Math.log(MEDIA_PLAYER_MAX_VOLUME - volume) / Math.log(MEDIA_PLAYER_MAX_VOLUME));
         if (mediaPlayer != null) { //NPE here reported by firebase crash reporter
             mediaPlayer.setVolume(volumeLog, volumeLog);
         }
