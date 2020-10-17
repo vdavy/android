@@ -6,8 +6,8 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
-        classpath 'com.google.gms:google-services:4.3.3'
+        classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath 'com.google.gms:google-services:4.3.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.3.0'
     }
@@ -19,9 +19,9 @@ ext {
     jacksonVersion = '2.9.9'
     piwikSdkVersion = '4.1.0'
     playServicesVersion = '17.0.0'
-    playServicesCoreVersion = '17.5.0'
+    playServicesCoreVersion = '17.5.1'
     cafVersion = '19.0.0'
-    crashlyticsVersion = '17.2.1'
+    crashlyticsVersion = '17.2.2'
     glideVersion = "4.9.0"
     timberVersion = "4.7.1"
     constraintLayoutVersion = "1.1.3"

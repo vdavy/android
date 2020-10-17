@@ -8,11 +8,11 @@ dependencies {
     api project(':replay')
 
     api 'androidx.appcompat:appcompat:1.2.0'
-    api 'androidx.mediarouter:mediarouter:1.1.0'
+    api 'androidx.mediarouter:mediarouter:1.2.0'
     api 'androidx.annotation:annotation:1.1.0'
     api "com.google.firebase:firebase-invites:${rootProject.ext.playServicesVersion}"
     api "com.google.firebase:firebase-core:${rootProject.ext.playServicesCoreVersion}"
-    api 'androidx.constraintlayout:constraintlayout:2.0.1'
+    api 'androidx.constraintlayout:constraintlayout:2.0.2'
     api "com.google.android.gms:play-services-cast-framework:${rootProject.ext.cafVersion}"
     implementation "com.google.firebase:firebase-crashlytics:${rootProject.ext.crashlyticsVersion}"
 
