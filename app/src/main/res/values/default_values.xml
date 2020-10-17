@@ -3,9 +3,9 @@
 
     <!-- default values for player -->
     <string name="player_stream_url">https://www.station-millenium.com/millenium.mp3</string>
-    <string name="player_current_song_url">https://dev.station-millenium.com:8080/coverart/api/v1/getLastTrack</string>
-    <string name="player_image_url_root">https://dev.station-millenium.com:8080/coverart/api/v1/getImage/</string>
-    <string name="player_last_5_tracks_url">https://dev.station-millenium.com:8080/coverart/api/v1/getLast5Tracks</string>
+    <string name="player_current_song_url">https://www.station-millenium.com/coverart/api/v1/getLastTrack</string>
+    <string name="player_image_url_root">https://www.station-millenium.com/coverart/api/v1/getImage/</string>
+    <string name="player_last_5_tracks_url">https://www.station-millenium.com/coverart/api/v1/getLast5Tracks</string>
 
     <!-- antenna grid -->
     <string name="antenna_grid_page_url">https://www.station-millenium.com/radio/la-grille-des-programmes/</string>
@@ -20,7 +20,7 @@
     <string name="google_play_url">https://play.google.com/store/apps/details?id=com.stationmillenium.android</string>
 
     <!-- song history values -->
-    <string name="song_history_url">https://dev.station-millenium.com:8080/coverart/api/v1/getTrackHistory</string>
+    <string name="song_history_url">https://www.station-millenium.com/coverart/api/v1/getTrackHistory</string>
     <string name="song_history_date_format">dd/MM/yyyy - HH:mm</string>
 
 </resources>
