@@ -63,11 +63,11 @@
                 android:layout_marginBottom="@dimen/action_button_margin"
                 android:layout_marginEnd="@dimen/action_button_margin"
                 android:layout_marginRight="@dimen/action_button_margin"
-                android:src="@drawable/ic_replay_search"
+                android:src="@drawable/ic_calendar_search"
                 app:backgroundTint="@color/primary_dark"
                 app:layout_anchor="@id/song_search_fragment"
                 app:layout_anchorGravity="bottom|right|end"
-                android:onClick="@{() -> activity.triggerSearch()}"/>
+                android:onClick="@{() -> activity.launchDatePickerFragment()}"/>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -1,6 +1,5 @@
 package com.stationmillenium.android.providers;
 
-import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -16,19 +15,14 @@ public final class SongHistoryContract {
     public static final String AUTHORITY = "com.stationmillenium.android.contentproviders.SongHistoryContentProvider";
     public static final Uri CONTENT_URI = buildContentURI();
     public static final Uri ROOT_URI = buildRootURI();
-    public static final String DATE_SEARCH_FORMAT = "yyyyMMdd-HHmm";
     public static final String DEFAULT_MATCH = "songHistory";
     public static final String DATE_SEARCH_SEGMENT = DEFAULT_MATCH + "Date";
-    public static final String FULL_TEXT_SEARCH = DEFAULT_MATCH + "/*";
     public static final String DATE_SEARCH = DEFAULT_MATCH + "Date/*";
     public static final String MIME_TYPE = "vnd." + AUTHORITY + "." + DEFAULT_MATCH;
 
     //list of uri matcher states
     public static final int ALL_SONGS_SEARCH = 0;
-    public static final int FULL_TEXT_SEARCH_INDEX = 1;
-    public static final int DATE_SEARCH_INDEX = 2;
-    public static final int SUGGEST_SEARCH = 3;
-    public static final int SUGGEST_SEARCH_NO_SUGGEST = 4;
+    public static final int DATE_SEARCH_INDEX = 1;
 
     /**
      * Init the content {@link Uri}
@@ -63,10 +57,7 @@ public final class SongHistoryContract {
     public static UriMatcher buildURIMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         matcher.addURI(AUTHORITY, DEFAULT_MATCH, ALL_SONGS_SEARCH);
-        matcher.addURI(AUTHORITY, FULL_TEXT_SEARCH, FULL_TEXT_SEARCH_INDEX);
         matcher.addURI(AUTHORITY, DATE_SEARCH, DATE_SEARCH_INDEX);
-        matcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SUGGEST_SEARCH);
-        matcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SUGGEST_SEARCH);
         return matcher;
     }
 
@@ -80,7 +71,5 @@ public final class SongHistoryContract {
         String TITLE = "title";
         String DATE = "date";
         String IMAGE_PATH = "image_path";
-        String IMAGE_WIDTH = "image_width";
-        String IMAGE_HEIGHT = "image_height";
     }
 }

@@ -63,7 +63,7 @@ public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity {
 
         //image URL part
         if (imageURL == null) {
-            imageURL = getResources().getString(R.string.player_image_url_root) + getIntent().getStringExtra(LocalIntentsData.IMAGE_FILE_PATH.toString());
+            imageURL = getIntent().getStringExtra(LocalIntentsData.IMAGE_FILE_PATH.toString());
         }
         binding.setImageURL(imageURL);
 

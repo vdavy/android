@@ -11,6 +11,7 @@ dependencies {
     api 'com.google.android.material:material:1.2.1'
     api "com.google.android.gms:play-services-cast-framework:${rootProject.ext.cafVersion}"
     api 'androidx.annotation:annotation:1.1.0'
+    api "com.fasterxml.jackson.core:jackson-annotations:${rootProject.ext.jacksonVersion}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
