@@ -161,7 +161,7 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
         }
     }
 
-    override fun onPlayerError(error: ExoPlaybackException?) {
+    fun onPlayerError(error: ExoPlaybackException?) {
         Timber.e(error, "Can't read replay : %s", replay!!.fileSize)
         Snackbar.make(replayItemActivityBinding.replayItemCoordinatorLayout, R.string.replay_unavailable, Snackbar.LENGTH_SHORT).show()
     }

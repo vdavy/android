@@ -11,7 +11,6 @@ import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.core.app.TaskStackBuilder
 import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
@@ -30,11 +29,11 @@ class ReplayPlayerService : Service() {
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var mediaSessionConnector: MediaSessionConnector
     private var replay: TrackDTO? = null
-    private var playlistTitle : String? = null
+    private var playlistTitle: String? = null
 
     override fun onCreate() {
         super.onCreate()
-        exoPlayer = ExoPlayerFactory.newSimpleInstance(this)
+        exoPlayer = SimpleExoPlayer.Builder(this).build()
         playerLink = exoPlayer
         playerNotificationManager = initPlayerNotificationManager()
         playerNotificationManager.setUseStopAction(true)
@@ -48,50 +47,66 @@ class ReplayPlayerService : Service() {
     }
 
     private fun initPlayerNotificationManager(): PlayerNotificationManager =
-            PlayerNotificationManager.createWithNotificationChannel(
-                    this,
-                    REPLAY_NOTIF_CHANNEL_ID,
-                    R.string.app_name,
-                    R.string.app_name,
-                    NOTIFICATION_ID,
-                    object : PlayerNotificationManager.MediaDescriptionAdapter {
-                        override fun createCurrentContentIntent(player: Player?): PendingIntent? {
-                            var replayItemIntent = Intent(this@ReplayPlayerService, ReplayItemActivity::class.java)
-                            replayItemIntent.putExtra(ReplayItemActivity.REPLAY_ITEM, replay)
-                            replayItemIntent.putExtra(ReplayItemActivity.REPLAY_PLAYLIST, playlistTitle)
-                            replayItemIntent.putExtra(ReplayItemActivity.REPLAY_PLAYING, true)
+        PlayerNotificationManager.Builder(
+            this,
+            NOTIFICATION_ID,
+            REPLAY_NOTIF_CHANNEL_ID
+        ).setMediaDescriptionAdapter(
+            object : PlayerNotificationManager.MediaDescriptionAdapter {
+                override fun createCurrentContentIntent(player: Player): PendingIntent? {
+                    var replayItemIntent =
+                        Intent(this@ReplayPlayerService, ReplayItemActivity::class.java)
+                    replayItemIntent.putExtra(ReplayItemActivity.REPLAY_ITEM, replay)
+                    replayItemIntent.putExtra(ReplayItemActivity.REPLAY_PLAYLIST, playlistTitle)
+                    replayItemIntent.putExtra(ReplayItemActivity.REPLAY_PLAYING, true)
 
-                            return TaskStackBuilder.create(this@ReplayPlayerService).run {
-                                addNextIntentWithParentStack(replayItemIntent)
-                                getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
-                            }
-                        }
-
-                        override fun getCurrentContentText(player: Player?): String? = getString(R.string.replay_notification)
-
-
-                        override fun getCurrentContentTitle(player: Player?): String = replay?.title
-                                ?: ""
-
-                        override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback?): Bitmap? = BitmapFactory.decodeResource(resources, R.drawable.play_replay_icon)
-                    },
-                    object : PlayerNotificationManager.NotificationListener {
-                        override fun onNotificationStarted(notificationId: Int, notification: Notification?) =
-                                startForeground(notificationId, notification)
-
-                        override fun onNotificationCancelled(notificationId: Int) = stopSelf()
+                    return TaskStackBuilder.create(this@ReplayPlayerService).run {
+                        addNextIntentWithParentStack(replayItemIntent)
+                        getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
                     }
-            )
+                }
+
+                override fun getCurrentContentText(player: Player): String? =
+                    getString(R.string.replay_notification)
+
+                override fun getCurrentContentTitle(player: Player): String = replay?.title
+                    ?: ""
+
+                override fun getCurrentLargeIcon(
+                    player: Player,
+                    callback: PlayerNotificationManager.BitmapCallback
+                ): Bitmap? = BitmapFactory.decodeResource(resources, R.drawable.play_replay_icon)
+
+            }
+        ).setNotificationListener(
+            object : PlayerNotificationManager.NotificationListener {
+                override fun onNotificationCancelled(
+                    notificationId: Int,
+                    dismissedByUser: Boolean
+                ) = stopSelf()
+
+                override fun onNotificationPosted(
+                    notificationId: Int,
+                    notification: Notification,
+                    ongoing: Boolean
+                ) = startForeground(notificationId, notification)
+            }
+        ).setChannelNameResourceId(R.string.app_name)
+            .setChannelDescriptionResourceId(R.string.app_name)
+            .build()
+
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         replay = intent?.getSerializableExtra(ReplayItemActivity.REPLAY_ITEM) as TrackDTO
         playlistTitle = intent?.getStringExtra(ReplayItemActivity.REPLAY_PLAYLIST)
-        val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)))
-        val source = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(replay!!.fileURL))
+        val dataSourceFactory =
+            DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)))
+        val source = ProgressiveMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(Uri.parse(replay!!.fileURL))
         with(exoPlayer) {
-            addListener(com.stationmillenium.android.replay.activities.playerEventListener)
+            com.stationmillenium.android.replay.activities.playerEventListener?.let { addListener(it) }
             ReplayItemActivity.instance?.setPlayerControlPlayerRef(exoPlayer)
             prepare(source)
             playWhenReady = true
@@ -103,7 +118,11 @@ class ReplayPlayerService : Service() {
         mediaSession.release()
         mediaSessionConnector.setPlayer(null)
         playerNotificationManager.setPlayer(null)
-        exoPlayer.removeListener(com.stationmillenium.android.replay.activities.playerEventListener)
+        com.stationmillenium.android.replay.activities.playerEventListener?.let {
+            exoPlayer.removeListener(
+                it
+            )
+        }
         exoPlayer.release()
         playerLink = null
 
@@ -115,4 +134,4 @@ private const val NOTIFICATION_ID = 1
 private const val REPLAY_NOTIF_CHANNEL_ID = "replayNotifChannelID"
 private const val MEDIA_SESSION_TAG = "replay_player_session"
 
-var playerLink : ExoPlayer? = null
+var playerLink: ExoPlayer? = null
