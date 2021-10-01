@@ -33,7 +33,6 @@ import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -61,7 +60,6 @@ import java.util.TimerTask;
 
 import timber.log.Timber;
 
-import static android.content.Intent.EXTRA_KEY_EVENT;
 import static com.stationmillenium.android.libutils.mediaplayer.utils.MediaPlayerNotificationBuilder.NOTIFICATION_CHANNEL_ID;
 
 /**
@@ -512,30 +510,34 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
         Timber.e("Media player error occured");
         switch (what) {
             case MediaPlayer.MEDIA_ERROR_UNKNOWN:
-                Timber.e("Unknown media player error - stopping media player");
-                stopMediaPlayer();
+                Timber.e("Unknown media player error - restarting media player");
+                restartMediaPlayerOnError();
                 break;
 
             case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
                 Timber.w("Media player server died error - restarting");
-                if (mediaPlayer != null) {
-                    mediaPlayer.release();
-                }
-                mediaPlayer = null;
-                unregisterWidgetBR();
-                try { //reinit media player
-                    initMediaPlayer();
-                } catch (IOException e) {
-                    Timber.w(e, "Error while trying to init media player");
-                    Toast.makeText(MediaPlayerService.this, R.string.player_error, Toast.LENGTH_SHORT).show();
-
-                    //stop the service
-                    stopMediaPlayer();
-                }
-
+                restartMediaPlayerOnError();
+                break;
         }
 
         return true; //error handled
+    }
+
+    private void restartMediaPlayerOnError() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+        }
+        mediaPlayer = null;
+        unregisterWidgetBR();
+        try { //reinit media player
+            initMediaPlayer();
+        } catch (IOException e) {
+            Timber.w(e, "Error while trying to init media player");
+            Toast.makeText(MediaPlayerService.this, R.string.player_error, Toast.LENGTH_SHORT).show();
+
+            //stop the service
+            stopMediaPlayer();
+        }
     }
 
     @Override
