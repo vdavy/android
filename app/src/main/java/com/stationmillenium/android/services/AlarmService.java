@@ -256,8 +256,8 @@ public class AlarmService extends JobIntentService {
         Intent launchPlayerIntent = new Intent(this, AlarmService.class);
         launchPlayerIntent.setAction(LocalIntents.ON_ALARM_TIME_ELAPSED.toString());
         return AppUtils.isAPILevel26Available()
-                ? PendingIntent.getForegroundService(this, 0, launchPlayerIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-                : PendingIntent.getService(this, 0, launchPlayerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                ? PendingIntent.getForegroundService(this, 0, launchPlayerIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE)
+                : PendingIntent.getService(this, 0, launchPlayerIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     /**

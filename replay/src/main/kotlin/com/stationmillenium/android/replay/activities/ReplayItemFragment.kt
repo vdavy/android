@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-
-import com.stationmillenium.android.replay.R
 import com.stationmillenium.android.replay.databinding.ReplayItemFragmentBinding
 import com.stationmillenium.android.replay.dto.TrackDTO
 
@@ -20,7 +17,7 @@ class ReplayItemFragment : Fragment() {
     private lateinit var binding: ReplayItemFragmentBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.replay_item_fragment, container, false)
+        binding = ReplayItemFragmentBinding.inflate(inflater, container, false)
         binding.activity = activity as ReplayItemActivity
         return binding.root
     }

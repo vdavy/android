@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -22,19 +21,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/colorPrimary"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                    android:theme="@style/MaterialTheme.Toolbar"/>
+                    android:theme="@style/MaterialTheme.Toolbar"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
             </com.google.android.material.appbar.AppBarLayout>
-            
+
             <!-- The main content view -->
             <fragment
                 android:id="@+id/home_fragment"
                 android:name="com.stationmillenium.android.activities.fragments.HomeFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-            
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <include layout="@layout/navigation_drawer" />

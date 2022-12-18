@@ -56,20 +56,20 @@ public class WidgetProvider extends AppWidgetProvider {
         Intent playIntent = new Intent(context, MediaPlayerService.class);
         playIntent.putExtra(LocalIntentsData.RESUME_PLAYER_ACTIVITY.toString(), false);
         PendingIntent playPendingIntent = AppUtils.isAPILevel26Available()
-                ? PendingIntent.getForegroundService(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-                : PendingIntent.getService(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                ? PendingIntent.getForegroundService(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE)
+                : PendingIntent.getService(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         remoteViews.setOnClickPendingIntent(R.id.widget_play_button, playPendingIntent);
 
         //pause pending intent
         Intent pauseIntent = new Intent(context, MediaPlayerService.class);
         pauseIntent.setAction(LocalIntents.PLAYER_PAUSE.toString());
-        PendingIntent pausePendingIntent = PendingIntent.getService(context, 0, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pausePendingIntent = PendingIntent.getService(context, 0, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         remoteViews.setOnClickPendingIntent(R.id.widget_pause_button, pausePendingIntent);
 
         //stop pending intent
         Intent stopIntent = new Intent(context, MediaPlayerService.class);
         stopIntent.setAction(LocalIntents.PLAYER_STOP.toString());
-        PendingIntent stopPendingIntent = PendingIntent.getService(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent stopPendingIntent = PendingIntent.getService(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         remoteViews.setOnClickPendingIntent(R.id.widget_stop_button, stopPendingIntent);
 
         //set global pending intent
@@ -198,7 +198,7 @@ public class WidgetProvider extends AppWidgetProvider {
                 //update play pending intent
                 Intent pauseIntent = new Intent(context, MediaPlayerService.class);
                 pauseIntent.setAction(LocalIntents.PLAYER_PLAY.toString());
-                PendingIntent pausePendingIntent = PendingIntent.getService(context, 0, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pausePendingIntent = PendingIntent.getService(context, 0, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
                 remoteViews.setOnClickPendingIntent(R.id.widget_play_button, pausePendingIntent);
 
                 //set global pending intent
@@ -214,8 +214,8 @@ public class WidgetProvider extends AppWidgetProvider {
                 Intent playIntent = new Intent(context, MediaPlayerService.class);
                 playIntent.putExtra(LocalIntentsData.RESUME_PLAYER_ACTIVITY.toString(), false);
                 PendingIntent playPendingIntent = AppUtils.isAPILevel26Available()
-                        ? PendingIntent.getForegroundService(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-                        : PendingIntent.getService(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        ? PendingIntent.getForegroundService(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE)
+                        : PendingIntent.getService(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
                 remoteViews.setOnClickPendingIntent(R.id.widget_play_button, playPendingIntent);
 
                 //set global pending intent
@@ -246,7 +246,7 @@ public class WidgetProvider extends AppWidgetProvider {
     private <T extends Activity> void setMainWidgetPartsPendingIntent(Context context, RemoteViews remoteViews, Class<T> activityClazz) {
         //main widget parts pending intent
         Intent mainActivityIntent = new Intent(context, activityClazz);
-        PendingIntent mainActivityPendingIntent = PendingIntent.getActivity(context, 0, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent mainActivityPendingIntent = PendingIntent.getActivity(context, 0, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         remoteViews.setOnClickPendingIntent(R.id.widget_image, mainActivityPendingIntent);
         remoteViews.setOnClickPendingIntent(R.id.widget_text_layout, mainActivityPendingIntent);
     }

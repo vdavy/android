@@ -15,14 +15,11 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
 import androidx.databinding.BindingAdapter;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.databinding.SongSearchHistoryFragmentBinding;
 import com.stationmillenium.android.providers.SongHistoryContract;
-
-import static com.stationmillenium.android.libutils.R.color;
 
 /**
  * Activity to display the song search history
@@ -49,9 +46,9 @@ public class SongSearchHistoryFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         //init widgets
-        binding = DataBindingUtil.inflate(inflater, R.layout.song_search_history_fragment, container, false);
+        binding = SongSearchHistoryFragmentBinding.inflate(inflater, container, false);
         binding.setActivity((SongSearchHistoryActivity) getActivity());
-        binding.songHistorySwipeRefreshLayout.setColorSchemeResources(color.primary, color.accent);
+        binding.songHistorySwipeRefreshLayout.setColorSchemeResources(R.color.primary, R.color.accent);
 
         //cursor adapter
         cursorAdapter = new SimpleCursorAdapter(getActivity(), R.layout.song_search_history_list_item, null,

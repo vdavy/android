@@ -42,7 +42,7 @@ import java.util.*
  * Inspired from http://stackoverflow.com/questions/3747139/how-can-i-show-a-mediacontroller-while-playing-audio-in-android/5265629#5265629
  * Created by vincent on 28/11/16.
  */
-class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
+class ReplayItemActivity : AppCompatActivity(), Player.Listener {
 
     private lateinit var replayItemFragment: ReplayItemFragment
     private lateinit var replayItemActivityBinding: ReplayItemActivityBinding
@@ -268,6 +268,7 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_PERMISSION_EXTERNAL_STORAGE
                 && grantResults.isNotEmpty()
                 && grantResults[0] == PERMISSION_GRANTED) {
@@ -316,4 +317,4 @@ class ReplayItemActivity : AppCompatActivity(), Player.EventListener {
     }
 }
 
-var playerEventListener : Player.EventListener? = null
+var playerEventListener : Player.Listener? = null

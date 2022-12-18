@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,7 +31,7 @@ public class ReplayTitleFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         replayTitleAdapter = new ReplayTitleAdapter((ReplayActivity) getActivity());
-        binding = DataBindingUtil.inflate(inflater, R.layout.replay_title_fragment, container, false);
+        binding = ReplayTitleFragmentBinding.inflate(inflater, container, false);
         binding.replayRecyclerview.setAdapter(replayTitleAdapter);
         binding.replaySrl.setColorSchemeResources(R.color.primary, R.color.accent);
         binding.replaySrl.setOnRefreshListener(() -> ((ReplayActivity) getActivity()).onTrackRefresh());

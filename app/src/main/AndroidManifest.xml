@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.stationmillenium.android"
-          xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           android:installLocation="auto">
+
 
     <!-- permissions to access network and check network state -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -41,7 +41,8 @@
         <activity
             android:name=".activities.HomeActivity"
             android:label="@string/app_name"
-            android:theme="@style/MaterialTheme">
+            android:theme="@style/MaterialTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -57,7 +58,8 @@
             android:label="@string/player_activity_title"
             android:launchMode="singleTop"
             android:theme="@style/CastMaterialTheme"
-            tools:ignore="UnusedAttribute">
+            tools:ignore="UnusedAttribute"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.stationmillenium.android.intents.ON_PLAYER_PLAY"/>
                 <action android:name="com.stationmillenium.android.intents.ON_PLAYER_PAUSE"/>
@@ -98,14 +100,14 @@
             android:name=".activities.AntennaGridActivity"
             android:label="@string/antenna_grid_activity_title"
             android:theme="@style/MaterialTheme"
-            tools:ignore="UnusedAttribute"></activity>
+            tools:ignore="UnusedAttribute" />
 
         <!-- alarm preferences activity -->
         <activity
             android:name=".activities.preferences.AlarmSharedPreferencesActivity"
             android:label="@string/preferences_alarm_screen"
             android:theme="@style/MaterialTheme"
-            tools:ignore="UnusedAttribute"></activity>
+            tools:ignore="UnusedAttribute" />
 
         <!-- song history search activity -->
         <activity
@@ -113,7 +115,8 @@
             android:label="@string/song_search_history"
             android:launchMode="singleTop"
             android:theme="@style/MaterialTheme"
-            tools:ignore="UnusedAttribute">
+            tools:ignore="UnusedAttribute"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -146,7 +149,8 @@
             android:label="@string/replay_activity_title"
             android:launchMode="singleTop"
             android:theme="@style/MaterialTheme"
-            tools:ignore="UnusedAttribute">
+            tools:ignore="UnusedAttribute"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
@@ -173,7 +177,8 @@
             android:launchMode="singleTask"
             android:parentActivityName=".activities.PlayerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/CastMaterialTheme">
+            android:theme="@style/CastMaterialTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -206,14 +211,16 @@
         </service>
 
         <!-- broadcast receiver for playback buttons -->
-        <receiver android:name=".libutils.mediaplayer.receivers.PlaybackControlButtonsBroadcastReceiver">
+        <receiver android:name=".libutils.mediaplayer.receivers.PlaybackControlButtonsBroadcastReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON"/>
             </intent-filter>
         </receiver>
 
         <!-- broadcast receiver for the widget part -->
-        <receiver android:name=".widgets.WidgetProvider">
+        <receiver android:name=".widgets.WidgetProvider"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -230,7 +237,8 @@
             android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <!-- alarm service boot completed initialization broadcast receiver -->
-        <receiver android:name=".services.AlarmBootCompletedBroadcastReceiver">
+        <receiver android:name=".services.AlarmBootCompletedBroadcastReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>

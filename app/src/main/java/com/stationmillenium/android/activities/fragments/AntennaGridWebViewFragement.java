@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.stationmillenium.android.R;
@@ -18,8 +17,6 @@ import com.stationmillenium.android.databinding.WebviewFragmentBinding;
 
 import timber.log.Timber;
 
-import static com.stationmillenium.android.libutils.R.color.accent;
-import static com.stationmillenium.android.libutils.R.color.primary;
 
 /**
  * Abstract webview fragment
@@ -32,8 +29,8 @@ public class AntennaGridWebViewFragement extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.webview_fragment, container, false);
-        binding.webviewSwipeRefreshLayout.setColorSchemeResources(primary, accent);
+        binding = WebviewFragmentBinding.inflate(inflater, container, false);
+        binding.webviewSwipeRefreshLayout.setColorSchemeResources(R.color.primary, R.color.accent);
         binding.setFragment(this);
         binding.setProgress(0);
         return binding.getRoot();

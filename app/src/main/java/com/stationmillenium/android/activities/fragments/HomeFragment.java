@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.stationmillenium.android.R;
@@ -37,7 +36,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         facebookPostAdapter = new FacebookPostAdapter((HomeActivity) getActivity());
-        binding = DataBindingUtil.inflate(inflater, R.layout.home_fragment, container, false);
+        binding = HomeFragmentBinding.inflate(inflater, container, false);
         binding.setActivity((HomeActivity) getActivity());
         binding.homeSrl.setColorSchemeResources(R.color.primary, R.color.accent);
         binding.homeRecyclerview.setAdapter(facebookPostAdapter);

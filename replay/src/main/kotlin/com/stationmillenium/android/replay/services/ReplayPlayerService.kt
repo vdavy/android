@@ -11,6 +11,7 @@ import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.core.app.TaskStackBuilder
 import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
@@ -62,7 +63,7 @@ class ReplayPlayerService : Service() {
 
                     return TaskStackBuilder.create(this@ReplayPlayerService).run {
                         addNextIntentWithParentStack(replayItemIntent)
-                        getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+                        getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT + PendingIntent.FLAG_IMMUTABLE)
                     }
                 }
 
@@ -104,7 +105,7 @@ class ReplayPlayerService : Service() {
         val dataSourceFactory =
             DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)))
         val source = ProgressiveMediaSource.Factory(dataSourceFactory)
-            .createMediaSource(Uri.parse(replay!!.fileURL))
+            .createMediaSource(MediaItem.fromUri(Uri.parse(replay!!.fileURL)))
         with(exoPlayer) {
             com.stationmillenium.android.replay.activities.playerEventListener?.let { addListener(it) }
             ReplayItemActivity.instance?.setPlayerControlPlayerRef(exoPlayer)

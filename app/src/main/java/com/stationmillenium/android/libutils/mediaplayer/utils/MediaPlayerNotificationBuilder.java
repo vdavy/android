@@ -186,7 +186,7 @@ public class MediaPlayerNotificationBuilder {
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(mediaPlayerServiceRef.get());
             stackBuilder.addParentStack(PlayerActivity.class);
             stackBuilder.addNextIntent(playerIntent);
-            PendingIntent playerPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent playerPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
             //manage state text
             String stateText;
@@ -210,11 +210,11 @@ public class MediaPlayerNotificationBuilder {
 
             //pending intent for stopping player
             Intent stopIntent = new Intent(LocalIntents.PLAYER_STOP.toString());
-            PendingIntent stopPendingIntent = PendingIntent.getService(mediaPlayerServiceRef.get(), 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent stopPendingIntent = PendingIntent.getService(mediaPlayerServiceRef.get(), 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
             //pending intent for pausing or playing player
             Intent pausePlayIntent = new Intent(((pauseAction) ? LocalIntents.PLAYER_PAUSE : LocalIntents.PLAYER_PLAY).toString());
-            PendingIntent pausePlayPendingIntent = PendingIntent.getService(mediaPlayerServiceRef.get(), 0, pausePlayIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pausePlayPendingIntent = PendingIntent.getService(mediaPlayerServiceRef.get(), 0, pausePlayIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
             if (AppUtils.isAPILevel21Available()) {
                 return notificationAPI21(pauseAction, playerPendingIntent, stateText, stopPendingIntent, pausePlayPendingIntent);

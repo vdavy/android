@@ -13,10 +13,8 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.PlayerActivity;
 import com.stationmillenium.android.databinding.PlayerFragmentBinding;
 import com.stationmillenium.android.libutils.activities.PlayerState;
@@ -50,7 +48,7 @@ public class PlayerFragment extends Fragment {
         Timber.d("Create the activity");
 
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.inflate(inflater, R.layout.player_fragment, container, false);
+        binding = PlayerFragmentBinding.inflate(inflater, container, false);
         binding.setActivity((PlayerActivity) getActivity());
         binding.setPlayerState(PlayerState.STOPPED);
 
