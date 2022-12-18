@@ -4,7 +4,6 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import org.matomo.sdk.BuildConfig;
 import org.matomo.sdk.Matomo;
 import org.matomo.sdk.Tracker;
 import org.matomo.sdk.TrackerBuilder;
@@ -24,6 +23,8 @@ public class PiwikTracker {
     private static Tracker piwikAppTracker;
     private static Tracker piwikStreamTracker;
     private static int piwikGoalId;
+
+    private static boolean isDebugMode;
 
     public enum PiwikPages {
         PLAYER("/player"),
@@ -56,7 +57,7 @@ public class PiwikTracker {
      * Init the Piwik trackers
      * @param context the context to get resources
      */
-    public static void initPiwikTrackers(@NonNull Context context) {
+    public static void initPiwikTrackers(@NonNull Context context, boolean isDebugMode) {
         Matomo matomo = Matomo.getInstance(context);
         piwikAppTracker = new TrackerBuilder(context.getString(R.string.piwik_url), context.getResources().getInteger(R.integer.piwik_app_site_id), APP_TRACKER).build(matomo);
         piwikStreamTracker = new TrackerBuilder(context.getString(R.string.piwik_url), context.getResources().getInteger(R.integer.piwik_stream_site_id), STREAM_TRACKER).build(matomo);
@@ -68,7 +69,7 @@ public class PiwikTracker {
      */
     public static void trackStream() {
         Timber.d("PIWIK / Track stream");
-        if (!BuildConfig.DEBUG) {
+        if (!isDebugMode) {
             if (piwikStreamTracker != null) {
                 TrackHelper.track().goal(piwikGoalId).with(piwikStreamTracker);
             }
@@ -84,7 +85,7 @@ public class PiwikTracker {
     public static void trackScreenView(@NonNull PiwikPages page) {
         Timber.d("PIWIK / Track page : %s", page);
 
-        if (!BuildConfig.DEBUG) {
+        if (!isDebugMode) {
             if (piwikAppTracker != null) {
                 TrackHelper.track().screen(page.getPath()).with(piwikAppTracker);
             }
@@ -100,7 +101,7 @@ public class PiwikTracker {
      */
     public static void trackScreenViewWithTitle(@NonNull PiwikPages page, @NonNull String title) {
         Timber.d("PIWIK / Track page : " + page + " - with title : " + title);
-        if (!BuildConfig.DEBUG) {
+        if (!isDebugMode) {
             if (piwikAppTracker != null) {
                 TrackHelper.track().screen(page.getPath()).title(title).with(piwikAppTracker);
             }

@@ -17,7 +17,7 @@ public class StationMilleniumApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        PiwikTracker.initPiwikTrackers(this);
+        PiwikTracker.initPiwikTrackers(this, BuildConfig.DEBUG);
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
