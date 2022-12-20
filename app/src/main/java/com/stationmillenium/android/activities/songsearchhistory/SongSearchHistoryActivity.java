@@ -26,6 +26,7 @@ import com.stationmillenium.android.databinding.SongSearchHistoryActivityBinding
 import com.stationmillenium.android.libutils.DateTime;
 import com.stationmillenium.android.libutils.PiwikTracker;
 import com.stationmillenium.android.libutils.drawer.DrawerUtils;
+import com.stationmillenium.android.libutils.dtos.CurrentTitleDTO;
 import com.stationmillenium.android.libutils.intents.LocalIntents;
 import com.stationmillenium.android.libutils.intents.LocalIntentsData;
 import com.stationmillenium.android.providers.SongHistoryContract;
@@ -66,7 +67,8 @@ public class SongSearchHistoryActivity extends AppCompatActivity implements Load
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Timber.d("Create the activity");
-        binding = DataBindingUtil.setContentView(this, R.layout.song_search_history_activity);
+        binding = SongSearchHistoryActivityBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         binding.setActivity(this);
         setSupportActionBar(binding.songSearchToolbar);
         drawerUtils = new DrawerUtils(this, binding.songSearchDrawerLayout, binding.songSearchToolbar, R.id.nav_drawer_song_history);

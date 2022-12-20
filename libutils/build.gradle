@@ -1,6 +1,5 @@
 apply from: 'android-build.gradle'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 repositories {
     maven { url 'https://jitpack.io' }

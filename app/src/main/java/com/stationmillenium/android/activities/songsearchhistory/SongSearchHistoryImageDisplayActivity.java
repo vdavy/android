@@ -40,7 +40,8 @@ public class SongSearchHistoryImageDisplayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.image_display_layout);
+        binding = ImageDisplayLayoutBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         setSupportActionBar(binding.songImageToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

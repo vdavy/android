@@ -65,7 +65,8 @@ class ReplayItemActivity : AppCompatActivity(), Player.Listener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        replayItemActivityBinding = DataBindingUtil.setContentView(this, R.layout.replay_item_activity)
+        replayItemActivityBinding = ReplayItemActivityBinding.inflate(layoutInflater)
+        setContentView(replayItemActivityBinding.root)
         instance = this
         setSupportActionBar(replayItemActivityBinding.replayItemToolbar)
         if (supportActionBar != null) {

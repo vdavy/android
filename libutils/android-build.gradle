@@ -18,7 +18,10 @@ android {
         multiDexEnabled true
     }
 
-    buildFeatures.dataBinding = true
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+    }
 
     testOptions {
         unitTests.returnDefaultValues = true

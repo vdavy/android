@@ -48,7 +48,8 @@ public class AntennaGridActivity extends AppCompatActivity {
         resetWebview = (savedInstanceState == null);
         Timber.d("Load main preferences");
 
-        binding = DataBindingUtil.setContentView(this, R.layout.antenna_grid_activity);
+        binding = AntennaGridActivityBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         setSupportActionBar(binding.antennaGridToolbar);
         fragment = (AntennaGridWebViewFragement) getSupportFragmentManager().findFragmentById(R.id.antenna_grid_fragment);
 

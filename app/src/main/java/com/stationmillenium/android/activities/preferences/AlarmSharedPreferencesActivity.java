@@ -37,7 +37,8 @@ public class AlarmSharedPreferencesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Timber.d("Load alarm preferences");
 
-        AlarmPreferencesActivityBinding alarmPreferencesActivityBinding = DataBindingUtil.setContentView(this, R.layout.alarm_preferences_activity);
+        AlarmPreferencesActivityBinding alarmPreferencesActivityBinding = AlarmPreferencesActivityBinding.inflate(getLayoutInflater());
+        setContentView(alarmPreferencesActivityBinding.getRoot());
         setSupportActionBar(alarmPreferencesActivityBinding.alarmPrefToolbar);
 
         drawerUtils = new DrawerUtils(this, alarmPreferencesActivityBinding.alarmPrefDrawerLayout, alarmPreferencesActivityBinding.alarmPrefToolbar, R.id.nav_drawer_alarm);

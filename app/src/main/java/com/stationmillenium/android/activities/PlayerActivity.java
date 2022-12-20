@@ -86,7 +86,8 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //init view
         super.onCreate(savedInstanceState);
-        playerActivityBinding = DataBindingUtil.setContentView(this, R.layout.player_activity);
+        playerActivityBinding = PlayerActivityBinding.inflate(getLayoutInflater());
+        setContentView(playerActivityBinding.getRoot());
         setSupportActionBar(playerActivityBinding.playerToolbar);
 
         drawerUtils = new DrawerUtils(this, playerActivityBinding.playerDrawerLayout, playerActivityBinding.playerToolbar, R.id.nav_drawer_player);

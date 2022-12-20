@@ -78,7 +78,8 @@ public class HomeActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.home_activity);
+        binding = HomeActivityBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         setSupportActionBar(binding.mainToolbar);
         fragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.home_fragment);
 

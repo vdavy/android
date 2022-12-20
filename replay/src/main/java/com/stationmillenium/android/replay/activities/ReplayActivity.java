@@ -77,7 +77,8 @@ public class ReplayActivity extends AppCompatActivity implements LoaderCallbacks
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         titleTabTitle = getString(R.string.replay_toolbar_normal_title);
-        binding = DataBindingUtil.setContentView(this, R.layout.replay_activity);
+        binding = ReplayActivityBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         binding.setActivity(this);
         binding.setItemCount(0);
         binding.replayViewpager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {

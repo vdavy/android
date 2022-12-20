@@ -34,7 +34,8 @@ public class SharedPreferencesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Timber.d("Load main preferences");
 
-        PreferencesActivityBinding preferencesActivityBinding = DataBindingUtil.setContentView(this, R.layout.preferences_activity);
+        PreferencesActivityBinding preferencesActivityBinding = PreferencesActivityBinding.inflate(getLayoutInflater());
+        setContentView(preferencesActivityBinding.getRoot());
         setSupportActionBar(preferencesActivityBinding.prefToolbar);
 
         drawerUtils = new DrawerUtils(this, preferencesActivityBinding.prefDrawerLayout, preferencesActivityBinding.prefToolbar, R.id.nav_drawer_settings);
