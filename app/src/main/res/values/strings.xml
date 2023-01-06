@@ -37,6 +37,8 @@
     <string name="player_notification_time">%1$s:%2$s</string>
     <string name="player_cast">Caster</string>
     <string name="player_time_unavailable">--:--</string>
+    <string name="player_remote_no_artist">Station Millenium</string>
+    <string name="player_remote_no_title">Hits &amp; Mix</string>
 
     <!-- playing notification -->
     <string name="notification_ticker_text">Player Live Millenium</string>

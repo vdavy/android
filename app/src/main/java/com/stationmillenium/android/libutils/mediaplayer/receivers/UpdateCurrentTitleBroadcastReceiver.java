@@ -55,20 +55,20 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
                     .asBitmap()
                     .load(songData.getCurrentSong().getImageURL())
                     .apply(new RequestOptions()
-                        .placeholder(R.drawable.player_default_image)
-                        .error(R.drawable.player_default_image)
-                        .centerCrop()
+                            .placeholder(R.drawable.player_default_image)
+                            .error(R.drawable.player_default_image)
+                            .centerCrop()
                     )
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                            propagateMetaData(resource, songData);
+                            propagateMetaData(context, resource, songData);
                         }
 
                         @Override
                         public void onLoadFailed(@Nullable Drawable errorDrawable) {
                             if (errorDrawable instanceof BitmapDrawable) {
-                                propagateMetaData(((BitmapDrawable) errorDrawable).getBitmap(), songData);
+                                propagateMetaData(context, ((BitmapDrawable) errorDrawable).getBitmap(), songData);
                             }
                         }
                     });
@@ -78,7 +78,7 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void propagateMetaData(Bitmap songArtBitmap, CurrentTitleDTO song) {
+    private void propagateMetaData(Context context, Bitmap songArtBitmap, CurrentTitleDTO song) {
         if (mediaPlayerServiceRef.get() != null) {
             synchronized (mediaPlayerServiceRef.get().getCurrentSongImageLock()) { //save image
                 mediaPlayerServiceRef.get().setCurrentSongImage(songArtBitmap);
@@ -107,9 +107,15 @@ public class UpdateCurrentTitleBroadcastReceiver extends BroadcastReceiver {
             //set metadata for remote control
             if (mediaPlayerServiceRef.get().getRemoteControlClient() != null) {
                 RemoteControlClient.MetadataEditor metadataEditor = mediaPlayerServiceRef.get().getRemoteControlClient().editMetadata(false);
-                metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, song.getCurrentSong().getArtist());
-                metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, song.getCurrentSong().getArtist());
-                metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, song.getCurrentSong().getTitle());
+                if ((song.getCurrentSong().getArtist() != "") && (song.getCurrentSong().getTitle() != "")) {
+                    metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, song.getCurrentSong().getArtist());
+                    metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, song.getCurrentSong().getArtist());
+                    metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, song.getCurrentSong().getTitle());
+                } else {
+                    metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, context.getString(R.string.player_remote_no_artist));
+                    metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, context.getString(R.string.player_remote_no_artist));
+                    metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, context.getString(R.string.player_remote_no_title));
+                }
                 metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, songArtBitmap.copy(songArtBitmap.getConfig(), false));
                 metadataEditor.apply();
             }
