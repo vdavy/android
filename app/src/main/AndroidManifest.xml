@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:installLocation="auto">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:installLocation="auto">
 
 
     <!-- permissions to access network and check network state -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".app.StationMilleniumApp"
@@ -21,7 +21,7 @@
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:value="@integer/google_play_services_version" />
 
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
@@ -30,54 +30,54 @@
         <!-- meta data for backup service -->
         <meta-data
             android:name="com.google.android.backup.api_key"
-            android:value="AEdPqrEAAAAIlSghV3IjqM6OSpPBeM7T6cgtLubwGfn6YE2khA"/>
+            android:value="AEdPqrEAAAAIlSghV3IjqM6OSpPBeM7T6cgtLubwGfn6YE2khA" />
 
         <!-- enable crashlytics when not uin debug -->
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
-            android:value="false"/>
+            android:value="false" />
 
         <!-- main activity -->
         <activity
             android:name=".activities.HomeActivity"
+            android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/MaterialTheme"
-            android:exported="true">
+            android:theme="@style/MaterialTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <meta-data
                 android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts"/>
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <!-- player activity -->
         <activity
             android:name=".activities.PlayerActivity"
+            android:exported="true"
             android:label="@string/player_activity_title"
             android:launchMode="singleTop"
             android:theme="@style/CastMaterialTheme"
-            tools:ignore="UnusedAttribute"
-            android:exported="true">
+            tools:ignore="UnusedAttribute">
             <intent-filter>
-                <action android:name="com.stationmillenium.android.intents.ON_PLAYER_PLAY"/>
-                <action android:name="com.stationmillenium.android.intents.ON_PLAYER_PAUSE"/>
-                <action android:name="com.stationmillenium.android.intents.ON_PLAYER_STOP"/>
-                <action android:name="com.stationmillenium.android.intents.ON_PLAYER_BUFFERING"/>
-                <action android:name="com.stationmillenium.android.intents.ON_PLAYER_OPEN"/>
+                <action android:name="com.stationmillenium.android.intents.ON_PLAYER_PLAY" />
+                <action android:name="com.stationmillenium.android.intents.ON_PLAYER_PAUSE" />
+                <action android:name="com.stationmillenium.android.intents.ON_PLAYER_STOP" />
+                <action android:name="com.stationmillenium.android.intents.ON_PLAYER_BUFFERING" />
+                <action android:name="com.stationmillenium.android.intents.ON_PLAYER_OPEN" />
             </intent-filter>
 
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="www.station-millenium.com"
                     android:pathPrefix="/coverart/player.html"
-                    android:scheme="https"/>
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
@@ -89,9 +89,9 @@
             android:theme="@style/MaterialTheme"
             tools:ignore="UnusedAttribute">
             <intent-filter>
-                <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
+                <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
@@ -112,22 +112,22 @@
         <!-- song history search activity -->
         <activity
             android:name=".activities.songsearchhistory.SongSearchHistoryActivity"
+            android:exported="true"
             android:label="@string/song_search_history"
             android:launchMode="singleTop"
             android:theme="@style/MaterialTheme"
-            tools:ignore="UnusedAttribute"
-            android:exported="true">
+            tools:ignore="UnusedAttribute">
 
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="www.station-millenium.com"
                     android:path="/radio/cetait-quoi-ce-titre/"
-                    android:scheme="https"/>
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
@@ -140,23 +140,23 @@
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity"/>
+                android:value="com.stationmillenium.android.activities.songsearchhistory.SongSearchHistoryActivity" />
         </activity>
 
         <!-- replay activity -->
         <activity
             android:name=".replay.activities.ReplayActivity"
+            android:exported="true"
             android:label="@string/replay_activity_title"
             android:launchMode="singleTop"
             android:theme="@style/MaterialTheme"
-            tools:ignore="UnusedAttribute"
-            android:exported="true">
+            tools:ignore="UnusedAttribute">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/replay_searchable"/>
+                android:resource="@xml/replay_searchable" />
         </activity>
 
         <!-- replay item display activity -->
@@ -173,12 +173,12 @@
 
         <activity
             android:name=".activities.CastExpandedControlsActivity"
+            android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:parentActivityName=".activities.PlayerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/CastMaterialTheme"
-            android:exported="true">
+            android:theme="@style/CastMaterialTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -191,56 +191,63 @@
         <service
             android:name=".services.CurrentTitlePlayerService"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:foregroundServiceType="dataSync"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".services.StatsTrackerService"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:foregroundServiceType="dataSync"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".services.MediaPlayerService"
-            android:exported="false">
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback">
             <intent-filter>
-                <action android:name="com.stationmillenium.android.intents.PLAYER_PLAY"/>
-                <action android:name="com.stationmillenium.android.intents.PLAYER_PLAY_PAUSE"/>
-                <action android:name="com.stationmillenium.android.intents.PLAYER_PAUSE"/>
-                <action android:name="com.stationmillenium.android.intents.PLAYER_STOP"/>
-                <action android:name="com.stationmillenium.android.intents.PLAYER_OPEN"/>
-                <action android:name="com.stationmillenium.android.intents.PLAYER_ACTIVITY_RESUME"/>
-                <action android:name="com.stationmillenium.android.intents.PLAYER_ACTIVITY_PAUSE"/>
+                <action android:name="com.stationmillenium.android.intents.PLAYER_PLAY" />
+                <action android:name="com.stationmillenium.android.intents.PLAYER_PLAY_PAUSE" />
+                <action android:name="com.stationmillenium.android.intents.PLAYER_PAUSE" />
+                <action android:name="com.stationmillenium.android.intents.PLAYER_STOP" />
+                <action android:name="com.stationmillenium.android.intents.PLAYER_OPEN" />
+                <action android:name="com.stationmillenium.android.intents.PLAYER_ACTIVITY_RESUME" />
+                <action android:name="com.stationmillenium.android.intents.PLAYER_ACTIVITY_PAUSE" />
             </intent-filter>
         </service>
 
         <!-- broadcast receiver for playback buttons -->
-        <receiver android:name=".libutils.mediaplayer.receivers.PlaybackControlButtonsBroadcastReceiver"
+        <receiver
+            android:name=".libutils.mediaplayer.receivers.PlaybackControlButtonsBroadcastReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
 
         <!-- broadcast receiver for the widget part -->
-        <receiver android:name=".widgets.WidgetProvider"
+        <receiver
+            android:name=".widgets.WidgetProvider"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget"/>
+                android:resource="@xml/widget" />
         </receiver>
 
         <!-- alarm service -->
         <service
             android:name=".services.AlarmService"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:foregroundServiceType="dataSync"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <!-- alarm service boot completed initialization broadcast receiver -->
-        <receiver android:name=".services.AlarmBootCompletedBroadcastReceiver"
+        <receiver
+            android:name=".services.AlarmBootCompletedBroadcastReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
@@ -248,13 +255,14 @@
         <provider
             android:name=".providers.SongHistoryContentProvider"
             android:authorities="com.stationmillenium.android.contentproviders.SongHistoryContentProvider"
-            android:exported="false"/>
+            android:exported="false" />
 
         <!-- auto restart player service -->
         <service
             android:name=".services.AutoRestartPlayerService"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:foregroundServiceType="mediaPlayback"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
     </application>
 
