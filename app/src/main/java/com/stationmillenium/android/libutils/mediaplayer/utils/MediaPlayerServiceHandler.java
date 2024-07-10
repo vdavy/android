@@ -118,7 +118,7 @@ public class MediaPlayerServiceHandler extends Handler {
             //init the remote control client
             Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
             mediaButtonIntent.setComponent(mediaPlayerServiceRef.get().getPcbbrComponentName());
-            PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(mediaPlayerServiceRef.get().getApplicationContext(), 0, mediaButtonIntent, 0);
+            PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(mediaPlayerServiceRef.get().getApplicationContext(), 0, mediaButtonIntent, PendingIntent.FLAG_IMMUTABLE);
             mediaPlayerServiceRef.get().setRemoteControlClient(new RemoteControlClient(mediaPendingIntent));
             mediaPlayerServiceRef.get().getRemoteControlClient().setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY
                     | RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE
