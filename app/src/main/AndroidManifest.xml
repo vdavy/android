@@ -10,8 +10,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <application
         android:name=".app.StationMilleniumApp"
@@ -193,17 +191,14 @@
         <service
             android:name=".services.CurrentTitlePlayerService"
             android:exported="false"
-            android:foregroundServiceType="dataSync"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".services.StatsTrackerService"
             android:exported="false"
-            android:foregroundServiceType="dataSync"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".services.MediaPlayerService"
-            android:exported="false"
-            android:foregroundServiceType="mediaPlayback">
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.stationmillenium.android.intents.PLAYER_PLAY" />
                 <action android:name="com.stationmillenium.android.intents.PLAYER_PLAY_PAUSE" />
@@ -241,7 +236,6 @@
         <service
             android:name=".services.AlarmService"
             android:exported="false"
-            android:foregroundServiceType="dataSync"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <!-- alarm service boot completed initialization broadcast receiver -->
@@ -263,7 +257,6 @@
         <service
             android:name=".services.AutoRestartPlayerService"
             android:exported="false"
-            android:foregroundServiceType="mediaPlayback"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
     </application>
