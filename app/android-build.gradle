@@ -13,7 +13,7 @@ android {
         applicationId "com.stationmillenium.android"
         minSdkVersion 23
         targetSdkVersion 34
-        versionCode 230
+        versionCode 231
         versionName "4.4.1-beta2"
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         testApplicationId "com.stationmillenium.android.test"
