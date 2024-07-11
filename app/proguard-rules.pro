@@ -9,8 +9,8 @@
 # Avoid spring lib : http://stackoverflow.com/questions/11640571/problems-obfuscating-android-application-that-uses-spring-for-android
 -keep class com.fasterxml.jackson.** { *; }
 -keep class org.springframework.** { *; }
--keep class com.stationmillenium.android.replay.dto.** { public *; }
--keep class com.stationmillenium.android.libutils.dtos.** { public *; }
+-keep class com.stationmillenium.android.replay.dto.** { *; }
+-keep class com.stationmillenium.android.libutils.dtos.** { *; }
 
 # Don't warn on missing classes
 -dontwarn org.springframework.http.client.**
@@ -42,5 +42,5 @@
 -keep public class * extends java.lang.Exception
 
 # Google cast
--keep class com.stationmillenium.android.cast.CastOptionsProvider { public *; }
+-keep class com.stationmillenium.android.cast.CastOptionsProvider { *; }
 -keep class com.stationmillenium.android.libutils.cast.CustomMediaRouteActionProvider { *; }
