@@ -68,16 +68,15 @@
                 <action android:name="com.stationmillenium.android.intents.ON_PLAYER_OPEN" />
             </intent-filter>
 
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                    android:host="www.station-millenium.com"
-                    android:pathPrefix="/coverart/player.html"
-                    android:scheme="https" />
+                <data android:scheme="https" />
+                <data android:host="www.station-millenium.com" />
+                <data android:pathPrefix="/radio/le-player/" />
             </intent-filter>
         </activity>
 
@@ -118,16 +117,15 @@
             android:theme="@style/MaterialTheme"
             tools:ignore="UnusedAttribute">
 
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                    android:host="www.station-millenium.com"
-                    android:path="/radio/cetait-quoi-ce-titre/"
-                    android:scheme="https" />
+                <data android:scheme="https" />
+                <data android:host="www.station-millenium.com" />
+                <data android:path="/radio/cetait-quoi-ce-titre/" />
             </intent-filter>
         </activity>
 
