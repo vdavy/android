@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.ServiceCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.stationmillenium.android.R;
@@ -60,6 +61,7 @@ import java.util.TimerTask;
 
 import timber.log.Timber;
 
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK;
 import static com.stationmillenium.android.libutils.mediaplayer.utils.MediaPlayerNotificationBuilder.NOTIFICATION_CHANNEL_ID;
 
 /**
@@ -137,7 +139,7 @@ public class MediaPlayerService extends Service implements OnPreparedListener, O
             pcbbrComponentName = new ComponentName(this, PlaybackControlButtonsBroadcastReceiver.class);
         }
         if (AppUtils.isAPILevel26Available()) {
-            startForeground(NOTIFICATION_ID, buildForegroundWaintingNotification());
+            ServiceCompat.startForeground(this, NOTIFICATION_ID, buildForegroundWaintingNotification(), FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
         }
 
         // Start up the thread running the service.  Note that we create a

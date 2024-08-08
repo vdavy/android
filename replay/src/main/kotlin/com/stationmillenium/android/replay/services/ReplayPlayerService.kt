@@ -4,11 +4,15 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.annotation.RequiresApi
+import androidx.core.app.ServiceCompat
 import androidx.core.app.TaskStackBuilder
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -86,11 +90,12 @@ class ReplayPlayerService : Service() {
                     dismissedByUser: Boolean
                 ) = stopSelf()
 
+                @RequiresApi(Build.VERSION_CODES.Q)
                 override fun onNotificationPosted(
                     notificationId: Int,
                     notification: Notification,
                     ongoing: Boolean
-                ) = startForeground(notificationId, notification)
+                ) = ServiceCompat.startForeground(this@ReplayPlayerService, notificationId, notification, FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
             }
         ).setChannelNameResourceId(R.string.app_name)
             .setChannelDescriptionResourceId(R.string.app_name)

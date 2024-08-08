@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.ServiceCompat;
 
 import com.stationmillenium.android.R;
 import com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity.AlarmSharedPreferencesConstants;
@@ -36,6 +37,8 @@ import java.util.List;
 import java.util.Set;
 
 import timber.log.Timber;
+
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK;
 
 /**
  * Service to manage alarm intent : launch player when alarm elapsed and set pending intents
@@ -59,10 +62,11 @@ public class AlarmService extends JobIntentService {
         displayToast = new DisplayToastsUtil(getApplicationContext());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @TargetApi(Build.VERSION_CODES.O)
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         if (AppUtils.isAPILevel26Available() && intent != null && LocalIntents.ON_ALARM_TIME_ELAPSED.toString().equals(intent.getAction())) {
-            startForeground(NOTIF_ID, buildNotification());
+            ServiceCompat.startForeground(this, NOTIF_ID, buildNotification(), FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
             requestPlayerStart();
             enqueueWork(this, intent);
         }

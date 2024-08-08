@@ -16,6 +16,8 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ServiceCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.stationmillenium.android.R;
@@ -27,6 +29,7 @@ import java.lang.ref.WeakReference;
 
 import timber.log.Timber;
 
+import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK;
 import static android.media.AudioManager.STREAM_MUSIC;
 import static com.stationmillenium.android.activities.preferences.AlarmSharedPreferencesActivity.AlarmSharedPreferencesConstants.ALARM_VOLUME;
 
@@ -46,6 +49,7 @@ public class MediaPlayerServiceHandler extends Handler {
         mediaPlayerServiceRef = new WeakReference<>(service);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     public void handleMessage(Message msg) {
@@ -73,7 +77,7 @@ public class MediaPlayerServiceHandler extends Handler {
 
                             //start in foreground
                             Notification notification = mediaPlayerServiceRef.get().getMediaPlayerNotificationBuilder().createNotification(true);
-                            mediaPlayerServiceRef.get().startForeground(MediaPlayerService.NOTIFICATION_ID, notification);
+                            ServiceCompat.startForeground(mediaPlayerServiceRef.get(), MediaPlayerService.NOTIFICATION_ID, notification, FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
 
                         } catch (Exception e) {
                             Timber.w(e, "Error while trying to init media player");

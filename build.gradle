@@ -7,7 +7,7 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.4.1'
+        classpath 'com.android.tools.build:gradle:8.5.0'
         classpath 'com.google.gms:google-services:4.3.14'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
@@ -21,7 +21,7 @@ ext {
     piwikSdkVersion = '4.1.4'
     playServicesVersion = '17.0.0'
     playServicesCoreVersion = '21.1.1'
-    cafVersion = '21.2.0'
+    cafVersion = '21.5.0'
     crashlyticsVersion = '18.3.2'
     glideVersion = "4.9.0"
     timberVersion = "4.7.1"

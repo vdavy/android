@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <application
         android:name=".app.StationMilleniumApp"
@@ -196,6 +197,7 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".services.MediaPlayerService"
+            android:foregroundServiceType="mediaPlayback"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.stationmillenium.android.intents.PLAYER_PLAY" />
