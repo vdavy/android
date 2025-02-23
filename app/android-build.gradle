@@ -3,7 +3,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     namespace "com.stationmillenium.android"
-    compileSdk 34
+    compileSdk 35
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId "com.stationmillenium.android"
         minSdkVersion 23
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 235
         versionName "4.4.2"
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'

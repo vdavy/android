@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     namespace "com.stationmillenium.android.libutils"
-    compileSdk 34
+    compileSdk 35
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         minSdkVersion 23
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 0
         versionName ""
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'

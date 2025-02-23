@@ -12,10 +12,10 @@ dependencies {
 
     api 'androidx.appcompat:appcompat:1.7.0'
     api 'androidx.mediarouter:mediarouter:1.7.0'
-    api 'androidx.annotation:annotation:1.8.2'
+    api 'androidx.annotation:annotation:1.9.1'
     api "com.google.firebase:firebase-invites:${rootProject.ext.playServicesVersion}"
     api "com.google.firebase:firebase-core:${rootProject.ext.playServicesCoreVersion}"
-    api 'androidx.constraintlayout:constraintlayout:2.1.4'
+    api 'androidx.constraintlayout:constraintlayout:2.2.0'
     api "com.google.android.gms:play-services-cast-framework:${rootProject.ext.cafVersion}"
     implementation "com.google.firebase:firebase-crashlytics:${rootProject.ext.crashlyticsVersion}"
 
@@ -36,6 +36,10 @@ dependencies {
 apply plugin: 'com.google.gms.google-services'
 android {
 
+
+    buildFeatures {
+        buildConfig true
+    }
     packagingOptions {
         resources {
             excludes += ['META-INF/notice.txt', 'META-INF/license.txt']

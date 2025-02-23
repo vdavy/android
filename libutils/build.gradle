@@ -13,7 +13,7 @@ dependencies {
     api 'androidx.mediarouter:mediarouter:1.7.0'
     api 'com.google.android.material:material:1.12.0'
     api "com.google.android.gms:play-services-cast-framework:${rootProject.ext.cafVersion}"
-    api 'androidx.annotation:annotation:1.8.2'
+    api 'androidx.annotation:annotation:1.9.1'
     api "com.fasterxml.jackson.core:jackson-annotations:${rootProject.ext.jacksonVersion}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
